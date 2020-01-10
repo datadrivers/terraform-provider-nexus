@@ -8,20 +8,27 @@ import (
 	"time"
 )
 
+// Client represents the Nexus API Client interface
 type Client interface {
 	Post(string, io.Reader) ([]byte, *http.Response, error)
 	Put(string, io.Reader) ([]byte, *http.Response, error)
-	Delete(string) (*http.Response, error)
+	Delete(string) ([]byte, *http.Response, error)
+	UserCreate(User) error
+	UserRead(string) (*User, error)
+	UserUpdate(string, User) error
+	UserDelete(string) error
 }
 
 type client struct {
 	config Config
+	client *http.Client
 }
 
 // NewClient returns an instance of client that implements the Client interface
 func NewClient(config Config) Client {
 	return &client{
 		config: config,
+		client: &http.Client{},
 	}
 }
 
@@ -41,7 +48,7 @@ func (c client) NewRequest(method string, endpoint string, body io.Reader) (req 
 func (c client) execute(method string, endpoint string, payload io.Reader) ([]byte, *http.Response, error) {
 	req, err := c.NewRequest(method, endpoint, payload)
 	if err != nil {
-		return nil, nil, fmt.Errorf("could not create new request: %v", err)
+		return nil, nil, fmt.Errorf("could not create equest: %v", err)
 	}
 
 	client := &http.Client{
@@ -49,13 +56,17 @@ func (c client) execute(method string, endpoint string, payload io.Reader) ([]by
 	}
 
 	resp, err := client.Do(req)
-	defer resp.Body.Close()
 	if err != nil {
 		return nil, nil, fmt.Errorf("could not execute request: %v", err)
 	}
+	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	return body, resp, err
+}
+
+func (c client) Get(endpoint string, payload io.Reader) ([]byte, *http.Response, error) {
+	return c.execute(http.MethodGet, endpoint, payload)
 }
 
 func (c client) Post(endpoint string, payload io.Reader) ([]byte, *http.Response, error) {
@@ -66,7 +77,6 @@ func (c client) Put(endpoint string, payload io.Reader) ([]byte, *http.Response,
 	return c.execute(http.MethodPut, endpoint, payload)
 }
 
-func (c client) Delete(endpoint string) (*http.Response, error) {
-	_, resp, err := c.execute(http.MethodDelete, endpoint, nil)
-	return resp, err
+func (c client) Delete(endpoint string) ([]byte, *http.Response, error) {
+	return c.execute(http.MethodDelete, endpoint, nil)
 }

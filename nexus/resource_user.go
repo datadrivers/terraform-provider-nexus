@@ -1,28 +1,9 @@
 package nexus
 
 import (
-	"bytes"
-	"encoding/json"
-	"fmt"
-	"net/http"
-
-	"github.com/datadrivers/terraform-provider-nexus/nexus/client"
+	nexus "github.com/datadrivers/terraform-provider-nexus/nexus/client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
-
-const (
-	nexusUsersAPIEndpoint = "service/rest/beta/security/users"
-)
-
-type NexusUser struct {
-	UserID       string   `json:"userId"`
-	FirstName    string   `json:"firstName"`
-	LastName     string   `json:"lastName"`
-	EmailAddress string   `json:"emailAddress"`
-	Password     string   `json:"password"`
-	Status       string   `json:"status"`
-	Roles        []string `json:"roles"`
-}
 
 func resourceUser() *schema.Resource {
 	return &schema.Resource{
@@ -72,11 +53,8 @@ func resourceUser() *schema.Resource {
 	}
 }
 
-func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
-	config := m.(*client.Config)
-	client := client.NewClient(*config)
-
-	user := NexusUser{
+func getUserFromResourceData(d *schema.ResourceData) nexus.User {
+	return nexus.User{
 		UserID:       d.Get("userid").(string),
 		FirstName:    d.Get("firstname").(string),
 		LastName:     d.Get("lastname").(string),
@@ -85,21 +63,14 @@ func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
 		Status:       d.Get("status").(string),
 		Roles:        resourceDataStringSlice(d, "roles"),
 	}
+}
 
-	reqBytes, err := json.Marshal(user)
-	if err != nil {
-		return fmt.Errorf("could not marshal user data: %v", err)
-	}
+func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
+	nexusClient := m.(nexus.Client)
+	user := getUserFromResourceData(d)
 
-	reqReader := bytes.NewReader(reqBytes)
-
-	body, resp, err := client.Post(nexusUsersAPIEndpoint, reqReader)
-	if err != nil {
-		return fmt.Errorf("error while creating user: %v", err)
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("error while creating user: HTTP: %d, %s", resp.StatusCode, string(body))
+	if err := nexusClient.UserCreate(user); err != nil {
+		return err
 	}
 
 	d.SetId(user.UserID)
@@ -111,33 +82,26 @@ func resourceUserRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
+	nexus := m.(nexus.Client)
+	if d.HasChange("firstname") || d.HasChange("lastname") || d.HasChange("email") || d.HasChange("status") {
+		userId := d.Get("userid").(string)
+		user := getUserFromResourceData(d)
+		if err := nexus.UserUpdate(userId, user); err != nil {
+			return err
+		}
+	}
 	return resourceUserRead(d, m)
 }
 
 func resourceUserDelete(d *schema.ResourceData, m interface{}) error {
-	config := m.(*client.Config)
-	client := client.NewClient(*config)
+	nexus := m.(nexus.Client)
 
 	userId := d.Get("userid").(string)
 
-	resp, err := client.Delete(fmt.Sprintf("%s/%s", nexusUsersAPIEndpoint, userId))
-	if err != nil {
-		return fmt.Errorf("could not delete user: %v", err)
-	}
-
-	if resp.StatusCode != http.StatusOK && resp.StatusCode != 204 {
-		return fmt.Errorf("could not delete user: HTTP: %d", resp.StatusCode)
+	if err := nexus.UserDelete(userId); err != nil {
+		return err
 	}
 
 	d.SetId("")
 	return nil
-}
-
-func resourceDataStringSlice(d *schema.ResourceData, attribute string) []string {
-	n := d.Get(fmt.Sprintf("%s.#", attribute)).(int)
-	data := make([]string, n)
-	for i := 0; i < n; i++ {
-		data[i] = d.Get(fmt.Sprintf("%s.%d", attribute, i)).(string)
-	}
-	return data
 }

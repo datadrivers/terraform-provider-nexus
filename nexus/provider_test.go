@@ -24,3 +24,7 @@ func TestProvider(t *testing.T) {
 		t.Fatalf("err: %s", err)
 	}
 }
+
+func TestProvider_impl(t *testing.T) {
+	var _ terraform.ResourceProvider = Provider()
+}
