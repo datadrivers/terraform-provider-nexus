@@ -1,12 +1,13 @@
 package nexus
 
 import (
-	"github.com/datadrivers/terraform-provider-nexus/nexus"
+	"github.com/datadrivers/terraform-provider-nexus/nexus/client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
 // Provider returns a terraform.ResourceProvider
-func Provider() *schema.Provider {
+func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
 		ResourcesMap: map[string]*schema.Resource{
 			"nexus_repository": resourceRepository(),
@@ -34,10 +35,10 @@ func Provider() *schema.Provider {
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	config := nexus.Config{
+	config := client.Config{
 		URL:      d.Get("url").(string),
 		Username: d.Get("username").(string),
 		Password: d.Get("password").(string),
 	}
-	return nexus.NewClient(config), nil
+	return client.NewClient(config), nil
 }

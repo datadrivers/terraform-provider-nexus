@@ -7,6 +7,6 @@ import (
 
 func main() {
 	plugin.Serve(&plugin.ServeOpts{
-		ProviderFunc: nexus.Provider(),
+		ProviderFunc: nexus.Provider,
 	})
 }

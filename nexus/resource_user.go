@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/datadrivers/terraform-provider-nexus/nexus/client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -72,8 +73,8 @@ func resourceUser() *schema.Resource {
 }
 
 func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
-	config := m.(*Config)
-	client := NewClient(*config)
+	config := m.(*client.Config)
+	client := client.NewClient(*config)
 
 	user := NexusUser{
 		UserID:       d.Get("userid").(string),
@@ -114,8 +115,8 @@ func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceUserDelete(d *schema.ResourceData, m interface{}) error {
-	config := m.(*Config)
-	client := NewClient(*config)
+	config := m.(*client.Config)
+	client := client.NewClient(*config)
 
 	userId := d.Get("userid").(string)
 
