@@ -82,11 +82,18 @@ func resourceUserRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
-	nexus := m.(nexus.Client)
+	nexusClient := m.(nexus.Client)
+	userId := d.Get("userid").(string)
+
+	if d.HasChange("password") {
+		password := d.Get("password").(string)
+		if err := nexusClient.UserChangePassword(userId, password); err != nil {
+			return err
+		}
+	}
 	if d.HasChange("firstname") || d.HasChange("lastname") || d.HasChange("email") || d.HasChange("status") {
-		userId := d.Get("userid").(string)
 		user := getUserFromResourceData(d)
-		if err := nexus.UserUpdate(userId, user); err != nil {
+		if err := nexusClient.UserUpdate(userId, user); err != nil {
 			return err
 		}
 	}
@@ -94,11 +101,11 @@ func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceUserDelete(d *schema.ResourceData, m interface{}) error {
-	nexus := m.(nexus.Client)
+	nexusClient := m.(nexus.Client)
 
 	userId := d.Get("userid").(string)
 
-	if err := nexus.UserDelete(userId); err != nil {
+	if err := nexusClient.UserDelete(userId); err != nil {
 		return err
 	}
 
