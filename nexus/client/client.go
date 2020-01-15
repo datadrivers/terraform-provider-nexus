@@ -10,13 +10,19 @@ import (
 
 // Client represents the Nexus API Client interface
 type Client interface {
-	Post(string, io.Reader) ([]byte, *http.Response, error)
-	Put(string, io.Reader) ([]byte, *http.Response, error)
-	Delete(string) ([]byte, *http.Response, error)
+	RepositoryCreate(Repository, string, string) error
+	RepositoryRead(string, string, string) (*Repository, error)
+	RepositoryUpdate(string, Repository) error
+	RepositoryDelete(string) error
+	RoleCreate(Role) error
+	RoleRead(string) (*Role, error)
+	RoleUpdate(string, Role) error
+	RoleDelete(string) error
 	UserCreate(User) error
 	UserRead(string) (*User, error)
 	UserUpdate(string, User) error
 	UserDelete(string) error
+	UserChangePassword(string, string) error
 }
 
 type client struct {

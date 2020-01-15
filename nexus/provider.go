@@ -11,6 +11,7 @@ func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
 		ResourcesMap: map[string]*schema.Resource{
 			"nexus_repository": resourceRepository(),
+			"nexus_role":       resourceRole(),
 			"nexus_user":       resourceUser(),
 		},
 		Schema: map[string]*schema.Schema{
