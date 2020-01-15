@@ -1,4 +1,5 @@
 .terraform/
+terraform-provider-nexus
 terraform.tfstate
 terraform.tfstate.backup
 terraform.tfstate.*.backup
