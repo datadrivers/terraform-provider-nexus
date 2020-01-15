@@ -1,6 +1,7 @@
 package nexus
 
 import (
+	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -12,16 +13,22 @@ func resourceRepository() *schema.Resource {
 		Delete: resourceRepositoryDelete,
 
 		Schema: map[string]*schema.Schema{
+			"format": {
+				Required: true,
+				Type:     schema.TypeString,
+			},
 			"name": {
 				Description: "A unique identifier for this repository",
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
+			},
+			"online": {
+				Default:     true,
+				Description: "",
+				Optional:    true,
+				Type:        schema.TypeBool,
 			},
 			"type": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"format": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
@@ -29,12 +36,24 @@ func resourceRepository() *schema.Resource {
 	}
 }
 
+func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
+	return nexus.Repository{
+		Name:   d.Get("name").(string),
+		Online: d.Get("online").(bool),
+	}
+}
+
 func resourceRepositoryCreate(d *schema.ResourceData, m interface{}) error {
-	// config := m.(*client.Config)
+	client := m.(nexus.Client)
+	repo := getRepositoryFromResourceData(d)
+	repoFormat := d.Get("format").(string)
+	repoType := d.Get("type").(string)
 
-	repoName := d.Get("name").(string)
+	if err := client.RepositoryCreate(repo, repoFormat, repoType); err != nil {
+		return err
+	}
 
-	d.SetId(repoName)
+	d.SetId(repo.Name)
 	return resourceRepositoryRead(d, m)
 }
 

@@ -1,7 +1,7 @@
 package nexus
 
 import (
-	"github.com/datadrivers/terraform-provider-nexus/nexus/client"
+	client "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
