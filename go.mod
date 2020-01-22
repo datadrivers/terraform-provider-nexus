@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go v0.51.0 // indirect
 	cloud.google.com/go/storage v1.5.0 // indirect
 	github.com/aws/aws-sdk-go v1.28.7 // indirect
-	github.com/datadrivers/go-nexus-client v0.0.0-20200122085750-5185283d6967
+	github.com/datadrivers/go-nexus-client v0.0.0-20200122162820-783386cc9071
 	github.com/fatih/color v1.9.0 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golangci/golangci-lint v1.22.2 // indirect
@@ -23,6 +23,7 @@ require (
 	github.com/oklog/run v1.1.0 // indirect
 	github.com/posener/complete v1.2.3 // indirect
 	github.com/sonatype-nexus-community/gonexus v0.56.4
+	github.com/stretchr/testify v1.4.0
 	github.com/ulikunitz/xz v0.5.6 // indirect
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	github.com/zclconf/go-cty v1.2.1 // indirect

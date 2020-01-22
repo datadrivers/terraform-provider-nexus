@@ -112,6 +112,8 @@ github.com/datadrivers/go-nexus-client v0.0.0-20200115191839-964c7cd9dead h1:oIA
 github.com/datadrivers/go-nexus-client v0.0.0-20200115191839-964c7cd9dead/go.mod h1:IwxcdvCQoMCGqlB1e8sF0ZGFjFave9WisLgbOvcu1w4=
 github.com/datadrivers/go-nexus-client v0.0.0-20200122085750-5185283d6967 h1:sCEohK2RSQviGCmH9JYIYay8jxqMCKyW7TYeE95vyn4=
 github.com/datadrivers/go-nexus-client v0.0.0-20200122085750-5185283d6967/go.mod h1:IwxcdvCQoMCGqlB1e8sF0ZGFjFave9WisLgbOvcu1w4=
+github.com/datadrivers/go-nexus-client v0.0.0-20200122162820-783386cc9071 h1:F0DmuvypnazvwmoP68IlpD5rt/ibGWboLiZjM7aP0Dk=
+github.com/datadrivers/go-nexus-client v0.0.0-20200122162820-783386cc9071/go.mod h1:IwxcdvCQoMCGqlB1e8sF0ZGFjFave9WisLgbOvcu1w4=
 github.com/datadrivers/terraform-provider-nexus v0.0.0-20200110133824-eb0282f6fbce h1:L0iVLSxoIrbVAG3uBCgQAxiMOYYH5m/XNvosCNqlcQI=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
