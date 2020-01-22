@@ -78,6 +78,27 @@ func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceUserRead(d *schema.ResourceData, m interface{}) error {
+	nexusClient := m.(nexus.Client)
+	userId := d.Get("userid").(string)
+
+	user, err := nexusClient.UserRead(userId)
+	if err != nil {
+		return err
+	}
+
+	if user == nil {
+		d.SetId("")
+		return nil
+	}
+
+	d.SetId(user.UserID)
+	d.Set("firstname", user.FirstName)
+	d.Set("lastname", user.LastName)
+	d.Set("email", user.EmailAddress)
+	d.Set("password", user.Password)
+	d.Set("roles", user.Roles)
+	d.Set("status", user.Status)
+
 	return nil
 }
 
