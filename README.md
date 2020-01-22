@@ -19,7 +19,19 @@ provider "nexus" {
 }
 ```
 
-## nexus_role
+### Data
+
+#### nexus_user
+
+```hcl
+data "nexus_user" "admin" {
+  userid = "admin"
+}
+```
+
+### Resources
+
+#### nexus_role
 
 ```hcl
 resource "nexus_role" "nx-admin" {
@@ -31,7 +43,7 @@ resource "nexus_role" "nx-admin" {
 }
 ```
 
-## nexus_user
+#### nexus_user
 
 ```hcl
 resource "nexus_user" "admin" {
@@ -52,3 +64,7 @@ There is a [makefile](./GNUmakefile) to build the provider.
 ```sh
 $ make
 ```
+
+# Author
+
+[Datadrivers GmbH](https://www.datadrivers.de)

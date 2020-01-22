@@ -9,6 +9,9 @@ import (
 // Provider returns a terraform.ResourceProvider
 func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
+		DataSourcesMap: map[string]*schema.Resource{
+			"nexus_user": dataSourceUser(),
+		},
 		ResourcesMap: map[string]*schema.Resource{
 			"nexus_repository": resourceRepository(),
 			"nexus_role":       resourceRole(),
