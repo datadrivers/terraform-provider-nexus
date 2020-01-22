@@ -15,6 +15,7 @@ func resourceUser() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"userid": {
 				Description: "The userid which is required for login. This value cannot be changed.",
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Required:    true,
 			},
