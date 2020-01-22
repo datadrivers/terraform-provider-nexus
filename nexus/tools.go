@@ -14,3 +14,19 @@ func resourceDataStringSlice(d *schema.ResourceData, attribute string) []string 
 	}
 	return data
 }
+
+func interfaceSliceToStringSlice(data []interface{}) []string {
+	result := make([]string, len(data))
+	for i, v := range data {
+		result[i] = v.(string)
+	}
+	return result
+}
+
+func stringSliceToInterfaceSlice(strings []string) []interface{} {
+	s := make([]interface{}, len(strings))
+	for i, v := range strings {
+		s[i] = string(v)
+	}
+	return s
+}

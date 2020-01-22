@@ -12,6 +12,10 @@ func resourceUser() *schema.Resource {
 		Read:   resourceUserRead,
 		Update: resourceUserUpdate,
 		Delete: resourceUserDelete,
+		Exists: resourceUserExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"userid": {
@@ -45,7 +49,7 @@ func resourceUser() *schema.Resource {
 				Description: "The roles which the user has been assigned within Nexus.",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Optional:    true,
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 			},
 			"status": {
 				Description: "The user's status, e.g. active or disabled.",
@@ -68,7 +72,7 @@ func getUserFromResourceData(d *schema.ResourceData) nexus.User {
 		EmailAddress: d.Get("email").(string),
 		Password:     d.Get("password").(string),
 		Status:       d.Get("status").(string),
-		Roles:        resourceDataStringSlice(d, "roles"),
+		Roles:        interfaceSliceToStringSlice(d.Get("roles").(*schema.Set).List()),
 	}
 }
 
@@ -86,9 +90,9 @@ func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
 
 func resourceUserRead(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
-	userId := d.Get("userid").(string)
+	userID := d.Get("userid").(string)
 
-	user, err := nexusClient.UserRead(userId)
+	user, err := nexusClient.UserRead(userID)
 	if err != nil {
 		return err
 	}
@@ -102,8 +106,7 @@ func resourceUserRead(d *schema.ResourceData, m interface{}) error {
 	d.Set("firstname", user.FirstName)
 	d.Set("lastname", user.LastName)
 	d.Set("email", user.EmailAddress)
-	d.Set("password", user.Password)
-	d.Set("roles", user.Roles)
+	d.Set("roles", stringSliceToInterfaceSlice(user.Roles))
 	d.Set("status", user.Status)
 
 	return nil
@@ -111,17 +114,23 @@ func resourceUserRead(d *schema.ResourceData, m interface{}) error {
 
 func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
-	userId := d.Get("userid").(string)
+	userID := d.Get("userid").(string)
+
+	d.Partial(true)
 
 	if d.HasChange("password") {
 		password := d.Get("password").(string)
-		if err := nexusClient.UserChangePassword(userId, password); err != nil {
+		if err := nexusClient.UserChangePassword(userID, password); err != nil {
 			return err
 		}
+		d.SetPartial("password")
 	}
-	if d.HasChange("firstname") || d.HasChange("lastname") || d.HasChange("email") || d.HasChange("status") {
+
+	d.Partial(false)
+
+	if d.HasChange("firstname") || d.HasChange("lastname") || d.HasChange("email") || d.HasChange("status") || d.HasChange("roles") {
 		user := getUserFromResourceData(d)
-		if err := nexusClient.UserUpdate(userId, user); err != nil {
+		if err := nexusClient.UserUpdate(userID, user); err != nil {
 			return err
 		}
 	}
@@ -131,12 +140,25 @@ func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
 func resourceUserDelete(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
 
-	userId := d.Get("userid").(string)
+	userID := d.Get("userid").(string)
 
-	if err := nexusClient.UserDelete(userId); err != nil {
+	if err := nexusClient.UserDelete(userID); err != nil {
 		return err
 	}
 
 	d.SetId("")
 	return nil
+}
+
+func resourceUserExists(d *schema.ResourceData, m interface{}) (bool, error) {
+	nexusClient := m.(nexus.Client)
+
+	userID := d.Get("userid").(string)
+
+	user, err := nexusClient.UserRead(userID)
+	if err != nil {
+		return false, err
+	}
+
+	return user != nil, nil
 }
