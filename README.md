@@ -9,6 +9,16 @@ Implemented and tested with Sonatype Nexus 3.20.1.
 
 # Usage
 
+## Provider config
+
+```hcl
+provider "nexus" {
+  url      = "http://127.0.0.1:8080"
+  username = "admin"
+  password = "admin123"
+}
+```
+
 ## nexus_role
 
 ```hcl
