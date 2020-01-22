@@ -39,6 +39,7 @@ func resourceUser() *schema.Resource {
 				Description: "The password for the user.",
 				Type:        schema.TypeString,
 				Required:    true,
+				Sensitive:   true,
 			},
 			"roles": {
 				Description: "The roles which the user has been assigned within Nexus.",
