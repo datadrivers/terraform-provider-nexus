@@ -3,6 +3,7 @@ package nexus
 import (
 	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
 
 func resourceUser() *schema.Resource {
@@ -49,6 +50,10 @@ func resourceUser() *schema.Resource {
 				Description: "The user's status, e.g. active or disabled.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ValidateFunc: validation.StringInSlice([]string{
+					"active",
+					"disabled",
+				}, false),
 			},
 		},
 	}
