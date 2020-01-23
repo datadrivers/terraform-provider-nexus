@@ -11,6 +11,10 @@ func resourceRole() *schema.Resource {
 		Read:   resourceRoleRead,
 		Update: resourceRoleUpdate,
 		Delete: resourceRoleDelete,
+		Exists: resourceRoleExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"roleid": {
@@ -67,16 +71,36 @@ func resourceRoleCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRoleRead(d *schema.ResourceData, m interface{}) error {
+	nexusClient := m.(nexus.Client)
+
+	roleID := d.Get("roleid").(string)
+
+	role, err := nexusClient.RoleRead(roleID)
+	if err != nil {
+		return err
+	}
+
+	if role == nil {
+		d.SetId("")
+		return nil
+	}
+
+	d.SetId(role.ID)
+	d.Set("name", role.Name)
+	d.Set("description", role.Description)
+	d.Set("roles", stringSliceToInterfaceSlice(role.Roles))
+	d.Set("privileges", stringSliceToInterfaceSlice(role.Privileges))
+
 	return nil
 }
 
 func resourceRoleUpdate(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
-	roleId := d.Get("roleid").(string)
+	roleID := d.Get("roleid").(string)
 
 	if d.HasChange("name") || d.HasChange("description") || d.HasChange("privileges") || d.HasChange("roles") {
 		role := getRoleFromResourceData(d)
-		if err := nexusClient.RoleUpdate(roleId, role); err != nil {
+		if err := nexusClient.RoleUpdate(roleID, role); err != nil {
 			return err
 		}
 	}
@@ -87,12 +111,23 @@ func resourceRoleUpdate(d *schema.ResourceData, m interface{}) error {
 func resourceRoleDelete(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
 
-	roleId := d.Get("roleid").(string)
+	roleID := d.Get("roleid").(string)
 
-	if err := nexusClient.RoleDelete(roleId); err != nil {
+	if err := nexusClient.RoleDelete(roleID); err != nil {
 		return err
 	}
 
 	d.SetId("")
 	return nil
+}
+
+func resourceRoleExists(d *schema.ResourceData, m interface{}) (bool, error) {
+	nexusClient := m.(nexus.Client)
+
+	roleID := d.Get("roleid").(string)
+	role, err := nexusClient.RoleRead(roleID)
+	if err != nil {
+		return false, err
+	}
+	return role != nil, nil
 }
