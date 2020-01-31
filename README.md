@@ -160,6 +160,15 @@ resource "nexus_user" "admin" {
 }
 ```
 
+#### nexus_script
+
+```hcl
+resource "nexus_script" "hello_world" {
+  name    = "hello-world"
+  content = "log.info('Hello, World!')"
+}
+```
+
 # Build
 
 There is a [makefile](./GNUmakefile) to build the provider.
