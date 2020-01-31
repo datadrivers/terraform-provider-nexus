@@ -2,6 +2,7 @@ package nexus
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 
 	nexus "github.com/datadrivers/go-nexus-client"
@@ -11,7 +12,7 @@ import (
 )
 
 func TestAccUser_update(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 
 	var user nexus.User
 
@@ -20,17 +21,18 @@ func TestAccUser_update(t *testing.T) {
 	userLastname := fmt.Sprintf("user-lastname-%s", acctest.RandString(10))
 	userEmail := fmt.Sprintf("user-email-%s@example.com", acctest.RandString(10))
 	userPassword := acctest.RandString(16)
+	userRoles := []string{"nx-admin"}
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
-		//CheckDestroy: testAccCheckUserDestroy,
+		// CheckDestroy: testAccCheckUserDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccUserResource(userID, userFirstname, userLastname, userEmail, userPassword, "active"),
+				Config: testAccUserResource(userID, userFirstname, userLastname, userEmail, userPassword, "active", userRoles),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckUserResourceExists("nexus_user.test", &user),
-					testAccCheckUserValues(user, userID, userFirstname, userLastname, userEmail),
+					// testAccCheckUserValues(user, userID, userFirstname, userLastname, userEmail),
 					resource.TestCheckResourceAttr("nexus_user.test", "firstname", userFirstname),
 					resource.TestCheckResourceAttr("nexus_user.test", "lastname", userLastname),
 					resource.TestCheckResourceAttr("nexus_user.test", "email", userEmail),
@@ -45,7 +47,7 @@ func TestAccUser_update(t *testing.T) {
 	})
 }
 
-func testAccUserResource(userID string, firstname string, lastname string, email string, password string, status string) string {
+func testAccUserResource(userID string, firstname string, lastname string, email string, password string, status string, roles []string) string {
 	return fmt.Sprintf(`
 resource "nexus_user" "test" {
 	userid    = "%s"
@@ -54,9 +56,9 @@ resource "nexus_user" "test" {
 	email     = "%s"
 	password  = "%s"
 	status    = "%s"
-	roles     = ["nx-admin"]
+	roles     = ["%s"]
 }
-`, userID, firstname, lastname, email, password, status)
+`, userID, firstname, lastname, email, password, status, strings.Join(roles, "\",\""))
 }
 
 func testAccCheckUserResourceExists(name string, user *nexus.User) resource.TestCheckFunc {
@@ -73,7 +75,7 @@ func testAccCheckUserResourceExists(name string, user *nexus.User) resource.Test
 		}
 		*user = *result
 
-		return nil // fmt.Errorf("User `%s' not found", rs.Primary.ID)
+		return nil
 	}
 }
 

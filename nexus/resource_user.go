@@ -52,9 +52,10 @@ func resourceUser() *schema.Resource {
 				Type:        schema.TypeSet,
 			},
 			"status": {
+				Default:     "active",
 				Description: "The user's status, e.g. active or disabled.",
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				ValidateFunc: validation.StringInSlice([]string{
 					"active",
 					"disabled",
