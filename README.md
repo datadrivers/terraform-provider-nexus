@@ -55,6 +55,82 @@ resource "nexus_repository" "apt_hosted" {
     keypair    = "<keypair>
     passphrase = "<passphrase>
   }
+
+  storage {
+
+  }
+}
+```
+
+```hcl
+resource "nexus_repository" "bower_hosted" {
+  name   = "bower-hosted-repo"
+  format = "bower"
+  type   = "hosted"
+
+  bower {
+
+  }
+
+  storage {
+
+  }
+}
+```
+
+```hcl
+resource "nexus_repository" "docker_hosted" {
+	name   = "docker-hosted-repo"
+	format = "docker"
+	type   = "hosted"
+	online = true
+
+	docker {
+		http_port        = 8082
+		https_port       = 8083
+		force_basic_auth = true
+		v1enabled        = true
+	}
+
+	storage {
+
+	}
+}
+```
+
+```hcl
+resource "nexus_repository" "docker_proxy" {
+	name   = "docker-proxy-repo"
+	type   = "proxy"
+	format = "docker"
+
+	docker {
+		http_port = 8082
+		https_port = 8083
+		force_basic_auth = true
+		v1enabled = true
+	}
+
+    docker_proxy {
+		index_url  = "https://index.docker.io"
+		index_type = "HUB"
+	}
+
+  http_client {
+
+	}
+
+	negative_cache {
+
+	}
+
+	proxy {
+
+	}
+
+	storage {
+
+	}
 }
 ```
 
