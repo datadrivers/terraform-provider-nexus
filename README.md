@@ -21,6 +21,14 @@ provider "nexus" {
 
 ### Data
 
+#### nexus_role
+
+```hcl
+data "nexus_repository" "maven-central" {
+  name = "maven-central"
+}
+```
+
 #### nexus_user
 
 ```hcl

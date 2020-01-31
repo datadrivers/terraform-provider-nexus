@@ -21,7 +21,7 @@ test: fmtcheck
 		xargs -t -n4 go test -cover $(TESTARGS) -timeout=30s -parallel=4
 
 testacc: fmtcheck
-	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m -parallel=4
+	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -cover -timeout 120m -parallel=4
 
 vet:
 	@echo "go vet ."
