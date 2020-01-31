@@ -21,7 +21,7 @@ provider "nexus" {
 
 ### Data
 
-#### nexus_role
+#### nexus_repository
 
 ```hcl
 data "nexus_repository" "maven-central" {
@@ -38,6 +38,25 @@ data "nexus_user" "admin" {
 ```
 
 ### Resources
+
+#### nexus_repository
+
+```hcl
+resource "nexus_repository" "apt_hosted" {
+  name   = "apt-repo"
+  format = "apt"
+  type   = "hosted"
+
+  apt {
+    distribution = "bionic"
+  }
+
+  apt_signing {
+    keypair    = "<keypair>
+    passphrase = "<passphrase>
+  }
+}
+```
 
 #### nexus_role
 
