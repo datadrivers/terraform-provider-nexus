@@ -2,7 +2,6 @@ package nexus
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
 	nexus "github.com/datadrivers/go-nexus-client"
@@ -18,7 +17,7 @@ resource "nexus_script" "test" {
 	content = "%s"
 	type    = "%s"
 }
-`, scriptName, scriptContent, scriptType))
+`, scriptName, scriptContent, scriptType)
 }
 
 func testAccCheckScriptResourceExists(name string, script *nexus.Script) resource.TestCheckFunc {
