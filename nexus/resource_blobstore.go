@@ -23,12 +23,14 @@ func resourceBlobstore() *schema.Resource {
 				Computed: true,
 			},
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "Blobstore name",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"path": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "The path to the blobstore contents. This can be an absolute path to anywhere on the system nxrm has access to or it can be a path relative to the sonatype-work directory",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"soft_quota": {
 				Description: "The limit in MB.",
