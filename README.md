@@ -1,15 +1,14 @@
-Terraform provider Nexus
-==========
+# Terraform provider Nexus
 
-# Introduction
+## Introduction
 
 Terraform provider to configure Sonatype Nexus using it's API.
 
 Implemented and tested with Sonatype Nexus 3.20.1.
 
-# Usage
+## Usage
 
-## Provider config
+### Provider config
 
 ```hcl
 provider "nexus" {
@@ -114,7 +113,7 @@ resource "nexus_repository" "docker_proxy" {
   docker_proxy {
     index_url  = "https://index.docker.io"
     index_type = "HUB"
-	}
+  }
 
   http_client {
 
@@ -169,14 +168,14 @@ resource "nexus_script" "hello_world" {
 }
 ```
 
-# Build
+## Build
 
 There is a [makefile](./GNUmakefile) to build the provider.
 
 ```sh
-$ make
+make
 ```
 
-# Author
+## Author
 
 [Datadrivers GmbH](https://www.datadrivers.de)
