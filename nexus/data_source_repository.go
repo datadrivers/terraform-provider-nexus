@@ -98,6 +98,69 @@ func dataSourceRepository() *schema.Resource {
 					},
 				},
 			},
+			"maven": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"version_policy": {
+							Default:  "RELEASE",
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"layout_policy": {
+							Default:  "PERMISSIVE",
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+					},
+				},
+			},
+			"negative_cache": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Default:     false,
+							Description: "Whether to cache responses for content not present in the proxied repository",
+							Optional:    true,
+							Type:        schema.TypeBool,
+						},
+						"ttl": {
+							Default:     1440,
+							Description: "How long to cache the fact that a file was not found in the repository (in minutes)",
+							Optional:    true,
+							Type:        schema.TypeInt,
+						},
+					},
+				},
+			},
+			"proxy": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"content_max_age": {
+							Type:     schema.TypeInt,
+							Optional: true,
+							Default:  1440,
+						},
+						"metadata_max_age": {
+							Type:     schema.TypeInt,
+							Optional: true,
+							Default:  1440,
+						},
+						"remote_url": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+					},
+				},
+			},
 			"storage": {
 				Type:     schema.TypeList,
 				Optional: true,

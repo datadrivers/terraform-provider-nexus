@@ -1,11 +1,9 @@
 package nexus
 
 import (
-	"encoding/json"
 	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
-	"io/ioutil"
 )
 
 func resourceRepository() *schema.Resource {
@@ -15,9 +13,14 @@ func resourceRepository() *schema.Resource {
 		Update: resourceRepositoryUpdate,
 		Delete: resourceRepositoryDelete,
 		Exists: resourceRepositoryExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"format": {
+				Description:  "Repository format",
+				ForceNew:     true,
 				Required:     true,
 				Type:         schema.TypeString,
 				ValidateFunc: validation.StringInSlice([]string{"apt", "bower", "docker", "maven2", "nuget", "pypi"}, false),
@@ -34,6 +37,8 @@ func resourceRepository() *schema.Resource {
 				Type:        schema.TypeBool,
 			},
 			"type": {
+				Description:  "Repository type",
+				ForceNew:     true,
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringInSlice([]string{"group", "hosted", "proxy"}, false),
@@ -54,7 +59,7 @@ func resourceRepository() *schema.Resource {
 			"apt": {
 				Type:          schema.TypeList,
 				Optional:      true,
-				ConflictsWith: []string{"docker"},
+				ConflictsWith: []string{"bower", "docker", "docker_proxy", "maven"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"distribution": {
@@ -67,7 +72,7 @@ func resourceRepository() *schema.Resource {
 			"apt_signing": {
 				Type:          schema.TypeList,
 				Optional:      true,
-				ConflictsWith: []string{"docker"},
+				ConflictsWith: []string{"bower", "docker", "docker_proxy", "maven"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"keypair": {
@@ -84,7 +89,7 @@ func resourceRepository() *schema.Resource {
 			"bower": {
 				Type:          schema.TypeList,
 				Optional:      true,
-				ConflictsWith: []string{"apt", "apt_signing", "docker"},
+				ConflictsWith: []string{"apt", "apt_signing", "docker", "maven"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"rewrite_package_urls": {
@@ -98,7 +103,7 @@ func resourceRepository() *schema.Resource {
 			"docker": {
 				Type:          schema.TypeList,
 				Optional:      true,
-				ConflictsWith: []string{"apt", "apt_signing", "bower"},
+				ConflictsWith: []string{"apt", "apt_signing", "bower", "maven"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"force_basic_auth": {
@@ -127,9 +132,10 @@ func resourceRepository() *schema.Resource {
 				},
 			},
 			"docker_proxy": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
+				ConflictsWith: []string{"apt", "apt_signing", "bower", "maven"},
+				Type:          schema.TypeList,
+				Optional:      true,
+				MaxItems:      1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"index_type": {
@@ -153,6 +159,36 @@ func resourceRepository() *schema.Resource {
 			"http_client": {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"authentication": {
+							Type:     schema.TypeList,
+							Required: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"type": {
+										Description:  "Authentication type",
+										Required:     true,
+										Type:         schema.TypeString,
+										ValidateFunc: validation.StringInSlice([]string{"ntlm", "username"}, false),
+									},
+									"username": {
+										Description: "",
+										Optional:    true,
+										Type:        schema.TypeString,
+									},
+									"ntlm_domain": {
+										Description: "",
+										Optional:    true,
+										Type:        schema.TypeString,
+									},
+									"ntlm_host": {
+										Description: "",
+										Optional:    true,
+										Type:        schema.TypeString,
+									},
+								},
+							},
+						},
 						"auto_block": {
 							Default:     true,
 							Description: "Whether to auto-block outbound connections if remote peer is detected as unreachable/unresponsive",
@@ -192,6 +228,25 @@ func resourceRepository() *schema.Resource {
 				MaxItems: 1,
 				Optional: true,
 				Type:     schema.TypeList,
+			},
+			"maven": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"version_policy": {
+							Default:  "RELEASE",
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"layout_policy": {
+							Default:  "PERMISSIVE",
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+					},
+				},
 			},
 			"negative_cache": {
 				Type:     schema.TypeList,
@@ -282,6 +337,7 @@ func repositoryStorageDefault() (interface{}, error) {
 	}
 	return []map[string]interface{}{data}, nil
 }
+
 func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 	repo := nexus.Repository{
 		Name:   d.Get("name").(string),
@@ -349,9 +405,10 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		dockerProxyList := d.Get("docker_proxy").([]interface{})
 		dockerProxyConfig := dockerProxyList[0].(map[string]interface{})
 
+		indexURL := dockerProxyConfig["index_url"].(string)
 		repo.RepositoryDockerProxy = &nexus.RepositoryDockerProxy{
 			IndexType: dockerProxyConfig["index_type"].(string),
-			IndexURL:  dockerProxyConfig["index_url"].(string),
+			IndexURL:  &indexURL,
 		}
 	}
 
@@ -369,13 +426,22 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 			authList := httpClientConfig["authentication"].([]interface{})
 			authConfig := authList[0].(map[string]interface{})
 
-			auth := &nexus.RepositoryHTTPClientAuthentication{
+			repo.RepositoryHTTPClient.Authentication = nexus.RepositoryHTTPClientAuthentication{
 				Type:       authConfig["type"].(string),
 				Username:   authConfig["username"].(string),
 				NTLMDomain: authConfig["ntlm_domain"].(string),
 				NTLMHost:   authConfig["ntlm_host"].(string),
 			}
-			repo.RepositoryHTTPClient.Authentication = *auth
+		}
+	}
+
+	if _, ok := d.GetOk("maven"); ok {
+		mavenList := d.Get("maven").([]interface{})
+		mavenConfig := mavenList[0].(map[string]interface{})
+
+		repo.RepositoryMaven = &nexus.RepositoryMaven{
+			VersionPolicy: mavenConfig["version_policy"].(string),
+			LayoutPolicy:  mavenConfig["layout_policy"].(string),
 		}
 	}
 
@@ -403,10 +469,11 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		storageList := d.Get("storage").([]interface{})
 		storageConfig := storageList[0].(map[string]interface{})
 
+		writePolicy := storageConfig["write_policy"].(string)
 		repo.RepositoryStorage = &nexus.RepositoryStorage{
 			BlobStoreName:               storageConfig["blob_store_name"].(string),
 			StrictContentTypeValidation: storageConfig["strict_content_type_validation"].(bool),
-			WritePolicy:                 storageConfig["write_policy"].(string),
+			WritePolicy:                 &writePolicy,
 		}
 	}
 
@@ -444,17 +511,23 @@ func setRepositoryToResourceData(repo *nexus.Repository, d *schema.ResourceData)
 		}
 	}
 
-	// if repo.RepositoryNegativeCache != nil {
-	// 	if err := d.Set("negative_cache", flattenRepositoryNegativeCache(repo.RepositoryNegativeCache)); err != nil {
-	// 		return err
-	// 	}
-	// }
+	if repo.RepositoryMaven != nil {
+		if err := d.Set("maven", flattenRepositoryMaven(repo.RepositoryMaven)); err != nil {
+			return err
+		}
+	}
 
-	// if repo.RepositoryProxy != nil {
-	// 	if err := d.Set("proxy", flattenRepositoryProxy(repo.RepositoryProxy)); err != nil {
-	// 		return err
-	// 	}
-	// }
+	if repo.RepositoryNegativeCache != nil {
+		if err := d.Set("negative_cache", flattenRepositoryNegativeCache(repo.RepositoryNegativeCache)); err != nil {
+			return err
+		}
+	}
+
+	if repo.RepositoryProxy != nil {
+		if err := d.Set("proxy", flattenRepositoryProxy(repo.RepositoryProxy)); err != nil {
+			return err
+		}
+	}
 
 	//	if repo.RepositoryStorage != nil {
 	if err := d.Set("storage", flattenRepositoryStorage(repo.RepositoryStorage)); err != nil {
@@ -513,6 +586,14 @@ func flattenRepositoryDockerProxy(dockerProxy *nexus.RepositoryDockerProxy) []ma
 	return []map[string]interface{}{data}
 }
 
+func flattenRepositoryMaven(maven *nexus.RepositoryMaven) []map[string]interface{} {
+	data := map[string]interface{}{
+		"version_policy": maven.VersionPolicy,
+		"layout_policy":  maven.LayoutPolicy,
+	}
+	return []map[string]interface{}{data}
+}
+
 func flattenRepositoryNegativeCache(negativeCache *nexus.RepositoryNegativeCache) []map[string]interface{} {
 	data := map[string]interface{}{
 		"enabled": negativeCache.Enabled,
@@ -544,10 +625,8 @@ func resourceRepositoryCreate(d *schema.ResourceData, m interface{}) error {
 	client := m.(nexus.Client)
 
 	repo := getRepositoryFromResourceData(d)
-	repoFormat := d.Get("format").(string)
-	repoType := d.Get("type").(string)
 
-	if err := client.RepositoryCreate(repo, repoFormat, repoType); err != nil {
+	if err := client.RepositoryCreate(repo); err != nil {
 		return err
 	}
 
@@ -565,12 +644,6 @@ func resourceRepositoryRead(d *schema.ResourceData, m interface{}) error {
 
 	repo, err := nexusClient.RepositoryRead(id)
 	if err != nil {
-		return err
-	}
-
-	data, err := json.Marshal(repo)
-
-	if err := ioutil.WriteFile("/tmp/test.log", data, 0644); err != nil {
 		return err
 	}
 
