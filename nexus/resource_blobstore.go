@@ -1,10 +1,9 @@
 package nexus
 
 import (
-	"fmt"
-
 	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
 
 func resourceBlobstore() *schema.Resource {
@@ -15,25 +14,51 @@ func resourceBlobstore() *schema.Resource {
 		Delete: resourceBlobstoreDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"type": {
-				Type:     schema.TypeString,
-				Required: true,
+			"available_space_in_bytes": {
+				Type:     schema.TypeInt,
+				Computed: true,
 			},
 			"blob_count": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
+			"name": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"path": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"soft_quota": {
+				Description: "The limit in MB.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"limit": {
+							Default:  0,
+							Optional: true,
+							Type:     schema.TypeInt,
+						},
+						"type": {
+							Description:  "The type to use such as spaceRemainingQuota, or spaceUsedQuota",
+							Optional:     true,
+							Type:         schema.TypeString,
+							ValidateFunc: validation.StringInSlice([]string{"spaceRemainingQuota", "spaceUsedQuota"}, false),
+						},
+					},
+				},
+				MaxItems: 1,
+				Optional: true,
+				Type:     schema.TypeList,
+			},
 			"total_size_in_bytes": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"available_space_in_bytes": {
-				Type:     schema.TypeInt,
-				Computed: true,
+			"type": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
 			},
 		},
 	}
@@ -43,6 +68,7 @@ func getBlobstoreFromResourceData(d *schema.ResourceData) nexus.Blobstore {
 	bs := nexus.Blobstore{
 		Name: d.Get("name").(string),
 		Type: d.Get("type").(string),
+		Path: d.Get("path").(string),
 	}
 
 	if _, ok := d.GetOk("soft_quota"); ok {
@@ -90,7 +116,8 @@ func resourceBlobstoreRead(d *schema.ResourceData, m interface{}) error {
 	d.Set("available_space_in_bytes", bs.AvailableSpaceInBytes)
 	d.Set("blob_count", bs.BlobCount)
 	d.Set("name", bs.Name)
-	d.Set("path", bs.Path)
+	// Path not returned by API :-/
+	//d.Set("path", bs.Path)
 	if bs.BlobstoreSoftQuota != nil {
 		if err := d.Set("soft_quota", flattenBlobstoreSoftQuota(bs.BlobstoreSoftQuota)); err != nil {
 			return err
@@ -111,9 +138,27 @@ func flattenBlobstoreSoftQuota(softQuota *nexus.BlobstoreSoftQuota) []map[string
 }
 
 func resourceBlobstoreUpdate(d *schema.ResourceData, m interface{}) error {
-	return fmt.Errorf("resourceBlobstoreUpdate not yet implemented")
+	nexusClient := m.(nexus.Client)
+	id := d.Id()
+
+	if d.HasChange("path") {
+		bs := getBlobstoreFromResourceData(d)
+		if err := nexusClient.BlobstoreUpdate(id, bs); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func resourceBlobstoreDelete(d *schema.ResourceData, m interface{}) error {
-	return fmt.Errorf("resourceBlobstoreDelete not yet implemented")
+	nexusClient := m.(nexus.Client)
+	id := d.Id()
+
+	if err := nexusClient.BlobstoreDelete(id); err != nil {
+		return err
+	}
+
+	d.SetId("")
+
+	return nil
 }
