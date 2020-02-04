@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go v0.52.0 // indirect
 	cloud.google.com/go/storage v1.5.0 // indirect
 	github.com/aws/aws-sdk-go v1.28.9 // indirect
-	github.com/datadrivers/go-nexus-client v0.3.0
+	github.com/datadrivers/go-nexus-client v0.4.0
 	github.com/fatih/color v1.9.0 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.3.3 // indirect
