@@ -10,8 +10,9 @@ import (
 func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
 		DataSourcesMap: map[string]*schema.Resource{
-			"nexus_user":       dataSourceUser(),
+			"nexus_blobstore":  dataSourceBlobstore(),
 			"nexus_repository": dataSourceRepository(),
+			"nexus_user":       dataSourceUser(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"nexus_repository": resourceRepository(),
