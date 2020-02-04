@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestResourceBlobstoreFile(t *testing.T) {
+func TestAccResourceBlobstoreFile(t *testing.T) {
 	bsName := fmt.Sprintf("test-blobstore-%d", acctest.RandIntRange(0, 99))
 	bsType := nexus.BlobstoreTypeFile
 	bsPath := fmt.Sprintf("/nexus-data/%s", bsName)
@@ -42,6 +42,5 @@ resource "nexus_blobstore" "acceptance" {
 		limit = %d
 		type  = "%s"
 	}
-}
-	`, name, path, bsType, quotaLimit, quotaType)
+}`, name, path, bsType, quotaLimit, quotaType)
 }
