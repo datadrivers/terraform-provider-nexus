@@ -177,10 +177,10 @@ resource "nexus_repository" "docker_proxy" {
 	format = "docker"
 
 	docker {
-		http_port = %d
-		https_port = %d
+		http_port        = %d
+		https_port       = %d
 		force_basic_auth = true
-		v1enabled = true
+		v1enabled        = true
 	}
 
     docker_proxy {
@@ -189,7 +189,9 @@ resource "nexus_repository" "docker_proxy" {
 	}
 
     http_client {
-
+		authentication {
+			type = "username"
+		}
 	}
 
 	negative_cache {
@@ -201,7 +203,7 @@ resource "nexus_repository" "docker_proxy" {
 	}
 
 	storage {
-
+		write_policy = "ALLOW"
 	}
 }`, name, httpPort, httpsPort)
 }
