@@ -405,9 +405,10 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		dockerProxyList := d.Get("docker_proxy").([]interface{})
 		dockerProxyConfig := dockerProxyList[0].(map[string]interface{})
 
+		indexURL := dockerProxyConfig["index_url"].(string)
 		repo.RepositoryDockerProxy = &nexus.RepositoryDockerProxy{
 			IndexType: dockerProxyConfig["index_type"].(string),
-			IndexURL:  dockerProxyConfig["index_url"].(string),
+			IndexURL:  &indexURL,
 		}
 	}
 
@@ -425,13 +426,12 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 			authList := httpClientConfig["authentication"].([]interface{})
 			authConfig := authList[0].(map[string]interface{})
 
-			auth := &nexus.RepositoryHTTPClientAuthentication{
+			repo.RepositoryHTTPClient.Authentication = nexus.RepositoryHTTPClientAuthentication{
 				Type:       authConfig["type"].(string),
 				Username:   authConfig["username"].(string),
 				NTLMDomain: authConfig["ntlm_domain"].(string),
 				NTLMHost:   authConfig["ntlm_host"].(string),
 			}
-			repo.RepositoryHTTPClient.Authentication = *auth
 		}
 	}
 
@@ -469,10 +469,11 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		storageList := d.Get("storage").([]interface{})
 		storageConfig := storageList[0].(map[string]interface{})
 
+		writePolicy := storageConfig["write_policy"].(string)
 		repo.RepositoryStorage = &nexus.RepositoryStorage{
 			BlobStoreName:               storageConfig["blob_store_name"].(string),
 			StrictContentTypeValidation: storageConfig["strict_content_type_validation"].(bool),
-			WritePolicy:                 storageConfig["write_policy"].(string),
+			WritePolicy:                 &writePolicy,
 		}
 	}
 
@@ -624,10 +625,8 @@ func resourceRepositoryCreate(d *schema.ResourceData, m interface{}) error {
 	client := m.(nexus.Client)
 
 	repo := getRepositoryFromResourceData(d)
-	repoFormat := d.Get("format").(string)
-	repoType := d.Get("type").(string)
 
-	if err := client.RepositoryCreate(repo, repoFormat, repoType); err != nil {
+	if err := client.RepositoryCreate(repo); err != nil {
 		return err
 	}
 
