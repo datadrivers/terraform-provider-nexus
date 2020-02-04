@@ -21,6 +21,14 @@ provider "nexus" {
 
 ### Data
 
+#### nexus_blobstore
+
+```hcl
+data "nexus_blobstore" "default" {
+  name = "default
+}
+```
+
 #### nexus_repository
 
 ```hcl
@@ -38,6 +46,21 @@ data "nexus_user" "admin" {
 ```
 
 ### Resources
+
+#### nexus_blobstore
+
+```hcl
+resource "nexus_blobstore" "default" {
+  name = "blobstore-01"
+  type = "File"
+  path = "/nexus-data/blobstore-01"
+
+  soft_quota {
+    limit = 1024
+    type  = "spaceRemainingQuota"
+  }
+}
+```
 
 #### nexus_repository
 
@@ -105,10 +128,10 @@ resource "nexus_repository" "docker_proxy" {
   format = "docker"
 
   docker {
-    http_port = 8082
-    https_port = 8083
+    http_port        = 8082
+    https_port       = 8083
     force_basic_auth = true
-    v1enabled = true
+    v1enabled        = true
   }
 
   docker_proxy {
