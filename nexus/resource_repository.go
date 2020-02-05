@@ -389,15 +389,21 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		}
 
 		if v, ok := dockerConfig["http_port"]; ok {
-			port := new(int)
-			*port = v.(int)
-			repo.RepositoryDocker.HTTPPort = port
+			value := v.(int)
+			if value > 0 {
+				port := new(int)
+				*port = value
+				repo.RepositoryDocker.HTTPPort = port
+			}
 		}
 
 		if v, ok := dockerConfig["https_port"]; ok {
-			port := new(int)
-			*port = v.(int)
-			repo.RepositoryDocker.HTTPSPort = port
+			value := v.(int)
+			if value > 0 {
+				port := new(int)
+				*port = v.(int)
+				repo.RepositoryDocker.HTTPSPort = port
+			}
 		}
 	}
 
