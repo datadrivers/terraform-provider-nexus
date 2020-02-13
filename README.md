@@ -74,12 +74,14 @@ resource "nexus_repository" "apt_hosted" {
   }
 
   apt_signing {
-    keypair    = "<keypair>
-    passphrase = "<passphrase>
+    keypair    = "<keypair>"
+    passphrase = "<passphrase>"
   }
 
   storage {
-
+    blob_store_name                = "default"
+    strict_content_type_validation = true
+    write_policy                   = "ALLOW_ONCE"
   }
 }
 ```
@@ -91,11 +93,13 @@ resource "nexus_repository" "bower_hosted" {
   type   = "hosted"
 
   bower {
-
+    rewrite_package_urls = false
   }
 
   storage {
-
+    blob_store_name                = "default"
+    strict_content_type_validation = true
+    write_policy                   = "ALLOW_ONCE"
   }
 }
 ```
@@ -115,7 +119,9 @@ resource "nexus_repository" "docker_hosted" {
   }
 
   storage {
-
+    blob_store_name                = "default"
+    strict_content_type_validation = true
+    write_policy                   = "ALLOW_ONCE"
   }
 }
 ```
@@ -151,7 +157,9 @@ resource "nexus_repository" "docker_proxy" {
   }
 
   storage {
-
+    blob_store_name                = "default"
+    strict_content_type_validation = true
+    write_policy                   = "ALLOW_ONCE"
   }
 }
 ```
