@@ -48,6 +48,12 @@ data "nexus_user" "admin" {
 
 #### nexus_blobstore
 
+Blobstore can be imported using
+
+```shell
+$ terraform import nexus_blobstore.default default
+```
+
 ```hcl
 resource "nexus_blobstore" "default" {
   name = "blobstore-01"
@@ -62,6 +68,11 @@ resource "nexus_blobstore" "default" {
 ```
 
 #### nexus_repository
+
+Repository can be imported using
+```shell
+$ terraform import nexus_repository.maven_central maven-central
+```
 
 ```hcl
 resource "nexus_repository" "apt_hosted" {
@@ -166,6 +177,11 @@ resource "nexus_repository" "docker_proxy" {
 
 #### nexus_role
 
+Role can be imported using
+```shell
+$ terraform import nexus_role.nx_admin nx-admin
+```
+
 ```hcl
 resource "nexus_role" "nx-admin" {
   roleid      = "nx-admin"
@@ -177,6 +193,11 @@ resource "nexus_role" "nx-admin" {
 ```
 
 #### nexus_user
+
+User can be imported using
+```shell
+$ terraform import nexus_user.admin admin
+````
 
 ```hcl
 resource "nexus_user" "admin" {
@@ -191,6 +212,11 @@ resource "nexus_user" "admin" {
 ```
 
 #### nexus_script
+
+Script can be imported using
+```shell
+$ terraform import nexus_script.my_script my-script
+```
 
 ```hcl
 resource "nexus_script" "hello_world" {
