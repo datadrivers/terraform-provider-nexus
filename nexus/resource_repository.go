@@ -43,19 +43,6 @@ func resourceRepository() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validation.StringInSlice([]string{"group", "hosted", "proxy"}, false),
 			},
-			"cleanup": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"policy_names": {
-							Elem:     &schema.Schema{Type: schema.TypeString},
-							Optional: true,
-							Type:     schema.TypeSet,
-						},
-					},
-				},
-			},
 			"apt": {
 				Type:          schema.TypeList,
 				Optional:      true,
@@ -89,13 +76,26 @@ func resourceRepository() *schema.Resource {
 			"bower": {
 				Type:          schema.TypeList,
 				Optional:      true,
-				ConflictsWith: []string{"apt", "apt_signing", "docker", "maven"},
+				ConflictsWith: []string{"apt", "apt_signing", "docker", "docker_proxy", "maven"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"rewrite_package_urls": {
 							Type:     schema.TypeBool,
 							Optional: true,
 							Default:  false,
+						},
+					},
+				},
+			},
+			"cleanup": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"policy_names": {
+							Elem:     &schema.Schema{Type: schema.TypeString},
+							Optional: true,
+							Type:     schema.TypeSet,
 						},
 					},
 				},
@@ -365,6 +365,15 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		}
 	}
 
+	if _, ok := d.GetOk("bower"); ok {
+		bowerList := d.Get("bower").([]interface{})
+		bowerConfig := bowerList[0].(map[string]interface{})
+
+		repo.RepositoryBower = &nexus.RepositoryBower{
+			RewritePackageUrls: bowerConfig["rewrite_package_urls"].(bool),
+		}
+	}
+
 	if _, ok := d.GetOk("cleanup"); ok {
 		cleanupList := d.Get("cleanup").([]interface{})
 		cleanupConfig := cleanupList[0].(map[string]interface{})
@@ -505,6 +514,12 @@ func setRepositoryToResourceData(repo *nexus.Repository, d *schema.ResourceData)
 		}
 	}
 
+	if repo.RepositoryBower != nil {
+		if err := d.Set("bower", flattenRepositoryBower(repo.RepositoryBower)); err != nil {
+			return err
+		}
+	}
+
 	if repo.RepositoryDocker != nil {
 		if err := d.Set("docker", flattenRepositoryDocker(repo.RepositoryDocker)); err != nil {
 			return err
@@ -556,6 +571,13 @@ func flattenRepositoryAptSigning(aptSigning *nexus.RepositoryAptSigning) []map[s
 	data := map[string]interface{}{
 		"keypair":    aptSigning.Keypair,
 		"passphrase": aptSigning.Passphrase,
+	}
+	return []map[string]interface{}{data}
+}
+
+func flattenRepositoryBower(bower *nexus.RepositoryBower) []map[string]interface{} {
+	data := map[string]interface{}{
+		"rewrite_package_urls": bower.RewritePackageUrls,
 	}
 	return []map[string]interface{}{data}
 }
@@ -646,9 +668,7 @@ func resourceRepositoryCreate(d *schema.ResourceData, m interface{}) error {
 func resourceRepositoryRead(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
 
-	id := d.Id()
-
-	repo, err := nexusClient.RepositoryRead(id)
+	repo, err := nexusClient.RepositoryRead(d.Id())
 	if err != nil {
 		return err
 	}
@@ -668,20 +688,12 @@ func resourceRepositoryUpdate(d *schema.ResourceData, m interface{}) error {
 func resourceRepositoryDelete(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
 
-	id := d.Get("name").(string)
-
-	return nexusClient.RepositoryDelete(id)
+	return nexusClient.RepositoryDelete(d.Id())
 }
 
 func resourceRepositoryExists(d *schema.ResourceData, m interface{}) (bool, error) {
 	nexusClient := m.(nexus.Client)
 
-	id := d.Get("name").(string)
-
-	repo, err := nexusClient.RepositoryRead(id)
-	if err != nil {
-		return false, nil
-	}
-
-	return repo != nil, nil
+	repo, err := nexusClient.RepositoryRead(d.Id())
+	return repo != nil, err
 }
