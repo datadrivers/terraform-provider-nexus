@@ -27,6 +27,14 @@ func TestAccResourceBlobstoreFile(t *testing.T) {
 					resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "type", bsType),
 				),
 			},
+			{
+				ResourceName:      "nexus_blobstore.acceptance",
+				ImportState:       true,
+				ImportStateId:     bsName,
+				ImportStateVerify: true,
+				// path is not returned by API
+				ImportStateVerifyIgnore: []string{"path"},
+			},
 		},
 	})
 }
