@@ -12,6 +12,8 @@ import (
 )
 
 func TestAccRole(t *testing.T) {
+	t.Parallel()
+
 	var role nexus.Role
 
 	roleID := acctest.RandString(10)
@@ -24,24 +26,31 @@ func TestAccRole(t *testing.T) {
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
+			// The first step creates a basic role
 			{
 				Config: testAccRoleResource(roleID, roleName, roleDescription, rolePrivileges, roleRoles),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRoleResourceExists("nexus_role.test", &role),
+					resource.TestCheckResourceAttr("nexus_role.acceptance", "description", roleDescription),
+					resource.TestCheckResourceAttr("nexus_role.acceptance", "name", roleName),
+					resource.TestCheckResourceAttr("nexus_role.acceptance", "roleid", roleID),
+					// resource.TestCheckResourceAttr("nexus_role.acceptance", "roles", roleRoles),
+					// resource.TestCheckResourceAttr("nexus_role.acceptance", "privileges", rolePrivileges),
+					testAccCheckRoleResourceExists("nexus_role.acceptance", &role),
 				),
 			},
-			// {
-			// 	ResourceName:      "nexus_role.test",
-			// 	ImportState:       true,
-			// 	ImportStateVerify: true,
-			// },
+			{
+				ResourceName:      "nexus_role.acceptance",
+				ImportStateId:     roleID,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
 
 func testAccRoleResource(id string, name string, description string, privileges []string, roles []string) string {
 	return fmt.Sprintf(`
-resource "nexus_role" "test" {
+resource "nexus_role" "acceptance" {
 	roleid = "%s"
 	name   = "%s"
 	description = "%s"

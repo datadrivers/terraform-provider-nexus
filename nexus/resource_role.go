@@ -73,9 +73,7 @@ func resourceRoleCreate(d *schema.ResourceData, m interface{}) error {
 func resourceRoleRead(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
 
-	roleID := d.Get("roleid").(string)
-
-	role, err := nexusClient.RoleRead(roleID)
+	role, err := nexusClient.RoleRead(d.Id())
 	if err != nil {
 		return err
 	}
@@ -85,11 +83,11 @@ func resourceRoleRead(d *schema.ResourceData, m interface{}) error {
 		return nil
 	}
 
-	d.SetId(role.ID)
-	d.Set("name", role.Name)
 	d.Set("description", role.Description)
-	d.Set("roles", stringSliceToInterfaceSlice(role.Roles))
+	d.Set("name", role.Name)
 	d.Set("privileges", stringSliceToInterfaceSlice(role.Privileges))
+	d.Set("roleid", role.ID)
+	d.Set("roles", stringSliceToInterfaceSlice(role.Roles))
 
 	return nil
 }
@@ -111,9 +109,7 @@ func resourceRoleUpdate(d *schema.ResourceData, m interface{}) error {
 func resourceRoleDelete(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
 
-	roleID := d.Get("roleid").(string)
-
-	if err := nexusClient.RoleDelete(roleID); err != nil {
+	if err := nexusClient.RoleDelete(d.Id()); err != nil {
 		return err
 	}
 
@@ -124,10 +120,6 @@ func resourceRoleDelete(d *schema.ResourceData, m interface{}) error {
 func resourceRoleExists(d *schema.ResourceData, m interface{}) (bool, error) {
 	nexusClient := m.(nexus.Client)
 
-	roleID := d.Get("roleid").(string)
-	role, err := nexusClient.RoleRead(roleID)
-	if err != nil {
-		return false, err
-	}
-	return role != nil, nil
+	role, err := nexusClient.RoleRead(d.Id())
+	return role != nil, err
 }
