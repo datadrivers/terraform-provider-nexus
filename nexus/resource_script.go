@@ -74,7 +74,6 @@ func resourceScriptRead(d *schema.ResourceData, m interface{}) error {
 		return nil
 	}
 
-	d.SetId(script.Name)
 	d.Set("name", script.Name)
 	d.Set("type", script.Type)
 	d.Set("content", script.Content)
@@ -114,8 +113,5 @@ func resourceScriptExists(d *schema.ResourceData, m interface{}) (bool, error) {
 	nexusClient := m.(nexus.Client)
 
 	script, err := nexusClient.ScriptRead(d.Id())
-	if err != nil {
-		return false, err
-	}
-	return script != nil, nil
+	return script != nil, err
 }
