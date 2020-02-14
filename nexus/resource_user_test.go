@@ -31,25 +31,27 @@ func TestAccUser_update(t *testing.T) {
 			{
 				Config: testAccUserResource(userID, userFirstname, userLastname, userEmail, userPassword, "active", userRoles),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckUserResourceExists("nexus_user.test", &user),
+					testAccCheckUserResourceExists("nexus_user.acceptance", &user),
 					// testAccCheckUserValues(user, userID, userFirstname, userLastname, userEmail),
-					resource.TestCheckResourceAttr("nexus_user.test", "firstname", userFirstname),
-					resource.TestCheckResourceAttr("nexus_user.test", "lastname", userLastname),
-					resource.TestCheckResourceAttr("nexus_user.test", "email", userEmail),
+					resource.TestCheckResourceAttr("nexus_user.acceptance", "firstname", userFirstname),
+					resource.TestCheckResourceAttr("nexus_user.acceptance", "lastname", userLastname),
+					resource.TestCheckResourceAttr("nexus_user.acceptance", "email", userEmail),
 				),
 			},
-			// {
-			// 	ResourceName:      "nexus_user.test",
-			// 	ImportState:       true,
-			// 	ImportStateVerify: true,
-			// },
+			{
+				ResourceName:            "nexus_user.acceptance",
+				ImportStateId:           userID,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"password"},
+			},
 		},
 	})
 }
 
 func testAccUserResource(userID string, firstname string, lastname string, email string, password string, status string, roles []string) string {
 	return fmt.Sprintf(`
-resource "nexus_user" "test" {
+resource "nexus_user" "acceptance" {
 	userid    = "%s"
 	firstname = "%s"
 	lastname  = "%s"

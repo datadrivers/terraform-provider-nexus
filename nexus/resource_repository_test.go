@@ -10,6 +10,8 @@ import (
 )
 
 func TestAccRepositoryAptHosted(t *testing.T) {
+	t.Parallel()
+
 	repoName := fmt.Sprintf("test-repo-%s", acctest.RandString(10))
 	repoAptDistribution := "bionic"
 	repoAptSigningKeypair := acctest.RandString(10)
@@ -22,6 +24,19 @@ func TestAccRepositoryAptHosted(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccRepositoryAptHosted(repoName, repoAptDistribution, repoAptSigningKeypair, repoAptSigningPassphrase, repoCleanupPolicyNames),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("nexus_repository.apt_hosted", "name", repoName),
+					resource.TestCheckResourceAttr("nexus_repository.apt_hosted", "format", "apt"),
+					resource.TestCheckResourceAttr("nexus_repository.apt_hosted", "type", "hosted"),
+				),
+			},
+			{
+				ResourceName:      "nexus_repository.apt_hosted",
+				ImportStateId:     repoName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				// apt_signing not returned by API
+				ImportStateVerifyIgnore: []string{"apt_signing"},
 			},
 		},
 	})
@@ -52,6 +67,7 @@ resource "nexus_repository" "apt_hosted" {
 
 func TestAccRpositoryBowerHosted(t *testing.T) {
 	repoName := fmt.Sprintf("test-repo-%s", acctest.RandString(10))
+	bowerRewritePackageURLs := true
 
 	resource.Test(t, resource.TestCase{
 
@@ -59,27 +75,40 @@ func TestAccRpositoryBowerHosted(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRepositoryBowerHosted(repoName),
+				Config: testAccRepositoryBowerHosted(repoName, bowerRewritePackageURLs),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "name", repoName),
+					resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "format", "bower"),
+					resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "type", "hosted"),
+				),
+			},
+			{
+				ResourceName:      "nexus_repository.bower_hosted",
+				ImportStateId:     repoName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				// bower attribute not returned by API
+				ImportStateVerifyIgnore: []string{"bower"},
 			},
 		},
 	})
 }
 
-func testAccRepositoryBowerHosted(name string) string {
+func testAccRepositoryBowerHosted(name string, rewritePackageURLs bool) string {
 	return fmt.Sprintf(`
 resource "nexus_repository" "bower_hosted" {
 	name   = "%s"
-	format = "%s"
-	type   = "%s"
+	format = "bower"
+	type   = "hosted"
 
 	bower {
-		
+		rewrite_package_urls = %v
 	}
 
 	storage {
 
 	}
-}`, name, "bower", "hosted")
+}`, name, rewritePackageURLs)
 }
 
 func TestAccRepositoryDockerHostedWithPorts(t *testing.T) {
@@ -94,6 +123,17 @@ func TestAccRepositoryDockerHostedWithPorts(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccRepositoryDockerHostedWithPorts(repoName, repoOnline, repoHTTPPort, repoHTTPSPort),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("nexus_repository.docker_hosted", "name", repoName),
+					resource.TestCheckResourceAttr("nexus_repository.docker_hosted", "format", "docker"),
+					resource.TestCheckResourceAttr("nexus_repository.docker_hosted", "type", "hosted"),
+				),
+			},
+			{
+				ResourceName:      "nexus_repository.docker_hosted",
+				ImportStateId:     repoName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})

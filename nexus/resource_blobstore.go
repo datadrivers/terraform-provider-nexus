@@ -12,6 +12,9 @@ func resourceBlobstore() *schema.Resource {
 		Read:   resourceBlobstoreRead,
 		Update: resourceBlobstoreUpdate,
 		Delete: resourceBlobstoreDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"available_space_in_bytes": {
@@ -102,9 +105,8 @@ func resourceBlobstoreCreate(d *schema.ResourceData, m interface{}) error {
 
 func resourceBlobstoreRead(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
-	id := d.Get("name").(string)
 
-	bs, err := nexusClient.BlobstoreRead(id)
+	bs, err := nexusClient.BlobstoreRead(d.Id())
 	if err != nil {
 		return err
 	}
@@ -114,7 +116,6 @@ func resourceBlobstoreRead(d *schema.ResourceData, m interface{}) error {
 		return nil
 	}
 
-	d.SetId(bs.Name)
 	d.Set("available_space_in_bytes", bs.AvailableSpaceInBytes)
 	d.Set("blob_count", bs.BlobCount)
 	d.Set("name", bs.Name)
@@ -141,11 +142,10 @@ func flattenBlobstoreSoftQuota(softQuota *nexus.BlobstoreSoftQuota) []map[string
 
 func resourceBlobstoreUpdate(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
-	id := d.Id()
 
 	if d.HasChange("path") {
 		bs := getBlobstoreFromResourceData(d)
-		if err := nexusClient.BlobstoreUpdate(id, bs); err != nil {
+		if err := nexusClient.BlobstoreUpdate(d.Id(), bs); err != nil {
 			return err
 		}
 	}
@@ -154,9 +154,8 @@ func resourceBlobstoreUpdate(d *schema.ResourceData, m interface{}) error {
 
 func resourceBlobstoreDelete(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
-	id := d.Id()
 
-	if err := nexusClient.BlobstoreDelete(id); err != nil {
+	if err := nexusClient.BlobstoreDelete(d.Id()); err != nil {
 		return err
 	}
 

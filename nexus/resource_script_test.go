@@ -12,7 +12,7 @@ import (
 
 func testScriptResource(scriptName string, scriptContent string, scriptType string) string {
 	return fmt.Sprintf(`
-resource "nexus_script" "test" {
+resource "nexus_script" "acceptance" {
     name    = "%s"
 	content = "%s"
 	type    = "%s"
@@ -40,6 +40,8 @@ func testAccCheckScriptResourceExists(name string, script *nexus.Script) resourc
 }
 
 func TestAccScript(t *testing.T) {
+	t.Parallel()
+
 	var script nexus.Script
 
 	scriptName := acctest.RandString(10)
@@ -53,8 +55,14 @@ func TestAccScript(t *testing.T) {
 			{
 				Config: testScriptResource(scriptName, scriptContent, scriptType),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckScriptResourceExists("nexus_script.test", &script),
+					testAccCheckScriptResourceExists("nexus_script.acceptance", &script),
 				),
+			},
+			{
+				ResourceName:      "nexus_script.acceptance",
+				ImportState:       true,
+				ImportStateId:     scriptName,
+				ImportStateVerify: true,
 			},
 		},
 	})
