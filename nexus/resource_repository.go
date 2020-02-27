@@ -23,7 +23,7 @@ func resourceRepository() *schema.Resource {
 				ForceNew:     true,
 				Required:     true,
 				Type:         schema.TypeString,
-				ValidateFunc: validation.StringInSlice([]string{"apt", "bower", "docker", "maven2", "nuget", "pypi"}, false),
+				ValidateFunc: validation.StringInSlice([]string{"apt", "bower", "docker", "maven2", "nuget", "pypi", "helm"}, false),
 			},
 			"name": {
 				Description: "A unique identifier for this repository",
@@ -46,7 +46,7 @@ func resourceRepository() *schema.Resource {
 			"apt": {
 				Type:          schema.TypeList,
 				Optional:      true,
-				ConflictsWith: []string{"bower", "docker", "docker_proxy", "maven"},
+				ConflictsWith: []string{"bower", "docker", "docker_proxy", "maven", "helm"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"distribution": {
@@ -59,7 +59,7 @@ func resourceRepository() *schema.Resource {
 			"apt_signing": {
 				Type:          schema.TypeList,
 				Optional:      true,
-				ConflictsWith: []string{"bower", "docker", "docker_proxy", "maven"},
+				ConflictsWith: []string{"bower", "docker", "docker_proxy", "maven", "helm"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"keypair": {
@@ -76,7 +76,7 @@ func resourceRepository() *schema.Resource {
 			"bower": {
 				Type:          schema.TypeList,
 				Optional:      true,
-				ConflictsWith: []string{"apt", "apt_signing", "docker", "docker_proxy", "maven"},
+				ConflictsWith: []string{"apt", "apt_signing", "docker", "docker_proxy", "maven", "helm"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"rewrite_package_urls": {
@@ -103,7 +103,7 @@ func resourceRepository() *schema.Resource {
 			"docker": {
 				Type:          schema.TypeList,
 				Optional:      true,
-				ConflictsWith: []string{"apt", "apt_signing", "bower", "maven"},
+				ConflictsWith: []string{"apt", "apt_signing", "bower", "maven", "helm"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"force_basic_auth": {
@@ -132,7 +132,7 @@ func resourceRepository() *schema.Resource {
 				},
 			},
 			"docker_proxy": {
-				ConflictsWith: []string{"apt", "apt_signing", "bower", "maven"},
+				ConflictsWith: []string{"apt", "apt_signing", "bower", "maven", "helm"},
 				Type:          schema.TypeList,
 				Optional:      true,
 				MaxItems:      1,
