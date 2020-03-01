@@ -207,7 +207,7 @@ resource "nexus_user" "admin" {
   email     = "nexus@example.com"
   password  = "admin123"
   roles     = ["nx-admin"]
-  status    = "online"
+  status    = "active"
 }
 ```
 
