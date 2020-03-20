@@ -2,6 +2,8 @@ module github.com/datadrivers/terraform-provider-nexus
 
 go 1.14
 
+replace github.com/datadrivers/go-nexus-client => github.com/mattegawel/go-nexus-client v0.5.2
+
 require (
 	cloud.google.com/go v0.55.0 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
