@@ -65,7 +65,7 @@ resource "nexus_repository" "apt_hosted" {
 `, name, aptDistribution, aptSigningKEypair, aptSigningPassphrase)
 }
 
-func TestAccRpositoryBowerHosted(t *testing.T) {
+func TestAccRepositoryBowerHosted(t *testing.T) {
 	repoName := fmt.Sprintf("test-repo-%s", acctest.RandString(10))
 	bowerRewritePackageURLs := true
 
