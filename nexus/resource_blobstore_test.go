@@ -32,8 +32,8 @@ func TestAccResourceBlobstoreFile(t *testing.T) {
 				ImportState:       true,
 				ImportStateId:     bsName,
 				ImportStateVerify: true,
-				// path is not returned by API
-				ImportStateVerifyIgnore: []string{"path"},
+				// path is not returned by APIImportStateVerify, available_space_in_bytes changes too frequently.
+				ImportStateVerifyIgnore: []string{"path", "available_space_in_bytes"},
 			},
 		},
 	})
