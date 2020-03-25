@@ -4,7 +4,7 @@
 
 Terraform provider to configure Sonatype Nexus using it's API.
 
-Implemented and tested with Sonatype Nexus 3.20.1.
+Implemented and tested with Sonatype Nexus 3.21.2.
 
 ## Usage
 
@@ -54,11 +54,39 @@ Blobstore can be imported using
 $ terraform import nexus_blobstore.default default
 ```
 
+##### File
+
 ```hcl
 resource "nexus_blobstore" "default" {
   name = "blobstore-01"
   type = "File"
   path = "/nexus-data/blobstore-01"
+
+  soft_quota {
+    limit = 1024
+    type  = "spaceRemainingQuota"
+  }
+}
+```
+
+##### S3
+
+```hcl
+resource "nexus_blobstore" "aws" {
+  name = "blobstore-01"
+  type = "S3"
+
+  bucket_configuration {
+    bucket {
+      name   = "aws-bucket-name"
+      region = "us-central-1"
+    }
+
+    bucket_security {
+      access_key_id = "<your-aws-access-key-id>"
+      secret_access_key = "<your-aws-secret-access-key>"
+    }
+  }
 
   soft_quota {
     limit = 1024
@@ -232,6 +260,28 @@ There is a [makefile](./GNUmakefile) to build the provider.
 ```sh
 make
 ```
+
+## Testing
+
+For testing start a local Docker container using script [./scripts/start-nexus.sh](./scripts/start-nexus.sh).
+
+```shell
+$ ./scripts/start-nexus.sh
+```
+
+This will start a Docker container and expose port 8081.
+
+Now start the tests
+
+```shell
+$ NEXUS_URL="http://127.0.0.1:8081" NEXUS_USERNAME="admin" NEXUS_PASSWORD="admin123" make testacc
+```
+
+To test Blobstore type S3 following environment variables must be set
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `AWS_DEFAULT_REGION`
+- `AWS_BUCKET_NAME` the name of S3 bucket to use
 
 ## Author
 
