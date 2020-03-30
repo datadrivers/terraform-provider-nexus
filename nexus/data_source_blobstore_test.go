@@ -21,8 +21,7 @@ func TestDataSourceBlobstore(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceName, "available_space_in_bytes"),
 					resource.TestCheckResourceAttrSet(resourceName, "blob_count"),
 					resource.TestCheckResourceAttrSet(resourceName, "name"),
-					// Path is not returned by API :-/
-					// resource.TestCheckResourceAttrSet(resourceName, "path"),
+					resource.TestCheckResourceAttrSet(resourceName, "path"),
 					resource.TestCheckResourceAttrSet(resourceName, "total_size_in_bytes"),
 					resource.TestCheckResourceAttrSet(resourceName, "type"),
 				),
@@ -35,6 +34,5 @@ func testAccDataSourceBlobstore(name string) string {
 	return fmt.Sprintf(`
 data "nexus_blobstore" "acceptance" {
 	name = "%s"
-}
-	`, name)
+}`, name)
 }

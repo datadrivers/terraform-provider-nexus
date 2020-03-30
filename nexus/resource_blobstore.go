@@ -1,6 +1,9 @@
 package nexus
 
 import (
+	"fmt"
+	"log"
+
 	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -12,13 +15,14 @@ func resourceBlobstore() *schema.Resource {
 		Read:   resourceBlobstoreRead,
 		Update: resourceBlobstoreUpdate,
 		Delete: resourceBlobstoreDelete,
+		Exists: resourceBlobstoreExists,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 
 		Schema: map[string]*schema.Schema{
 			"available_space_in_bytes": {
-				Type:     schema.TypeInt,
+				Type:     schema.TypeString,
 				Computed: true,
 			},
 			"blob_count": {
@@ -95,6 +99,7 @@ func resourceBlobstore() *schema.Resource {
 										Description: "The secret access key associated with the specified IAM access key ID",
 										Type:        schema.TypeString,
 										Required:    true,
+										Sensitive:   true,
 									},
 									"role": {
 										Description: "An IAM role to assume in order to access the S3 bucket",
@@ -105,6 +110,7 @@ func resourceBlobstore() *schema.Resource {
 										Description: "An AWS STS session token associated with temporary security credentials which grant access to the S3 bucket",
 										Type:        schema.TypeString,
 										Optional:    true,
+										Sensitive:   true,
 									},
 								},
 							},
@@ -188,60 +194,65 @@ func getBlobstoreFromResourceData(d *schema.ResourceData) nexus.Blobstore {
 	bs := nexus.Blobstore{
 		Name: d.Get("name").(string),
 		Type: d.Get("type").(string),
-		Path: d.Get("path").(string),
 	}
 
-	if _, ok := d.GetOk("bucket_configuration"); ok {
-		bucketConfigurationList := d.Get("bucket_configuration").([]interface{})
-		bucketConfiguration := bucketConfigurationList[0].(map[string]interface{})
+	if bs.Type == nexus.BlobstoreTypeFile {
+		bs.Path = d.Get("path").(string)
+	}
 
-		bs.BlobstoreS3BucketConfiguration = &nexus.BlobstoreS3BucketConfiguration{}
+	if bs.Type == nexus.BlobstoreTypeS3 {
+		if _, ok := d.GetOk("bucket_configuration"); ok {
+			bucketConfigurationList := d.Get("bucket_configuration").([]interface{})
+			bucketConfiguration := bucketConfigurationList[0].(map[string]interface{})
 
-		if _, ok := bucketConfiguration["advanced_bucket_connection"]; ok {
-			advancedBucketConfigurationList := bucketConfiguration["advanced_bucket_connection"].([]interface{})
-			if len(advancedBucketConfigurationList) > 0 {
-				advancedBucketConfiguration := advancedBucketConfigurationList[0].(map[string]interface{})
+			bs.BlobstoreS3BucketConfiguration = &nexus.BlobstoreS3BucketConfiguration{}
 
-				bs.BlobstoreS3BucketConfiguration.BlobstoreS3AdvancedBucketConnection = &nexus.BlobstoreS3AdvancedBucketConnection{
-					Endpoint:       advancedBucketConfiguration["endpoint"].(string),
-					SignerType:     advancedBucketConfiguration["signer_type"].(string),
-					ForcePathStyle: advancedBucketConfiguration["force_path_style"].(bool),
+			if _, ok := bucketConfiguration["advanced_bucket_connection"]; ok {
+				advancedBucketConfigurationList := bucketConfiguration["advanced_bucket_connection"].([]interface{})
+				if len(advancedBucketConfigurationList) > 0 {
+					advancedBucketConfiguration := advancedBucketConfigurationList[0].(map[string]interface{})
+
+					bs.BlobstoreS3BucketConfiguration.BlobstoreS3AdvancedBucketConnection = &nexus.BlobstoreS3AdvancedBucketConnection{
+						Endpoint:       advancedBucketConfiguration["endpoint"].(string),
+						SignerType:     advancedBucketConfiguration["signer_type"].(string),
+						ForcePathStyle: advancedBucketConfiguration["force_path_style"].(bool),
+					}
 				}
 			}
-		}
 
-		if _, ok := bucketConfiguration["bucket"]; ok {
-			bucketList := bucketConfiguration["bucket"].([]interface{})
-			bucket := bucketList[0].(map[string]interface{})
+			if _, ok := bucketConfiguration["bucket"]; ok {
+				bucketList := bucketConfiguration["bucket"].([]interface{})
+				bucket := bucketList[0].(map[string]interface{})
 
-			bs.BlobstoreS3BucketConfiguration.BlobstoreS3Bucket = &nexus.BlobstoreS3Bucket{
-				Expiration: bucket["expiration"].(int),
-				Name:       bucket["name"].(string),
-				Prefix:     bucket["prefix"].(string),
-				Region:     bucket["region"].(string),
+				bs.BlobstoreS3BucketConfiguration.BlobstoreS3Bucket = &nexus.BlobstoreS3Bucket{
+					Expiration: bucket["expiration"].(int),
+					Name:       bucket["name"].(string),
+					Prefix:     bucket["prefix"].(string),
+					Region:     bucket["region"].(string),
+				}
 			}
-		}
 
-		if _, ok := bucketConfiguration["bucket_security"]; ok {
-			bucketSecurityList := bucketConfiguration["bucket_security"].([]interface{})
-			bucketSecurity := bucketSecurityList[0].(map[string]interface{})
+			if _, ok := bucketConfiguration["bucket_security"]; ok {
+				bucketSecurityList := bucketConfiguration["bucket_security"].([]interface{})
+				bucketSecurity := bucketSecurityList[0].(map[string]interface{})
 
-			bs.BlobstoreS3BucketConfiguration.BlobstoreS3BucketSecurity = &nexus.BlobstoreS3BucketSecurity{
-				AccessKeyID:     bucketSecurity["access_key_id"].(string),
-				Role:            bucketSecurity["role"].(string),
-				SecretAccessKey: bucketSecurity["secret_access_key"].(string),
-				SessionToken:    bucketSecurity["session_token"].(string),
+				bs.BlobstoreS3BucketConfiguration.BlobstoreS3BucketSecurity = &nexus.BlobstoreS3BucketSecurity{
+					AccessKeyID:     bucketSecurity["access_key_id"].(string),
+					Role:            bucketSecurity["role"].(string),
+					SecretAccessKey: bucketSecurity["secret_access_key"].(string),
+					SessionToken:    bucketSecurity["session_token"].(string),
+				}
 			}
-		}
 
-		if _, ok := bucketConfiguration["encryption"]; ok {
-			encryptionList := bucketConfiguration["encryption"].([]interface{})
-			if len(encryptionList) > 0 {
-				encryption := encryptionList[0].(map[string]interface{})
+			if _, ok := bucketConfiguration["encryption"]; ok {
+				encryptionList := bucketConfiguration["encryption"].([]interface{})
+				if len(encryptionList) > 0 {
+					encryption := encryptionList[0].(map[string]interface{})
 
-				bs.BlobstoreS3BucketConfiguration.BlobstoreS3Encryption = &nexus.BlobstoreS3Encryption{
-					Key:  encryption["encryption_key"].(string),
-					Type: encryption["encryption_type"].(string),
+					bs.BlobstoreS3BucketConfiguration.BlobstoreS3Encryption = &nexus.BlobstoreS3Encryption{
+						Key:  encryption["encryption_key"].(string),
+						Type: encryption["encryption_type"].(string),
+					}
 				}
 			}
 		}
@@ -270,14 +281,16 @@ func resourceBlobstoreCreate(d *schema.ResourceData, m interface{}) error {
 	}
 
 	d.SetId(bs.Name)
+	d.Set("name", bs.Name)
 
-	return nil
+	return resourceBlobstoreRead(d, m)
 }
 
 func resourceBlobstoreRead(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
 
 	bs, err := nexusClient.BlobstoreRead(d.Id())
+	log.Print(bs)
 	if err != nil {
 		return err
 	}
@@ -290,94 +303,33 @@ func resourceBlobstoreRead(d *schema.ResourceData, m interface{}) error {
 	d.Set("available_space_in_bytes", bs.AvailableSpaceInBytes)
 	d.Set("blob_count", bs.BlobCount)
 	d.Set("name", bs.Name)
-	// Path not returned by API :-/
-	//d.Set("path", bs.Path)
+	d.Set("path", bs.Path)
+	d.Set("total_size_in_bytes", bs.TotalSizeInBytes)
+	d.Set("type", bs.Type)
 
 	if bs.BlobstoreS3BucketConfiguration != nil {
-		if err := d.Set("bucket_configuration", flattenBlobstoreBucketConfiguration(bs.BlobstoreS3BucketConfiguration)); err != nil {
-			return err
+		if err := d.Set("bucket_configuration", flattenBlobstoreBucketConfiguration(bs.BlobstoreS3BucketConfiguration, d)); err != nil {
+			return fmt.Errorf("Error reading bucket configuration: %s", err)
 		}
 	}
 
 	if bs.BlobstoreSoftQuota != nil {
 		if err := d.Set("soft_quota", flattenBlobstoreSoftQuota(bs.BlobstoreSoftQuota)); err != nil {
-			return err
+			return fmt.Errorf("Error reading soft quota: %s", err)
 		}
 	}
-	d.Set("total_size_in_bytes", bs.TotalSizeInBytes)
-	d.Set("type", bs.Type)
 
 	return nil
-}
-
-func flattenBlobstoreSoftQuota(softQuota *nexus.BlobstoreSoftQuota) []map[string]interface{} {
-	data := map[string]interface{}{
-		"limit": softQuota.Limit,
-		"type":  softQuota.Type,
-	}
-	return []map[string]interface{}{data}
-}
-
-func flattenBlobstoreBucketConfiguration(bucketConfig *nexus.BlobstoreS3BucketConfiguration) []map[string]interface{} {
-	advancedBucketConfiguration := flattenBlobstoreS3AdvancedBucketConnection(bucketConfig.BlobstoreS3AdvancedBucketConnection)
-	bucket := flattenBlobstoreS3Bucket(bucketConfig.BlobstoreS3Bucket)
-	bucketSecurity := flattenBlobstoreS3BucketSecurity(bucketConfig.BlobstoreS3BucketSecurity)
-	encryption := flattenBlobstoreS3Encryption(bucketConfig.BlobstoreS3Encryption)
-	data := map[string]interface{}{
-		"advanced_bucket_connection": advancedBucketConfiguration,
-		"bucket":                     bucket,
-		"bucket_security":            bucketSecurity,
-		"encryption":                 encryption,
-	}
-	return []map[string]interface{}{data}
-}
-
-func flattenBlobstoreS3AdvancedBucketConnection(config *nexus.BlobstoreS3AdvancedBucketConnection) []map[string]interface{} {
-	data := map[string]interface{}{
-		"endpoint":         config.Endpoint,
-		"force_path_style": config.ForcePathStyle,
-		"signer_type":      config.SignerType,
-	}
-	return []map[string]interface{}{data}
-}
-
-func flattenBlobstoreS3Bucket(config *nexus.BlobstoreS3Bucket) []map[string]interface{} {
-	data := map[string]interface{}{
-		"expiration": config.Expiration,
-		"name":       config.Name,
-		"prefix":     config.Prefix,
-		"region":     config.Region,
-	}
-	return []map[string]interface{}{data}
-}
-
-func flattenBlobstoreS3BucketSecurity(config *nexus.BlobstoreS3BucketSecurity) []map[string]interface{} {
-	data := map[string]interface{}{
-		"access_key_id":     config.AccessKeyID,
-		"role":              config.Role,
-		"secret_access_key": config.SecretAccessKey,
-		"session_token":     config.SessionToken,
-	}
-	return []map[string]interface{}{data}
-}
-
-func flattenBlobstoreS3Encryption(config *nexus.BlobstoreS3Encryption) []map[string]interface{} {
-	data := map[string]interface{}{
-		"encryption_key":  config.Key,
-		"encryption_type": config.Type,
-	}
-	return []map[string]interface{}{data}
 }
 
 func resourceBlobstoreUpdate(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
 
-	if d.HasChange("path") {
-		bs := getBlobstoreFromResourceData(d)
-		if err := nexusClient.BlobstoreUpdate(d.Id(), bs); err != nil {
-			return err
-		}
+	bs := getBlobstoreFromResourceData(d)
+	if err := nexusClient.BlobstoreUpdate(d.Id(), bs); err != nil {
+		return err
 	}
+
 	return nil
 }
 
@@ -391,4 +343,84 @@ func resourceBlobstoreDelete(d *schema.ResourceData, m interface{}) error {
 	d.SetId("")
 
 	return nil
+}
+
+func resourceBlobstoreExists(d *schema.ResourceData, m interface{}) (bool, error) {
+	nexusClient := m.(nexus.Client)
+
+	bs, err := nexusClient.BlobstoreRead(d.Id())
+	return bs != nil, err
+}
+
+func flattenBlobstoreSoftQuota(softQuota *nexus.BlobstoreSoftQuota) []map[string]interface{} {
+	if softQuota == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"limit": softQuota.Limit,
+		"type":  softQuota.Type,
+	}
+	return []map[string]interface{}{data}
+}
+
+func flattenBlobstoreBucketConfiguration(bucketConfig *nexus.BlobstoreS3BucketConfiguration, d *schema.ResourceData) []map[string]interface{} {
+	if bucketConfig == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"advanced_bucket_connection": flattenBlobstoreS3AdvancedBucketConnection(bucketConfig.BlobstoreS3AdvancedBucketConnection),
+		"bucket":                     flattenBlobstoreS3Bucket(bucketConfig.BlobstoreS3Bucket),
+		"bucket_security":            flattenBlobstoreS3BucketSecurity(bucketConfig.BlobstoreS3BucketSecurity, d),
+		"encryption":                 flattenBlobstoreS3Encryption(bucketConfig.BlobstoreS3Encryption),
+	}
+	return []map[string]interface{}{data}
+}
+
+func flattenBlobstoreS3AdvancedBucketConnection(bucketConnection *nexus.BlobstoreS3AdvancedBucketConnection) []map[string]interface{} {
+	if bucketConnection == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"endpoint":         bucketConnection.Endpoint,
+		"force_path_style": bucketConnection.ForcePathStyle,
+		"signer_type":      bucketConnection.SignerType,
+	}
+	return []map[string]interface{}{data}
+}
+
+func flattenBlobstoreS3Bucket(bucekt *nexus.BlobstoreS3Bucket) []map[string]interface{} {
+	if bucekt == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"expiration": bucekt.Expiration,
+		"name":       bucekt.Name,
+		"prefix":     bucekt.Prefix,
+		"region":     bucekt.Region,
+	}
+	return []map[string]interface{}{data}
+}
+
+func flattenBlobstoreS3BucketSecurity(bucketSecurity *nexus.BlobstoreS3BucketSecurity, d *schema.ResourceData) []map[string]interface{} {
+	if bucketSecurity == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"access_key_id":     bucketSecurity.AccessKeyID,
+		"role":              bucketSecurity.Role,
+		"secret_access_key": d.Get("bucket_configuration.0.bucket_security.0.secret_access_key"), // secret_access_key",
+		"session_token":     bucketSecurity.SessionToken,
+	}
+	return []map[string]interface{}{data}
+}
+
+func flattenBlobstoreS3Encryption(encryption *nexus.BlobstoreS3Encryption) []map[string]interface{} {
+	if encryption == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"encryption_key":  encryption.Key,
+		"encryption_type": encryption.Type,
+	}
+	return []map[string]interface{}{data}
 }

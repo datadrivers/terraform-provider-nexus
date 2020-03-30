@@ -277,11 +277,12 @@ Now start the tests
 $ NEXUS_URL="http://127.0.0.1:8081" NEXUS_USERNAME="admin" NEXUS_PASSWORD="admin123" make testacc
 ```
 
-To test Blobstore type S3 following environment variables must be set
+__NOTE__: To test Blobstore type S3 following environment variables must be set, otherwise tests will fail
+
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
-- `AWS_DEFAULT_REGION`
-- `AWS_BUCKET_NAME` the name of S3 bucket to use
+- `AWS_DEFAULT_REGION` the AWS region of the S3 bucket to use, defaults to `eu-central-1`
+- `AWS_BUCKET_NAME` the name of S3 bucket to use, defaults to `terraform-provider-nexus-s3-test`
 
 ## Author
 

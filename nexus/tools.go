@@ -2,6 +2,7 @@ package nexus
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
@@ -29,4 +30,12 @@ func stringSliceToInterfaceSlice(strings []string) []interface{} {
 		s[i] = string(v)
 	}
 	return s
+}
+
+func getEnv(key, fallback string) string {
+	value, exists := os.LookupEnv(key)
+	if !exists {
+		return fallback
+	}
+	return value
 }

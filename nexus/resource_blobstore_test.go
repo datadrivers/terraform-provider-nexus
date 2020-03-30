@@ -2,7 +2,6 @@ package nexus
 
 import (
 	"fmt"
-	"os"
 	"testing"
 
 	nexus "github.com/datadrivers/go-nexus-client"
@@ -26,6 +25,7 @@ func TestAccResourceBlobstoreFile(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "name", bsName),
 					resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "type", bsType),
+					resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "path", bsPath),
 				),
 			},
 			{
@@ -33,8 +33,8 @@ func TestAccResourceBlobstoreFile(t *testing.T) {
 				ImportState:       true,
 				ImportStateId:     bsName,
 				ImportStateVerify: true,
-				// path is not returned by APIImportStateVerify, available_space_in_bytes changes too frequently.
-				ImportStateVerifyIgnore: []string{"path", "available_space_in_bytes"},
+				// available_space_in_bytes changes too frequently.
+				ImportStateVerifyIgnore: []string{"available_space_in_bytes"},
 			},
 		},
 	})
@@ -52,14 +52,6 @@ resource "nexus_blobstore" "acceptance" {
 		type  = "%s"
 	}
 }`, name, path, bsType, quotaLimit, quotaType)
-}
-
-func getEnv(key, fallback string) string {
-	value, exists := os.LookupEnv(key)
-	if !exists {
-		return fallback
-	}
-	return value
 }
 
 func TestAccResourceBlobstoreS3(t *testing.T) {
@@ -86,8 +78,8 @@ func TestAccResourceBlobstoreS3(t *testing.T) {
 				ImportState:       true,
 				ImportStateId:     bsName,
 				ImportStateVerify: true,
-				// path is not returned by APIImportStateVerify, available_space_in_bytes changes too frequently.
-				ImportStateVerifyIgnore: []string{"path", "available_space_in_bytes"},
+				// available_space_in_bytes changes too frequently.
+				ImportStateVerifyIgnore: []string{"available_space_in_bytes", "bucket_configuration.0.bucket_security.0.secret_access_key"},
 			},
 		},
 	})
