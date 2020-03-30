@@ -113,11 +113,13 @@ func resourceRepository() *schema.Resource {
 							Type:        schema.TypeBool,
 						},
 						"http_port": {
+							Default:     0,
 							Description: "Create an HTTP connector at specified port",
 							Optional:    true,
 							Type:        schema.TypeInt,
 						},
 						"https_port": {
+							Default:     0,
 							Description: "Create an HTTPS connector at specified port",
 							Optional:    true,
 							Type:        schema.TypeInt,
@@ -287,7 +289,7 @@ func resourceRepository() *schema.Resource {
 						},
 						"remote_url": {
 							Type:     schema.TypeString,
-							Required: true,
+							Optional: true,
 						},
 					},
 				},
