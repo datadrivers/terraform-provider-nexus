@@ -3,3 +3,6 @@ terraform-provider-nexus
 terraform.tfstate
 terraform.tfstate.backup
 terraform.tfstate.*.backup
+
+# MacOS
+.DS_Store
