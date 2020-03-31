@@ -29,11 +29,10 @@ func TestAccResourceBlobstoreFile(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "nexus_blobstore.acceptance",
-				ImportState:       true,
-				ImportStateId:     bsName,
-				ImportStateVerify: true,
-				// available_space_in_bytes changes too frequently.
+				ResourceName:            "nexus_blobstore.acceptance",
+				ImportState:             true,
+				ImportStateId:           bsName,
+				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"available_space_in_bytes"},
 			},
 		},

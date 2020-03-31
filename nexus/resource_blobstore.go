@@ -290,7 +290,7 @@ func resourceBlobstoreCreate(d *schema.ResourceData, m interface{}) error {
 func resourceBlobstoreRead(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
 
-	bs, err := nexusClient.BlobstoreRead(d.Id())
+	bs, err := nexusClient.BlobstoreReadSpecified(d.Id())
 	log.Print(bs)
 	if err != nil {
 		return err
