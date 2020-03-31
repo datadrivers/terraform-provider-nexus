@@ -1,6 +1,8 @@
 package nexus
 
 import (
+	"sort"
+
 	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -152,19 +154,31 @@ func resourceRepository() *schema.Resource {
 						},
 						"index_url": {
 							Description: "URL of Docker Index to use",
-							Required:    true,
+							Optional:    true,
 							Type:        schema.TypeString,
 						},
 					},
 				},
 			},
+			"group": {
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"member_names": {
+							Description: "Member repositories names",
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Required:    true,
+							Type:        schema.TypeSet,
+						},
+					},
+				},
+				MaxItems: 1,
+				Optional: true,
+				Type:     schema.TypeList,
+			},
 			"http_client": {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"authentication": {
-							Type:     schema.TypeList,
-							Required: true,
-							MaxItems: 1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"type": {
@@ -190,6 +204,9 @@ func resourceRepository() *schema.Resource {
 									},
 								},
 							},
+							MaxItems: 1,
+							Optional: true,
+							Type:     schema.TypeList,
 						},
 						"auto_block": {
 							Default:     true,
@@ -314,7 +331,6 @@ func resourceRepository() *schema.Resource {
 							Type:        schema.TypeBool,
 						},
 						"write_policy": {
-							Default:     "ALLOW_ONCE",
 							Description: "Controls if deployments of and updates to assets are allowed",
 							Optional:    true,
 							Type:        schema.TypeString,
@@ -429,6 +445,24 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		}
 	}
 
+	if _, ok := d.GetOk("group"); ok {
+		groupList := d.Get("group").([]interface{})
+		groupMemberNames := make([]string, 0)
+
+		if len(groupList) == 1 && groupList[0] != nil {
+			groupConfig := groupList[0].(map[string]interface{})
+			groupConfigMemberNames := groupConfig["member_names"].(*schema.Set)
+
+			for _, v := range groupConfigMemberNames.List() {
+				groupMemberNames = append(groupMemberNames, v.(string))
+			}
+			sort.Strings(groupMemberNames)
+		}
+		repo.RepositoryGroup = &nexus.RepositoryGroup{
+			MemberNames: groupMemberNames,
+		}
+	}
+
 	if _, ok := d.GetOk("http_client"); ok {
 		httpClientList := d.Get("http_client").([]interface{})
 		httpClientConfig := httpClientList[0].(map[string]interface{})
@@ -441,13 +475,15 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 
 		if _, ok := httpClientConfig["authentication"]; ok {
 			authList := httpClientConfig["authentication"].([]interface{})
-			authConfig := authList[0].(map[string]interface{})
+			if len(authList) > 0 {
+				authConfig := authList[0].(map[string]interface{})
 
-			repo.RepositoryHTTPClient.Authentication = nexus.RepositoryHTTPClientAuthentication{
-				Type:       authConfig["type"].(string),
-				Username:   authConfig["username"].(string),
-				NTLMDomain: authConfig["ntlm_domain"].(string),
-				NTLMHost:   authConfig["ntlm_host"].(string),
+				repo.RepositoryHTTPClient.Authentication = nexus.RepositoryHTTPClientAuthentication{
+					Type:       authConfig["type"].(string),
+					Username:   authConfig["username"].(string),
+					NTLMDomain: authConfig["ntlm_domain"].(string),
+					NTLMHost:   authConfig["ntlm_host"].(string),
+				}
 			}
 		}
 	}
@@ -486,11 +522,10 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		storageList := d.Get("storage").([]interface{})
 		storageConfig := storageList[0].(map[string]interface{})
 
-		writePolicy := storageConfig["write_policy"].(string)
 		repo.RepositoryStorage = &nexus.RepositoryStorage{
 			BlobStoreName:               storageConfig["blob_store_name"].(string),
 			StrictContentTypeValidation: storageConfig["strict_content_type_validation"].(bool),
-			WritePolicy:                 &writePolicy,
+			WritePolicy:                 storageConfig["write_policy"].(string),
 		}
 	}
 
@@ -534,6 +569,12 @@ func setRepositoryToResourceData(repo *nexus.Repository, d *schema.ResourceData)
 		}
 	}
 
+	if repo.RepositoryGroup != nil {
+		if err := d.Set("group", flattenRepositoryGroup(repo.RepositoryGroup)); err != nil {
+			return err
+		}
+	}
+
 	if repo.RepositoryMaven != nil {
 		if err := d.Set("maven", flattenRepositoryMaven(repo.RepositoryMaven)); err != nil {
 			return err
@@ -552,16 +593,17 @@ func setRepositoryToResourceData(repo *nexus.Repository, d *schema.ResourceData)
 		}
 	}
 
-	//	if repo.RepositoryStorage != nil {
 	if err := d.Set("storage", flattenRepositoryStorage(repo.RepositoryStorage)); err != nil {
 		return err
 	}
-	//	}
 
 	return nil
 }
 
 func flattenRepositoryApt(apt *nexus.RepositoryApt) []map[string]interface{} {
+	if apt == nil {
+		return nil
+	}
 	data := map[string]interface{}{
 		"distribution": apt.Distribution,
 	}
@@ -570,6 +612,9 @@ func flattenRepositoryApt(apt *nexus.RepositoryApt) []map[string]interface{} {
 }
 
 func flattenRepositoryAptSigning(aptSigning *nexus.RepositoryAptSigning) []map[string]interface{} {
+	if aptSigning == nil {
+		return nil
+	}
 	data := map[string]interface{}{
 		"keypair":    aptSigning.Keypair,
 		"passphrase": aptSigning.Passphrase,
@@ -578,6 +623,9 @@ func flattenRepositoryAptSigning(aptSigning *nexus.RepositoryAptSigning) []map[s
 }
 
 func flattenRepositoryBower(bower *nexus.RepositoryBower) []map[string]interface{} {
+	if bower == nil {
+		return nil
+	}
 	data := map[string]interface{}{
 		"rewrite_package_urls": bower.RewritePackageUrls,
 	}
@@ -585,6 +633,9 @@ func flattenRepositoryBower(bower *nexus.RepositoryBower) []map[string]interface
 }
 
 func flattenRepositoryCleanup(cleanup *nexus.RepositoryCleanup) []map[string]interface{} {
+	if cleanup == nil {
+		return nil
+	}
 	data := map[string]interface{}{
 		// "policy_names":
 	}
@@ -593,6 +644,9 @@ func flattenRepositoryCleanup(cleanup *nexus.RepositoryCleanup) []map[string]int
 }
 
 func flattenRepositoryDocker(docker *nexus.RepositoryDocker) []map[string]interface{} {
+	if docker == nil {
+		return nil
+	}
 	data := map[string]interface{}{
 		"force_basic_auth": docker.ForceBasicAuth,
 		"v1enabled":        docker.V1Enabled,
@@ -609,6 +663,9 @@ func flattenRepositoryDocker(docker *nexus.RepositoryDocker) []map[string]interf
 }
 
 func flattenRepositoryDockerProxy(dockerProxy *nexus.RepositoryDockerProxy) []map[string]interface{} {
+	if dockerProxy == nil {
+		return nil
+	}
 	data := map[string]interface{}{
 		"index_type": dockerProxy.IndexType,
 		"index_url":  dockerProxy.IndexURL,
@@ -616,7 +673,21 @@ func flattenRepositoryDockerProxy(dockerProxy *nexus.RepositoryDockerProxy) []ma
 	return []map[string]interface{}{data}
 }
 
+func flattenRepositoryGroup(group *nexus.RepositoryGroup) []map[string]interface{} {
+	if group == nil {
+		return nil
+	}
+	sort.Strings(group.MemberNames)
+	data := map[string]interface{}{
+		"member_names": stringSliceToInterfaceSlice(group.MemberNames),
+	}
+	return []map[string]interface{}{data}
+}
+
 func flattenRepositoryMaven(maven *nexus.RepositoryMaven) []map[string]interface{} {
+	if maven == nil {
+		return nil
+	}
 	data := map[string]interface{}{
 		"version_policy": maven.VersionPolicy,
 		"layout_policy":  maven.LayoutPolicy,
@@ -625,6 +696,9 @@ func flattenRepositoryMaven(maven *nexus.RepositoryMaven) []map[string]interface
 }
 
 func flattenRepositoryNegativeCache(negativeCache *nexus.RepositoryNegativeCache) []map[string]interface{} {
+	if negativeCache == nil {
+		return nil
+	}
 	data := map[string]interface{}{
 		"enabled": negativeCache.Enabled,
 		"ttl":     negativeCache.TTL,
@@ -633,6 +707,9 @@ func flattenRepositoryNegativeCache(negativeCache *nexus.RepositoryNegativeCache
 }
 
 func flattenRepositoryProxy(proxy *nexus.RepositoryProxy) []map[string]interface{} {
+	if proxy == nil {
+		return nil
+	}
 	data := map[string]interface{}{
 		"content_max_age":  proxy.ContentMaxAge,
 		"metadata_max_age": proxy.MetadataMaxAge,
@@ -642,6 +719,9 @@ func flattenRepositoryProxy(proxy *nexus.RepositoryProxy) []map[string]interface
 }
 
 func flattenRepositoryStorage(storage *nexus.RepositoryStorage) []map[string]interface{} {
+	if storage == nil {
+		return nil
+	}
 	data := map[string]interface{}{
 		"blob_store_name":                storage.BlobStoreName,
 		"strict_content_type_validation": storage.StrictContentTypeValidation,

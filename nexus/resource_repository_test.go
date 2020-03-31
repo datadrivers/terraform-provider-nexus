@@ -59,7 +59,7 @@ resource "nexus_repository" "apt_hosted" {
 	}
 
 	storage {
-
+        write_policy = "ALLOW"
 	}
 }
 `, name, aptDistribution, aptSigningKEypair, aptSigningPassphrase)
@@ -106,13 +106,13 @@ resource "nexus_repository" "bower_hosted" {
 	}
 
 	storage {
-
+		write_policy = "ALLOW"
 	}
 }`, name, rewritePackageURLs)
 }
 
 func TestAccRepositoryDockerHostedWithPorts(t *testing.T) {
-	repoName := fmt.Sprintf("test-repo-%s", acctest.RandString(10))
+	repoName := fmt.Sprintf("test-repo-docker-hosted-%s", acctest.RandString(10))
 	repoOnline := true
 	repoHTTPPort := acctest.RandIntRange(32767, 49152)
 	repoHTTPSPort := acctest.RandIntRange(49153, 65535)
@@ -155,12 +155,12 @@ resource "nexus_repository" "docker_hosted" {
 	}
 
 	storage {
-
+		write_policy = "ALLOW"
 	}
 }`, name, strconv.FormatBool(online), httpPort, httpsPort)
 }
 func TestAccRepositoryDockerHostedWithoutPorts(t *testing.T) {
-	repoName := fmt.Sprintf("test-repo-%s", acctest.RandString(10))
+	repoName := fmt.Sprintf("test-repo-docker-hosted-%s", acctest.RandString(10))
 	repoOnline := true
 
 	resource.Test(t, resource.TestCase{
@@ -188,28 +188,31 @@ resource "nexus_repository" "docker_hosted" {
 	}
 
 	storage {
-
+		write_policy = "ALLOW"
 	}
 }`, name, strconv.FormatBool(online))
 }
 
 func TestAccRepositoryDockerProxy(t *testing.T) {
-	repoName := fmt.Sprintf("test-repo-%s", acctest.RandString(10))
-	repoHTTPPort := acctest.RandIntRange(32767, 49152)
-	repoHTTPSPort := acctest.RandIntRange(49153, 65535)
+	repoName := fmt.Sprintf("test-repo-docker-proxy-%s", acctest.RandString(10))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRepositoryDockerProxy(repoName, repoHTTPPort, repoHTTPSPort),
+				Config: testAccRepositoryDockerProxy(repoName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("nexus_repository.docker_proxy", "name", repoName),
+					resource.TestCheckResourceAttr("nexus_repository.docker_proxy", "format", "docker"),
+					resource.TestCheckResourceAttr("nexus_repository.docker_proxy", "type", "proxy"),
+				),
 			},
 		},
 	})
 }
 
-func testAccRepositoryDockerProxy(name string, httpPort int, httpsPort int) string {
+func testAccRepositoryDockerProxy(name string) string {
 	return fmt.Sprintf(`
 resource "nexus_repository" "docker_proxy" {
 	name   = "%s"
@@ -217,15 +220,13 @@ resource "nexus_repository" "docker_proxy" {
 	format = "docker"
 
 	docker {
-		http_port        = %d
-		https_port       = %d
 		force_basic_auth = true
-		v1enabled        = true
+		v1enabled        = false
 	}
 
     docker_proxy {
-		index_url  = "https://index.docker.io"
 		index_type = "HUB"
+		index_url  = "http://www.example.com"
 	}
 
     http_client {
@@ -235,15 +236,63 @@ resource "nexus_repository" "docker_proxy" {
 	}
 
 	negative_cache {
-
+		enabled = true
+		ttl     = 1440
 	}
 
 	proxy {
-		remote_url = "https://registry.npmjs.org"
+		remote_url  = "https://index.docker.io"
 	}
 
 	storage {
-		write_policy = "ALLOW"
+		blob_store_name = "default"
+		write_policy    = "ALLOW"
 	}
-}`, name, httpPort, httpsPort)
+}`, name)
+}
+
+func TestAccRepositoryDockerGroup(t *testing.T) {
+	repoName := fmt.Sprintf("test-repo-docker-group-%s", acctest.RandString(10))
+	memberRepoName := fmt.Sprintf("test-repo-docker-group-member-%d", acctest.RandInt())
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccRepositoryDockerProxy(memberRepoName) + testAccRepositoryDockerGroup(repoName, memberRepoName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("nexus_repository.docker_group", "name", repoName),
+					resource.TestCheckResourceAttr("nexus_repository.docker_group", "format", "docker"),
+					resource.TestCheckResourceAttr("nexus_repository.docker_group", "type", "group"),
+				),
+			},
+		},
+	})
+}
+
+func testAccRepositoryDockerGroup(name string, memberRepoName string) string {
+	return fmt.Sprintf(`
+resource "nexus_repository" "docker_group" {
+	name   = "%s"
+	format = "docker"
+	type   = "group"
+	online = true
+	
+	group {
+		member_names = [nexus_repository.docker_proxy.name]
+	}
+	
+	docker {
+		force_basic_auth = true
+		http_port        = 8082
+		https_port       = 0
+		v1enabled        = false
+	}
+	
+	storage {
+		blob_store_name                = "default"
+		strict_content_type_validation = true
+	}
+}`, name)
 }
