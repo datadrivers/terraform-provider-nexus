@@ -1,10 +1,29 @@
 # Terraform provider Nexus
 
+- [Introduction](#introduction)
+- [Usage](#usage)
+  - [Provider config](#provider-config
+  - [Data Sources](#data-sources)
+    - [nexus_blobstore](#nexus_blobstore)
+    - [nexus_repository](#nexus_repository)
+    - [nexus_user](#nexus_user)
+  - [Resources](#resources)
+    - [nexus_blobstore](#nexus_blobstore-1)
+      - [File](#file)
+      - [S3](#s3)
+    - [nexus_repository](#nexus_repository-1)
+    - [nexus_role](#nexus_role)
+    - [nexus_user](#nexus_user-1)
+    - [nexus_script](#nexus_script)
+- [Build](#build)
+- [Testing](#testing)
+- [Author](#author)
+
 ## Introduction
 
 Terraform provider to configure Sonatype Nexus using it's API.
 
-Implemented and tested with Sonatype Nexus 3.21.2.
+Implemented and tested with Sonatype Nexus `3.22.0`.
 
 ## Usage
 
@@ -18,7 +37,7 @@ provider "nexus" {
 }
 ```
 
-### Data
+### Data Sources
 
 #### nexus_blobstore
 
@@ -102,6 +121,8 @@ Repository can be imported using
 $ terraform import nexus_repository.maven_central maven-central
 ```
 
+##### APT hosted
+
 ```hcl
 resource "nexus_repository" "apt_hosted" {
   name   = "apt-repo"
@@ -125,6 +146,8 @@ resource "nexus_repository" "apt_hosted" {
 }
 ```
 
+##### Bower hosted
+
 ```hcl
 resource "nexus_repository" "bower_hosted" {
   name   = "bower-hosted-repo"
@@ -143,9 +166,38 @@ resource "nexus_repository" "bower_hosted" {
 }
 ```
 
+##### Docker group
+
+```hcl
+resource "nexus_repository" "docker_group" {
+	name   = "docker-group"
+	format = "docker"
+	type   = "group"
+	online = true
+	
+	group {
+		member_names = ["docker-hub"]
+	}
+	
+	docker {
+		force_basic_auth = true
+		http_port        = 5000
+		https_port       = 5001
+		v1enabled        = false
+	}
+	
+	storage {
+		blob_store_name                = "default"
+		strict_content_type_validation = true
+	}
+}
+```
+
+##### Docker hosted
+
 ```hcl
 resource "nexus_repository" "docker_hosted" {
-  name   = "docker-hosted-repo"
+  name   = "docker-hosted"
   format = "docker"
   type   = "hosted"
   online = true
@@ -166,20 +218,17 @@ resource "nexus_repository" "docker_hosted" {
 ```
 
 ```hcl
-resource "nexus_repository" "docker_proxy" {
-  name   = "docker-proxy-repo"
+resource "nexus_repository" "docker_hub" {
+  name   = "docker-hub"
   type   = "proxy"
   format = "docker"
 
   docker {
-    http_port        = 8082
-    https_port       = 8083
     force_basic_auth = true
     v1enabled        = true
   }
 
   docker_proxy {
-    index_url  = "https://index.docker.io"
     index_type = "HUB"
   }
 
@@ -188,11 +237,12 @@ resource "nexus_repository" "docker_proxy" {
   }
 
   negative_cache {
-
+    enabled = true
+    ttl     = 1440
   }
 
   proxy {
-
+        remote_url  = "https://registry-1.docker.io"
   }
 
   storage {
