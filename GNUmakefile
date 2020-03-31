@@ -4,6 +4,8 @@ PKG_NAME=nexus
 PKG_OS ?= darwin linux
 PKG_ARCH ?= amd64
 
+GOCMD=go
+GOBUILD=$(GOCMD) build
 GO111MODULE111=on
 GOFLAGS=-mod=vendor
 GOFMT_FILES?=$$(find . -name '*.go' | grep -v vendor)
@@ -14,6 +16,12 @@ default: build
 
 build: fmtcheck
 	go build -v .
+
+linux: fmtcheck
+	GCO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) -o terraform.d/plugins/linux_amd64/terraform-provider-nexus -v
+
+darwin: fmtcheck
+	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 $(GOBUILD) -o terraform.d/plugins/darwin_amd64/terraform-provider-nexus -v
 
 test: fmtcheck
 	go test -i $(TEST) || exit 1
