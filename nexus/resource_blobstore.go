@@ -196,11 +196,10 @@ func getBlobstoreFromResourceData(d *schema.ResourceData) nexus.Blobstore {
 		Type: d.Get("type").(string),
 	}
 
-	if bs.Type == nexus.BlobstoreTypeFile {
+	switch bs.Type {
+	case nexus.BlobstoreTypeFile:
 		bs.Path = d.Get("path").(string)
-	}
-
-	if bs.Type == nexus.BlobstoreTypeS3 {
+	case nexus.BlobstoreTypeS3:
 		if _, ok := d.GetOk("bucket_configuration"); ok {
 			bucketConfigurationList := d.Get("bucket_configuration").([]interface{})
 			bucketConfiguration := bucketConfigurationList[0].(map[string]interface{})
@@ -234,13 +233,15 @@ func getBlobstoreFromResourceData(d *schema.ResourceData) nexus.Blobstore {
 
 			if _, ok := bucketConfiguration["bucket_security"]; ok {
 				bucketSecurityList := bucketConfiguration["bucket_security"].([]interface{})
-				bucketSecurity := bucketSecurityList[0].(map[string]interface{})
+				if len(bucketSecurityList) > 0 && bucketSecurityList[0] != nil {
+					bucketSecurity := bucketSecurityList[0].(map[string]interface{})
 
-				bs.BlobstoreS3BucketConfiguration.BlobstoreS3BucketSecurity = &nexus.BlobstoreS3BucketSecurity{
-					AccessKeyID:     bucketSecurity["access_key_id"].(string),
-					Role:            bucketSecurity["role"].(string),
-					SecretAccessKey: bucketSecurity["secret_access_key"].(string),
-					SessionToken:    bucketSecurity["session_token"].(string),
+					bs.BlobstoreS3BucketConfiguration.BlobstoreS3BucketSecurity = &nexus.BlobstoreS3BucketSecurity{
+						AccessKeyID:     bucketSecurity["access_key_id"].(string),
+						Role:            bucketSecurity["role"].(string),
+						SecretAccessKey: bucketSecurity["secret_access_key"].(string),
+						SessionToken:    bucketSecurity["session_token"].(string),
+					}
 				}
 			}
 
