@@ -2,19 +2,19 @@
 
 - [Introduction](#introduction)
 - [Usage](#usage)
-  - [Provider config](#provider-config
+  - [Provider config](#provider-config)
   - [Data Sources](#data-sources)
-    - [nexus_blobstore](#nexus_blobstore)
-    - [nexus_repository](#nexus_repository)
-    - [nexus_user](#nexus_user)
+    - [nexus_blobstore](#data-nexus_blobstore)
+    - [nexus_repository](#data-nexus_repository)
+    - [nexus_user](#data-nexus_user)
   - [Resources](#resources)
-    - [nexus_blobstore](#nexus_blobstore-1)
-      - [File](#file)
-      - [S3](#s3)
-    - [nexus_repository](#nexus_repository-1)
-    - [nexus_role](#nexus_role)
-    - [nexus_user](#nexus_user-1)
-    - [nexus_script](#nexus_script)
+    - [nexus_blobstore](#resource-nexus_blobstore)
+      - [File](#use-file)
+      - [S3](#use-s3)
+    - [nexus_repository](#resource-nexus_repository)
+    - [nexus_role](#resource-nexus_role)
+    - [nexus_user](#resource-nexus_user)
+    - [nexus_script](#resource-nexus_script)
 - [Build](#build)
 - [Testing](#testing)
 - [Author](#author)
@@ -39,7 +39,7 @@ provider "nexus" {
 
 ### Data Sources
 
-#### nexus_blobstore
+#### Data nexus_blobstore
 
 ```hcl
 data "nexus_blobstore" "default" {
@@ -47,7 +47,7 @@ data "nexus_blobstore" "default" {
 }
 ```
 
-#### nexus_repository
+#### Data nexus_repository
 
 ```hcl
 data "nexus_repository" "maven-central" {
@@ -55,7 +55,7 @@ data "nexus_repository" "maven-central" {
 }
 ```
 
-#### nexus_user
+#### Data nexus_user
 
 ```hcl
 data "nexus_user" "admin" {
@@ -65,15 +65,15 @@ data "nexus_user" "admin" {
 
 ### Resources
 
-#### nexus_blobstore
+#### Resource nexus_blobstore
 
 Blobstore can be imported using
 
 ```shell
-$ terraform import nexus_blobstore.default default
+terraform import nexus_blobstore.default default
 ```
 
-##### File
+##### Use File
 
 ```hcl
 resource "nexus_blobstore" "default" {
@@ -88,7 +88,7 @@ resource "nexus_blobstore" "default" {
 }
 ```
 
-##### S3
+##### Use S3
 
 ```hcl
 resource "nexus_blobstore" "aws" {
@@ -114,11 +114,12 @@ resource "nexus_blobstore" "aws" {
 }
 ```
 
-#### nexus_repository
+#### Resource nexus_repository
 
 Repository can be imported using
+
 ```shell
-$ terraform import nexus_repository.maven_central maven-central
+terraform import nexus_repository.maven_central maven-central
 ```
 
 ##### APT hosted
@@ -170,26 +171,26 @@ resource "nexus_repository" "bower_hosted" {
 
 ```hcl
 resource "nexus_repository" "docker_group" {
-	name   = "docker-group"
-	format = "docker"
-	type   = "group"
-	online = true
-	
-	group {
-		member_names = ["docker-hub"]
-	}
-	
-	docker {
-		force_basic_auth = true
-		http_port        = 5000
-		https_port       = 5001
-		v1enabled        = false
-	}
-	
-	storage {
-		blob_store_name                = "default"
-		strict_content_type_validation = true
-	}
+  name   = "docker-group"
+  format = "docker"
+  type   = "group"
+  online = true
+
+  group {
+    member_names = ["docker-hub"]
+  }
+
+  docker {
+    force_basic_auth = true
+    http_port        = 5000
+    https_port       = 5001
+    v1enabled        = false
+  }
+
+  storage {
+    blob_store_name                = "default"
+    strict_content_type_validation = true
+  }
 }
 ```
 
@@ -253,11 +254,12 @@ resource "nexus_repository" "docker_hub" {
 }
 ```
 
-#### nexus_role
+#### Resource nexus_role
 
 Role can be imported using
+
 ```shell
-$ terraform import nexus_role.nx_admin nx-admin
+terraform import nexus_role.nx_admin nx-admin
 ```
 
 ```hcl
@@ -270,12 +272,13 @@ resource "nexus_role" "nx-admin" {
 }
 ```
 
-#### nexus_user
+#### Resource nexus_user
 
 User can be imported using
+
 ```shell
-$ terraform import nexus_user.admin admin
-````
+terraform import nexus_user.admin admin
+```
 
 ```hcl
 resource "nexus_user" "admin" {
@@ -289,11 +292,12 @@ resource "nexus_user" "admin" {
 }
 ```
 
-#### nexus_script
+#### Resource nexus_script
 
 Script can be imported using
+
 ```shell
-$ terraform import nexus_script.my_script my-script
+terraform import nexus_script.my_script my-script
 ```
 
 ```hcl
@@ -316,7 +320,7 @@ make
 For testing start a local Docker container using script [./scripts/start-nexus.sh](./scripts/start-nexus.sh).
 
 ```shell
-$ ./scripts/start-nexus.sh
+./scripts/start-nexus.sh
 ```
 
 This will start a Docker container and expose port 8081.
@@ -324,10 +328,10 @@ This will start a Docker container and expose port 8081.
 Now start the tests
 
 ```shell
-$ NEXUS_URL="http://127.0.0.1:8081" NEXUS_USERNAME="admin" NEXUS_PASSWORD="admin123" make testacc
+NEXUS_URL="http://127.0.0.1:8081" NEXUS_USERNAME="admin" NEXUS_PASSWORD="admin123" make testacc
 ```
 
-__NOTE__: To test Blobstore type S3 following environment variables must be set, otherwise tests will fail
+**NOTE**: To test Blobstore type S3 following environment variables must be set, otherwise tests will fail
 
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
