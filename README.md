@@ -315,6 +315,14 @@ There is a [makefile](./GNUmakefile) to build the provider.
 make
 ```
 
+To build and install provider on macOS into `~/.terraform.d/plugins/darwin_amd64`, you can run
+
+```sh
+make darwin-build-install
+```
+
+In this case provider will be available to use with your terraform codebase (in terraform init stage).
+
 ## Testing
 
 For testing start a local Docker container using script [./scripts/start-nexus.sh](./scripts/start-nexus.sh).
