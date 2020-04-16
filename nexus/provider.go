@@ -22,20 +22,26 @@ func Provider() terraform.ResourceProvider {
 			"nexus_script":     resourceScript(),
 		},
 		Schema: map[string]*schema.Schema{
-			"url": {
-				Type:        schema.TypeString,
-				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc("NEXUS_URL", "http://127.0.0.1:8080"),
-			},
-			"username": {
-				Type:        schema.TypeString,
-				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc("NEXUS_USERNAME", "admin"),
+			"insecure": {
+				Default:     false,
+				DefaultFunc: schema.EnvDefaultFunc("NEXUS_INSECURE_SKIP_VERIFY", "true"),
+				Optional:    true,
+				Type:        schema.TypeBool,
 			},
 			"password": {
-				Type:        schema.TypeString,
-				Required:    true,
 				DefaultFunc: schema.EnvDefaultFunc("NEXUS_PASSWORD", "admin123"),
+				Required:    true,
+				Type:        schema.TypeString,
+			},
+			"url": {
+				DefaultFunc: schema.EnvDefaultFunc("NEXUS_URL", "http://127.0.0.1:8080"),
+				Required:    true,
+				Type:        schema.TypeString,
+			},
+			"username": {
+				DefaultFunc: schema.EnvDefaultFunc("NEXUS_USERNAME", "admin"),
+				Required:    true,
+				Type:        schema.TypeString,
 			},
 		},
 		ConfigureFunc: providerConfigure,
@@ -44,9 +50,10 @@ func Provider() terraform.ResourceProvider {
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	config := client.Config{
+		Insecure: d.Get("insecure").(bool),
+		Password: d.Get("password").(string),
 		URL:      d.Get("url").(string),
 		Username: d.Get("username").(string),
-		Password: d.Get("password").(string),
 	}
 	return client.NewClient(config), nil
 }

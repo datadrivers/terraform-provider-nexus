@@ -31,9 +31,10 @@ Implemented and tested with Sonatype Nexus `3.22.0`.
 
 ```hcl
 provider "nexus" {
-  url      = "http://127.0.0.1:8080"
-  username = "admin"
+  insecure = true
   password = "admin123"
+  url      = "https://127.0.0.1:8080"
+  username = "admin"
 }
 ```
 
