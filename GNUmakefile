@@ -23,6 +23,9 @@ linux: fmtcheck
 darwin: fmtcheck
 	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 $(GOBUILD) -o terraform.d/plugins/darwin_amd64/terraform-provider-nexus -v
 
+darwin-build-install: fmtcheck
+	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 $(GOBUILD) -o ~/.terraform.d/plugins/darwin_amd64/terraform-provider-nexus -v
+
 test: fmtcheck
 	go test -i $(TEST) || exit 1
 	echo $(TEST) | \
