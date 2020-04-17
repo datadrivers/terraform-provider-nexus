@@ -2,6 +2,7 @@ package nexus
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	nexus "github.com/datadrivers/go-nexus-client"
@@ -55,6 +56,9 @@ resource "nexus_blobstore" "acceptance" {
 }
 
 func TestAccResourceBlobstoreS3(t *testing.T) {
+	if os.Getenv("SKIP_S3_TESTS") != "" {
+		t.Skip("Skipping S3 tests")
+	}
 	awsAccessKeyID := getEnv("AWS_ACCESS_KEY_ID", "")
 	awsSecretAccessKey := getEnv("AWS_SECRET_ACCESS_KEY", "")
 	bsName := fmt.Sprintf("test-blobstore-s3-%d", acctest.RandIntRange(0, 99))
@@ -99,7 +103,7 @@ resource "nexus_blobstore" "acceptance" {
 
 		bucket_security {
 		  access_key_id     = "%s"
-		  secret_access_key = "%s"		  
+		  secret_access_key = "%s"
 		}
 	}
 }`, name, bsType, bucketName, bucketRegion, awsAccessKeyID, awsSecretAccessKey)

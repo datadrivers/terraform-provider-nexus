@@ -331,7 +331,13 @@ Now start the tests
 NEXUS_URL="http://127.0.0.1:8081" NEXUS_USERNAME="admin" NEXUS_PASSWORD="admin123" make testacc
 ```
 
-**NOTE**: To test Blobstore type S3 following environment variables must be set, otherwise tests will fail
+or without s3 tests which require additional configuration:
+
+```shell
+SKIP_S3_TESTS=1 NEXUS_URL="http://127.0.0.1:8081" NEXUS_USERNAME="admin" NEXUS_PASSWORD="admin123" make testacc
+```
+
+**NOTE**: To test Blobstore type S3 following environment variables must be set, otherwise tests will fail.
 
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
