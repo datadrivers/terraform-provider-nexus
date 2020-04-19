@@ -1,5 +1,5 @@
 dist: bionic
-sudo: required
+os: linux
 services:
   - docker
 language: go
@@ -24,7 +24,7 @@ branches:
   only:
     - master
 
-matrix:
+jobs:
   fast_finish: true
   allow_failures:
     - go: tip
