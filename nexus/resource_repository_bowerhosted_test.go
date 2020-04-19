@@ -30,8 +30,10 @@ func TestAccRepositoryBowerHosted(t *testing.T) {
 				ImportStateId:     repoName,
 				ImportState:       true,
 				ImportStateVerify: true,
-				// bower attribute not returned by API
+				// TODO: verify bower configuration, bower attribute is not returned by API currently
 				ImportStateVerifyIgnore: []string{"bower"},
+				// TODO: add check for storage
+				// TODO: add tests for readonly repository
 			},
 		},
 	})

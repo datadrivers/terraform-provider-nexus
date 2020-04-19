@@ -22,6 +22,13 @@ func TestAccRepositoryDockerProxy(t *testing.T) {
 					resource.TestCheckResourceAttr("nexus_repository.docker_proxy", "format", "docker"),
 					resource.TestCheckResourceAttr("nexus_repository.docker_proxy", "type", "proxy"),
 				),
+				// TODO: add check for storage
+				// TODO: add check for repository connectors
+				// TODO: add check for Group members
+				// TODO: add check for api version support
+				// TODO: add tests for readonly repository
+				// TODO: add tests for cleanup
+				// TODO: add tests for docker proxy specific parameters
 			},
 		},
 	})

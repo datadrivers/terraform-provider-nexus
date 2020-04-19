@@ -32,6 +32,12 @@ func TestAccRepositoryDockerHostedWithPorts(t *testing.T) {
 				ImportStateId:     repoName,
 				ImportState:       true,
 				ImportStateVerify: true,
+				// TODO: add check for storage
+				// TODO: add check for repository connectors
+				// TODO: add check for Group members
+				// TODO: add check for api version support
+				// TODO: add tests for readonly repository
+				// TODO: add tests for cleanup
 			},
 		},
 	})

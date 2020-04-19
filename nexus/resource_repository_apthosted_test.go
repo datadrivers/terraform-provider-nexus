@@ -34,8 +34,11 @@ func TestAccRepositoryAptHosted(t *testing.T) {
 				ImportStateId:     repoName,
 				ImportState:       true,
 				ImportStateVerify: true,
-				// apt_signing not returned by API
+				// TODO: verify apt_signing configuration, apt_signing not returned by API currently
 				ImportStateVerifyIgnore: []string{"apt_signing"},
+				// TODO: add check for storage
+				// TODO: add check for apt.distribution
+				// TODO: add tests for readonly repository
 			},
 		},
 	})
