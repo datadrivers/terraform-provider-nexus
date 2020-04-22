@@ -359,6 +359,8 @@ Set env variable `TF_LOG=DEBUG` to see additional output.
 
 Use `printState()` function to discover terraform state (and resource props) during test.
 
+Debug configurations are also available for VS Code.
+
 ## Author
 
 [Datadrivers GmbH](https://www.datadrivers.de)
