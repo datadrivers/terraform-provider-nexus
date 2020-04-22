@@ -353,6 +353,12 @@ SKIP_S3_TESTS=1 NEXUS_URL="http://127.0.0.1:8081" NEXUS_USERNAME="admin" NEXUS_P
 - `AWS_DEFAULT_REGION` the AWS region of the S3 bucket to use, defaults to `eu-central-1`
 - `AWS_BUCKET_NAME` the name of S3 bucket to use, defaults to `terraform-provider-nexus-s3-test`
 
+To debug tests
+
+Set env variable `TF_LOG=DEBUG` to see additional output.
+
+Use `printState()` function to discover terraform state (and resource props) during test.
+
 ## Author
 
 [Datadrivers GmbH](https://www.datadrivers.de)
