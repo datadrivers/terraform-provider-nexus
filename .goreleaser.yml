@@ -1,0 +1,18 @@
+build:
+  goos:
+  - darwin
+  - linux
+  - windows
+  ignore:
+  - goos: darwin
+    goarch: 386
+
+archives:
+# Terraform expects a "v" in the plugin version identifier
+- name_template: "{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  format: gz
+  format_overrides:
+  - goos: windows
+    format: zip
+  files:
+  - none*
