@@ -1,4 +1,5 @@
 build:
+  binary: terraform-provider-nexus_v{{ .Version }}
   goos:
   - darwin
   - linux
@@ -10,7 +11,7 @@ build:
 archives:
 # Terraform expects a "v" in the plugin version identifier
 - name_template: "{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-  format: gz
+  format: tar.gz
   format_overrides:
   - goos: windows
     format: zip
