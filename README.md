@@ -2,7 +2,7 @@
 
 - [Introduction](#introduction)
 - [Usage](#usage)
-  - [Provider config](#provider-config
+  - [Provider config](#provider-config)
   - [Data Sources](#data-sources)
     - [nexus_blobstore](#nexus_blobstore)
     - [nexus_repository](#nexus_repository)
