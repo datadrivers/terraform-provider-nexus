@@ -1,8 +1,9 @@
 #!/bin/bash
 set -eo pipefail
 
-echo "Starting Nexus container..."
-docker run -d --rm --name nexus -p 127.0.0.1:8081:8081 sonatype/nexus3:3.22.0
+export NEXUS_VERSION=3.22.1
+echo "Starting Nexus v${NEXUS_VERSION} container..."
+docker run -d --rm --name nexus -p 127.0.0.1:8081:8081 "sonatype/nexus3:${NEXUS_VERSION}"
 
 function wait_for_nexus {
     echo -n "Waiting for Nexus to be ready "
