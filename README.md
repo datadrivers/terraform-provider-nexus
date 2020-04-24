@@ -271,6 +271,22 @@ resource "nexus_repository" "pypi_hosted" {
 }
 ```
 
+##### NPM hosted
+
+```hcl
+resource "nexus_repository" "npm_hosted" {
+  name   = "npm-hosted-repo"
+  format = "npm"
+  type   = "hosted"
+
+  storage {
+    blob_store_name                = "default"
+    strict_content_type_validation = true
+    write_policy                   = "ALLOW_ONCE"
+  }
+}
+```
+
 #### Resource nexus_role
 
 Role can be imported using

@@ -25,7 +25,7 @@ func resourceRepository() *schema.Resource {
 				ForceNew:     true,
 				Required:     true,
 				Type:         schema.TypeString,
-				ValidateFunc: validation.StringInSlice([]string{"apt", "bower", "docker", "maven2", "nuget", "pypi"}, false),
+				ValidateFunc: validation.StringInSlice([]string{"apt", "bower", "docker", "maven2", "npm", "nuget", "pypi"}, false),
 			},
 			"name": {
 				Description: "A unique identifier for this repository",
