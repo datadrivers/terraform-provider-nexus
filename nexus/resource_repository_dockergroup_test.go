@@ -2,22 +2,22 @@ package nexus
 
 import (
 	"fmt"
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"testing"
 )
 
 func TestAccRepositoryDockerGroup(t *testing.T) {
 	repoName := fmt.Sprintf("test-repo-docker-group-%s", acctest.RandString(10))
-	memberRepoName := fmt.Sprintf("test-repo-docker-group-member-%d", acctest.RandInt())
-
+	dockerProxyRepoName := fmt.Sprintf("test-repo-docker-group-member-%s", acctest.RandString(10))
+	dockerHostedWithPortsRepoName := fmt.Sprintf("test-repo-docker-group-member-%s", acctest.RandString(10))
+	dockerHostedWithoutPortsRepoName := fmt.Sprintf("test-repo-docker-group-member-%s", acctest.RandString(10))
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: createTfStmtForResourceDockerProxy(memberRepoName) + createTfStmtForResourceDockerGroup(repoName, memberRepoName),
+				Config: createTfStmtForResourceDockerHostedWithPorts(dockerHostedWithPortsRepoName) + createTfStmtForResourceDockerHostedWithoutPorts(dockerHostedWithoutPortsRepoName) + createTfStmtForResourceDockerProxy(dockerProxyRepoName) + createTfStmtForResourceDockerGroup(repoName),
 				Check: resource.ComposeTestCheckFunc(
 					// Base and common repo props
 					// Identity fields
@@ -58,14 +58,14 @@ func TestAccRepositoryDockerGroup(t *testing.T) {
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr("nexus_repository.docker_group", "docker.#", "1"),
 						resource.TestCheckResourceAttr("nexus_repository.docker_group", "docker.0.force_basic_auth", "true"),
-						resource.TestCheckResourceAttr("nexus_repository.docker_group", "docker.0.http_port", "8082"),
-						resource.TestCheckResourceAttr("nexus_repository.docker_group", "docker.0.https_port", "0"),
+						resource.TestCheckResourceAttr("nexus_repository.docker_group", "docker.0.http_port", "8085"),
+						resource.TestCheckResourceAttr("nexus_repository.docker_group", "docker.0.https_port", "8086"),
 						resource.TestCheckResourceAttr("nexus_repository.docker_group", "docker.0.v1enabled", "false"),
 					),
 					// Type
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr("nexus_repository.docker_group", "group.#", "1"),
-						resource.TestCheckResourceAttr("nexus_repository.docker_group", "group.0.member_names.#", "1"),
+						resource.TestCheckResourceAttr("nexus_repository.docker_group", "group.0.member_names.#", "3"),
 					),
 					// FIXME: (BUG) Incorrect member_names state representation.
 					// For some reasons, 1st element in array is not stored as group.0.member_names.0, but instead it's stored
@@ -81,7 +81,7 @@ func TestAccRepositoryDockerGroup(t *testing.T) {
 	})
 }
 
-func createTfStmtForResourceDockerGroup(name string, memberRepoName string) string {
+func createTfStmtForResourceDockerGroup(name string) string {
 	return fmt.Sprintf(`
 resource "nexus_repository" "docker_group" {
 	name   = "%s"
@@ -90,13 +90,13 @@ resource "nexus_repository" "docker_group" {
 	online = true
 
 	group {
-		member_names = [nexus_repository.docker_proxy.name]
+		member_names = [nexus_repository.docker_proxy.name, nexus_repository.docker_hosted_with_ports.name, nexus_repository.docker_hosted_without_ports.name ]
 	}
 
 	docker {
 		force_basic_auth = true
-		http_port        = 8082
-		https_port       = 0
+		http_port        = 8085
+		https_port       = 8086
 		v1enabled        = false
 	}
 
