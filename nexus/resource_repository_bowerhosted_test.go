@@ -20,9 +20,50 @@ func TestAccRepositoryBowerHosted(t *testing.T) {
 			{
 				Config: createTfStmtForResourceBowerHosted(repoName, bowerRewritePackageURLs),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "name", repoName),
-					resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "format", "bower"),
-					resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "type", "hosted"),
+					// Base and common repo props
+					// Identity fields
+					resource.ComposeAggregateTestCheckFunc(
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "id", repoName),
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "name", repoName),
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "format", "bower"),
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "type", "hosted"),
+					),
+					// Common fields
+					// Online
+					resource.ComposeAggregateTestCheckFunc(
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "online", "true"),
+						// Storage
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "storage.#", "1"),
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "storage.0.blob_store_name", "default"),
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "storage.0.strict_content_type_validation", "true"),
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "storage.0.write_policy", "ALLOW"),
+					),
+					// No fields related to other repo types
+					// Format
+					resource.ComposeAggregateTestCheckFunc(
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "maven.#", "0"),
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "apt.#", "0"),
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "apt_signing.#", "0"),
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "docker.#", "0"),
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "docker_proxy.#", "0"),
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "http_client.#", "0"),
+					),
+					// Type
+					resource.ComposeAggregateTestCheckFunc(
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "group.#", "0"),
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "negative_cache.#", "0"),
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "proxy.#", "0"),
+					),
+					// Fields related to this format and type
+					// Format
+					resource.ComposeAggregateTestCheckFunc(
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "bower.#", "1"),
+						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "bower.0.rewrite_package_urls", "true"),
+					),
+					// Type
+					resource.ComposeAggregateTestCheckFunc(
+					// No specific fields
+					),
 				),
 			},
 			{
@@ -32,7 +73,6 @@ func TestAccRepositoryBowerHosted(t *testing.T) {
 				ImportStateVerify: true,
 				// TODO: verify bower configuration, bower attribute is not returned by API currently
 				ImportStateVerifyIgnore: []string{"bower"},
-				// TODO: add check for storage
 				// TODO: add tests for readonly repository
 			},
 		},
