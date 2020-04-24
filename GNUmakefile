@@ -14,6 +14,12 @@ WEBSITE_REPO=github.com/hashicorp/terraform-website
 
 default: build
 
+nexus-start:
+	./scripts/stop-nexus.sh && ./scripts/start-nexus.sh
+
+nexus-stop:
+	./scripts/stop-nexus.sh
+
 build: fmtcheck
 	go build -v .
 

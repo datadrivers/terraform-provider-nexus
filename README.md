@@ -358,10 +358,10 @@ In this case provider will be available to use with your terraform codebase (in 
 
 ## Testing
 
-For testing start a local Docker container using script [./scripts/start-nexus.sh](./scripts/start-nexus.sh).
+For testing start a local Docker container using make
 
 ```shell
-./scripts/start-nexus.sh
+make nexus-start
 ```
 
 This will start a Docker container and expose port 8081.

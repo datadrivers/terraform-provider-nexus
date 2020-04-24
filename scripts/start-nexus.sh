@@ -2,8 +2,9 @@
 set -eo pipefail
 
 export NEXUS_VERSION=3.22.1
+
 echo "Starting Nexus v${NEXUS_VERSION} container..."
-docker run -d --rm --name nexus -p 127.0.0.1:8081:8081 "sonatype/nexus3:${NEXUS_VERSION}"
+docker run -d --rm --name nexus -l terraform-provider-nexus=true -p 127.0.0.1:8081:8081 "sonatype/nexus3:${NEXUS_VERSION}"
 
 function wait_for_nexus {
     echo -n "Waiting for Nexus to be ready "
@@ -14,6 +15,7 @@ function wait_for_nexus {
         echo -n .
         if [[ $((i%3)) == 0 ]]; then echo -n ' '; fi
         (( i++ ))
+        echo ""
     done
 }
 
@@ -29,3 +31,5 @@ echo "Enabling scripting related features and restarting Nexus. https://issues.s
 docker exec nexus /bin/bash -c "echo 'nexus.scripts.allowCreation=true' >> /nexus-data/etc/nexus.properties" && docker restart nexus
 
 wait_for_nexus
+
+echo "Nexus is started"
