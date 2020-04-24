@@ -255,6 +255,22 @@ resource "nexus_repository" "docker_hub" {
 }
 ```
 
+##### PyPi hosted
+
+```hcl
+resource "nexus_repository" "pypi_hosted" {
+  name   = "pypi-hosted-repo"
+  format = "pypi"
+  type   = "hosted"
+
+  storage {
+    blob_store_name                = "default"
+    strict_content_type_validation = true
+    write_policy                   = "ALLOW_ONCE"
+  }
+}
+```
+
 #### Resource nexus_role
 
 Role can be imported using
