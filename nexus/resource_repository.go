@@ -21,11 +21,20 @@ func resourceRepository() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"format": {
-				Description:  "Repository format",
-				ForceNew:     true,
-				Required:     true,
-				Type:         schema.TypeString,
-				ValidateFunc: validation.StringInSlice([]string{"apt", "bower", "docker", "maven2", "npm", "nuget", "pypi"}, false),
+				Description: "Repository format",
+				ForceNew:    true,
+				Required:    true,
+				Type:        schema.TypeString,
+				ValidateFunc: validation.StringInSlice([]string{
+					"apt",
+					"bower",
+					"docker",
+					"helm",
+					"maven2",
+					"npm",
+					"nuget",
+					"pypi",
+				}, false),
 			},
 			"name": {
 				Description: "A unique identifier for this repository",
