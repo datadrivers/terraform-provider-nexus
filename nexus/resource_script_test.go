@@ -10,16 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func testScriptResource(scriptName string, scriptContent string, scriptType string) string {
-	return fmt.Sprintf(`
-resource "nexus_script" "acceptance" {
-    name    = "%s"
-	content = "%s"
-	type    = "%s"
-}
-`, scriptName, scriptContent, scriptType)
-}
-
 func testAccCheckScriptResourceExists(name string, script *nexus.Script) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[name]
@@ -55,6 +45,11 @@ func TestAccScript(t *testing.T) {
 			{
 				Config: testScriptResource(scriptName, scriptContent, scriptType),
 				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("nexus_script.acceptance", "id", scriptName),
+					resource.TestCheckResourceAttr("nexus_script.acceptance", "name", scriptName),
+					resource.TestCheckResourceAttr("nexus_script.acceptance", "type", scriptType),
+					resource.TestCheckResourceAttr("nexus_script.acceptance", "content", scriptContent),
+					// TODO: Does it make sense to check additionally that script exists?
 					testAccCheckScriptResourceExists("nexus_script.acceptance", &script),
 				),
 			},
@@ -66,4 +61,14 @@ func TestAccScript(t *testing.T) {
 			},
 		},
 	})
+}
+
+func testScriptResource(scriptName string, scriptContent string, scriptType string) string {
+	return fmt.Sprintf(`
+resource "nexus_script" "acceptance" {
+	name    = "%s"
+	content = "%s"
+	type    = "%s"
+}
+`, scriptName, scriptContent, scriptType)
 }
