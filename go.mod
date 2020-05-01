@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go v0.56.0 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/aws/aws-sdk-go v1.30.7 // indirect
-	github.com/datadrivers/go-nexus-client v0.7.1
+	github.com/datadrivers/go-nexus-client v0.0.0-20200507085243-aa291c6ed35c
 	github.com/fatih/color v1.9.0 // indirect
 	github.com/golang/protobuf v1.4.0 // indirect
 	github.com/hashicorp/go-getter v1.4.1 // indirect

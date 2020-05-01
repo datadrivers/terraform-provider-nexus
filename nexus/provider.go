@@ -15,11 +15,13 @@ func Provider() terraform.ResourceProvider {
 			"nexus_user":       dataSourceUser(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"nexus_blobstore":  resourceBlobstore(),
-			"nexus_repository": resourceRepository(),
-			"nexus_role":       resourceRole(),
-			"nexus_user":       resourceUser(),
-			"nexus_script":     resourceScript(),
+			"nexus_blobstore":        resourceBlobstore(),
+			"nexus_content_selector": resourceContentSelector(),
+			"nexus_privilege":        resourcePrivilege(),
+			"nexus_repository":       resourceRepository(),
+			"nexus_role":             resourceRole(),
+			"nexus_user":             resourceUser(),
+			"nexus_script":           resourceScript(),
 		},
 		Schema: map[string]*schema.Schema{
 			"insecure": {
