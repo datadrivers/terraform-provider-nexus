@@ -1,30 +1,30 @@
 dist: bionic
-sudo: required
+os: linux
 services:
   - docker
 language: go
 go:
   - "1.14.x"
 
+cache:
+  directories:
+    - $GOPATH/pkg/mod
+
 install:
-  # This script is used by the Travis build to install a cookie for
-  # go.googlesource.com so rate limits are higher when using `go get` to fetch
-  # packages that live there.
-  # See: https://github.com/golang/go/issues/12933
-  - bash scripts/gogetcookie.sh
-  - bash scripts/start-nexus.sh
+  - make nexus-start
 
 script:
   - make test
   - make vet
-  - NEXUS_URL=http://127.0.0.1:8081 NEXUS_USERNAME=admin NEXUS_PASSWORD=admin123 make testacc
+  - SKIP_S3_TESTS=1 NEXUS_URL=http://127.0.0.1:8081 NEXUS_USERNAME=admin NEXUS_PASSWORD=admin123 make testacc
 #  - make website-test
 
 branches:
   only:
     - master
+    - develop
 
-matrix:
+jobs:
   fast_finish: true
   allow_failures:
     - go: tip
