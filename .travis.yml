@@ -17,6 +17,7 @@ script:
   - make test
   - make vet
   - SKIP_S3_TESTS=1 NEXUS_URL=http://127.0.0.1:8081 NEXUS_USERNAME=admin NEXUS_PASSWORD=admin123 make testacc
+#  - make website-test
 
 branches:
   only:
