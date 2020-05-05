@@ -31,9 +31,10 @@ Implemented and tested with Sonatype Nexus `3.22.0`.
 
 ```hcl
 provider "nexus" {
-  url      = "http://127.0.0.1:8080"
-  username = "admin"
+  insecure = true
   password = "admin123"
+  url      = "https://127.0.0.1:8080"
+  username = "admin"
 }
 ```
 
@@ -254,6 +255,38 @@ resource "nexus_repository" "docker_hub" {
 }
 ```
 
+##### PyPi hosted
+
+```hcl
+resource "nexus_repository" "pypi_hosted" {
+  name   = "pypi-hosted-repo"
+  format = "pypi"
+  type   = "hosted"
+
+  storage {
+    blob_store_name                = "default"
+    strict_content_type_validation = true
+    write_policy                   = "ALLOW_ONCE"
+  }
+}
+```
+
+##### NPM hosted
+
+```hcl
+resource "nexus_repository" "npm_hosted" {
+  name   = "npm-hosted-repo"
+  format = "npm"
+  type   = "hosted"
+
+  storage {
+    blob_store_name                = "default"
+    strict_content_type_validation = true
+    write_policy                   = "ALLOW_ONCE"
+  }
+}
+```
+
 #### Resource nexus_role
 
 Role can be imported using
@@ -315,12 +348,20 @@ There is a [makefile](./GNUmakefile) to build the provider.
 make
 ```
 
+To build and install provider on macOS into `~/.terraform.d/plugins/darwin_amd64`, you can run
+
+```sh
+make darwin-build-install
+```
+
+In this case provider will be available to use with your terraform codebase (in terraform init stage).
+
 ## Testing
 
-For testing start a local Docker container using script [./scripts/start-nexus.sh](./scripts/start-nexus.sh).
+For testing start a local Docker container using make
 
 ```shell
-./scripts/start-nexus.sh
+make nexus-start
 ```
 
 This will start a Docker container and expose port 8081.
@@ -331,12 +372,26 @@ Now start the tests
 NEXUS_URL="http://127.0.0.1:8081" NEXUS_USERNAME="admin" NEXUS_PASSWORD="admin123" make testacc
 ```
 
-**NOTE**: To test Blobstore type S3 following environment variables must be set, otherwise tests will fail
+or without s3 tests which require additional configuration:
+
+```shell
+SKIP_S3_TESTS=1 NEXUS_URL="http://127.0.0.1:8081" NEXUS_USERNAME="admin" NEXUS_PASSWORD="admin123" make testacc
+```
+
+**NOTE**: To test Blobstore type S3 following environment variables must be set, otherwise tests will fail.
 
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
 - `AWS_DEFAULT_REGION` the AWS region of the S3 bucket to use, defaults to `eu-central-1`
 - `AWS_BUCKET_NAME` the name of S3 bucket to use, defaults to `terraform-provider-nexus-s3-test`
+
+To debug tests
+
+Set env variable `TF_LOG=DEBUG` to see additional output.
+
+Use `printState()` function to discover terraform state (and resource props) during test.
+
+Debug configurations are also available for VS Code.
 
 ## Author
 
