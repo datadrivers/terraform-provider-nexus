@@ -2,6 +2,8 @@ package nexus
 
 import (
 	"fmt"
+	"os"
+	"strconv"
 	"testing"
 
 	nexus "github.com/datadrivers/go-nexus-client"
@@ -23,17 +25,40 @@ func TestAccResourceBlobstoreFile(t *testing.T) {
 			{
 				Config: testAccBlobstoreResourceFile(bsName, bsType, bsPath, quotaLimit, quotaType),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "name", bsName),
-					resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "type", bsType),
-					resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "path", bsPath),
+					// Base and common resource props
+					// Identity fields
+					resource.ComposeAggregateTestCheckFunc(
+						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "id", bsName),
+						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "name", bsName),
+						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "path", bsPath),
+						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "type", bsType),
+					),
+					// Common fields
+					resource.ComposeAggregateTestCheckFunc(
+						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "soft_quota.#", "1"),
+						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "soft_quota.0.limit", strconv.Itoa(quotaLimit)),
+						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "soft_quota.0.type", quotaType),
+					),
+					// No fields related to other types
+					resource.ComposeAggregateTestCheckFunc(
+						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "bucket_configuration.#", "0"),
+					),
+
+					// Fields related to this type
+					resource.ComposeAggregateTestCheckFunc(
+						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "blob_count", "0"),          // empty
+						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "total_size_in_bytes", "0"), // empty
+						// FIXME: The value is unavailable, but should be
+						// TODO: check that value is non-zero
+						// resource.TestCheckResourceAttrSet("nexus_blobstore.acceptance", "available_space_in_bytes"),
+					),
 				),
 			},
 			{
-				ResourceName:      "nexus_blobstore.acceptance",
-				ImportState:       true,
-				ImportStateId:     bsName,
-				ImportStateVerify: true,
-				// available_space_in_bytes changes too frequently.
+				ResourceName:            "nexus_blobstore.acceptance",
+				ImportState:             true,
+				ImportStateId:           bsName,
+				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"available_space_in_bytes"},
 			},
 		},
@@ -55,6 +80,9 @@ resource "nexus_blobstore" "acceptance" {
 }
 
 func TestAccResourceBlobstoreS3(t *testing.T) {
+	if os.Getenv("SKIP_S3_TESTS") != "" {
+		t.Skip("Skipping S3 tests")
+	}
 	awsAccessKeyID := getEnv("AWS_ACCESS_KEY_ID", "")
 	awsSecretAccessKey := getEnv("AWS_SECRET_ACCESS_KEY", "")
 	bsName := fmt.Sprintf("test-blobstore-s3-%d", acctest.RandIntRange(0, 99))
@@ -68,6 +96,7 @@ func TestAccResourceBlobstoreS3(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBlobstoreResourceS3Minimal(bsName, bsType, bucketName, bucketRegion, awsAccessKeyID, awsSecretAccessKey),
+				// FIXME: Increase test coverage
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "name", bsName),
 					resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "type", bsType),
@@ -99,7 +128,7 @@ resource "nexus_blobstore" "acceptance" {
 
 		bucket_security {
 		  access_key_id     = "%s"
-		  secret_access_key = "%s"		  
+		  secret_access_key = "%s"
 		}
 	}
 }`, name, bsType, bucketName, bucketRegion, awsAccessKeyID, awsSecretAccessKey)

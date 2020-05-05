@@ -6,3 +6,5 @@ terraform.tfstate.*.backup
 
 # MacOS
 .DS_Store
+
+debug.test

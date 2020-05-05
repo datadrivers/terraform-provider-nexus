@@ -52,7 +52,7 @@ func resourceScriptCreate(d *schema.ResourceData, m interface{}) error {
 	if err := nexusClient.ScriptCreate(&script); err != nil {
 		return err
 	}
-
+	// TODO: It should be possible to configure whether to run script or not
 	if err := nexusClient.ScriptRun(script.Name); err != nil {
 		return err
 	}

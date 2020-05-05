@@ -8,8 +8,19 @@ import (
 func dataSourceBlobstore() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceBlobstoreRead,
-
 		Schema: map[string]*schema.Schema{
+			"type": {
+				Optional: true,
+				Type:     schema.TypeString,
+			},
+			"name": {
+				Required: true,
+				Type:     schema.TypeString,
+			},
+			"path": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			"available_space_in_bytes": {
 				Computed: true,
 				Type:     schema.TypeInt,
@@ -134,14 +145,6 @@ func dataSourceBlobstore() *schema.Resource {
 				Optional: true,
 				Type:     schema.TypeList,
 			},
-			"name": {
-				Required: true,
-				Type:     schema.TypeString,
-			},
-			"path": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
 			"soft_quota": {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -162,10 +165,6 @@ func dataSourceBlobstore() *schema.Resource {
 			"total_size_in_bytes": {
 				Computed: true,
 				Type:     schema.TypeInt,
-			},
-			"type": {
-				Optional: true,
-				Type:     schema.TypeString,
 			},
 		},
 	}

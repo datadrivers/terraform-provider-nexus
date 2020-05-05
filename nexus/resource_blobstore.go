@@ -21,6 +21,24 @@ func resourceBlobstore() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
+			"type": {
+				Type:         schema.TypeString,
+				Required:     true,
+				ForceNew:     true,
+				ValidateFunc: validation.StringInSlice([]string{"S3", "File"}, false),
+			},
+
+			"name": {
+				Description: "Blobstore name",
+				Type:        schema.TypeString,
+				Required:    true,
+			},
+			"path": {
+				ConflictsWith: []string{"bucket_configuration"},
+				Description:   "The path to the blobstore contents. This can be an absolute path to anywhere on the system nxrm has access to or it can be a path relative to the sonatype-work directory",
+				Type:          schema.TypeString,
+				Optional:      true,
+			},
 			"available_space_in_bytes": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -145,17 +163,6 @@ func resourceBlobstore() *schema.Resource {
 				Optional: true,
 				Type:     schema.TypeList,
 			},
-			"name": {
-				Description: "Blobstore name",
-				Type:        schema.TypeString,
-				Required:    true,
-			},
-			"path": {
-				ConflictsWith: []string{"bucket_configuration"},
-				Description:   "The path to the blobstore contents. This can be an absolute path to anywhere on the system nxrm has access to or it can be a path relative to the sonatype-work directory",
-				Type:          schema.TypeString,
-				Optional:      true,
-			},
 			"soft_quota": {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -180,11 +187,6 @@ func resourceBlobstore() *schema.Resource {
 			"total_size_in_bytes": {
 				Type:     schema.TypeInt,
 				Computed: true,
-			},
-			"type": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
 			},
 		},
 	}
