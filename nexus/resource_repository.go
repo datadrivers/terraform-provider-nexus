@@ -30,7 +30,7 @@ func resourceRepository() *schema.Resource {
 					"bower",
 					"docker",
 					"helm",
-					"maven2",
+					"maven",
 					"npm",
 					"nuget",
 					"pypi",
