@@ -23,7 +23,7 @@ func TestAccDataSourceRepositoryMavenProxy(t *testing.T) {
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(resourceName, "id", repoName),
 						resource.TestCheckResourceAttr(resourceName, "name", repoName),
-						resource.TestCheckResourceAttr(resourceName, "format", "maven"),
+						resource.TestCheckResourceAttr(resourceName, "format", "maven2"),
 						resource.TestCheckResourceAttr(resourceName, "type", "proxy"),
 					),
 					// Common fields
@@ -60,7 +60,7 @@ func TestAccDataSourceRepositoryMavenProxy(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "proxy.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "proxy.0.content_max_age", "-1"),
 						resource.TestCheckResourceAttr(resourceName, "proxy.0.metadata_max_age", "1440"),
-						resource.TestCheckResourceAttr(resourceName, "proxy.0.remote_url", "https://repo1.maven.org/maven/"),
+						resource.TestCheckResourceAttr(resourceName, "proxy.0.remote_url", "https://repo1.maven.org/maven2/"),
 						resource.TestCheckResourceAttr(resourceName, "negative_cache.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "negative_cache.0.enabled", "true"),
 						resource.TestCheckResourceAttr(resourceName, "negative_cache.0.ttl", "1440"),
