@@ -1,8 +1,6 @@
 package nexus
 
 import (
-	"sort"
-
 	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -465,7 +463,6 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 			for _, v := range groupConfigMemberNames.List() {
 				groupMemberNames = append(groupMemberNames, v.(string))
 			}
-			sort.Strings(groupMemberNames)
 		}
 		repo.RepositoryGroup = &nexus.RepositoryGroup{
 			MemberNames: groupMemberNames,
@@ -686,7 +683,6 @@ func flattenRepositoryGroup(group *nexus.RepositoryGroup) []map[string]interface
 	if group == nil {
 		return nil
 	}
-	sort.Strings(group.MemberNames)
 	data := map[string]interface{}{
 		"member_names": stringSliceToInterfaceSlice(group.MemberNames),
 	}
