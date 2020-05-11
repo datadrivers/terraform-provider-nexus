@@ -32,7 +32,7 @@ func resourceRepository() *schema.Resource {
 					nexus.RepositoryFormatMaven2,
 					nexus.RepositoryFormatNPM,
 					nexus.RepositoryFormatNuget,
-					nexus.RepositoryFormatPyPI,
+					nexus.RepositoryFormatPyPi,
 					nexus.RepositoryFormatYum,
 				}, false),
 			},
