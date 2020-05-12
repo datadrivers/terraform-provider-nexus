@@ -3,7 +3,6 @@ package nexus
 import (
 	"fmt"
 	"os"
-	"sort"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
@@ -14,7 +13,6 @@ func resourceDataStringSlice(d *schema.ResourceData, attribute string) []string 
 	for i := 0; i < n; i++ {
 		data[i] = d.Get(fmt.Sprintf("%s.%d", attribute, i)).(string)
 	}
-	sort.Strings(data)
 	return data
 }
 
