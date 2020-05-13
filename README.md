@@ -23,7 +23,7 @@
 
 Terraform provider to configure Sonatype Nexus using it's API.
 
-Implemented and tested with Sonatype Nexus `3.22.0`.
+Implemented and tested with Sonatype Nexus `3.23.0-03`.
 
 ## Usage
 
@@ -284,6 +284,40 @@ resource "nexus_repository" "npm_hosted" {
     strict_content_type_validation = true
     write_policy                   = "ALLOW_ONCE"
   }
+}
+```
+
+##### Nuget proxy
+
+```hcl
+resource "nexus_repository" "nuget_proxy" {
+	name   = "nuget-proxy-repo"
+	format = "nuget"
+	type   = "proxy"
+	online = true
+
+	http_client {
+		authentication {
+			type = "username"
+		}
+	}
+
+	negative_cache {
+		enabled = true
+		ttl     = 1440
+	}
+
+	nuget_proxy {
+		query_cache_item_max_age = 1440
+	}
+
+	proxy {
+		remote_url  = "https://www.nuget.org/api/v2/"
+	}
+
+	storage {
+		write_policy = "ALLOW"
+	}
 }
 ```
 
