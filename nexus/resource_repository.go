@@ -771,6 +771,19 @@ func resourceRepositoryRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRepositoryUpdate(d *schema.ResourceData, m interface{}) error {
+	client := m.(nexus.Client)
+
+	repoName := d.Id()
+	repo := getRepositoryFromResourceData(d)
+
+	if err := client.RepositoryUpdate(repoName, repo); err != nil {
+		return err
+	}
+
+	if err := setRepositoryToResourceData(&repo, d); err != nil {
+		return err
+	}
+
 	return resourceRepositoryRead(d, m)
 }
 
