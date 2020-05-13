@@ -36,6 +36,10 @@ github.com/cheggaaa/pb v1.0.27/go.mod h1:pQciLPpbU0oxA0h+VJYYLxO+XeDQb5pZijXscXH
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/datadrivers/go-nexus-client v0.8.2-0.20200508135155-e3f2a98aedb4 h1:PU6F8/Eh+CBJlUFJVpuIj3F3qHMcdK1J0qqYFUrXX8Y=
 github.com/datadrivers/go-nexus-client v0.8.2-0.20200508135155-e3f2a98aedb4/go.mod h1:YWiZvmtfQMDiOOHckMJa60gcYS9Kmj5MXo37yiV3SZE=
+github.com/datadrivers/go-nexus-client v0.8.2-0.20200511093134-2bf160d3692a h1:TyjOIZHQLsJ3kZnvgAWIQnGZazpjuWplgBlrRiTQ1nY=
+github.com/datadrivers/go-nexus-client v0.8.2-0.20200511093134-2bf160d3692a/go.mod h1:YWiZvmtfQMDiOOHckMJa60gcYS9Kmj5MXo37yiV3SZE=
+github.com/datadrivers/go-nexus-client v0.8.2-0.20200513114337-c9976bbe2317 h1:Vvs3H7nxiV4Ht2vTn3Bc2uR5aHW6vLZ3FF06uFb6BqY=
+github.com/datadrivers/go-nexus-client v0.8.2-0.20200513114337-c9976bbe2317/go.mod h1:YWiZvmtfQMDiOOHckMJa60gcYS9Kmj5MXo37yiV3SZE=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
