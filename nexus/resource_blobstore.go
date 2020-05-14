@@ -133,7 +133,7 @@ func resourceBlobstore() *schema.Resource {
 								},
 							},
 							MaxItems: 1,
-							Required: true,
+							Optional: true,
 							Type:     schema.TypeList,
 						},
 						"encryption": {
