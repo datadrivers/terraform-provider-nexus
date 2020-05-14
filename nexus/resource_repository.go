@@ -297,6 +297,20 @@ func resourceRepository() *schema.Resource {
 					},
 				},
 			},
+			"nuget_proxy": {
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"query_cache_item_max_age": {
+							Description: "What type of artifacts does this repository store",
+							Required:    true,
+							Type:        schema.TypeInt,
+						},
+					},
+				},
+				MaxItems: 1,
+				Optional: true,
+				Type:     schema.TypeList,
+			},
 			"proxy": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -516,6 +530,15 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		}
 	}
 
+	if _, ok := d.GetOk("nuget_proxy"); ok {
+		nugetProxyList := d.Get("nuget_proxy").([]interface{})
+		nugetProxyConfig := nugetProxyList[0].(map[string]interface{})
+
+		repo.RepositoryNugetProxy = &nexus.RepositoryNugetProxy{
+			QueryCacheItemMaxAge: nugetProxyConfig["query_cache_item_max_age"].(int),
+		}
+	}
+
 	if _, ok := d.GetOk("proxy"); ok {
 		proxyList := d.Get("proxy").([]interface{})
 		proxyConfig := proxyList[0].(map[string]interface{})
@@ -591,6 +614,12 @@ func setRepositoryToResourceData(repo *nexus.Repository, d *schema.ResourceData)
 
 	if repo.RepositoryNegativeCache != nil {
 		if err := d.Set("negative_cache", flattenRepositoryNegativeCache(repo.RepositoryNegativeCache)); err != nil {
+			return err
+		}
+	}
+
+	if repo.RepositoryNugetProxy != nil {
+		if err := d.Set("nuget_proxy", flattenRepositoryNugetProxy(repo.RepositoryNugetProxy)); err != nil {
 			return err
 		}
 	}
@@ -709,6 +738,16 @@ func flattenRepositoryNegativeCache(negativeCache *nexus.RepositoryNegativeCache
 	data := map[string]interface{}{
 		"enabled": negativeCache.Enabled,
 		"ttl":     negativeCache.TTL,
+	}
+	return []map[string]interface{}{data}
+}
+
+func flattenRepositoryNugetProxy(nugetProxy *nexus.RepositoryNugetProxy) []map[string]interface{} {
+	if nugetProxy == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"query_cache_item_max_age": nugetProxy.QueryCacheItemMaxAge,
 	}
 	return []map[string]interface{}{data}
 }
