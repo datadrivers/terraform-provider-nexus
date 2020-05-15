@@ -1,5 +1,7 @@
 build:
   binary: terraform-provider-nexus_v{{ .Version }}
+  env:
+    - CGO_ENABLED=0 # force static builds
   goos:
   - darwin
   - linux
