@@ -11,6 +11,8 @@
     - [nexus_blobstore](#resource-nexus_blobstore)
       - [File](#use-file)
       - [S3](#use-s3)
+    - [nexus_content_selector](#resource-nexus_content_selector)
+    - [nexus_privilege](#resource-nexus_privilege)
     - [nexus_repository](#resource-nexus_repository)
     - [nexus_role](#resource-nexus_role)
     - [nexus_user](#resource-nexus_user)
@@ -112,6 +114,44 @@ resource "nexus_blobstore" "aws" {
     limit = 1024
     type  = "spaceRemainingQuota"
   }
+}
+```
+
+#### Resource nexus_content_selector
+
+Content selector can be imported using
+
+```shell
+terraform import nexus_content_selector.docker-public docker-public
+```
+
+```hcl
+resource "nexus_content_selector" "docker-public" {
+  name = "docker-public"
+  description = "A content selector matching public docker images."
+  expression = "path =^ \"/v2/public/\""
+}
+```
+
+#### Resource nexus_privilege
+
+Privilege can be imported using
+
+```shell
+terraform import nexus_privilege.docker-public-read docker-public-read
+```
+
+##### Content Selector
+
+```hcl
+resource "nexus_privilege" "docker-public-read" {
+  name = "docker-public-read"
+  description = "Read permission on the docker public path."
+  type = "repository-content-selector"
+  content_selector = "docker-public"
+  actions = [
+    "read"
+  ]
 }
 ```
 
