@@ -80,6 +80,25 @@ func resourceRepository() *schema.Resource {
 					},
 				},
 			},
+			"yum": {
+				Type:          schema.TypeList,
+				Optional:      true,
+				ConflictsWith: []string{"bower", "docker", "docker_proxy", "maven", "apt"},
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"repodata_depth": {
+							Type:     schema.TypeInt,
+							Optional: true,
+							Default:  0,
+						},
+						"deploy_policy": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: validation.StringInSlice([]string{"STRICT", "PERMISSIVE"}, false),
+						},
+					},
+				},
+			},
 			"bower": {
 				Type:          schema.TypeList,
 				Optional:      true,
@@ -410,6 +429,16 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		repo.RepositoryAptSigning = &nexus.RepositoryAptSigning{
 			Keypair:    aptSigningConfig["keypair"].(string),
 			Passphrase: aptSigningConfig["passphrase"].(string),
+		}
+	}
+
+	if _, ok := d.GetOk("yum"); ok {
+		yumList := d.Get("yum").([]interface{})
+		yumConfig := yumList[0].(map[string]interface{})
+
+		repo.RepositoryYum = &nexus.RepositoryYum{
+			RepodataDepth: yumConfig["repodata_depth"].(int),
+			DeployPolicy:  yumConfig["deploy_policy"].(string),
 		}
 	}
 
