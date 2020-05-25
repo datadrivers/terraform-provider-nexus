@@ -39,9 +39,10 @@ func resourcePrivilege() *schema.Resource {
 				Type:        schema.TypeString,
 			},
 			"format": {
-				Description: "The format of the privilege",
-				Optional:    true,
-				Type:        schema.TypeString,
+				Description:  "The format of the privilege",
+				Optional:     true,
+				Type:         schema.TypeString,
+				ValidateFunc: validation.StringInSlice(nexus.RepositoryFormats, false),
 			},
 			"name": {
 				Description: "The name of the privilege",
