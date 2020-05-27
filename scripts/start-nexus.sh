@@ -2,7 +2,7 @@
 set -eo pipefail
 
 export NEXUS_VERSION=3.23.0
-LOCAL_PORT=8082
+LOCAL_PORT=8081
 
 echo "Starting Nexus v${NEXUS_VERSION} container..."
 docker run \
