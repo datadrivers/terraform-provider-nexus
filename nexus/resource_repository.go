@@ -19,22 +19,11 @@ func resourceRepository() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"format": {
-				Description: "Repository format",
-				ForceNew:    true,
-				Required:    true,
-				Type:        schema.TypeString,
-				ValidateFunc: validation.StringInSlice([]string{
-					nexus.RepositoryFormatApt,
-					nexus.RepositoryFormatBower,
-					nexus.RepositoryFormatConan,
-					nexus.RepositoryFormatDocker,
-					nexus.RepositoryFormatHelm,
-					nexus.RepositoryFormatMaven2,
-					nexus.RepositoryFormatNPM,
-					nexus.RepositoryFormatNuget,
-					nexus.RepositoryFormatPyPi,
-					nexus.RepositoryFormatYum,
-				}, false),
+				Description:  "Repository format",
+				ForceNew:     true,
+				Required:     true,
+				Type:         schema.TypeString,
+				ValidateFunc: validation.StringInSlice(nexus.RepositoryFormats, false),
 			},
 			"name": {
 				Description: "A unique identifier for this repository",
