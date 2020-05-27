@@ -74,7 +74,6 @@ func dataSourceRepository() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"force_basic_auth": {
-							Default:     true,
 							Description: "Whether to force authentication (Docker Bearer Token Realm required if false)",
 							Optional:    true,
 							Type:        schema.TypeBool,
@@ -90,13 +89,95 @@ func dataSourceRepository() *schema.Resource {
 							Type:        schema.TypeInt,
 						},
 						"v1enabled": {
-							Default:     false,
 							Description: "Whether to allow clients to use the V1 API to interact with this repository",
 							Optional:    true,
 							Type:        schema.TypeBool,
 						},
 					},
 				},
+			},
+			"group": {
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"member_names": {
+							Description: "Member repositories names",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Required: true,
+							Type:     schema.TypeSet,
+						},
+					},
+				},
+				MaxItems: 1,
+				Optional: true,
+				Type:     schema.TypeList,
+			},
+			"http_client": {
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"authentication": {
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"type": {
+										Description: "Authentication type",
+										Required:    true,
+										Type:        schema.TypeString,
+									},
+									"username": {
+										Description: "",
+										Optional:    true,
+										Type:        schema.TypeString,
+									},
+									"ntlm_domain": {
+										Description: "",
+										Optional:    true,
+										Type:        schema.TypeString,
+									},
+									"ntlm_host": {
+										Description: "",
+										Optional:    true,
+										Type:        schema.TypeString,
+									},
+								},
+							},
+							MaxItems: 1,
+							Optional: true,
+							Type:     schema.TypeList,
+						},
+						"auto_block": {
+							Description: "Whether to auto-block outbound connections if remote peer is detected as unreachable/unresponsive",
+							Optional:    true,
+							Type:        schema.TypeBool,
+						},
+						"blocked": {
+							Description: "Whether to block outbound connections on the repository",
+							Optional:    true,
+							Type:        schema.TypeBool,
+						},
+						"connection": {
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"retries": {
+										Description: "Total retries if the initial connection attempt suffers a timeout",
+										Optional:    true,
+										Type:        schema.TypeInt,
+									},
+									"timeout": {
+										Description: "Seconds to wait for activity before stopping and retrying the connection",
+										Optional:    true,
+										Type:        schema.TypeInt,
+									},
+								},
+							},
+							Type:     schema.TypeList,
+							Optional: true,
+						},
+					},
+				},
+				MaxItems: 1,
+				Optional: true,
+				Type:     schema.TypeList,
 			},
 			"maven": {
 				Type:     schema.TypeList,

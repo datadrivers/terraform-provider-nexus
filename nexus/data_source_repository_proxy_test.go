@@ -1,7 +1,6 @@
 package nexus
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -44,7 +43,6 @@ func TestAccDataSourceRepositoryMavenProxy(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "bower.#", "0"),
 						resource.TestCheckResourceAttr(resourceName, "docker.#", "0"),
 						resource.TestCheckResourceAttr(resourceName, "docker_proxy.#", "0"),
-						resource.TestCheckResourceAttr(resourceName, "http_client.#", "0"),
 					),
 					// Type
 					resource.ComposeAggregateTestCheckFunc(
@@ -57,6 +55,10 @@ func TestAccDataSourceRepositoryMavenProxy(t *testing.T) {
 					),
 					// Type
 					resource.ComposeAggregateTestCheckFunc(
+						resource.TestCheckResourceAttr(resourceName, "http_client.#", "1"),
+						resource.TestCheckResourceAttr(resourceName, "http_client.0.authentication.#", "0"),
+						resource.TestCheckResourceAttr(resourceName, "http_client.0.auto_block", "false"),
+						resource.TestCheckResourceAttr(resourceName, "http_client.0.blocked", "false"),
 						resource.TestCheckResourceAttr(resourceName, "proxy.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "proxy.0.content_max_age", "-1"),
 						resource.TestCheckResourceAttr(resourceName, "proxy.0.metadata_max_age", "1440"),
@@ -69,11 +71,4 @@ func TestAccDataSourceRepositoryMavenProxy(t *testing.T) {
 			},
 		},
 	})
-}
-
-func testAccDataSourceRepository(name string) string {
-	return fmt.Sprintf(`
-data "nexus_repository" "acceptance" {
-	name   = "%s"
-}`, name)
 }
