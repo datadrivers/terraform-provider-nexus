@@ -41,7 +41,7 @@ func resourceRepository() *schema.Resource {
 				ForceNew:     true,
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validation.StringInSlice([]string{"group", "hosted", "proxy"}, false),
+				ValidateFunc: validation.StringInSlice(nexus.RepositoryTypes, false),
 			},
 			"apt": {
 				Type:          schema.TypeList,
