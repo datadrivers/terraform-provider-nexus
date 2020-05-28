@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"testing"
 
+	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
 func TestAccRepositoryDockerProxy(t *testing.T) {
+	resName := "nexus_repository.docker_proxy"
 	repoName := fmt.Sprintf("test-repo-docker-proxy-%s", acctest.RandString(10))
 
 	resource.Test(t, resource.TestCase{
@@ -18,9 +20,10 @@ func TestAccRepositoryDockerProxy(t *testing.T) {
 			{
 				Config: createTfStmtForResourceDockerProxy(repoName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("nexus_repository.docker_proxy", "name", repoName),
-					resource.TestCheckResourceAttr("nexus_repository.docker_proxy", "format", "docker"),
-					resource.TestCheckResourceAttr("nexus_repository.docker_proxy", "type", "proxy"),
+					resource.TestCheckResourceAttr(resName, "name", repoName),
+					resource.TestCheckResourceAttr(resName, "format", nexus.RepositoryFormatDocker),
+					resource.TestCheckResourceAttr(resName, "type", nexus.RepositoryTypeProxy),
+					resource.TestCheckResourceAttr(resName, "online", "true"),
 				),
 				// TODO: add check for storage
 				// TODO: add check for repository connectors
@@ -37,9 +40,10 @@ func TestAccRepositoryDockerProxy(t *testing.T) {
 func createTfStmtForResourceDockerProxy(name string) string {
 	return fmt.Sprintf(`
 resource "nexus_repository" "docker_proxy" {
+	format = "%s"
 	name   = "%s"
-	type   = "proxy"
-	format = "docker"
+	online = true
+	type   = "%s"
 
 	docker {
 		force_basic_auth = true
@@ -51,11 +55,7 @@ resource "nexus_repository" "docker_proxy" {
 		index_url  = "http://www.example.com"
 	}
 
-	http_client {
-		authentication {
-			type = "username"
-		}
-	}
+	http_client {}
 
 	negative_cache {
 		enabled = true
@@ -70,5 +70,5 @@ resource "nexus_repository" "docker_proxy" {
 		blob_store_name = "default"
 		write_policy    = "ALLOW"
 	}
-}`, name)
+}`, nexus.RepositoryFormatDocker, name, nexus.RepositoryTypeProxy)
 }
