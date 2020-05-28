@@ -1,11 +1,32 @@
+// iam user
 resource "aws_iam_user" "login_for_external_user" {
-  name = var.iam_name_prefix
-  tags = var.tags
+  count = var.iam_user_name_prefix != null ? 1 : 0
+  name  = var.iam_user_name_prefix
+  tags  = var.tags
 }
 
+resource "aws_iam_user_policy" "assume_nexus_role" {
+  count = var.iam_user_name_prefix != null ? 1 : 0
+  name  = "assume_role_nexus"
+  user  = aws_iam_user.login_for_external_user.0.name
 
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Effect": "Allow",
+      "Resource": "${aws_iam_role.access_s3_bucket_nexus.arn}"
+    }
+  ]
+}
+EOF
+}
+
+// iam role
 resource "aws_iam_role" "access_s3_bucket_nexus" {
-  name_prefix = var.iam_name_prefix
+  name = var.iam_role_name
 
   assume_role_policy = <<EOF
 {
@@ -14,18 +35,9 @@ resource "aws_iam_role" "access_s3_bucket_nexus" {
     {
       "Action": "sts:AssumeRole",
       "Principal": {
-        "AWS": "${aws_iam_user.login_for_external_user.arn}"
+        "AWS": ${jsonencode(aws_iam_user.login_for_external_user.*.arn)}
       },
-      "Effect": "Allow",
-      "Sid": "iam_user"
-    },
-        {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": "ec2_instance"
+      "Effect": "Allow"
     }
   ]
 }
@@ -60,8 +72,8 @@ data "aws_iam_policy_document" "bucket_policy" {
 }
 
 resource "aws_iam_policy" "policy_s3_bucket" {
-  name_prefix = var.iam_name_prefix
-  description = "A test policy"
+  name_prefix = var.iam_role_name
+  description = "Nexus Access to S3 bucket"
 
   policy = data.aws_iam_policy_document.bucket_policy.json
 }
@@ -71,6 +83,7 @@ resource "aws_iam_role_policy_attachment" "attach-s3-policy" {
   policy_arn = aws_iam_policy.policy_s3_bucket.arn
 }
 
+// s3 bucket
 module "s3_bucket" {
   source = "terraform-aws-modules/s3-bucket/aws"
 

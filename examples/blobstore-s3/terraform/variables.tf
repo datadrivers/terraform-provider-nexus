@@ -1,5 +1,11 @@
-variable "iam_name_prefix" {
-  description = "The name prefix of the iam resoruces to access the bucket. If omitted, Terraform will assign a random, unique name."
+variable "iam_user_name_prefix" {
+  description = "The name prefix of the iam user resoruces to access the bucket. If omitted, Terraform will skip user creation"
+  type        = string
+  default     = null
+}
+
+variable "iam_role_name" {
+  description = "The name of the iam role to access the bucket. If omitted, Terraform will assign a random, unique name."
   type        = string
   default     = null
 }
