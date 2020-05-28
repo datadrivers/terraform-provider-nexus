@@ -223,28 +223,38 @@ func resourceRepository() *schema.Resource {
 							Optional:    true,
 							Type:        schema.TypeBool,
 						},
-						"connection": {
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"retries": {
-										Default:      0,
-										Description:  "Total retries if the initial connection attempt suffers a timeout",
-										Optional:     true,
-										Type:         schema.TypeInt,
-										ValidateFunc: validation.IntBetween(0, 10),
-									},
-									"timeout": {
-										Default:      60,
-										Description:  "Seconds to wait for activity before stopping and retrying the connection",
-										Optional:     true,
-										Type:         schema.TypeInt,
-										ValidateFunc: validation.IntBetween(1, 3600),
-									},
-								},
-							},
-							Type:     schema.TypeList,
-							Optional: true,
-						},
+						// "connection": {
+						// 	Elem: &schema.Resource{
+						// 		Schema: map[string]*schema.Schema{
+						// 			"enable_cookies": {
+						// 				Default:     false,
+						// 				Description: "Whether to allow cookies to be stored and used",
+						// 				Optional:    true,
+						// 				Type:        schema.TypeBool,
+						// 			},
+						// 			"retries": {
+						// 				Description:  "Total retries if the initial connection attempt suffers a timeout",
+						// 				Optional:     true,
+						// 				Type:         schema.TypeInt,
+						// 				ValidateFunc: validation.IntBetween(0, 10),
+						// 			},
+						// 			"timeout": {
+						// 				Description:  "Seconds to wait for activity before stopping and retrying the connection",
+						// 				Optional:     true,
+						// 				Type:         schema.TypeInt,
+						// 				ValidateFunc: validation.IntBetween(1, 3600),
+						// 			},
+						// 			"user_agent_suffix": {
+						// 				Description: "Custom fragment to append to User-Agent header in HTTP requests",
+						// 				Optional:    true,
+						// 				Type:        schema.TypeString,
+						// 			},
+						// 		},
+						// 	},
+						// 	MaxItems: 1,
+						// 	Optional: true,
+						// 	Type:     schema.TypeList,
+						// },
 					},
 				},
 				MaxItems: 1,
@@ -487,22 +497,35 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		repo.RepositoryHTTPClient = &nexus.RepositoryHTTPClient{
 			AutoBlock: httpClientConfig["auto_block"].(bool),
 			Blocked:   httpClientConfig["blocked"].(bool),
-			// Connection: ,
 		}
 
-		if _, ok := httpClientConfig["authentication"]; ok {
-			authList := httpClientConfig["authentication"].([]interface{})
-			if len(authList) > 0 {
+		if v, ok := httpClientConfig["authentication"]; ok {
+			authList := v.([]interface{})
+			if len(authList) == 1 && authList[0] != nil {
 				authConfig := authList[0].(map[string]interface{})
 
 				repo.RepositoryHTTPClient.Authentication = &nexus.RepositoryHTTPClientAuthentication{
-					Type:       authConfig["type"].(string),
-					Username:   authConfig["username"].(string),
 					NTLMDomain: authConfig["ntlm_domain"].(string),
 					NTLMHost:   authConfig["ntlm_host"].(string),
+					Type:       authConfig["type"].(string),
+					Username:   authConfig["username"].(string),
 				}
 			}
 		}
+
+		// if v, ok := httpClientConfig["connection"]; ok {
+		// 	connList := v.([]interface{})
+		// 	if len(connList) == 1 && connList[0] != nil {
+		// 		connConfig := connList[0].(map[string]interface{})
+
+		// 		repo.RepositoryHTTPClient.Connection = &nexus.RepositoryHTTPClientConnection{
+		// 			EnableCookies:   connConfig["enable_cookis"].(bool),
+		// 			Retries:         connConfig["retries"].(*int),
+		// 			Timeout:         connConfig["timeout"].(*int),
+		// 			UserAgentSuffix: connConfig["user_agent_suffix"].(*string),
+		// 		}
+		// 	}
+		// }
 	}
 
 	if _, ok := d.GetOk("maven"); ok {
@@ -597,6 +620,12 @@ func setRepositoryToResourceData(repo *nexus.Repository, d *schema.ResourceData)
 
 	if repo.RepositoryGroup != nil {
 		if err := d.Set("group", flattenRepositoryGroup(repo.RepositoryGroup)); err != nil {
+			return err
+		}
+	}
+
+	if repo.RepositoryHTTPClient != nil {
+		if err := d.Set("http_client", flattenRepositoryHTTPClient(repo.RepositoryHTTPClient)); err != nil {
 			return err
 		}
 	}
@@ -712,6 +741,49 @@ func flattenRepositoryGroup(group *nexus.RepositoryGroup) []map[string]interface
 	}
 	data := map[string]interface{}{
 		"member_names": stringSliceToInterfaceSlice(group.MemberNames),
+	}
+	return []map[string]interface{}{data}
+}
+
+func flattenRepositoryHTTPClient(httpClient *nexus.RepositoryHTTPClient) []map[string]interface{} {
+	if httpClient == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"authentication": flattenRepositoryHTTPClientAuthentication(httpClient.Authentication),
+		"auto_block":     httpClient.AutoBlock,
+		"blocked":        httpClient.Blocked,
+		// "connection":     flattenRepositoryHTTPClientConnection(httpClient.Connection),
+	}
+	return []map[string]interface{}{data}
+}
+
+func flattenRepositoryHTTPClientAuthentication(auth *nexus.RepositoryHTTPClientAuthentication) []map[string]interface{} {
+	if auth == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"ntlm_domain": auth.NTLMDomain,
+		"ntlm_host":   auth.NTLMHost,
+		"type":        auth.Type,
+		"username":    auth.Username,
+	}
+	return []map[string]interface{}{data}
+}
+
+func flattenRepositoryHTTPClientConnection(conn *nexus.RepositoryHTTPClientConnection) []map[string]interface{} {
+	if conn == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"enable_cookies":    conn.EnableCookies,
+		"user_agent_suffix": conn.UserAgentSuffix,
+	}
+	if conn.Retries != nil {
+		data["retries"] = *conn.Retries
+	}
+	if conn.Timeout != nil {
+		data["timeout"] = *conn.Timeout
 	}
 	return []map[string]interface{}{data}
 }
