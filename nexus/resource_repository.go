@@ -53,6 +53,11 @@ func resourceRepository() *schema.Resource {
 							Type:     schema.TypeString,
 							Required: true,
 						},
+						"flat": {
+							Description: "Whether this repository is flat",
+							Type:        schema.TypeBool,
+							Optional:    true,
+						},
 					},
 				},
 			},
@@ -382,6 +387,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 
 		repo.RepositoryApt = &nexus.RepositoryApt{
 			Distribution: aptConfig["distribution"].(string),
+			Flat:         aptConfig["flat"].(bool),
 		}
 	}
 
@@ -632,6 +638,7 @@ func flattenRepositoryApt(apt *nexus.RepositoryApt) []map[string]interface{} {
 	}
 	data := map[string]interface{}{
 		"distribution": apt.Distribution,
+		"flat":         apt.Flat,
 	}
 
 	return []map[string]interface{}{data}
