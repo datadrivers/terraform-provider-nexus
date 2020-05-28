@@ -181,7 +181,7 @@ func resourceRepository() *schema.Resource {
 								Schema: map[string]*schema.Schema{
 									"type": {
 										Description:  "Authentication type",
-										Required:     true,
+										Optional:     true,
 										Type:         schema.TypeString,
 										ValidateFunc: validation.StringInSlice([]string{"ntlm", "username"}, false),
 									},
@@ -489,7 +489,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 			if len(authList) > 0 {
 				authConfig := authList[0].(map[string]interface{})
 
-				repo.RepositoryHTTPClient.Authentication = nexus.RepositoryHTTPClientAuthentication{
+				repo.RepositoryHTTPClient.Authentication = &nexus.RepositoryHTTPClientAuthentication{
 					Type:       authConfig["type"].(string),
 					Username:   authConfig["username"].(string),
 					NTLMDomain: authConfig["ntlm_domain"].(string),
