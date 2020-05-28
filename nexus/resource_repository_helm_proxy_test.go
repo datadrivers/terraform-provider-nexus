@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
@@ -24,12 +25,12 @@ func TestAccRepositoryHelmProxy(t *testing.T) {
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr("nexus_repository.helm_proxy", "id", repoName),
 						resource.TestCheckResourceAttr("nexus_repository.helm_proxy", "name", repoName),
-						resource.TestCheckResourceAttr("nexus_repository.helm_proxy", "format", "helm"),
-						resource.TestCheckResourceAttr("nexus_repository.helm_proxy", "type", "proxy"),
+						resource.TestCheckResourceAttr("nexus_repository.helm_proxy", "format", nexus.RepositoryFormatHelm),
+						resource.TestCheckResourceAttr("nexus_repository.helm_proxy", "type", nexus.RepositoryTypeProxy),
 					),
 					// Common fields
-					// Online
 					resource.ComposeAggregateTestCheckFunc(
+						// Online
 						resource.TestCheckResourceAttr("nexus_repository.helm_proxy", "online", "true"),
 						// Storage
 						resource.TestCheckResourceAttr("nexus_repository.helm_proxy", "storage.#", "1"),
@@ -68,8 +69,6 @@ func TestAccRepositoryHelmProxy(t *testing.T) {
 				ImportStateId:     repoName,
 				ImportState:       true,
 				ImportStateVerify: true,
-				// FIXME: (BUG) There is an inconsistency in http_client
-				ImportStateVerifyIgnore: []string{"http_client"},
 			},
 		},
 	})
@@ -78,18 +77,16 @@ func TestAccRepositoryHelmProxy(t *testing.T) {
 func createTfStmtForResourceHelmProxy(name string) string {
 	return fmt.Sprintf(`
 resource "nexus_repository" "helm_proxy" {
+	format = "%s"
 	name   = "%s"
-	format = "helm"
-	type   = "proxy"
+	online = true
+	type   = "%s"
 
 	proxy {
 		remote_url  = "https://helm.org"
 	}
 
 	http_client {
-		authentication {
-			type = "username"
-		}
 	}
 
 	negative_cache {
@@ -100,5 +97,5 @@ resource "nexus_repository" "helm_proxy" {
 	storage {
 
 	}
-}`, name)
+}`, nexus.RepositoryFormatHelm, name, nexus.RepositoryTypeProxy)
 }
