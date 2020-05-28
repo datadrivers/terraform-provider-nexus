@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
@@ -24,8 +25,8 @@ func TestAccRepositoryNpmProxy(t *testing.T) {
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr("nexus_repository.npm_proxy", "id", repoName),
 						resource.TestCheckResourceAttr("nexus_repository.npm_proxy", "name", repoName),
-						resource.TestCheckResourceAttr("nexus_repository.npm_proxy", "format", "npm"),
-						resource.TestCheckResourceAttr("nexus_repository.npm_proxy", "type", "proxy"),
+						resource.TestCheckResourceAttr("nexus_repository.npm_proxy", "format", nexus.RepositoryFormatNPM),
+						resource.TestCheckResourceAttr("nexus_repository.npm_proxy", "type", nexus.RepositoryTypeProxy),
 					),
 					// Common fields
 					// Online
@@ -68,8 +69,6 @@ func TestAccRepositoryNpmProxy(t *testing.T) {
 				ImportStateId:     repoName,
 				ImportState:       true,
 				ImportStateVerify: true,
-				// FIXME: (BUG) There is an inconsistency in http_client
-				ImportStateVerifyIgnore: []string{"http_client"},
 			},
 		},
 	})
@@ -154,9 +153,6 @@ resource "nexus_repository" "npm_proxy" {
 	}
 
 	http_client {
-		authentication {
-			type = "username"
-		}
 	}
 
 	negative_cache {
@@ -173,9 +169,10 @@ resource "nexus_repository" "npm_proxy" {
 func createTfStmtForResourceNpmProxyWithoutAuth(name string) string {
 	return fmt.Sprintf(`
 resource "nexus_repository" "npm_proxy" {
+	format = "%s"
 	name   = "%s"
-	format = "npm"
-	type   = "proxy"
+	online = true
+	type   = "%s"
 
 	proxy {
 		remote_url  = "https://npm.org"
@@ -192,5 +189,5 @@ resource "nexus_repository" "npm_proxy" {
 	storage {
 
 	}
-}`, name)
+}`, nexus.RepositoryFormatNPM, name, nexus.RepositoryTypeProxy)
 }
