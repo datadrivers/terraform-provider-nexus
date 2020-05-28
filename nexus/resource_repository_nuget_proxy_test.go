@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
@@ -23,8 +24,8 @@ func TestAccRepositoryNugetProxy(t *testing.T) {
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr("nexus_repository.nuget_proxy", "id", repoName),
 						resource.TestCheckResourceAttr("nexus_repository.nuget_proxy", "name", repoName),
-						resource.TestCheckResourceAttr("nexus_repository.nuget_proxy", "format", "nuget"),
-						resource.TestCheckResourceAttr("nexus_repository.nuget_proxy", "type", "proxy"),
+						resource.TestCheckResourceAttr("nexus_repository.nuget_proxy", "format", nexus.RepositoryFormatNuget),
+						resource.TestCheckResourceAttr("nexus_repository.nuget_proxy", "type", nexus.RepositoryTypeProxy),
 					),
 					// Common fields
 					resource.ComposeAggregateTestCheckFunc(
@@ -65,8 +66,6 @@ func TestAccRepositoryNugetProxy(t *testing.T) {
 				ImportStateId:     repoName,
 				ImportState:       true,
 				ImportStateVerify: true,
-				// FIXME: (BUG) There is an inconsistency in http_client
-				ImportStateVerifyIgnore: []string{"http_client"},
 			},
 		},
 	})
@@ -75,15 +74,12 @@ func TestAccRepositoryNugetProxy(t *testing.T) {
 func createTfStmtForResourceNugetProxy(name string) string {
 	return fmt.Sprintf(`
 resource "nexus_repository" "nuget_proxy" {
+	format = "%s"
 	name   = "%s"
-	format = "nuget"
-	type   = "proxy"
 	online = true
+	type   = "%s"
 
 	http_client {
-		authentication {
-			type = "username"
-		}
 	}
 
 	negative_cache {
@@ -102,5 +98,5 @@ resource "nexus_repository" "nuget_proxy" {
 	storage {
 		write_policy = "ALLOW"
 	}
-}`, name)
+}`, nexus.RepositoryFormatNuget, name, nexus.RepositoryTypeProxy)
 }
