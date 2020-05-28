@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"testing"
 
+	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccRepositoryPypiProxy(t *testing.T) {
+func TestAccRepositoryPyPiProxy(t *testing.T) {
 	repoName := fmt.Sprintf("test-repo-%s", acctest.RandString(10))
 
 	resource.Test(t, resource.TestCase{
@@ -24,12 +25,12 @@ func TestAccRepositoryPypiProxy(t *testing.T) {
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr("nexus_repository.pypi_proxy", "id", repoName),
 						resource.TestCheckResourceAttr("nexus_repository.pypi_proxy", "name", repoName),
-						resource.TestCheckResourceAttr("nexus_repository.pypi_proxy", "format", "pypi"),
-						resource.TestCheckResourceAttr("nexus_repository.pypi_proxy", "type", "proxy"),
+						resource.TestCheckResourceAttr("nexus_repository.pypi_proxy", "format", nexus.RepositoryFormatPyPi),
+						resource.TestCheckResourceAttr("nexus_repository.pypi_proxy", "type", nexus.RepositoryTypeProxy),
 					),
 					// Common fields
-					// Online
 					resource.ComposeAggregateTestCheckFunc(
+						// Online
 						resource.TestCheckResourceAttr("nexus_repository.pypi_proxy", "online", "true"),
 						// Storage
 						resource.TestCheckResourceAttr("nexus_repository.pypi_proxy", "storage.#", "1"),
@@ -68,8 +69,6 @@ func TestAccRepositoryPypiProxy(t *testing.T) {
 				ImportStateId:     repoName,
 				ImportState:       true,
 				ImportStateVerify: true,
-				// FIXME: (BUG) There is an inconsistency in http_client
-				ImportStateVerifyIgnore: []string{"http_client"},
 			},
 		},
 	})
@@ -78,18 +77,16 @@ func TestAccRepositoryPypiProxy(t *testing.T) {
 func createTfStmtForResourcePypiProxy(name string) string {
 	return fmt.Sprintf(`
 resource "nexus_repository" "pypi_proxy" {
+	format = "%s"
 	name   = "%s"
-	format = "pypi"
-	type   = "proxy"
+	online = true
+	type   = "%s"
 
 	proxy {
 		remote_url  = "https://pypi.org"
 	}
 
 	http_client {
-		authentication {
-			type = "username"
-		}
 	}
 
 	negative_cache {
@@ -100,5 +97,5 @@ resource "nexus_repository" "pypi_proxy" {
 	storage {
 
 	}
-}`, name)
+}`, nexus.RepositoryFormatPyPi, name, nexus.RepositoryTypeProxy)
 }
