@@ -5,6 +5,7 @@
   - [Provider config](#provider-config)
   - [Data Sources](#data-sources)
     - [nexus_blobstore](#data-nexus_blobstore)
+    - [nexus_privileges](#data-nexus_privileges)
     - [nexus_repository](#data-nexus_repository)
     - [nexus_user](#data-nexus_user)
   - [Resources](#resources)
@@ -49,6 +50,19 @@ data "nexus_blobstore" "default" {
   name = "default
 }
 ```
+
+#### Data nexus_privileges
+
+Get all privileges matching all optional filters. All parameters are optional.
+The returned list contains all privileges that match all specified parameters!
+
+```hcl
+data "nexus_privileges" "exmaple" {
+  domain     = "application"
+  format     = "maven2"
+  repository = "maven-public"
+  type       = "repository-admin"
+}
 
 #### Data nexus_repository
 
@@ -275,7 +289,13 @@ resource "nexus_repository" "docker_hub" {
   }
 
   http_client {
-
+    # Optional
+    authentication {
+      type        = "username"
+      username    = "example"
+      ntlm_domain = "example"
+      ntlm_host   = "host.example.com"
+    }
   }
 
   negative_cache {
@@ -284,7 +304,7 @@ resource "nexus_repository" "docker_hub" {
   }
 
   proxy {
-        remote_url  = "https://registry-1.docker.io"
+    remote_url  = "https://registry-1.docker.io"
   }
 
   storage {
@@ -331,16 +351,23 @@ resource "nexus_repository" "npm_hosted" {
 
 ```hcl
 resource "nexus_repository" "nuget_proxy" {
-	name   = "nuget-proxy-repo"
-	format = "nuget"
-	type   = "proxy"
-	online = true
+  name   = "nuget-proxy-repo"
+  format = "nuget"
+  type   = "proxy"
+  online = true
 
-	http_client {
-		authentication {
-			type = "username"
-		}
-	}
+  http_client {
+    auto_block = true
+    blocked    = false
+
+    # Optional
+    authentication {
+      type        = "username"
+      username    = "example"
+      ntlm_domain = "example"
+      ntlm_host   = "host.example.com"
+    }
+}
 
 	negative_cache {
 		enabled = true

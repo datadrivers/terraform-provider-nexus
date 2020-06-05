@@ -11,6 +11,7 @@ func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
 		DataSourcesMap: map[string]*schema.Resource{
 			"nexus_blobstore":  dataSourceBlobstore(),
+			"nexus_privileges": dataSourcePrivileges(),
 			"nexus_repository": dataSourceRepository(),
 			"nexus_user":       dataSourceUser(),
 		},
