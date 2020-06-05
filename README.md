@@ -63,6 +63,7 @@ data "nexus_privileges" "exmaple" {
   repository = "maven-public"
   type       = "repository-admin"
 }
+```
 
 #### Data nexus_repository
 
