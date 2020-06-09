@@ -311,23 +311,7 @@ resource "nexus_repository" "docker_hub" {
   storage {
     blob_store_name                = "default"
     strict_content_type_validation = true
-    write_policy                   = "ALLOW_ONCE"
-  }
-}
-```
-
-##### PyPi hosted
-
-```hcl
-resource "nexus_repository" "pypi_hosted" {
-  name   = "pypi-hosted-repo"
-  format = "pypi"
-  type   = "hosted"
-
-  storage {
-    blob_store_name                = "default"
-    strict_content_type_validation = true
-    write_policy                   = "ALLOW_ONCE"
+    write_policy                   = "ALLOW"
   }
 }
 ```
@@ -385,6 +369,103 @@ resource "nexus_repository" "nuget_proxy" {
 
 	storage {
 		write_policy = "ALLOW"
+	}
+}
+```
+
+##### PyPi hosted
+
+```hcl
+resource "nexus_repository" "pypi_hosted" {
+  name   = "pypi-hosted-repo"
+  format = "pypi"
+  type   = "hosted"
+
+  storage {
+    blob_store_name                = "default"
+    strict_content_type_validation = true
+    write_policy                   = "ALLOW_ONCE"
+  }
+}
+```
+
+##### PyPi proxy
+
+```hcl
+resource "nexus_repository" "pypi_proxy" {
+  name   = "pypi-proxy-repo"
+  format = "pypi"
+  type   = "proxy"
+  online = true
+
+  http_client {
+    auto_block = true
+    blocked    = false
+
+    # Optional
+    authentication {
+      type        = "username"
+      username    = "example"
+      ntlm_domain = "example"
+      ntlm_host   = "host.example.com"
+    }
+}
+
+	negative_cache {
+		enabled = true
+		ttl     = 1440
+	}
+
+	proxy {
+		remote_url  = "https://pypi.org"
+	}
+
+	storage {
+		write_policy = "ALLOW"
+	}
+}
+```
+
+##### RAW hosted
+
+```hcl
+resource "nexus_repository" "raw_hosted" {
+  name   = "raw-hosted-repo"
+  format = "raw"
+  type   = "hosted"
+
+  storage {
+    blob_store_name                = "default"
+    strict_content_type_validation = true
+    write_policy                   = "ALLOW_ONCE"
+  }
+}
+```
+
+##### RAW proxy
+
+```hcl
+resource "nexus_repository" "raw_proxy" {
+	format = "raw"
+	name   = "raw-proxy-repo"
+	online = true
+	type   = "proxy"
+
+	proxy {
+		remote_url  = "https://nodejs.org/dist/"
+	}
+
+	http_client {
+    ...
+	}
+
+	negative_cache {
+		enabled = true
+		ttl     = 1440
+	}
+
+	storage {
+    ...
 	}
 }
 ```
