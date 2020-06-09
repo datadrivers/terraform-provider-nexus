@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eo pipefail
 
-export NEXUS_VERSION=3.23.0
+export NEXUS_VERSION=3.24.0
 LOCAL_PORT=8081
 
 echo "Starting Nexus v${NEXUS_VERSION} container..."
