@@ -34,8 +34,8 @@ github.com/bgentry/speakeasy v0.1.0/go.mod h1:+zsyZBPWlz7T6j88CTgSN5bM796AkVf0kB
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/cheggaaa/pb v1.0.27/go.mod h1:pQciLPpbU0oxA0h+VJYYLxO+XeDQb5pZijXscXHm81s=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
-github.com/datadrivers/go-nexus-client v0.10.0 h1:y/5JRQ9SSuREXMsAGf4ZrT9V7Wy/s4JGXaZ3vp6UYgI=
-github.com/datadrivers/go-nexus-client v0.10.0/go.mod h1:YWiZvmtfQMDiOOHckMJa60gcYS9Kmj5MXo37yiV3SZE=
+github.com/datadrivers/go-nexus-client v0.11.0 h1:fUzZTM0DGTmCDk2rNxx8bbKQtj8z246T9gHdLeOdviY=
+github.com/datadrivers/go-nexus-client v0.11.0/go.mod h1:YWiZvmtfQMDiOOHckMJa60gcYS9Kmj5MXo37yiV3SZE=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
