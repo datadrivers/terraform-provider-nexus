@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
+	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	nexus "github.com/datadrivers/go-nexus-client"
 )
 
 func TestAccRepositoryRAWHosted(t *testing.T) {
