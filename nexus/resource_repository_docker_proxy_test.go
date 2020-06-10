@@ -18,7 +18,7 @@ func TestAccRepositoryDockerProxy(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: createTfStmtForResourceDockerProxy(repoName),
+				Config: createTfStmtForResourceDockerProxy(repoName, "https://index.docker.io/"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resName, "name", repoName),
 					resource.TestCheckResourceAttr(resName, "format", nexus.RepositoryFormatDocker),
@@ -37,7 +37,7 @@ func TestAccRepositoryDockerProxy(t *testing.T) {
 	})
 }
 
-func createTfStmtForResourceDockerProxy(name string) string {
+func createTfStmtForResourceDockerProxy(name string, indexURL string) string {
 	return fmt.Sprintf(`
 resource "nexus_repository" "docker_proxy" {
 	format = "%s"
@@ -52,7 +52,7 @@ resource "nexus_repository" "docker_proxy" {
 
 	docker_proxy {
 		index_type = "HUB"
-		index_url  = "http://www.example.com"
+		index_url  = "%s"
 	}
 
 	http_client {}
@@ -70,5 +70,5 @@ resource "nexus_repository" "docker_proxy" {
 		blob_store_name = "default"
 		write_policy    = "ALLOW"
 	}
-}`, nexus.RepositoryFormatDocker, name, nexus.RepositoryTypeProxy)
+}`, nexus.RepositoryFormatDocker, name, nexus.RepositoryTypeProxy, indexURL)
 }
