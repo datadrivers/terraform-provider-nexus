@@ -1,6 +1,8 @@
 package nexus
 
 import (
+	"strings"
+
 	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -466,10 +468,14 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		dockerProxyList := d.Get("docker_proxy").([]interface{})
 		dockerProxyConfig := dockerProxyList[0].(map[string]interface{})
 
-		indexURL := dockerProxyConfig["index_url"].(string)
+		var indexURLValue *string
+		indexURL := strings.TrimSpace(dockerProxyConfig["index_url"].(string))
+		if indexURL != "" {
+			indexURLValue = &indexURL
+		}
 		repo.RepositoryDockerProxy = &nexus.RepositoryDockerProxy{
 			IndexType: dockerProxyConfig["index_type"].(string),
-			IndexURL:  &indexURL,
+			IndexURL:  indexURLValue,
 		}
 	}
 

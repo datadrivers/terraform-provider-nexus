@@ -18,7 +18,7 @@ func TestAccRepositoryDockerGroup(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: createTfStmtForResourceDockerHostedWithPorts(dockerHostedWithPortsRepoName) + createTfStmtForResourceDockerHostedWithoutPorts(dockerHostedWithoutPortsRepoName) + createTfStmtForResourceDockerProxy(dockerProxyRepoName) + createTfStmtForResourceDockerGroup(repoName),
+				Config: createTfStmtForResourceDockerHostedWithPorts(dockerHostedWithPortsRepoName) + createTfStmtForResourceDockerHostedWithoutPorts(dockerHostedWithoutPortsRepoName) + createTfStmtForResourceDockerProxy(dockerProxyRepoName, "") + createTfStmtForResourceDockerGroup(repoName),
 				Check: resource.ComposeTestCheckFunc(
 					// Base and common repo props
 					// Identity fields
