@@ -9,5 +9,6 @@
   },
   "go.buildFlags": [
     "-v"
-  ]
+  ],
+  "go.inferGopath": false
 }
