@@ -629,6 +629,12 @@ func setRepositoryToResourceData(repo *nexus.Repository, d *schema.ResourceData)
 		}
 	}
 
+	if repo.RepositoryYum != nil {
+		if err := d.Set("yum", flattenRepositoryYum(repo.RepositoryYum)); err != nil {
+			return err
+		}
+	}
+
 	if repo.RepositoryAptSigning != nil {
 		if err := d.Set("apt_signing", flattenRepositoryAptSigning(repo.RepositoryAptSigning)); err != nil {
 			return err
@@ -703,6 +709,18 @@ func flattenRepositoryApt(apt *nexus.RepositoryApt) []map[string]interface{} {
 	data := map[string]interface{}{
 		"distribution": apt.Distribution,
 		"flat":         apt.Flat,
+	}
+
+	return []map[string]interface{}{data}
+}
+
+func flattenRepositoryYum(yum *nexus.RepositoryYum) []map[string]interface{} {
+	if yum == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"deploy_policy":  yum.DeployPolicy,
+		"repodata_depth": yum.RepodataDepth,
 	}
 
 	return []map[string]interface{}{data}
