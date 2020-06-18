@@ -80,6 +80,25 @@ func resourceRepository() *schema.Resource {
 					},
 				},
 			},
+			"yum": {
+				Type:          schema.TypeList,
+				Optional:      true,
+				ConflictsWith: []string{"bower", "docker", "docker_proxy", "maven", "apt"},
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"repodata_depth": {
+							Type:     schema.TypeInt,
+							Optional: true,
+							Default:  0,
+						},
+						"deploy_policy": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: validation.StringInSlice([]string{"STRICT", "PERMISSIVE"}, false),
+						},
+					},
+				},
+			},
 			"bower": {
 				Type:          schema.TypeList,
 				Optional:      true,
@@ -413,6 +432,16 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		}
 	}
 
+	if _, ok := d.GetOk("yum"); ok {
+		yumList := d.Get("yum").([]interface{})
+		yumConfig := yumList[0].(map[string]interface{})
+
+		repo.RepositoryYum = &nexus.RepositoryYum{
+			RepodataDepth: yumConfig["repodata_depth"].(int),
+			DeployPolicy:  yumConfig["deploy_policy"].(string),
+		}
+	}
+
 	if _, ok := d.GetOk("bower"); ok {
 		bowerList := d.Get("bower").([]interface{})
 		bowerConfig := bowerList[0].(map[string]interface{})
@@ -600,6 +629,12 @@ func setRepositoryToResourceData(repo *nexus.Repository, d *schema.ResourceData)
 		}
 	}
 
+	if repo.RepositoryYum != nil {
+		if err := d.Set("yum", flattenRepositoryYum(repo.RepositoryYum)); err != nil {
+			return err
+		}
+	}
+
 	if repo.RepositoryAptSigning != nil {
 		if err := d.Set("apt_signing", flattenRepositoryAptSigning(repo.RepositoryAptSigning)); err != nil {
 			return err
@@ -674,6 +709,18 @@ func flattenRepositoryApt(apt *nexus.RepositoryApt) []map[string]interface{} {
 	data := map[string]interface{}{
 		"distribution": apt.Distribution,
 		"flat":         apt.Flat,
+	}
+
+	return []map[string]interface{}{data}
+}
+
+func flattenRepositoryYum(yum *nexus.RepositoryYum) []map[string]interface{} {
+	if yum == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"deploy_policy":  yum.DeployPolicy,
+		"repodata_depth": yum.RepodataDepth,
 	}
 
 	return []map[string]interface{}{data}
