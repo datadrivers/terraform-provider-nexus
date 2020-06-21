@@ -216,6 +216,11 @@ func resourceRepository() *schema.Resource {
 										Optional:    true,
 										Type:        schema.TypeString,
 									},
+									"password": {
+										Description: "",
+										Optional:    true,
+										Type:        schema.TypeString,
+									},
 									"ntlm_domain": {
 										Description: "",
 										Optional:    true,
@@ -544,6 +549,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 					NTLMHost:   authConfig["ntlm_host"].(string),
 					Type:       authConfig["type"].(string),
 					Username:   authConfig["username"].(string),
+					Password:   authConfig["password"].(string),
 				}
 			}
 		}
