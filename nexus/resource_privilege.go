@@ -61,6 +61,11 @@ func resourcePrivilege() *schema.Resource {
 				Type:         schema.TypeString,
 				ValidateFunc: validation.StringInSlice([]string{"application", "repository-admin", "repository-content-selector", "repository-view", "script", "wildcard"}, false),
 			},
+			"pattern": {
+				Description: "The wildcard privilege pattern",
+				Optional:    true,
+				Type:        schema.TypeString,
+			},
 		},
 	}
 }
@@ -92,6 +97,10 @@ func getPrivilegeFromResourceData(d *schema.ResourceData) nexus.Privilege {
 		privilege.Repository = repository.(string)
 	}
 
+	if pattern, ok := d.GetOk("pattern"); ok {
+		privilege.Pattern = pattern.(string)
+	}
+
 	return privilege
 }
 
@@ -105,6 +114,7 @@ func setPrivilegeToResourceData(privilege *nexus.Privilege, d *schema.ResourceDa
 	d.Set("name", privilege.Name)
 	d.Set("repository", privilege.Repository)
 	d.Set("type", privilege.Type)
+	d.Set("pattern", privilege.Pattern)
 	return nil
 }
 
