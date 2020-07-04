@@ -6,6 +6,7 @@
   - [Data Sources](#data-sources)
     - [nexus_blobstore](#data-nexus_blobstore)
     - [nexus_privileges](#data-nexus_privileges)
+    - [nexus_realms_active](#data-nexus_realms_active)
     - [nexus_repository](#data-nexus_repository)
     - [nexus_user](#data-nexus_user)
   - [Resources](#resources)
@@ -63,6 +64,14 @@ data "nexus_privileges" "exmaple" {
   repository = "maven-public"
   type       = "repository-admin"
 }
+```
+
+#### Data nexus_realms_active
+
+Returns all active security realms
+
+```hcl
+data "nexus_realms_active" "example" {}
 ```
 
 #### Data nexus_repository
