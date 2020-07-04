@@ -1,6 +1,8 @@
 package nexus
 
 import (
+	"strings"
+
 	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
@@ -34,15 +36,25 @@ func resourceRole() *schema.Resource {
 			},
 			"privileges": {
 				Description: "The privileges of this role.",
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Optional:    true,
-				Type:        schema.TypeList,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Optional: true,
+				Set: func(v interface{}) int {
+					return schema.HashString(strings.ToLower(v.(string)))
+				},
+				Type: schema.TypeSet,
 			},
 			"roles": {
 				Description: "The roles of this role.",
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Optional:    true,
-				Type:        schema.TypeList,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Optional: true,
+				Set: func(v interface{}) int {
+					return schema.HashString(strings.ToLower(v.(string)))
+				},
+				Type: schema.TypeSet,
 			},
 		},
 	}
@@ -53,15 +65,14 @@ func getRoleFromResourceData(d *schema.ResourceData) nexus.Role {
 		ID:          d.Get("roleid").(string),
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
-		Privileges:  resourceDataStringSlice(d, "privileges"),
-		Roles:       resourceDataStringSlice(d, "roles"),
+		Privileges:  interfaceSliceToStringSlice(d.Get("privileges").(*schema.Set).List()),
+		Roles:       interfaceSliceToStringSlice(d.Get("roles").(*schema.Set).List()),
 	}
 }
 
 func resourceRoleCreate(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
 	role := getRoleFromResourceData(d)
-
 	if err := nexusClient.RoleCreate(role); err != nil {
 		return err
 	}
@@ -96,11 +107,9 @@ func resourceRoleUpdate(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
 	roleID := d.Get("roleid").(string)
 
-	if d.HasChange("name") || d.HasChange("description") || d.HasChange("privileges") || d.HasChange("roles") {
-		role := getRoleFromResourceData(d)
-		if err := nexusClient.RoleUpdate(roleID, role); err != nil {
-			return err
-		}
+	role := getRoleFromResourceData(d)
+	if err := nexusClient.RoleUpdate(roleID, role); err != nil {
+		return err
 	}
 
 	return resourceRoleRead(d, m)
