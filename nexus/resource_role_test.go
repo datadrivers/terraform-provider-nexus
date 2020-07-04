@@ -2,6 +2,7 @@ package nexus
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -31,10 +32,8 @@ func TestAccRoleBasic(t *testing.T) {
 					resource.TestCheckResourceAttr("nexus_role.acceptance", "name", roleName),
 					resource.TestCheckResourceAttr("nexus_role.acceptance", "roleid", roleID),
 					resource.TestCheckResourceAttr("nexus_role.acceptance", "description", roleDescription),
-					resource.TestCheckResourceAttr("nexus_role.acceptance", "roles.#", "1"),
-					resource.TestCheckResourceAttr("nexus_role.acceptance", "roles.0", roleRoles[0]),
-					resource.TestCheckResourceAttr("nexus_role.acceptance", "privileges.#", "1"),
-					resource.TestCheckResourceAttr("nexus_role.acceptance", "privileges.0", rolePrivileges[0]),
+					resource.TestCheckResourceAttr("nexus_role.acceptance", "privileges.#", strconv.Itoa(len(rolePrivileges))),
+					resource.TestCheckResourceAttr("nexus_role.acceptance", "roles.#", strconv.Itoa(len(roleRoles))),
 				),
 			},
 			{
