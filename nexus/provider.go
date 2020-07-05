@@ -20,11 +20,11 @@ func Provider() terraform.ResourceProvider {
 			"nexus_blobstore":        resourceBlobstore(),
 			"nexus_content_selector": resourceContentSelector(),
 			"nexus_privilege":        resourcePrivilege(),
-			"nexus_realms":           resourceRealms(),
 			"nexus_repository":       resourceRepository(),
 			"nexus_role":             resourceRole(),
-			"nexus_user":             resourceUser(),
 			"nexus_script":           resourceScript(),
+			"nexus_security_realms":  resourceSecurityRealms(),
+			"nexus_user":             resourceUser(),
 		},
 		Schema: map[string]*schema.Schema{
 			"insecure": {

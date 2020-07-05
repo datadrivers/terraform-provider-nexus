@@ -17,8 +17,9 @@
     - [nexus_privilege](#resource-nexus_privilege)
     - [nexus_repository](#resource-nexus_repository)
     - [nexus_role](#resource-nexus_role)
-    - [nexus_user](#resource-nexus_user)
+    - [nexus_security_realms](#resource-nexus_security_realms)
     - [nexus_script](#resource-nexus_script)
+    - [nexus_user](#resource-nexus_user)
 - [Build](#build)
 - [Testing](#testing)
 - [Author](#author)
@@ -497,6 +498,35 @@ resource "nexus_role" "nx-admin" {
 }
 ```
 
+#### Resource nexus_security_realms
+
+Set active security realms
+
+```shell
+terraform import nexus_security_realms.example
+```
+
+```hcl
+resource "nexus_security_realms" "example" {
+  active = ["NexusAuthenticatingRealm", "NexusAuthorizingRealm"]
+}
+```
+
+#### Resource nexus_script
+
+Script can be imported using
+
+```shell
+terraform import nexus_script.my_script my-script
+```
+
+```hcl
+resource "nexus_script" "hello_world" {
+  name    = "hello-world"
+  content = "log.info('Hello, World!')"
+}
+```
+
 #### Resource nexus_user
 
 User can be imported using
@@ -514,21 +544,6 @@ resource "nexus_user" "admin" {
   password  = "admin123"
   roles     = ["nx-admin"]
   status    = "active"
-}
-```
-
-#### Resource nexus_script
-
-Script can be imported using
-
-```shell
-terraform import nexus_script.my_script my-script
-```
-
-```hcl
-resource "nexus_script" "hello_world" {
-  name    = "hello-world"
-  content = "log.info('Hello, World!')"
 }
 ```
 
