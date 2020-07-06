@@ -219,6 +219,7 @@ func resourceRepository() *schema.Resource {
 									"password": {
 										Description: "",
 										Optional:    true,
+										Sensitive:   true,
 										Type:        schema.TypeString,
 									},
 									"ntlm_domain": {
