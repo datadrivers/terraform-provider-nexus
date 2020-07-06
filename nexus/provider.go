@@ -10,10 +10,12 @@ import (
 func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
 		DataSourcesMap: map[string]*schema.Resource{
-			"nexus_blobstore":  dataSourceBlobstore(),
-			"nexus_privileges": dataSourcePrivileges(),
-			"nexus_repository": dataSourceRepository(),
-			"nexus_user":       dataSourceUser(),
+			"nexus_blobstore":       dataSourceBlobstore(),
+			"nexus_privileges":      dataSourcePrivileges(),
+			"nexus_repository":      dataSourceRepository(),
+			"nexus_security_ldap":   dataSourceSecurityLDAP(),
+			"nexus_security_realms": dataSourceSecurityRealms(),
+			"nexus_user":            dataSourceUser(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"nexus_blobstore":        resourceBlobstore(),
@@ -21,8 +23,10 @@ func Provider() terraform.ResourceProvider {
 			"nexus_privilege":        resourcePrivilege(),
 			"nexus_repository":       resourceRepository(),
 			"nexus_role":             resourceRole(),
-			"nexus_user":             resourceUser(),
 			"nexus_script":           resourceScript(),
+			"nexus_security_ldap":    resourceSecurityLDAP(),
+			"nexus_security_realms":  resourceSecurityRealms(),
+			"nexus_user":             resourceUser(),
 		},
 		Schema: map[string]*schema.Schema{
 			"insecure": {

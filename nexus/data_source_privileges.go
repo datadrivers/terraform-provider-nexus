@@ -2,7 +2,6 @@ package nexus
 
 import (
 	"fmt"
-	"log"
 
 	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -143,8 +142,6 @@ func filterPrivileges(privileges []nexus.Privilege, filterDomain, filterFormat, 
 	repositories := make([]int, 0)
 	types := make([]int, 0)
 
-	log.Printf("Found %d privs", len(privileges))
-
 	// Filter
 	// Golang OR operator precedence is left to right
 	// https://www.tutorialspoint.com/go/go_operators_precedence.htm
@@ -176,7 +173,7 @@ func filterPrivileges(privileges []nexus.Privilege, filterDomain, filterFormat, 
 	for i, v := range intSlice {
 		result[i] = privileges[v]
 	}
-	log.Println(result)
+
 	return result, nil
 }
 
