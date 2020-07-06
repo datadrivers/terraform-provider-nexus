@@ -7,6 +7,7 @@
     - [nexus_blobstore](#data-nexus_blobstore)
     - [nexus_privileges](#data-nexus_privileges)
     - [nexus_repository](#data-nexus_repository)
+    - [nexus_security_ldap](#data-nexus_security_ldap)
     - [nexus_security_realms](#data-nexus_security_realms)
     - [nexus_user](#data-nexus_user)
   - [Resources](#resources)
@@ -73,6 +74,14 @@ data "nexus_privileges" "exmaple" {
 data "nexus_repository" "maven-central" {
   name = "maven-central"
 }
+```
+
+#### Data nexus_security_ldap
+
+Return LDAP server
+
+```hcl
+data "nexus_security_ldap" "example" {}
 ```
 
 #### Data nexus_security_realms
@@ -500,7 +509,7 @@ resource "nexus_role" "nx-admin" {
 
 #### Resource nexus_security_realms
 
-Set active security realms
+Activate security realms
 
 ```shell
 terraform import nexus_security_realms.example

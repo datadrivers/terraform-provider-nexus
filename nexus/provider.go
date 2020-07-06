@@ -13,6 +13,7 @@ func Provider() terraform.ResourceProvider {
 			"nexus_blobstore":       dataSourceBlobstore(),
 			"nexus_privileges":      dataSourcePrivileges(),
 			"nexus_repository":      dataSourceRepository(),
+			"nexus_security_ldap":   dataSourceSecurityLDAP(),
 			"nexus_security_realms": dataSourceSecurityRealms(),
 			"nexus_user":            dataSourceUser(),
 		},
