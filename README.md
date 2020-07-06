@@ -18,6 +18,7 @@
     - [nexus_privilege](#resource-nexus_privilege)
     - [nexus_repository](#resource-nexus_repository)
     - [nexus_role](#resource-nexus_role)
+    - [nexus_security_ldap](#resource-nexus_security_ldap)
     - [nexus_security_realms](#resource-nexus_security_realms)
     - [nexus_script](#resource-nexus_script)
     - [nexus_user](#resource-nexus_user)
@@ -504,6 +505,47 @@ resource "nexus_role" "nx-admin" {
   description = "Administrator role"
   privileges  = ["nx-all"]
   roles       = []
+}
+```
+
+#### Resource nexus_security_ldap
+
+Configure LDAP server
+
+```shell
+terraform import nexus_security_ldap.example example
+```
+
+```hcl
+resource "nexus_security_ldap" "acceptance" {
+  auth_password                  = "t0ps3cr3t"
+  auth_realm                     = "EXAMPLE"
+  auth_schema                    = ""
+  auth_username                  = "admin"
+  connection_retry_delay_seconds = 1
+  connection_timeout_seconds     = 1
+  group_base_dn                  = "ou=Group"
+  group_id_attribute             = "cn"
+  group_member_attribute         = "memberUid"
+  group_member_format            = "uid=${username},ou=people,dc=example,dc=com"
+  group_object_class             = "example"
+  group_subtree                  = true
+  host                           = "ldap.example.com"
+  ldap_groups_as_roles           = true
+  max_incident_count             = 1
+  name                           = "example-ldap"
+  port                           = 389
+  protocol                       = "LDAP"
+  search_base                    = "dc=example,dc=com"
+  user_base_dn                   = "ou=people"
+  user_email_address_attribute   = "mail"
+  user_id_attribute              = "uid"
+  user_ldap_filter               = "(|(mail=*@example.com)(uid=dom*))"
+  user_member_of_attribute       = "memberOf"
+  user_object_class              = "posixGroup"
+  user_password_attribute        = "exmaple"
+  user_real_name_attribute       = "cn"
+  user_subtree                   = true
 }
 ```
 

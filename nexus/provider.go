@@ -24,6 +24,7 @@ func Provider() terraform.ResourceProvider {
 			"nexus_repository":       resourceRepository(),
 			"nexus_role":             resourceRole(),
 			"nexus_script":           resourceScript(),
+			"nexus_security_ldap":    resourceSecurityLDAP(),
 			"nexus_security_realms":  resourceSecurityRealms(),
 			"nexus_user":             resourceUser(),
 		},
