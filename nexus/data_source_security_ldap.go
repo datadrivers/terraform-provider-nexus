@@ -98,10 +98,6 @@ func dataSourceSecurityLDAP() *schema.Resource {
 							Computed: true,
 							Type:     schema.TypeString,
 						},
-						"use_base_con": {
-							Computed: true,
-							Type:     schema.TypeString,
-						},
 						"use_subtree": {
 							Computed: true,
 							Type:     schema.TypeBool,
@@ -109,6 +105,10 @@ func dataSourceSecurityLDAP() *schema.Resource {
 						"use_trust_store": {
 							Computed: true,
 							Type:     schema.TypeBool,
+						},
+						"user_base_dn": {
+							Computed: true,
+							Type:     schema.TypeString,
 						},
 						"user_email_address_attribute": {
 							Computed: true,
@@ -173,7 +173,6 @@ func flattenSecurityLDAP(ldap []nexus.LDAP) []map[string]interface{} {
 			"auth_realm":                     server.AuthRealm,
 			"auth_schema":                    server.AuthSchema,
 			"auth_username":                  server.AuthUserName,
-			"id":                             server.ID,
 			"connection_retry_delay_seconds": server.ConnectionRetryDelaySeconds,
 			"connection_timeout_seconds":     server.ConnectionTimeoutSeconds,
 			"group_base_dn":                  server.GroupBaseDn,
@@ -184,15 +183,14 @@ func flattenSecurityLDAP(ldap []nexus.LDAP) []map[string]interface{} {
 			"group_subtree":                  server.GroupSubtree,
 			"group_type":                     server.GroupType,
 			"host":                           server.Host,
+			"id":                             server.ID,
 			"ldap_groups_as_roles":           server.LDAPGroupsAsRoles,
 			"max_incident_count":             server.MaxIncidentCount,
 			"name":                           server.Name,
 			"port":                           server.Port,
 			"protocol":                       server.Protocol,
 			"search_base":                    server.SearchBase,
-			"use_base_con":                   server.UseBaseCon,
-			"use_subtree":                    server.UseSubtree,
-			"use_trust_store":                server.UseTrustStore,
+			"user_base_dn":                   server.UserBaseDN,
 			"user_email_address_attribute":   server.UserEmailAddressAttribute,
 			"user_id_attribute":              server.UserIDAttribute,
 			"user_ldap_filter":               server.UserLDAPFilter,
@@ -200,6 +198,8 @@ func flattenSecurityLDAP(ldap []nexus.LDAP) []map[string]interface{} {
 			"user_object_class":              server.UserObjectClass,
 			"user_password_attribute":        server.UserPasswordAttribute,
 			"user_real_name_attribute":       server.UserRealNameAttribute,
+			"user_subtree":                   server.UserSubtree,
+			"user_trust_store":               server.UseTrustStore,
 		}
 	}
 	return nil
