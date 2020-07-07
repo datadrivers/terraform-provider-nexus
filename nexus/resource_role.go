@@ -21,6 +21,7 @@ func resourceRole() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"roleid": {
 				Description: "The id of the role.",
+				ForceNew:    true,
 				Required:    true,
 				Type:        schema.TypeString,
 			},
