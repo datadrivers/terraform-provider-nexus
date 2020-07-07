@@ -673,7 +673,7 @@ func setRepositoryToResourceData(repo *nexus.Repository, d *schema.ResourceData)
 	}
 
 	if repo.RepositoryHTTPClient != nil {
-		if err := d.Set("http_client", flattenRepositoryHTTPClient(repo.RepositoryHTTPClient)); err != nil {
+		if err := d.Set("http_client", flattenRepositoryHTTPClient(repo.RepositoryHTTPClient, d)); err != nil {
 			return err
 		}
 	}
@@ -805,12 +805,12 @@ func flattenRepositoryGroup(group *nexus.RepositoryGroup) []map[string]interface
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryHTTPClient(httpClient *nexus.RepositoryHTTPClient) []map[string]interface{} {
+func flattenRepositoryHTTPClient(httpClient *nexus.RepositoryHTTPClient, d *schema.ResourceData) []map[string]interface{} {
 	if httpClient == nil {
 		return nil
 	}
 	data := map[string]interface{}{
-		"authentication": flattenRepositoryHTTPClientAuthentication(httpClient.Authentication),
+		"authentication": flattenRepositoryHTTPClientAuthentication(httpClient.Authentication, d),
 		"auto_block":     httpClient.AutoBlock,
 		"blocked":        httpClient.Blocked,
 		// "connection":     flattenRepositoryHTTPClientConnection(httpClient.Connection),
@@ -818,7 +818,7 @@ func flattenRepositoryHTTPClient(httpClient *nexus.RepositoryHTTPClient) []map[s
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryHTTPClientAuthentication(auth *nexus.RepositoryHTTPClientAuthentication) []map[string]interface{} {
+func flattenRepositoryHTTPClientAuthentication(auth *nexus.RepositoryHTTPClientAuthentication, d *schema.ResourceData) []map[string]interface{} {
 	if auth == nil {
 		return nil
 	}
@@ -827,6 +827,7 @@ func flattenRepositoryHTTPClientAuthentication(auth *nexus.RepositoryHTTPClientA
 		"ntlm_host":   auth.NTLMHost,
 		"type":        auth.Type,
 		"username":    auth.Username,
+		"password":    d.Get("http_client.0.authentication.0.password").(string),
 	}
 	return []map[string]interface{}{data}
 }
