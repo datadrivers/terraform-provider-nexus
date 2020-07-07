@@ -21,12 +21,13 @@ func TestAccResourceSecurityRealms(t *testing.T) {
 				Config: testAccSecurityRealmsConfig(realms),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resName, "active.#", strconv.Itoa(len(realms))),
+					resource.TestCheckResourceAttr(resName, "active.0", realms[0]),
+					resource.TestCheckResourceAttr(resName, "active.1", realms[1]),
 				),
 			},
 			{
-				ResourceName: resName,
-				ImportState:  true,
-				// ImportStateId:     scriptName,
+				ResourceName:      resName,
+				ImportState:       true,
 				ImportStateVerify: true,
 			},
 		},
