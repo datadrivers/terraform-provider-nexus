@@ -1,8 +1,6 @@
 package nexus
 
 import (
-	"strings"
-
 	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
@@ -24,10 +22,7 @@ func resourceSecurityRealms() *schema.Resource {
 					Type: schema.TypeString,
 				},
 				Required: true,
-				Set: func(v interface{}) int {
-					return schema.HashString(strings.ToLower(v.(string)))
-				},
-				Type: schema.TypeSet,
+				Type:     schema.TypeList,
 			},
 		},
 	}
@@ -35,7 +30,7 @@ func resourceSecurityRealms() *schema.Resource {
 
 func resourceRealmsCreate(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
-	realmIDs := interfaceSliceToStringSlice(d.Get("active").(*schema.Set).List())
+	realmIDs := interfaceSliceToStringSlice(d.Get("active").([]interface{}))
 	if err := nexusClient.RealmsActivate(realmIDs); err != nil {
 		return err
 	}
@@ -59,7 +54,7 @@ func resourceRealmsRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRealmsUpdate(d *schema.ResourceData, m interface{}) error {
-	return nil
+	return resourceRealmsCreate(d, m)
 }
 
 func resourceRealmsDelete(d *schema.ResourceData, m interface{}) error {
