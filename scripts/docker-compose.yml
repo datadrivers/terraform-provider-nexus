@@ -1,0 +1,15 @@
+version: '3'
+services:
+  nexus:
+    container_name: nexus
+    image: "sonatype/nexus3:${NEXUS_VERSION}"
+    ports:
+      - "${NEXUS_PORT}:8081"
+    volumes:
+      - "${PWD}/nexus.properties:/nexus-data/etc/nexus.properties"
+  minio:
+    container_name: minio
+    image: "minio/minio:latest"
+    ports:
+      - "9000:9000"
+    command: "server /data"

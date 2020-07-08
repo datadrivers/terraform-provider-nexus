@@ -3,6 +3,7 @@ package nexus
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"testing"
 
 	nexus "github.com/datadrivers/go-nexus-client"
@@ -16,6 +17,8 @@ func TestAccResourceBlobstoreS3(t *testing.T) {
 	}
 	awsAccessKeyID := getEnv("AWS_ACCESS_KEY_ID", "")
 	awsSecretAccessKey := getEnv("AWS_SECRET_ACCESS_KEY", "")
+	awsEndpoint := getEnv("AWS_ENDPOINT", "")
+	forcePathStyle := true
 	bsName := fmt.Sprintf("test-blobstore-s3-%d", acctest.RandIntRange(0, 99))
 	bsType := nexus.BlobstoreTypeS3
 	bucketName := getEnv("AWS_BUCKET_NAME", "terraform-provider-nexus-s3-test")
@@ -26,7 +29,7 @@ func TestAccResourceBlobstoreS3(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBlobstoreResourceS3Minimal(bsName, bsType, bucketName, bucketRegion, awsAccessKeyID, awsSecretAccessKey),
+				Config: testAccBlobstoreResourceS3Minimal(bsName, bsType, bucketName, bucketRegion, awsAccessKeyID, awsSecretAccessKey, awsEndpoint, forcePathStyle),
 				// FIXME: Increase test coverage
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "name", bsName),
@@ -45,7 +48,7 @@ func TestAccResourceBlobstoreS3(t *testing.T) {
 	})
 }
 
-func testAccBlobstoreResourceS3Minimal(name string, bsType string, bucketName string, bucketRegion string, awsAccessKeyID string, awsSecretAccessKey string) string {
+func testAccBlobstoreResourceS3Minimal(name string, bsType string, bucketName string, bucketRegion string, awsAccessKeyID string, awsSecretAccessKey string, awsEndpoint string, forcePathStyle bool) string {
 	return fmt.Sprintf(`
 resource "nexus_blobstore" "acceptance" {
 	name = "%s"
@@ -61,6 +64,11 @@ resource "nexus_blobstore" "acceptance" {
 		  access_key_id     = "%s"
 		  secret_access_key = "%s"
 		}
+
+		advanced_bucket_connection {
+ 		  endpoint			= "%s"
+		  force_path_style	= "%s"
+		}
 	}
-}`, name, bsType, bucketName, bucketRegion, awsAccessKeyID, awsSecretAccessKey)
+}`, name, bsType, bucketName, bucketRegion, awsAccessKeyID, awsSecretAccessKey, awsEndpoint, strconv.FormatBool(forcePathStyle))
 }

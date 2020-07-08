@@ -1,5 +1,7 @@
 dist: bionic
 os: linux
+env:
+  - DOCKER_COMPOSE_VERSION=1.4.2
 services:
   - docker
 language: go
@@ -11,12 +13,16 @@ cache:
     - $GOPATH/pkg/mod
 
 install:
-  - make nexus-start
+  - make stop-services
+  - make start-services
 
 script:
   - make test
   - make vet
-  - SKIP_S3_TESTS=1 NEXUS_URL=http://127.0.0.1:8081 NEXUS_USERNAME=admin NEXUS_PASSWORD=admin123 make testacc
+  - >
+    NEXUS_URL=http://127.0.0.1:8081 NEXUS_USERNAME=admin NEXUS_PASSWORD=admin123
+    AWS_ACCESS_KEY_ID="minioadmin" AWS_SECRET_ACCESS_KEY="minioadmin" AWS_ENDPOINT="http://minio:9000"
+    make testacc
 #  - make website-test
 
 branches:
