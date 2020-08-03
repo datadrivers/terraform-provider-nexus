@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestDataSourcePrivileges(t *testing.T) {
+func TestAccDataSourcePrivileges(t *testing.T) {
 	dataSourceName := "data.nexus_privileges.acceptance"
 
 	resource.Test(t, resource.TestCase{
@@ -16,7 +16,7 @@ func TestDataSourcePrivileges(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourcePrivileges(),
+				Config: testAccDataSourcePrivilegesConfig(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttrSet(dataSourceName, "id"),
@@ -29,19 +29,8 @@ func TestDataSourcePrivileges(t *testing.T) {
 					),
 				),
 			},
-		},
-	})
-}
-
-func TestDataSourcePrivilegesTypeWildcard(t *testing.T) {
-	dataSourceName := "data.nexus_privileges.acceptance"
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
-		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourcePrivilegesByType(nexus.PrivilegeTypeWildcard),
+				Config: testAccDataSourcePrivilegesByTypeConfig(nexus.PrivilegeTypeWildcard),
 				Check: resource.ComposeTestCheckFunc(
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttrSet(dataSourceName, "id"),
@@ -59,16 +48,15 @@ func TestDataSourcePrivilegesTypeWildcard(t *testing.T) {
 			},
 		},
 	})
-
 }
 
-func testAccDataSourcePrivileges() string {
+func testAccDataSourcePrivilegesConfig() string {
 	return fmt.Sprintf(`
 data "nexus_privileges" "acceptance" {
 }`)
 }
 
-func testAccDataSourcePrivilegesByType(privType string) string {
+func testAccDataSourcePrivilegesByTypeConfig(privType string) string {
 	return fmt.Sprintf(`
 data "nexus_privileges" "acceptance" {
 	type = "%s"

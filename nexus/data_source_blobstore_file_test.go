@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestDataSourceBlobstoreFile(t *testing.T) {
+func TestAccDataSourceBlobstoreFile(t *testing.T) {
 	bsName := "default"
 	resourceName := "data.nexus_blobstore.acceptance"
 
@@ -16,7 +16,7 @@ func TestDataSourceBlobstoreFile(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceBlobstore(bsName),
+				Config: testAccDataSourceBlobstoreConfig(bsName),
 				Check: resource.ComposeTestCheckFunc(
 					// Base and common resource props
 					// Identity fields
@@ -40,7 +40,7 @@ func TestDataSourceBlobstoreFile(t *testing.T) {
 	})
 }
 
-func testAccDataSourceBlobstore(name string) string {
+func testAccDataSourceBlobstoreConfig(name string) string {
 	return fmt.Sprintf(`
 data "nexus_blobstore" "acceptance" {
 	name = "%s"

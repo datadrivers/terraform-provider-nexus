@@ -9,9 +9,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccResourceSecurityLDAP(t *testing.T) {
-	resName := "nexus_security_ldap.acceptance"
-	ldap := nexus.LDAP{
+func testAccResourceSecurityLDAP() nexus.LDAP {
+	return nexus.LDAP{
 		AuthPassword:                "1234567890",
 		AuthSchema:                  "SIMPLE",
 		AuthUserName:                "admin",
@@ -20,7 +19,7 @@ func TestAccResourceSecurityLDAP(t *testing.T) {
 		GroupType:                   "static",
 		Host:                        "127.0.0.1",
 		MaxIncidentCount:            uint(1),
-		Name:                        "ci-test",
+		Name:                        "acceptance",
 		Port:                        389,
 		Protocol:                    "LDAP",
 		SearchBase:                  "dc=example,dc=com",
@@ -29,13 +28,18 @@ func TestAccResourceSecurityLDAP(t *testing.T) {
 		UserObjectClass:             "inetOrgPerson",
 		UserRealNameAttribute:       "cn",
 	}
+}
+
+func TestAccResourceSecurityLDAP(t *testing.T) {
+	ldap := testAccResourceSecurityLDAP()
+	resName := fmt.Sprintf("nexus_security_ldap.%s", ldap.Name)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceSecurityLDAP(ldap),
+				Config: testAccResourceSecurityLDAPConfig(ldap),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(resName, "auth_password"),
 					resource.TestCheckResourceAttr(resName, "auth_realm", ldap.AuthRealm),
@@ -79,9 +83,9 @@ func TestAccResourceSecurityLDAP(t *testing.T) {
 	})
 }
 
-func testAccResourceSecurityLDAP(ldap nexus.LDAP) string {
+func testAccResourceSecurityLDAPConfig(ldap nexus.LDAP) string {
 	return fmt.Sprintf(`
-resource "nexus_security_ldap" "acceptance" {
+resource "nexus_security_ldap" "%s" {
 	auth_password                  = "%s"
 	auth_schema                    = "%s"
 	auth_username                  = "%s"
@@ -99,5 +103,5 @@ resource "nexus_security_ldap" "acceptance" {
 	user_object_class              = "%s"
 	user_real_name_attribute       = "%s"
 }
-`, ldap.AuthPassword, ldap.AuthSchema, ldap.AuthUserName, ldap.ConnectionRetryDelaySeconds, ldap.ConnectionTimeoutSeconds, ldap.GroupType, ldap.Host, ldap.MaxIncidentCount, ldap.Name, ldap.Port, ldap.Protocol, ldap.SearchBase, ldap.UserEmailAddressAttribute, ldap.UserIDAttribute, ldap.UserObjectClass, ldap.UserRealNameAttribute)
+`, ldap.Name, ldap.AuthPassword, ldap.AuthSchema, ldap.AuthUserName, ldap.ConnectionRetryDelaySeconds, ldap.ConnectionTimeoutSeconds, ldap.GroupType, ldap.Host, ldap.MaxIncidentCount, ldap.Name, ldap.Port, ldap.Protocol, ldap.SearchBase, ldap.UserEmailAddressAttribute, ldap.UserIDAttribute, ldap.UserObjectClass, ldap.UserRealNameAttribute)
 }

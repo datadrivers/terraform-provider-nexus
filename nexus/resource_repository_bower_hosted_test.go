@@ -1,16 +1,24 @@
 package nexus
 
 import (
-	"fmt"
+	"strconv"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
+	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccRepositoryBowerHosted(t *testing.T) {
-	repoName := fmt.Sprintf("test-repo-%s", acctest.RandString(10))
-	bowerRewritePackageURLs := true
+func testAccRepositoryBowerHosted() nexus.Repository {
+	repo := testAccResourceRepositoryHosted(nexus.RepositoryFormatBower)
+	repo.RepositoryBower = &nexus.RepositoryBower{
+		RewritePackageUrls: true,
+	}
+	return repo
+}
+
+func TestAccResourceRepositoryBowerHosted(t *testing.T) {
+	repo := testAccRepositoryBowerHosted()
+	resName := testAccResourceRepositoryName(repo)
 
 	resource.Test(t, resource.TestCase{
 
@@ -18,57 +26,26 @@ func TestAccRepositoryBowerHosted(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: createTfStmtForResourceBowerHosted(repoName, bowerRewritePackageURLs),
+				Config: testAccResourceRepositoryConfig(repo),
 				Check: resource.ComposeTestCheckFunc(
-					// Base and common repo props
-					// Identity fields
+					resourceRepositoryTestCheckFunc(repo),
+					resourceRepositoryTypeHostedTestCheckFunc(repo),
 					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "id", repoName),
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "name", repoName),
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "format", "bower"),
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "type", "hosted"),
+						resource.TestCheckResourceAttr(resName, "apt.#", "0"),
+						resource.TestCheckResourceAttr(resName, "apt_signing.#", "0"),
+						resource.TestCheckResourceAttr(resName, "docker.#", "0"),
+						resource.TestCheckResourceAttr(resName, "docker_proxy.#", "0"),
+						resource.TestCheckResourceAttr(resName, "maven.#", "0"),
 					),
-					// Common fields
-					// Online
 					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "online", "true"),
-						// Storage
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "storage.#", "1"),
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "storage.0.blob_store_name", "default"),
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "storage.0.strict_content_type_validation", "true"),
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "storage.0.write_policy", "ALLOW"),
-					),
-					// No fields related to other repo types
-					// Format
-					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "maven.#", "0"),
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "apt.#", "0"),
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "apt_signing.#", "0"),
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "docker.#", "0"),
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "docker_proxy.#", "0"),
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "http_client.#", "0"),
-					),
-					// Type
-					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "group.#", "0"),
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "negative_cache.#", "0"),
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "proxy.#", "0"),
-					),
-					// Fields related to this format and type
-					// Format
-					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "bower.#", "1"),
-						resource.TestCheckResourceAttr("nexus_repository.bower_hosted", "bower.0.rewrite_package_urls", "true"),
-					),
-					// Type
-					resource.ComposeAggregateTestCheckFunc(
-					// No specific fields
+						resource.TestCheckResourceAttr(resName, "bower.#", "1"),
+						resource.TestCheckResourceAttr(resName, "bower.0.rewrite_package_urls", strconv.FormatBool(repo.RepositoryBower.RewritePackageUrls)),
 					),
 				),
 			},
 			{
-				ResourceName:      "nexus_repository.bower_hosted",
-				ImportStateId:     repoName,
+				ResourceName:      resName,
+				ImportStateId:     repo.Name,
 				ImportState:       true,
 				ImportStateVerify: true,
 				// TODO: verify bower configuration, bower attribute is not returned by API currently
@@ -77,21 +54,4 @@ func TestAccRepositoryBowerHosted(t *testing.T) {
 			},
 		},
 	})
-}
-
-func createTfStmtForResourceBowerHosted(name string, rewritePackageURLs bool) string {
-	return fmt.Sprintf(`
-resource "nexus_repository" "bower_hosted" {
-	name   = "%s"
-	format = "bower"
-	type   = "hosted"
-
-	bower {
-		rewrite_package_urls = %v
-	}
-
-	storage {
-		write_policy = "ALLOW"
-	}
-}`, name, rewritePackageURLs)
 }

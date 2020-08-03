@@ -2,42 +2,52 @@ package nexus
 
 import (
 	"fmt"
+	"strconv"
 	"testing"
 
+	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
 func TestAccDataSourceUser(t *testing.T) {
-	userID := acctest.RandString(10)
+	resName := "data.nexus_user.acceptance"
+	user := nexus.User{
+		UserID:       fmt.Sprintf("user-test-%s", acctest.RandString(10)),
+		FirstName:    fmt.Sprintf("user-firstname-%s", acctest.RandString(10)),
+		LastName:     fmt.Sprintf("user-lastname-%s", acctest.RandString(10)),
+		EmailAddress: fmt.Sprintf("user-email-%s@example.com", acctest.RandString(10)),
+		Status:       "active",
+		Password:     acctest.RandString(16),
+		Roles:        []string{"nx-admin"},
+	}
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckUser(userID),
-				// FIXME: No tests
-				Check: resource.ComposeTestCheckFunc(),
+				Config: testAccResourceUserConfig(user) + testAccDataSourceUserConfig(),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resName, "id", user.UserID),
+					resource.TestCheckResourceAttr(resName, "userid", user.UserID),
+					resource.TestCheckResourceAttr(resName, "firstname", user.FirstName),
+					resource.TestCheckResourceAttr(resName, "lastname", user.LastName),
+					// Password is not returned by API
+					// resource.TestCheckResourceAttr(resName, "password", user.Password),
+					resource.TestCheckResourceAttr(resName, "email", user.EmailAddress),
+					resource.TestCheckResourceAttr(resName, "status", user.Status),
+					resource.TestCheckResourceAttr(resName, "roles.#", strconv.Itoa(len(user.Roles))),
+				),
 			},
 		},
 	})
 }
 
-func testAccCheckUser(userID string) string {
+func testAccDataSourceUserConfig() string {
 	return fmt.Sprintf(`
-resource "nexus_user" "test" {
-	userid    = "%s"
-	firstname = "terraform-test"
-	lastname  = "terraform-test"
-	email     = "terraform-test@example.com"
-	password  = "test123"
-	status    = "active"
-	roles     = ["nx-admin"]
+data "nexus_user" "acceptance" {
+	userid = nexus_user.acceptance.userid
 }
-
-data "nexus_user" "test" {
-	userid = nexus_user.test.userid
-}
-`, userID)
+`)
 }

@@ -80,25 +80,6 @@ func resourceRepository() *schema.Resource {
 					},
 				},
 			},
-			"yum": {
-				Type:          schema.TypeList,
-				Optional:      true,
-				ConflictsWith: []string{"bower", "docker", "docker_proxy", "maven", "apt"},
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"repodata_depth": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  0,
-						},
-						"deploy_policy": {
-							Type:         schema.TypeString,
-							Required:     true,
-							ValidateFunc: validation.StringInSlice([]string{"STRICT", "PERMISSIVE"}, false),
-						},
-					},
-				},
-			},
 			"bower": {
 				Type:          schema.TypeList,
 				Optional:      true,
@@ -119,9 +100,14 @@ func resourceRepository() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"policy_names": {
-							Elem:     &schema.Schema{Type: schema.TypeString},
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Optional: true,
-							Type:     schema.TypeSet,
+							Set: func(v interface{}) int {
+								return schema.HashString(strings.ToLower(v.(string)))
+							},
+							Type: schema.TypeSet,
 						},
 					},
 				},
@@ -189,9 +175,14 @@ func resourceRepository() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"member_names": {
 							Description: "Member repositories names",
-							Elem:        &schema.Schema{Type: schema.TypeString},
-							Required:    true,
-							Type:        schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Required: true,
+							Set: func(v interface{}) int {
+								return schema.HashString(strings.ToLower(v.(string)))
+							},
+							Type: schema.TypeSet,
 						},
 					},
 				},
@@ -397,6 +388,25 @@ func resourceRepository() *schema.Resource {
 					},
 				},
 			},
+			"yum": {
+				Type:          schema.TypeList,
+				Optional:      true,
+				ConflictsWith: []string{"bower", "docker", "docker_proxy", "maven", "apt"},
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"repodata_depth": {
+							Type:     schema.TypeInt,
+							Optional: true,
+							Default:  0,
+						},
+						"deploy_policy": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: validation.StringInSlice([]string{"STRICT", "PERMISSIVE"}, false),
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -405,17 +415,16 @@ func repositoryStorageDefault() (interface{}, error) {
 	data := map[string]interface{}{
 		"blob_store_name":                "default",
 		"strict_content_type_validation": true,
-		"write_policy":                   "ALLOW",
 	}
 	return []map[string]interface{}{data}, nil
 }
 
 func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 	repo := nexus.Repository{
-		Name:   d.Get("name").(string),
-		Type:   d.Get("type").(string),
 		Format: d.Get("format").(string),
+		Name:   d.Get("name").(string),
 		Online: d.Get("online").(bool),
+		Type:   d.Get("type").(string),
 	}
 
 	if _, ok := d.GetOk("apt"); ok {
@@ -438,16 +447,6 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		}
 	}
 
-	if _, ok := d.GetOk("yum"); ok {
-		yumList := d.Get("yum").([]interface{})
-		yumConfig := yumList[0].(map[string]interface{})
-
-		repo.RepositoryYum = &nexus.RepositoryYum{
-			RepodataDepth: yumConfig["repodata_depth"].(int),
-			DeployPolicy:  yumConfig["deploy_policy"].(string),
-		}
-	}
-
 	if _, ok := d.GetOk("bower"); ok {
 		bowerList := d.Get("bower").([]interface{})
 		bowerConfig := bowerList[0].(map[string]interface{})
@@ -460,15 +459,8 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 	if _, ok := d.GetOk("cleanup"); ok {
 		cleanupList := d.Get("cleanup").([]interface{})
 		cleanupConfig := cleanupList[0].(map[string]interface{})
-		repoCleanupPolicyNames := cleanupConfig["policy_names"].(*schema.Set)
-
-		cleanupPolicyNames := make([]string, repoCleanupPolicyNames.Len())
-		for _, v := range repoCleanupPolicyNames.List() {
-			cleanupPolicyNames = append(cleanupPolicyNames, v.(string))
-		}
-
 		repo.RepositoryCleanup = &nexus.RepositoryCleanup{
-			PolicyNames: cleanupPolicyNames,
+			PolicyNames: interfaceSliceToStringSlice(cleanupConfig["policy_names"].(*schema.Set).List()),
 		}
 	}
 
@@ -616,7 +608,21 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		repo.RepositoryStorage = &nexus.RepositoryStorage{
 			BlobStoreName:               storageConfig["blob_store_name"].(string),
 			StrictContentTypeValidation: storageConfig["strict_content_type_validation"].(bool),
-			WritePolicy:                 storageConfig["write_policy"].(string),
+		}
+		// Only hosted repository has attribute WritePolicy
+		if repo.Type == nexus.RepositoryTypeHosted {
+			writePolicy := storageConfig["write_policy"].(string)
+			repo.RepositoryStorage.WritePolicy = &writePolicy
+		}
+	}
+
+	if _, ok := d.GetOk("yum"); ok {
+		yumList := d.Get("yum").([]interface{})
+		yumConfig := yumList[0].(map[string]interface{})
+
+		repo.RepositoryYum = &nexus.RepositoryYum{
+			RepodataDepth: yumConfig["repodata_depth"].(int),
+			DeployPolicy:  yumConfig["deploy_policy"].(string),
 		}
 	}
 
@@ -636,12 +642,6 @@ func setRepositoryToResourceData(repo *nexus.Repository, d *schema.ResourceData)
 		}
 	}
 
-	if repo.RepositoryYum != nil {
-		if err := d.Set("yum", flattenRepositoryYum(repo.RepositoryYum)); err != nil {
-			return err
-		}
-	}
-
 	if repo.RepositoryAptSigning != nil {
 		if err := d.Set("apt_signing", flattenRepositoryAptSigning(repo.RepositoryAptSigning)); err != nil {
 			return err
@@ -650,6 +650,12 @@ func setRepositoryToResourceData(repo *nexus.Repository, d *schema.ResourceData)
 
 	if repo.RepositoryBower != nil {
 		if err := d.Set("bower", flattenRepositoryBower(repo.RepositoryBower)); err != nil {
+			return err
+		}
+	}
+
+	if repo.RepositoryCleanup != nil {
+		if err := d.Set("cleanup", flattenRepositoryCleanup(repo.RepositoryCleanup)); err != nil {
 			return err
 		}
 	}
@@ -673,7 +679,7 @@ func setRepositoryToResourceData(repo *nexus.Repository, d *schema.ResourceData)
 	}
 
 	if repo.RepositoryHTTPClient != nil {
-		if err := d.Set("http_client", flattenRepositoryHTTPClient(repo.RepositoryHTTPClient)); err != nil {
+		if err := d.Set("http_client", flattenRepositoryHTTPClient(repo.RepositoryHTTPClient, d)); err != nil {
 			return err
 		}
 	}
@@ -702,7 +708,13 @@ func setRepositoryToResourceData(repo *nexus.Repository, d *schema.ResourceData)
 		}
 	}
 
-	if err := d.Set("storage", flattenRepositoryStorage(repo.RepositoryStorage)); err != nil {
+	if repo.RepositoryYum != nil {
+		if err := d.Set("yum", flattenRepositoryYum(repo.RepositoryYum)); err != nil {
+			return err
+		}
+	}
+
+	if err := d.Set("storage", flattenRepositoryStorage(repo.RepositoryStorage, d)); err != nil {
 		return err
 	}
 
@@ -716,18 +728,6 @@ func flattenRepositoryApt(apt *nexus.RepositoryApt) []map[string]interface{} {
 	data := map[string]interface{}{
 		"distribution": apt.Distribution,
 		"flat":         apt.Flat,
-	}
-
-	return []map[string]interface{}{data}
-}
-
-func flattenRepositoryYum(yum *nexus.RepositoryYum) []map[string]interface{} {
-	if yum == nil {
-		return nil
-	}
-	data := map[string]interface{}{
-		"deploy_policy":  yum.DeployPolicy,
-		"repodata_depth": yum.RepodataDepth,
 	}
 
 	return []map[string]interface{}{data}
@@ -759,7 +759,7 @@ func flattenRepositoryCleanup(cleanup *nexus.RepositoryCleanup) []map[string]int
 		return nil
 	}
 	data := map[string]interface{}{
-		// "policy_names":
+		"policy_names": stringSliceToInterfaceSlice(cleanup.PolicyNames),
 	}
 
 	return []map[string]interface{}{data}
@@ -805,12 +805,12 @@ func flattenRepositoryGroup(group *nexus.RepositoryGroup) []map[string]interface
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryHTTPClient(httpClient *nexus.RepositoryHTTPClient) []map[string]interface{} {
+func flattenRepositoryHTTPClient(httpClient *nexus.RepositoryHTTPClient, d *schema.ResourceData) []map[string]interface{} {
 	if httpClient == nil {
 		return nil
 	}
 	data := map[string]interface{}{
-		"authentication": flattenRepositoryHTTPClientAuthentication(httpClient.Authentication),
+		"authentication": flattenRepositoryHTTPClientAuthentication(httpClient.Authentication, d),
 		"auto_block":     httpClient.AutoBlock,
 		"blocked":        httpClient.Blocked,
 		// "connection":     flattenRepositoryHTTPClientConnection(httpClient.Connection),
@@ -818,7 +818,7 @@ func flattenRepositoryHTTPClient(httpClient *nexus.RepositoryHTTPClient) []map[s
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryHTTPClientAuthentication(auth *nexus.RepositoryHTTPClientAuthentication) []map[string]interface{} {
+func flattenRepositoryHTTPClientAuthentication(auth *nexus.RepositoryHTTPClientAuthentication, d *schema.ResourceData) []map[string]interface{} {
 	if auth == nil {
 		return nil
 	}
@@ -827,6 +827,7 @@ func flattenRepositoryHTTPClientAuthentication(auth *nexus.RepositoryHTTPClientA
 		"ntlm_host":   auth.NTLMHost,
 		"type":        auth.Type,
 		"username":    auth.Username,
+		"password":    d.Get("http_client.0.authentication.0.password").(string),
 	}
 	return []map[string]interface{}{data}
 }
@@ -892,16 +893,28 @@ func flattenRepositoryProxy(proxy *nexus.RepositoryProxy) []map[string]interface
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryStorage(storage *nexus.RepositoryStorage) []map[string]interface{} {
+func flattenRepositoryStorage(storage *nexus.RepositoryStorage, d *schema.ResourceData) []map[string]interface{} {
 	if storage == nil {
 		return nil
 	}
 	data := map[string]interface{}{
 		"blob_store_name":                storage.BlobStoreName,
 		"strict_content_type_validation": storage.StrictContentTypeValidation,
-		"write_policy":                   storage.WritePolicy,
 	}
+	if d.Get("type") == nexus.RepositoryTypeHosted {
+		data["write_policy"] = storage.WritePolicy
+	}
+	return []map[string]interface{}{data}
+}
 
+func flattenRepositoryYum(yum *nexus.RepositoryYum) []map[string]interface{} {
+	if yum == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"deploy_policy":  yum.DeployPolicy,
+		"repodata_depth": yum.RepodataDepth,
+	}
 	return []map[string]interface{}{data}
 }
 

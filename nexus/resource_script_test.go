@@ -7,68 +7,46 @@ import (
 	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func testAccCheckScriptResourceExists(name string, script *nexus.Script) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
-		if !ok {
-			return fmt.Errorf("Not found: %s", name)
-		}
+func TestAccResourceScript(t *testing.T) {
+	resName := "nexus_script.acceptance"
 
-		nexusClient := testAccProvider.Meta().(nexus.Client)
-		result, err := nexusClient.ScriptRead(rs.Primary.ID)
-		if err != nil {
-			return err
-		}
-
-		*script = *result
-
-		return nil
+	script := nexus.Script{
+		Name:    acctest.RandString(10),
+		Content: "log.info('Hello, World!')",
+		Type:    "groovy",
 	}
-}
-
-func TestAccScript(t *testing.T) {
-	t.Parallel()
-
-	var script nexus.Script
-
-	scriptName := acctest.RandString(10)
-	scriptContent := "log.info('Hello, World!')"
-	scriptType := "groovy"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testScriptResource(scriptName, scriptContent, scriptType),
+				Config: testAccResourceScriptConfig(script),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("nexus_script.acceptance", "id", scriptName),
-					resource.TestCheckResourceAttr("nexus_script.acceptance", "name", scriptName),
-					resource.TestCheckResourceAttr("nexus_script.acceptance", "type", scriptType),
-					resource.TestCheckResourceAttr("nexus_script.acceptance", "content", scriptContent),
-					// TODO: Does it make sense to check additionally that script exists?
-					testAccCheckScriptResourceExists("nexus_script.acceptance", &script),
+					resource.TestCheckResourceAttr(resName, "id", script.Name),
+					resource.TestCheckResourceAttr(resName, "name", script.Name),
+					resource.TestCheckResourceAttr(resName, "type", script.Type),
+					resource.TestCheckResourceAttr(resName, "content", script.Content),
 				),
 			},
 			{
-				ResourceName:      "nexus_script.acceptance",
+				ResourceName:      resName,
 				ImportState:       true,
-				ImportStateId:     scriptName,
+				ImportStateId:     script.Name,
 				ImportStateVerify: true,
 			},
 		},
 	})
 }
 
-func testScriptResource(scriptName string, scriptContent string, scriptType string) string {
+func testAccResourceScriptConfig(script nexus.Script) string {
 	return fmt.Sprintf(`
 resource "nexus_script" "acceptance" {
 	name    = "%s"
 	content = "%s"
 	type    = "%s"
 }
-`, scriptName, scriptContent, scriptType)
+`, script.Name, script.Content, script.Type)
 }
