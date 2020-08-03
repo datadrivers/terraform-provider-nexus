@@ -640,32 +640,34 @@ In this case provider will be available to use with your terraform codebase (in 
 
 ## Testing
 
-For testing start a local Docker container using make
+For testing start a local Docker containers using make
 
 ```shell
-make nexus-start
+make start-services
 ```
 
-This will start a Docker container and expose port 8081.
+This will start a Docker and MinIO containers and expose ports 8081 and 9000.
 
 Now start the tests
 
 ```shell
-NEXUS_URL="http://127.0.0.1:8081" NEXUS_USERNAME="admin" NEXUS_PASSWORD="admin123" make testacc
+NEXUS_URL="http://127.0.0.1:8081" NEXUS_USERNAME="admin" NEXUS_PASSWORD="admin123" AWS_ACCESS_KEY_ID="minioadmin" AWS_SECRET_ACCESS_KEY="minioadmin" AWS_ENDPOINT="http://minio:9000" make testacc
 ```
 
-or without s3 tests which require additional configuration:
+or without S3 tests:
 
 ```shell
 SKIP_S3_TESTS=1 NEXUS_URL="http://127.0.0.1:8081" NEXUS_USERNAME="admin" NEXUS_PASSWORD="admin123" make testacc
 ```
 
-**NOTE**: To test Blobstore type S3 following environment variables must be set, otherwise tests will fail.
+**NOTE**: To test Blobstore type S3 following environment variables must be set, otherwise tests will fail:
 
-- `AWS_ACCESS_KEY_ID`
-- `AWS_SECRET_ACCESS_KEY`
-- `AWS_DEFAULT_REGION` the AWS region of the S3 bucket to use, defaults to `eu-central-1`
-- `AWS_BUCKET_NAME` the name of S3 bucket to use, defaults to `terraform-provider-nexus-s3-test`
+- `AWS_ACCESS_KEY_ID`,
+- `AWS_SECRET_ACCESS_KEY`,
+- `AWS_DEFAULT_REGION` the AWS region of the S3 bucket to use, defaults to `eu-central-1`,
+- `AWS_BUCKET_NAME` the name of S3 bucket to use, defaults to `terraform-provider-nexus-s3-test`.
+
+Optionally you can set `AWS_ENDPOINT` to point an alternative S3 endpoint.
 
 To debug tests
 

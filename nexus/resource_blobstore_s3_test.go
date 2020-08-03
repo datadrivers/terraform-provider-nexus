@@ -3,6 +3,7 @@ package nexus
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"testing"
 
 	nexus "github.com/datadrivers/go-nexus-client"
@@ -26,6 +27,10 @@ func TestAccResourceBlobstoreS3(t *testing.T) {
 			BlobstoreS3Bucket: &nexus.BlobstoreS3Bucket{
 				Name:   getEnv("AWS_BUCKET_NAME", "terraform-provider-nexus-s3-test"),
 				Region: getEnv("AWS_DEFAULT_REGION", "eu-central-1"),
+			},
+			BlobstoreS3AdvancedBucketConnection: &nexus.BlobstoreS3AdvancedBucketConnection{
+				Endpoint:       getEnv("AWS_ENDPOINT", ""),
+				ForcePathStyle: true,
 			},
 		},
 	}
@@ -70,6 +75,11 @@ resource "nexus_blobstore" "acceptance" {
 		  access_key_id     = "%s"
 		  secret_access_key = "%s"
 		}
+
+		advanced_bucket_connection {
+ 		  endpoint			= "%s"
+		  force_path_style	= %s
+		}
 	}
-}`, bs.Name, bs.Type, bs.BlobstoreS3BucketConfiguration.Name, bs.BlobstoreS3BucketConfiguration.Region, awsAccessKeyID, awsSecretAccessKey)
+}`, bs.Name, bs.Type, bs.BlobstoreS3BucketConfiguration.Name, bs.BlobstoreS3BucketConfiguration.Region, awsAccessKeyID, awsSecretAccessKey, bs.BlobstoreS3AdvancedBucketConnection.Endpoint, strconv.FormatBool(bs.BlobstoreS3AdvancedBucketConnection.ForcePathStyle))
 }
