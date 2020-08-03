@@ -11,52 +11,58 @@ import (
 )
 
 func TestAccResourceBlobstoreFile(t *testing.T) {
-	bsName := fmt.Sprintf("test-blobstore-%d", acctest.RandIntRange(0, 99))
-	bsType := nexus.BlobstoreTypeFile
-	bsPath := fmt.Sprintf("/nexus-data/%s", bsName)
-	quotaLimit := acctest.RandIntRange(100, 300)
-	quotaType := "spaceRemainingQuota"
+	resName := "nexus_blobstore.acceptance"
+
+	bs := nexus.Blobstore{
+		Name: fmt.Sprintf("test-blobstore-%d", acctest.RandIntRange(0, 99)),
+		Type: nexus.BlobstoreTypeFile,
+		Path: "/nexus-data/acceptance",
+		BlobstoreSoftQuota: &nexus.BlobstoreSoftQuota{
+			Limit: acctest.RandIntRange(100, 300),
+			Type:  "spaceRemainingQuota",
+		},
+	}
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBlobstoreResourceFile(bsName, bsType, bsPath, quotaLimit, quotaType),
+				Config: testAccResourceBlobstoreFileConfig(bs),
 				Check: resource.ComposeTestCheckFunc(
 					// Base and common resource props
 					// Identity fields
 					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "id", bsName),
-						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "name", bsName),
-						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "path", bsPath),
-						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "type", bsType),
+						resource.TestCheckResourceAttr(resName, "id", bs.Name),
+						resource.TestCheckResourceAttr(resName, "name", bs.Name),
+						resource.TestCheckResourceAttr(resName, "path", bs.Path),
+						resource.TestCheckResourceAttr(resName, "type", bs.Type),
 					),
 					// Common fields
 					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "soft_quota.#", "1"),
-						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "soft_quota.0.limit", strconv.Itoa(quotaLimit)),
-						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "soft_quota.0.type", quotaType),
+						resource.TestCheckResourceAttr(resName, "soft_quota.#", "1"),
+						resource.TestCheckResourceAttr(resName, "soft_quota.0.limit", strconv.Itoa(bs.BlobstoreSoftQuota.Limit)),
+						resource.TestCheckResourceAttr(resName, "soft_quota.0.type", bs.BlobstoreSoftQuota.Type),
 					),
 					// No fields related to other types
 					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "bucket_configuration.#", "0"),
+						resource.TestCheckResourceAttr(resName, "bucket_configuration.#", "0"),
 					),
 
 					// Fields related to this type
 					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "blob_count", "0"),          // empty
-						resource.TestCheckResourceAttr("nexus_blobstore.acceptance", "total_size_in_bytes", "0"), // empty
+						resource.TestCheckResourceAttr(resName, "blob_count", "0"),          // empty
+						resource.TestCheckResourceAttr(resName, "total_size_in_bytes", "0"), // empty
 						// FIXME: The value is unavailable, but should be
 						// TODO: check that value is non-zero
-						// resource.TestCheckResourceAttrSet("nexus_blobstore.acceptance", "available_space_in_bytes"),
+						// resource.TestCheckResourceAttrSet(resName, "available_space_in_bytes"),
 					),
 				),
 			},
 			{
-				ResourceName:            "nexus_blobstore.acceptance",
+				ResourceName:            resName,
 				ImportState:             true,
-				ImportStateId:           bsName,
+				ImportStateId:           bs.Name,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"available_space_in_bytes"},
 			},
@@ -64,7 +70,7 @@ func TestAccResourceBlobstoreFile(t *testing.T) {
 	})
 }
 
-func testAccBlobstoreResourceFile(name string, bsType string, path string, quotaLimit int, quotaType string) string {
+func testAccResourceBlobstoreFileConfig(bs nexus.Blobstore) string {
 	return fmt.Sprintf(`
 resource "nexus_blobstore" "acceptance" {
 	name = "%s"
@@ -75,5 +81,5 @@ resource "nexus_blobstore" "acceptance" {
 		limit = %d
 		type  = "%s"
 	}
-}`, name, path, bsType, quotaLimit, quotaType)
+}`, bs.Name, bs.Path, bs.Type, bs.BlobstoreSoftQuota.Limit, bs.BlobstoreSoftQuota.Type)
 }

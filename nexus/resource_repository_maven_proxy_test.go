@@ -7,17 +7,21 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func testAccResourceRepositoryPyPiHosted() nexus.Repository {
-	repo := testAccResourceRepositoryHosted(nexus.RepositoryFormatPyPi)
+func testAccResourceRepositoryMavenProxy() nexus.Repository {
+	repo := testAccResourceRepositoryProxy(nexus.RepositoryFormatMaven2)
+	repo.RepositoryMaven = &nexus.RepositoryMaven{
+		LayoutPolicy:  "STRICT",
+		VersionPolicy: "SNAPSHOT",
+	}
+	repo.RepositoryProxy.RemoteURL = "https://www.example.com"
 	return repo
 }
 
-func TestAccResourceRepositoryPypiHosted(t *testing.T) {
-	repo := testAccResourceRepositoryPyPiHosted()
+func TestAccResourceRepositoryMavenProxy(t *testing.T) {
+	repo := testAccResourceRepositoryMavenProxy()
 	resName := testAccResourceRepositoryName(repo)
 
 	resource.Test(t, resource.TestCase{
-
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
@@ -25,7 +29,7 @@ func TestAccResourceRepositoryPypiHosted(t *testing.T) {
 				Config: testAccResourceRepositoryConfig(repo),
 				Check: resource.ComposeTestCheckFunc(
 					resourceRepositoryTestCheckFunc(repo),
-					resourceRepositoryTypeHostedTestCheckFunc(repo),
+					resourceRepositoryTypeProxyTestCheckFunc(repo),
 					// No fields related to other repo types
 					// Format
 					resource.ComposeAggregateTestCheckFunc(
@@ -34,15 +38,15 @@ func TestAccResourceRepositoryPypiHosted(t *testing.T) {
 						resource.TestCheckResourceAttr(resName, "bower.#", "0"),
 						resource.TestCheckResourceAttr(resName, "docker.#", "0"),
 						resource.TestCheckResourceAttr(resName, "docker_proxy.#", "0"),
-						resource.TestCheckResourceAttr(resName, "maven.#", "0"),
 					),
 				),
 			},
 			{
-				ResourceName:      resName,
-				ImportStateId:     repo.Name,
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            resName,
+				ImportStateId:           repo.Name,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"http_client.0.authentication.0.password"},
 			},
 		},
 	})

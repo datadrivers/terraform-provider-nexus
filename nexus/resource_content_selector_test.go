@@ -10,14 +10,15 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccContentSelector(t *testing.T) {
-	t.Parallel()
-
+func TestAccResourceContentSelector(t *testing.T) {
 	var contentSelector nexus.ContentSelector
 
-	contentSelectorName := acctest.RandString(10)
-	contentSelectorDescription := acctest.RandString(30)
-	contentSelectorExpression := fmt.Sprintf("format == \\\"%s\\\" and path == \\\"%s\\\"", acctest.RandString(15), acctest.RandString(15))
+	resName := "nexus_content_selector.acceptance"
+	cs := nexus.ContentSelector{
+		Name:        acctest.RandString(10),
+		Description: acctest.RandString(30),
+		Expression:  fmt.Sprintf("format == \\\"%s\\\" and path == \\\"%s\\\"", acctest.RandString(15), acctest.RandString(15)),
+	}
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -25,17 +26,17 @@ func TestAccContentSelector(t *testing.T) {
 		Steps: []resource.TestStep{
 			// The first step creates a basic content selector
 			{
-				Config: testAccContentSelectorResource(contentSelectorName, contentSelectorDescription, contentSelectorExpression),
+				Config: testAccResourceContentSelectorConfig(cs),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("nexus_content_selector.acceptance", "description", contentSelectorDescription),
+					resource.TestCheckResourceAttr(resName, "description", cs.Description),
 					//resource.TestCheckResourceAttr("nexus_content_selector.acceptance", "expression", contentSelectorExpression),
-					resource.TestCheckResourceAttr("nexus_content_selector.acceptance", "name", contentSelectorName),
-					testAccCheckContentSelectorResourceExists("nexus_content_selector.acceptance", &contentSelector),
+					resource.TestCheckResourceAttr(resName, "name", cs.Name),
+					testAccCheckContentSelectorResourceExists(resName, &contentSelector),
 				),
 			},
 			{
-				ResourceName:      "nexus_content_selector.acceptance",
-				ImportStateId:     contentSelectorName,
+				ResourceName:      resName,
+				ImportStateId:     contentSelector.Name,
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -43,15 +44,14 @@ func TestAccContentSelector(t *testing.T) {
 	})
 }
 
-func testAccContentSelectorResource(name string, description string, expression string) string {
-
+func testAccResourceContentSelectorConfig(cs nexus.ContentSelector) string {
 	return fmt.Sprintf(`
-	resource "nexus_content_selector" "acceptance" {
-		name   = "%s"
-		description = "%s"
-		expression = "%s"
-	}
-	`, name, description, expression)
+resource "nexus_content_selector" "acceptance" {
+	description = "%s"
+	expression  = "%s"
+	name        = "%s"
+}
+`, cs.Description, cs.Expression, cs.Name)
 }
 
 func testAccCheckContentSelectorResourceExists(name string, contentSelector *nexus.ContentSelector) resource.TestCheckFunc {

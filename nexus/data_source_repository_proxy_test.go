@@ -15,7 +15,7 @@ func TestAccDataSourceRepositoryMavenProxy(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceRepository(repoName),
+				Config: testAccDataSourceRepositoryConfig(repoName),
 				Check: resource.ComposeTestCheckFunc(
 					// Base and common repo props
 					// Identity fields
@@ -33,7 +33,6 @@ func TestAccDataSourceRepositoryMavenProxy(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "storage.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "storage.0.blob_store_name", "default"),
 						resource.TestCheckResourceAttr(resourceName, "storage.0.strict_content_type_validation", "false"),
-						resource.TestCheckResourceAttr(resourceName, "storage.0.write_policy", "ALLOW"),
 					),
 					// No fields related to other repo types
 					// Format

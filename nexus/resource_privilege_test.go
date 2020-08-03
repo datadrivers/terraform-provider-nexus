@@ -12,36 +12,37 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccPrivilegeTypeApplication(t *testing.T) {
-	t.Parallel()
-
+func TestAccResourcePrivilegeTypeApplication(t *testing.T) {
 	var privilege nexus.Privilege
 
-	privilegeActions := []string{"READ"}
-	privilegeDescription := acctest.RandString(30)
-	privilegeDomain := "users"
-	privilegeName := acctest.RandString(10)
-	privilegeType := "application"
+	resName := "nexus_privilege.application"
+	priv := nexus.Privilege{
+		Actions:     []string{"READ"},
+		Description: acctest.RandString(30),
+		Domain:      "users",
+		Name:        acctest.RandString(10),
+		Type:        "application",
+	}
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccPrivilegeResourceTypeApplication(privilegeActions, privilegeName, privilegeDescription, privilegeDomain, privilegeType),
+				Config: testAccResourcePrivilegeTypeApplicationConfig(priv),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("nexus_privilege.application", "actions.#", strconv.Itoa(len(privilegeActions))),
-					//resource.TestCheckResourceAttr("nexus_privilege.application", "actions.0", privilegeActions[0]),
-					resource.TestCheckResourceAttr("nexus_privilege.application", "description", privilegeDescription),
-					resource.TestCheckResourceAttr("nexus_privilege.application", "domain", privilegeDomain),
-					resource.TestCheckResourceAttr("nexus_privilege.application", "name", privilegeName),
-					resource.TestCheckResourceAttr("nexus_privilege.application", "type", privilegeType),
-					testAccCheckPrivilegeResourceExists("nexus_privilege.application", &privilege),
+					resource.TestCheckResourceAttr(resName, "actions.#", strconv.Itoa(len(priv.Actions))),
+					//resource.TestCheckResourceAttr(resName, "actions.0", privilegeActions[0]),
+					resource.TestCheckResourceAttr(resName, "description", priv.Description),
+					resource.TestCheckResourceAttr(resName, "domain", priv.Domain),
+					resource.TestCheckResourceAttr(resName, "name", priv.Name),
+					resource.TestCheckResourceAttr(resName, "type", priv.Type),
+					testAccCheckPrivilegeResourceExists(resName, &privilege),
 				),
 			},
 			{
 				ResourceName:      "nexus_privilege.acceptance",
-				ImportStateId:     privilegeName,
+				ImportStateId:     priv.Name,
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -49,7 +50,7 @@ func TestAccPrivilegeTypeApplication(t *testing.T) {
 	})
 }
 
-func testAccPrivilegeResourceTypeApplication(actions []string, name string, description string, domain string, tipe string) string {
+func testAccResourcePrivilegeTypeApplicationConfig(priv nexus.Privilege) string {
 	return fmt.Sprintf(`
 	resource "nexus_privilege" "application" {
 		actions     = ["%s",]
@@ -58,7 +59,7 @@ func testAccPrivilegeResourceTypeApplication(actions []string, name string, desc
 		domain      = "%s"
 		type        = "%s"
 	}
-	`, strings.Join(actions, ",\n"), name, description, domain, tipe)
+	`, strings.Join(priv.Actions, ",\n"), priv.Name, priv.Description, priv.Domain, priv.Type)
 }
 
 func testAccCheckPrivilegeResourceExists(name string, privilege *nexus.Privilege) resource.TestCheckFunc {
@@ -80,14 +81,17 @@ func testAccCheckPrivilegeResourceExists(name string, privilege *nexus.Privilege
 	}
 }
 
-func TestAccPrivilegeTypeRepositoryView(t *testing.T) {
+func TestAccResourcePrivilegeTypeRepositoryView(t *testing.T) {
 	var privilege nexus.Privilege
 
-	privilegeActions := []string{"READ"}
-	privilegeDescription := acctest.RandString(30)
-	privilegeFormat := nexus.RepositoryFormatMaven2
-	privilegeName := acctest.RandString(10)
-	privilegeRepository := "maven-releases"
+	resName := "nexus_privilege.repository_view"
+	priv := nexus.Privilege{
+		Actions:     []string{"READ"},
+		Description: acctest.RandString(30),
+		Format:      nexus.RepositoryFormatMaven2,
+		Name:        acctest.RandString(10),
+		Repository:  "maven-releases",
+	}
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -95,20 +99,20 @@ func TestAccPrivilegeTypeRepositoryView(t *testing.T) {
 		Steps: []resource.TestStep{
 			// The first step creates a basic content selector
 			{
-				Config: testAccPrivilegeResourceTypeRepositoryView(privilegeActions, privilegeDescription, privilegeFormat, privilegeName, privilegeRepository),
+				Config: testAccResourcePrivilegeTypeRepositoryViewConfig(priv),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("nexus_privilege.repository_view", "actions.#", strconv.Itoa(len(privilegeActions))),
-					//resource.TestCheckResourceAttr("nexus_privilege.repository_view", "actions.0", privilegeActions[0]),
-					resource.TestCheckResourceAttr("nexus_privilege.repository_view", "description", privilegeDescription),
-					resource.TestCheckResourceAttr("nexus_privilege.repository_view", "format", privilegeFormat),
-					resource.TestCheckResourceAttr("nexus_privilege.repository_view", "name", privilegeName),
-					resource.TestCheckResourceAttr("nexus_privilege.repository_view", "type", "repository-view"),
-					testAccCheckPrivilegeResourceExists("nexus_privilege.repository_view", &privilege),
+					resource.TestCheckResourceAttr(resName, "actions.#", strconv.Itoa(len(priv.Actions))),
+					//resource.TestCheckResourceAttr(resName, "actions.0", privilegeActions[0]),
+					resource.TestCheckResourceAttr(resName, "description", priv.Description),
+					resource.TestCheckResourceAttr(resName, "format", priv.Format),
+					resource.TestCheckResourceAttr(resName, "name", priv.Name),
+					resource.TestCheckResourceAttr(resName, "type", "repository-view"),
+					testAccCheckPrivilegeResourceExists(resName, &privilege),
 				),
 			},
 			{
-				ResourceName:      "nexus_privilege.acceptance",
-				ImportStateId:     privilegeName,
+				ResourceName:      resName,
+				ImportStateId:     priv.Name,
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -116,7 +120,7 @@ func TestAccPrivilegeTypeRepositoryView(t *testing.T) {
 	})
 }
 
-func testAccPrivilegeResourceTypeRepositoryView(actions []string, description, format, name, repository string) string {
+func testAccResourcePrivilegeTypeRepositoryViewConfig(priv nexus.Privilege) string {
 	return fmt.Sprintf(`
 resource "nexus_privilege" "repository_view" {
   actions     = ["%s",]
@@ -126,5 +130,5 @@ resource "nexus_privilege" "repository_view" {
   repository  = "%s"
   type        = "repository-view"
 }
-`, strings.Join(actions, ",\n"), description, format, name, repository)
+`, strings.Join(priv.Actions, ",\n"), priv.Description, priv.Format, priv.Name, priv.Repository)
 }

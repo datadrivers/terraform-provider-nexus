@@ -16,7 +16,7 @@ func TestAccDataSourceRepositoryHosted(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceRepository(repoName),
+				Config: testAccDataSourceRepositoryConfig(repoName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(resourceName, "id", repoName),

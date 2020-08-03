@@ -6,18 +6,21 @@ import (
 	"strings"
 	"testing"
 
+	nexus "github.com/datadrivers/go-nexus-client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccRoleBasic(t *testing.T) {
-	t.Parallel()
+func TestAccResourceRole(t *testing.T) {
+	resName := "nexus_role.acceptance"
 
-	roleID := acctest.RandString(10)
-	roleName := acctest.RandString(10)
-	roleDescription := acctest.RandString(30)
-	rolePrivileges := []string{"nx-all"}
-	roleRoles := []string{"nx-admin"}
+	role := nexus.Role{
+		ID:          acctest.RandString(10),
+		Name:        acctest.RandString(10),
+		Description: acctest.RandString(30),
+		Privileges:  []string{"nx-all"},
+		Roles:       []string{"nx-admin"},
+	}
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -25,20 +28,20 @@ func TestAccRoleBasic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Creates a basic role
 			{
-				Config: testAccRoleResource(roleID, roleName, roleDescription, rolePrivileges, roleRoles),
+				Config: testAccResourceRoleConfig(role),
 				Check: resource.ComposeTestCheckFunc(
 
-					resource.TestCheckResourceAttr("nexus_role.acceptance", "id", roleID),
-					resource.TestCheckResourceAttr("nexus_role.acceptance", "name", roleName),
-					resource.TestCheckResourceAttr("nexus_role.acceptance", "roleid", roleID),
-					resource.TestCheckResourceAttr("nexus_role.acceptance", "description", roleDescription),
-					resource.TestCheckResourceAttr("nexus_role.acceptance", "privileges.#", strconv.Itoa(len(rolePrivileges))),
-					resource.TestCheckResourceAttr("nexus_role.acceptance", "roles.#", strconv.Itoa(len(roleRoles))),
+					resource.TestCheckResourceAttr(resName, "id", role.ID),
+					resource.TestCheckResourceAttr(resName, "name", role.Name),
+					resource.TestCheckResourceAttr(resName, "roleid", role.ID),
+					resource.TestCheckResourceAttr(resName, "description", role.Description),
+					resource.TestCheckResourceAttr(resName, "privileges.#", strconv.Itoa(len(role.Privileges))),
+					resource.TestCheckResourceAttr(resName, "roles.#", strconv.Itoa(len(role.Roles))),
 				),
 			},
 			{
-				ResourceName:      "nexus_role.acceptance",
-				ImportStateId:     roleID,
+				ResourceName:      resName,
+				ImportStateId:     role.ID,
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -46,7 +49,7 @@ func TestAccRoleBasic(t *testing.T) {
 	})
 }
 
-func testAccRoleResource(id string, name string, description string, privileges []string, roles []string) string {
+func testAccResourceRoleConfig(role nexus.Role) string {
 	return fmt.Sprintf(`
 resource "nexus_role" "acceptance" {
 	roleid = "%s"
@@ -55,5 +58,5 @@ resource "nexus_role" "acceptance" {
 	privileges = ["%s"]
 	roles = ["%s"]
 }
-`, id, name, description, strings.Join(privileges, "\",\""), strings.Join(roles, "\",\""))
+`, role.ID, role.Name, role.Description, strings.Join(role.Privileges, "\",\""), strings.Join(role.Roles, "\",\""))
 }

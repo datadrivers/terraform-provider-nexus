@@ -13,7 +13,7 @@ func TestAccDataSourceSecurityRealms(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceSecurityRealms(),
+				Config: testAccDataSourceSecurityRealmsConfig(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("data.nexus_security_realms.acceptance", "active.#", "2"),
 					resource.TestCheckResourceAttrSet("data.nexus_security_realms.acceptance", "available.#"),
@@ -24,6 +24,8 @@ func TestAccDataSourceSecurityRealms(t *testing.T) {
 
 }
 
-func testAccDataSourceSecurityRealms() string {
-	return fmt.Sprintf(`data "nexus_security_realms" "acceptance" {}`)
+func testAccDataSourceSecurityRealmsConfig() string {
+	return fmt.Sprintf(`
+data "nexus_security_realms" "acceptance" {}
+`)
 }
