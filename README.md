@@ -19,7 +19,7 @@
     - [nexus_repository](#resource-nexus_repository)
     - [nexus_role](#resource-nexus_role)
     - [nexus_security_ldap](#resource-nexus_security_ldap)
-    - [nexus_security_ldap_orger](#resource-nexus-security-ldap-order)
+    - [nexus_security_ldap_order](#resource-nexus-security-ldap-order)
     - [nexus_security_realms](#resource-nexus_security_realms)
     - [nexus_script](#resource-nexus_script)
     - [nexus_user](#resource-nexus_user)
@@ -332,7 +332,6 @@ resource "nexus_repository" "docker_hub" {
   storage {
     blob_store_name                = "default"
     strict_content_type_validation = true
-    write_policy                   = "ALLOW"
   }
 }
 ```
@@ -375,22 +374,22 @@ resource "nexus_repository" "nuget_proxy" {
     }
 }
 
-	negative_cache {
-		enabled = true
-		ttl     = 1440
-	}
+    negative_cache {
+	enabled = true
+	ttl     = 1440
+    }
 
-	nuget_proxy {
-		query_cache_item_max_age = 1440
-	}
+    nuget_proxy {
+	query_cache_item_max_age = 1440
+    }
 
-	proxy {
-		remote_url  = "https://www.nuget.org/api/v2/"
-	}
+    proxy {
+	remote_url  = "https://www.nuget.org/api/v2/"
+    }
 
-	storage {
-		write_policy = "ALLOW"
-	}
+    storage {
+	write_policy = "ALLOW"
+    }
 }
 ```
 
@@ -432,18 +431,18 @@ resource "nexus_repository" "pypi_proxy" {
     }
 }
 
-	negative_cache {
-		enabled = true
-		ttl     = 1440
-	}
+    negative_cache {
+	enabled = true
+	ttl     = 1440
+    }
 
-	proxy {
-		remote_url  = "https://pypi.org"
-	}
+    proxy {
+	remote_url  = "https://pypi.org"
+    }
 
-	storage {
-		write_policy = "ALLOW"
-	}
+    storage {
+	write_policy = "ALLOW"
+    }
 }
 ```
 
@@ -467,27 +466,27 @@ resource "nexus_repository" "raw_hosted" {
 
 ```hcl
 resource "nexus_repository" "raw_proxy" {
-	format = "raw"
-	name   = "raw-proxy-repo"
-	online = true
-	type   = "proxy"
+    format = "raw"
+    name   = "raw-proxy-repo"
+    online = true
+    type   = "proxy"
 
-	proxy {
-		remote_url  = "https://nodejs.org/dist/"
-	}
+    proxy {
+	remote_url  = "https://nodejs.org/dist/"
+    }
 
-	http_client {
+    http_client {
     ...
-	}
+    }
 
-	negative_cache {
-		enabled = true
-		ttl     = 1440
-	}
+    negative_cache {
+	enabled = true
+	ttl     = 1440
+    }
 
-	storage {
+    storage {
     ...
-	}
+    }
 }
 ```
 
