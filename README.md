@@ -19,6 +19,7 @@
     - [nexus_repository](#resource-nexus_repository)
     - [nexus_role](#resource-nexus_role)
     - [nexus_security_ldap](#resource-nexus_security_ldap)
+    - [nexus_security_ldap_orger](#resource-nexus-security-ldap-order)
     - [nexus_security_realms](#resource-nexus_security_realms)
     - [nexus_script](#resource-nexus_script)
     - [nexus_user](#resource-nexus_user)
@@ -546,6 +547,29 @@ resource "nexus_security_ldap" "acceptance" {
   user_password_attribute        = "exmaple"
   user_real_name_attribute       = "cn"
   user_subtree                   = true
+}
+```
+
+#### Resource nexus_security_ldap_order
+
+Set order of LDAP server
+
+```hcl
+resource "nexus_security_ldap" "server1" {
+  ...
+  name = "server1"
+}
+
+resource "nexus_security_ldap" "server2" {
+  ...
+  name = "server2"
+}
+
+resource "nexus_security_ldap_order" {
+  order = [
+    nexus_security_ldap.server1.name,
+    nexus_security_ldap.server2.name,
+  ]
 }
 ```
 
