@@ -1,7 +1,7 @@
 ##########
 #
 # This Script generates the MD Files for Nexus Data Sources and Resource Objects if not present
-# and populates the nexus.erb layout file accourdingly
+# and populates the nexus.erb layout file accordingly
 #
 ##########
 
