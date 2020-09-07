@@ -3,22 +3,23 @@ layout: "nexus"
 page_title: "Nexus: data_source_security_ldap"
 sidebar_current: "docs-nexus-data-source"
 description: |-
-  Sample data source in the Terraform provider Nexus.
+  Retrieve data about LDAP security settings
 ---
 
 # data_source_security_ldap
 
-Sample data source in the Terraform provider scaffolding.
+Retrieve data about LDAP security settings
 
 ## Example Usage
 
 ```hcl
-data "scaffolding_data_source" "example" {
-  sample_attribute = "foo"
-}
+data "nexus_security_ldap" "ldap" {}
 ```
+
+## Arguments Reference
+
+No arguments needed.
 
 ## Attributes Reference
 
-* sample_attribute - Sample attribute.
-
+No attributes supported.

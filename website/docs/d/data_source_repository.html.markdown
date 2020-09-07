@@ -3,22 +3,31 @@ layout: "nexus"
 page_title: "Nexus: data_source_repository"
 sidebar_current: "docs-nexus-data-source"
 description: |-
-  Sample data source in the Terraform provider Nexus.
+  Retrieve data about an existing repository.
 ---
 
 # data_source_repository
 
-Sample data source in the Terraform provider scaffolding.
+  Retrieve data about an existing repository.
 
 ## Example Usage
 
 ```hcl
-data "scaffolding_data_source" "example" {
-  sample_attribute = "foo"
+data "nexus_repository" "maven-public" {
+  name = "maven-public"
 }
 ```
 
+## Arguments Reference
+
+The following arguments are supported:
+
+* `name` - (Required) Repository name.
+* 
 ## Attributes Reference
 
-* sample_attribute - Sample attribute.
-
+* `name` - The repository name
+* `format` - The format (kind) of the repository
+* `type` - The repository's type
+* `url` - The URL of the repository
+* `attribute` - A map of attributes assigned to the repository
