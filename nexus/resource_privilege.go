@@ -66,6 +66,11 @@ func resourcePrivilege() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeString,
 			},
+			"script_name": {
+				Description: "The script name related to the privilege",
+				Optional:    true,
+				Type:        schema.TypeString,
+			},
 		},
 	}
 }
@@ -101,6 +106,10 @@ func getPrivilegeFromResourceData(d *schema.ResourceData) nexus.Privilege {
 		privilege.Pattern = pattern.(string)
 	}
 
+	if scriptName, ok := d.GetOk("script_name"); ok {
+		privilege.ScriptName = scriptName.(string)
+	}
+
 	return privilege
 }
 
@@ -115,6 +124,7 @@ func setPrivilegeToResourceData(privilege *nexus.Privilege, d *schema.ResourceDa
 	d.Set("repository", privilege.Repository)
 	d.Set("type", privilege.Type)
 	d.Set("pattern", privilege.Pattern)
+	d.Set("script_name", privilege.ScriptName)
 	return nil
 }
 
