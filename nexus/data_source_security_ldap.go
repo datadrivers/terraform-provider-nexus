@@ -1,3 +1,12 @@
+/*
+Use this data source to work with LDAP security
+
+Example Usage
+
+```hcl
+data "nexus_security_ldap" "default" {}
+```
+*/
 package nexus
 
 import (

@@ -1,3 +1,21 @@
+/*
+Use this resource to create a Nexus blobstore.
+
+Example Usage
+
+```hcl
+resource "nexus_blobstore" "default" {
+  name = "blobstore-01"
+  type = "File"
+  path = "/nexus-data/blobstore-01"
+
+  soft_quota {
+    limit = 1024
+    type  = "spaceRemainingQuota"
+  }
+}
+```
+*/
 package nexus
 
 import (

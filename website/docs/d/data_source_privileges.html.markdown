@@ -3,22 +3,30 @@ layout: "nexus"
 page_title: "Nexus: data_source_privileges"
 sidebar_current: "docs-nexus-data-source"
 description: |-
-  Sample data source in the Terraform provider Nexus.
+  Retrieve data about Nexus privileges.
 ---
 
 # data_source_privileges
 
-Sample data source in the Terraform provider scaffolding.
+Retrieve data about Nexus privileges.
 
 ## Example Usage
 
 ```hcl
-data "scaffolding_data_source" "example" {
-  sample_attribute = "foo"
+data "nexus_privileges" "repository-admin" {
+	type = "repository-admin"
 }
 ```
 
+## Arguments Reference
+
+The following arguments are supported:
+
+* `type` - (Optional) The privilege type to be queried for.
+
 ## Attributes Reference
 
-* sample_attribute - Sample attribute.
-
+* `type` - The privilege type
+* `name` - The privilege name
+* `description` - The description of the privilege
+* `readOnly` - Boolean to tell if privilege is read only
