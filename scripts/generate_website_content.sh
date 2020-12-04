@@ -7,7 +7,7 @@
 
 #!/bin/bash
 
-cat > website/nexus.erb << EOI
+cat > nexus.erb << EOI
 <% wrap_layout :inner do %>
   <% content_for :sidebar do %>
     <div class="docs-sidebar hidden-print affix-top" role="complementary">
@@ -33,11 +33,11 @@ do
 
   if [[ "$res" =~ "resource" ]]
   then
-    typeShort="r"
+    typeUrl="resources"
     typeLong="resource"
     if [[ "${writingDataSources}" == true ]]
     then
-      cat >> website/nexus.erb << EOI
+      cat >> nexus.erb << EOI
           </ul>
         </li>
         <li<%= sidebar_current("docs-nexus-resource") %>>
@@ -47,15 +47,15 @@ EOI
       writingDataSources=false
     fi
   else
-    typeShort="d"
+    typeUrl="data-sources"
     typeLong="data"
   fi
 
   echo $res
 
-  if [[ ! -f website/docs/$typeShort/$res.html.markdown ]]
+  if [[ ! -f docs/$typeUrl/$res.md ]]
   then
-    cat > website/docs/$typeShort/${res}.html.markdown << EOI
+    cat > docs/$typeUrl/${res}.md << EOI
 ---
 layout: "nexus"
 page_title: "Nexus: $res"
@@ -83,14 +83,14 @@ data "scaffolding_data_source" "example" {
 EOI
   fi
 
-  cat >> website/nexus.erb << EOI
+  cat >> nexus.erb << EOI
             <li<%= sidebar_current("$res") %>>
-              <a href="/docs/providers/nexus/$typeShort/${res}.html">$res</a>
+              <a href="/docs/providers/nexus/$typeUrl/${res}.html">$res</a>
             </li>
 EOI
 done
 
-cat >> website/nexus.erb << EOI
+cat >> nexus.erb << EOI
         </ul>
         </li>
       </ul>

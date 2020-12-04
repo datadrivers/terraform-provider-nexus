@@ -23,7 +23,7 @@ const (
 	cloudMark      = "nexus"
 	cloudTitle     = "Nexus"
 	cloudMarkShort = "nexus"
-	docRoot        = "../website/docs"
+	docRoot        = "../docs"
 )
 
 func main() {
@@ -259,7 +259,7 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	}
 	data["attributes"] = strings.Join(attributes, "\n")
 
-	fname = fmt.Sprintf("%s/%s/%s.html.markdown", docRoot, dtype[0:1], data["resource"])
+	fname = fmt.Sprintf("%s/%ss/%s.md", docRoot, strings.ReplaceAll(dtype, "_", "-"), data["resource"])
 	fd, err := os.OpenFile(fname, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		log.Printf("[FAIL!]open file %s failed: %s", fname, err)
