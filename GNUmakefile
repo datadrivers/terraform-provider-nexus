@@ -86,4 +86,7 @@ endif
 	)
 	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
-.PHONY: build test testacc fmt fmtcheck lint tools website website-test
+docs:
+	go run ./gendocs/*.go
+
+.PHONY: build test testacc fmt fmtcheck lint tools website website-test docs

@@ -5,6 +5,7 @@
   - [Provider config](#provider-config)
 - [Build](#build)
 - [Testing](#testing)
+- [Create documentation](#create-documentation)
 - [Author](#author)
 
 ## Introduction
@@ -80,6 +81,14 @@ Set env variable `TF_LOG=DEBUG` to see additional output.
 Use `printState()` function to discover terraform state (and resource props) during test.
 
 Debug configurations are also available for VS Code.
+
+## Create documentation
+
+To generate the terraform documentation from go files, you can run
+
+```shell
+make docs
+```
 
 ## Author
 
