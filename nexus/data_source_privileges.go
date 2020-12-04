@@ -1,7 +1,7 @@
 /*
 Use this data source to work with privileges
 
-Example usage
+Example Usage
 
 ```hcl
 data "nexus_privileges" "example" {

@@ -1,6 +1,8 @@
 /*
 Use this resource to create a Nexus blobstore.
 
+Example Usage
+
 Example Usage for file store
 
 ```hcl
@@ -15,7 +17,9 @@ resource "nexus_blobstore" "default" {
   }
 }
 ```
-Example usage with S3 bucket
+
+Example Usage with S3 bucket
+
 ```hcl
 resource "nexus_blobstore" "aws" {
   name = "blobstore-s3"

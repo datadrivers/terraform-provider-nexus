@@ -1,6 +1,8 @@
 /*
 Use this resource to create a Nexus Role.
 
+Example Usage
+
 Example Usage - Create a group with roles
 
 ```hcl

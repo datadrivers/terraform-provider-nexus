@@ -1,7 +1,10 @@
 /*
 Use this resource to create a Nexus Repository.
 
+Example Usage
+
 Example Usage - Apt hosted repository
+
 ```hcl
 resource "nexus_repository" "apt_hosted" {
   name   = "apt-repo"
