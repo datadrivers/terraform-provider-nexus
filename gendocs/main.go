@@ -15,7 +15,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 
-  // cloud "github.com/terraform-providers/terraform-provider-baiducloud/baiducloud"
+	// cloud "github.com/terraform-providers/terraform-provider-baiducloud/baiducloud"
 	cloud "github.com/datadrivers/terraform-provider-nexus/nexus"
 )
 
