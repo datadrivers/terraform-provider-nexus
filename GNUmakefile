@@ -70,8 +70,8 @@ ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
 	git clone https://$(WEBSITE_REPO) $(GOPATH)/src/$(WEBSITE_REPO)
 endif
 	(cd $(GOPATH)/src/$(WEBSITE_REPO); \
-	  ln -fs ../../../ext/providers/$(PKG_NAME)/website/$(PKG_NAME).erb content/source/layouts/$(PKG_NAME).erb; \
-	  ln -Fs ../../../../ext/providers/$(PKG_NAME)/website/docs content/source/docs/providers/$(PKG_NAME) \
+	  ln -fs ../../../ext/providers/$(PKG_NAME)/$(PKG_NAME).erb content/source/layouts/$(PKG_NAME).erb; \
+	  ln -Fs ../../../../ext/providers/$(PKG_NAME)/docs content/source/docs/providers/$(PKG_NAME) \
 	)
 	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
@@ -81,8 +81,8 @@ ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
 	git clone https://$(WEBSITE_REPO) $(GOPATH)/src/$(WEBSITE_REPO)
 endif
 	(cd $(GOPATH)/src/$(WEBSITE_REPO); \
-	  ln -fs ../../../ext/providers/$(PKG_NAME)/website/$(PKG_NAME).erb content/source/layouts/$(PKG_NAME).erb; \
-	  ln -Fs ../../../../ext/providers/$(PKG_NAME)/website/docs content/source/docs/providers/$(PKG_NAME) \
+	  ln -fs ../../../ext/providers/$(PKG_NAME)/$(PKG_NAME).erb content/source/layouts/$(PKG_NAME).erb; \
+	  ln -Fs ../../../../ext/providers/$(PKG_NAME)/docs content/source/docs/providers/$(PKG_NAME) \
 	)
 	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
