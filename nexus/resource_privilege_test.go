@@ -132,3 +132,56 @@ resource "nexus_privilege" "repository_view" {
 }
 `, strings.Join(priv.Actions, ",\n"), priv.Description, priv.Format, priv.Name, priv.Repository)
 }
+
+func TestAccResourcePrivilegeTypeScript(t *testing.T) {
+
+	privilege := nexus.Privilege{
+		Actions:     []string{"READ"},
+		Description: acctest.RandString(30),
+		Name:        acctest.RandString(10),
+		ScriptName:  fmt.Sprintf("sample-script-%s", acctest.RandString(5)),
+		Type:        "script",
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccResourcePrivilegeResourceTypeScriptConfig(privilege),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("nexus_privilege.script-privilege", "actions.#", strconv.Itoa(len(privilege.Actions))),
+					resource.TestCheckResourceAttr("nexus_privilege.script-privilege", "description", privilege.Description),
+					resource.TestCheckResourceAttr("nexus_privilege.script-privilege", "name", privilege.Name),
+					resource.TestCheckResourceAttr("nexus_privilege.script-privilege", "script_name", privilege.ScriptName),
+					resource.TestCheckResourceAttr("nexus_privilege.script-privilege", "type", privilege.Type),
+					testAccCheckPrivilegeResourceExists("nexus_privilege.script-privilege", &privilege),
+				),
+			},
+			{
+				ResourceName:      "nexus_privilege.acceptance",
+				ImportStateId:     privilege.Name,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccResourcePrivilegeResourceTypeScriptConfig(priv nexus.Privilege) string {
+	return fmt.Sprintf(`
+resource "nexus_script" "%[1]s" {
+  name    = "%[1]s"
+  content = "log.info('Privilege test')"
+  type    = "groovy"
+}
+resource "nexus_privilege" "script-privilege" {
+  actions     = ["%[2]s",]
+  description = "%[3]s"
+  name        = "%[4]s"
+  script_name = "%[1]s"
+  type        = "script"
+  depends_on  =  ["nexus_script.%[1]s"]
+}
+`, priv.ScriptName, strings.Join(priv.Actions, ",\n"), priv.Description, priv.Name)
+}
