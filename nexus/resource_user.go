@@ -1,3 +1,20 @@
+/*
+Use this resource to manage users
+
+Example Usage
+
+```hcl
+resource "nexus_user" "admin" {
+  userid    = "admin"
+  firstname = "Administrator"
+  lastname  = "User"
+  email     = "nexus@example.com"
+  password  = "admin123"
+  roles     = ["nx-admin"]
+  status    = "active"
+}
+```
+*/
 package nexus
 
 import (

@@ -1,7 +1,19 @@
 /*
 Use this resource to create a Nexus Role.
 
-Example Usage
+Example Usage - Create a group with roles
+
+```hcl
+resource "nexus_role" "nx-admin" {
+  roleid      = "nx-admin"
+  name        = "nx-admin"
+  description = "Administrator role"
+  privileges  = ["nx-all"]
+  roles       = []
+}
+```
+
+Example Usage - Create a group with privileges
 
 ```hcl
 resource "nexus_role" "docker_deploy" {
