@@ -13,8 +13,8 @@ Use this data source to get a repository data structure
 ## Example Usage
 
 ```hcl
-data "nexus_repository" "default" {
-	name   = "default"
+data "nexus_user" "admin" {
+  userid = "admin"
 }
 ```
 
