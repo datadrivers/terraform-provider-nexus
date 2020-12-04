@@ -1,3 +1,29 @@
+/*
+Use this resource to create a Nexus Security LDAP
+
+Example Usage
+
+```hcl
+resource "nexus_security_ldap" "default" {
+	auth_password                  = "12345"
+	auth_schema                    = "SIMPLE"
+	auth_username                  = "admin"
+	connection_retry_delay_seconds = 60
+	connection_timeout_seconds     = 60
+	group_type                     = "static"
+	host                           = "127.0.0.1"
+	max_incident_count             = 5
+	name                           = "ldap"
+	port                           = 389
+	protocol                       = "LDAP"
+	search_base                    = "dc=example,dc=com"
+	user_email_address_attribute   = "mail"
+	user_id_attribute              = "uid"
+	user_object_class              = "inetOrgPerson"
+	user_real_name_attribute       = "cn"
+}
+```
+*/
 package nexus
 
 import (
