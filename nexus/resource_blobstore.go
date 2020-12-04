@@ -1,5 +1,5 @@
 /*
-Use this resource to get create a Nexus blobstore.
+Use this resource to create a Nexus blobstore.
 
 Example Usage
 

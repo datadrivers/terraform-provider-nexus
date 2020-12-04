@@ -1,3 +1,12 @@
+/*
+Use this data source to work with Realms security
+
+Example Usage
+
+```hcl
+data "nexus_security_realms" "default" {}
+```
+*/
 package nexus
 
 import (

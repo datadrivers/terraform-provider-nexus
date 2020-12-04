@@ -1,3 +1,19 @@
+/*
+Use this resource to create a Nexus Role.
+
+Example Usage
+
+```hcl
+resource "nexus_role" "docker_deploy" {
+  description = "Docker deployment role"
+  name        = "docker-deploy"
+  privileges = [
+    "nx-repository-view-docker-*-*",
+  ]
+  roleid = "docker-deploy"
+}
+```
+*/
 package nexus
 
 import (

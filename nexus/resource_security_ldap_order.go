@@ -1,3 +1,15 @@
+/*
+Use this resource to change the LDAP order.
+
+Example Usage
+
+```hcl
+resource "nexus_security_ldap_order" "order" {
+	order = ["127.0.0.1", "localhost"]
+}
+
+```
+*/
 package nexus
 
 import (

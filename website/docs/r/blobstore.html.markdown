@@ -3,12 +3,12 @@ layout: "nexus"
 page_title: "Nexus: nexus_blobstore"
 sidebar_current: "docs-nexus-resource-blobstore"
 description: |-
-  Use this resource to get create a Nexus blobstore.
+  Use this resource to create a Nexus blobstore.
 ---
 
 # nexus_blobstore
 
-Use this resource to get create a Nexus blobstore.
+Use this resource to create a Nexus blobstore.
 
 ## Example Usage
 

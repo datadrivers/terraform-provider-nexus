@@ -1,3 +1,14 @@
+/*
+Use this data source to work with privileges
+
+Example Usage
+
+```hcl
+data "nexus_privileges" "default" {
+	type = "string"
+}
+```
+*/
 package nexus
 
 import (

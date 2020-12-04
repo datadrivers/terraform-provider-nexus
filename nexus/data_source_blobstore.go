@@ -1,3 +1,14 @@
+/*
+Use this to create a Nexus blobstore.
+
+Example Usage
+
+```hcl
+data "nexus_blobstore" "docker" {
+	name = "docker"
+}
+```
+*/
 package nexus
 
 import (

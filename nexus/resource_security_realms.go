@@ -1,3 +1,11 @@
+/*
+Use this resource to create a Nexus Security LDAP
+
+Example Usage
+
+```hcl
+```
+*/
 package nexus
 
 import (
