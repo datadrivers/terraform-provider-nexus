@@ -23,7 +23,7 @@ const (
 	cloudMark      = "nexus"
 	cloudTitle     = "Nexus"
 	cloudMarkShort = "nexus"
-	docRoot        = "../docs"
+	docRoot        = "./docs"
 )
 
 func main() {

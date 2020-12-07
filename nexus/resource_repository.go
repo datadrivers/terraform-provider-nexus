@@ -3,6 +3,33 @@ Use this resource to create a Nexus Repository.
 
 Example Usage
 
+Example Usage - Apt hosted repository
+
+```hcl
+resource "nexus_repository" "apt_hosted" {
+  name   = "apt-repo"
+  format = "apt"
+  type   = "hosted"
+
+  apt {
+    distribution = "bionic"
+  }
+
+  apt_signing {
+    keypair    = "<keypair>"
+    passphrase = "<passphrase>"
+  }
+
+  storage {
+    blob_store_name                = "default"
+    strict_content_type_validation = true
+    write_policy                   = "ALLOW_ONCE"
+  }
+}
+```
+
+Example Usage - Docker group repository
+
 ```hcl
 resource "nexus_repository" "docker_group" {
   name   = "docker-group"

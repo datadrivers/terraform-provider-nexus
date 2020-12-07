@@ -13,23 +13,35 @@ Use this resource to create a Nexus Security LDAP
 ## Example Usage
 
 ```hcl
-resource "nexus_security_ldap" "default" {
-	auth_password                  = "12345"
-	auth_schema                    = "SIMPLE"
-	auth_username                  = "admin"
-	connection_retry_delay_seconds = 60
-	connection_timeout_seconds     = 60
-	group_type                     = "static"
-	host                           = "127.0.0.1"
-	max_incident_count             = 5
-	name                           = "ldap"
-	port                           = 389
-	protocol                       = "LDAP"
-	search_base                    = "dc=example,dc=com"
-	user_email_address_attribute   = "mail"
-	user_id_attribute              = "uid"
-	user_object_class              = "inetOrgPerson"
-	user_real_name_attribute       = "cn"
+resource "nexus_security_ldap" "example" {
+  auth_password                  = "t0ps3cr3t"
+  auth_realm                     = "EXAMPLE"
+  auth_schema                    = ""
+  auth_username                  = "admin"
+  connection_retry_delay_seconds = 1
+  connection_timeout_seconds     = 1
+  group_base_dn                  = "ou=Group"
+  group_id_attribute             = "cn"
+  group_member_attribute         = "memberUid"
+  group_member_format            = "uid=${username},ou=people,dc=example,dc=com"
+  group_object_class             = "example"
+  group_subtree                  = true
+  host                           = "ldap.example.com"
+  ldap_groups_as_roles           = true
+  max_incident_count             = 1
+  name                           = "example-ldap"
+  port                           = 389
+  protocol                       = "LDAP"
+  search_base                    = "dc=example,dc=com"
+  user_base_dn                   = "ou=people"
+  user_email_address_attribute   = "mail"
+  user_id_attribute              = "uid"
+  user_ldap_filter               = "(|(mail=*@example.com)(uid=dom*))"
+  user_member_of_attribute       = "memberOf"
+  user_object_class              = "posixGroup"
+  user_password_attribute        = "exmaple"
+  user_real_name_attribute       = "cn"
+  user_subtree                   = true
 }
 ```
 

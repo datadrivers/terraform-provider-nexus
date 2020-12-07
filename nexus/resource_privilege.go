@@ -1,3 +1,16 @@
+/*
+Use this resource to create a Nexus privilege
+
+Example Usage
+
+```hcl
+resource "nexus_privilege" "example" {
+  name    = "example-privilige"
+  actions = "all"
+  type    = "repository-admin"
+}
+```
+*/
 package nexus
 
 import (

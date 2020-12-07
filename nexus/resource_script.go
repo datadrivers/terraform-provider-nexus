@@ -1,5 +1,5 @@
 /*
-Use this resource to get create and execute a custom script.
+Use this resource to create and execute a custom script.
 
 Example Usage
 

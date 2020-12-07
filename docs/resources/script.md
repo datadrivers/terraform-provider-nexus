@@ -3,12 +3,12 @@ layout: "nexus"
 page_title: "Nexus: nexus_script"
 sidebar_current: "docs-nexus-resource-script"
 description: |-
-  Use this resource to get create and execute a custom script.
+  Use this resource to create and execute a custom script.
 ---
 
 # nexus_script
 
-Use this resource to get create and execute a custom script.
+Use this resource to create and execute a custom script.
 
 ## Example Usage
 

@@ -4,10 +4,10 @@ Use this resource to create a Nexus Content Selector
 Example Usage
 
 ```hcl
-resource "nexus_content_selector" "selector" {
-	description = "My selector"
-	expression  = "format == \"maven2\" and path =^ \"/org/sonatype/nexus\""
-	name        = "selector"
+resource "nexus_content_selector" "docker-public" {
+  name        = "docker-public"
+  description = "A content selector matching public docker images."
+  expression  = "path =^ \"/v2/public/\""
 }
 ```
 */

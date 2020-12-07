@@ -4,8 +4,11 @@ Use this data source to work with privileges
 Example Usage
 
 ```hcl
-data "nexus_privileges" "default" {
-	type = "string"
+data "nexus_privileges" "example" {
+  domain     = "application"
+  format     = "maven2"
+  repository = "maven-public"
+  type       = "repository-admin"
 }
 ```
 */
