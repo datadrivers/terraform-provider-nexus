@@ -18,7 +18,7 @@ func TestAccResourceBlobstoreFile(t *testing.T) {
 		Type: nexus.BlobstoreTypeFile,
 		Path: "/nexus-data/acceptance",
 		BlobstoreSoftQuota: &nexus.BlobstoreSoftQuota{
-			Limit: acctest.RandIntRange(100, 300),
+			Limit: acctest.RandIntRange(100, 300) * 1000000,
 			Type:  "spaceRemainingQuota",
 		},
 	}

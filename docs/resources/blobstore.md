@@ -21,7 +21,7 @@ resource "nexus_blobstore" "default" {
   path = "/nexus-data/blobstore-file"
 
   soft_quota {
-    limit = 1024
+    limit = 1024000000
     type  = "spaceRemainingQuota"
   }
 }
@@ -59,5 +59,11 @@ The following arguments are supported:
 
 * `name` - (Required) Blobstore name
 * `path` - (Optional) The path to the blobstore contents. This can be an absolute path to anywhere on the system nxrm has access to or it can be a path relative to the sonatype-work directory
+* `soft_quota` - (Optional) Soft quota of the blobstore
+
+The `soft_quota` object supports the following:
+
+* `limit` - (Required) The limit in Bytes. Minimum value is 1000000
+* `type` - (Required) The type to use such as spaceRemainingQuota, or spaceUsedQuota
 
 
