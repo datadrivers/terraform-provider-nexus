@@ -12,7 +12,7 @@ resource "nexus_blobstore" "default" {
   path = "/nexus-data/blobstore-file"
 
   soft_quota {
-    limit = 1024
+    limit = 1024000000
     type  = "spaceRemainingQuota"
   }
 }
@@ -210,17 +210,18 @@ func resourceBlobstore() *schema.Resource {
 				Type:     schema.TypeList,
 			},
 			"soft_quota": {
+				Description: "Soft quota of the blobstore",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"limit": {
-							Default:     0,
-							Description: "The limit in MB.",
-							Optional:    true,
-							Type:        schema.TypeInt,
+							Description:  "The limit in Bytes. Minimum value is 1000000",
+							Required:     true,
+							Type:         schema.TypeInt,
+							ValidateFunc: validation.IntAtLeast(100000),
 						},
 						"type": {
 							Description:  "The type to use such as spaceRemainingQuota, or spaceUsedQuota",
-							Optional:     true,
+							Required:     true,
 							Type:         schema.TypeString,
 							ValidateFunc: validation.StringInSlice([]string{"spaceRemainingQuota", "spaceUsedQuota"}, false),
 						},
