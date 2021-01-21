@@ -20,7 +20,8 @@ func dataSourceSecurityRealms() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"active": {
-				Computed: true,
+				Description: "List of active security realms",
+				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
@@ -38,7 +39,8 @@ func dataSourceSecurityRealms() *schema.Resource {
 				Type: schema.TypeList,
 			},
 			"available": {
-				Computed: true,
+				Description: "List of available security realms",
+				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {

@@ -21,29 +21,35 @@ func dataSourceUser() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"userid": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "The userid which is required for login",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"firstname": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The first name of the user.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"lastname": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The last name of the user.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"email": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The email address associated with the user.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"roles": {
-				Type:     schema.TypeSet,
-				Computed: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
+				Description: "The roles which the user has been assigned within Nexus.",
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 			"status": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The user's status, e.g. active or disabled.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 		},
 	}

@@ -157,7 +157,7 @@ func resourceSecurityLDAP() *schema.Resource {
 				ValidateFunc: validation.StringInSlice([]string{"LDAP", "LDAPS"}, true),
 			},
 			"search_base": {
-				Description: "DAP location to be added to the connection URL",
+				Description: "LDAP location to be added to the connection URL",
 				Required:    true,
 				Type:        schema.TypeString,
 			},

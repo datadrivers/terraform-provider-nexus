@@ -22,4 +22,15 @@ The following arguments are supported:
 
 
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `active` - List of active security realms
+  * `id` - Realm ID
+  * `name` - Realm name
+* `available` - List of available security realms
+  * `id` - Realm ID
+  * `name` - Realm name
+
 

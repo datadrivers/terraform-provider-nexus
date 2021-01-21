@@ -27,61 +27,72 @@ func dataSourceRepository() *schema.Resource {
 				Type:        schema.TypeString,
 			},
 			"format": {
-				Optional: true,
-				Type:     schema.TypeString,
+				Description: "Repository format",
+				Optional:    true,
+				Type:        schema.TypeString,
 			},
 			"online": {
-				Optional: true,
-				Type:     schema.TypeBool,
+				Optional:    true,
+				Description: "Whether this repository accepts incoming requests",
+				Type:        schema.TypeBool,
 			},
 			"type": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Description: "Repository type",
+				Type:        schema.TypeString,
+				Optional:    true,
 			},
 			"cleanup": {
-				Type:     schema.TypeList,
-				Optional: true,
+				Description: "Cleanup policies",
+				Type:        schema.TypeList,
+				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"policy_names": {
-							Type:     schema.TypeSet,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-							Required: true,
+							Description: "List of policy names",
+							Type:        schema.TypeSet,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Required:    true,
 						},
 					},
 				},
 			},
 			"apt": {
-				Type:     schema.TypeList,
-				Optional: true,
+				Description: "Apt specific configuration of the repository",
+				Type:        schema.TypeList,
+				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"distribution": {
-							Type:     schema.TypeString,
-							Required: true,
+							Description: "The linux distribution",
+							Type:        schema.TypeString,
+							Required:    true,
 						},
 					},
 				},
 			},
 			"apt_signing": {
-				Type:     schema.TypeList,
-				Optional: true,
+				Description: "Apt signing configuration for the repository",
+				Type:        schema.TypeList,
+				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"keypair": {
-							Type:     schema.TypeString,
-							Required: true,
+							Description: "PGP signing key pair (armored private key e.g. gpg --export-secret-key --armor )",
+							Type:        schema.TypeString,
+							Required:    true,
 						},
 						"passphrase": {
-							Type:     schema.TypeString,
-							Required: true,
+							Description: "Passphrase for the keypair",
+							Type:        schema.TypeString,
+							Required:    true,
 						},
 					},
 				},
 			},
 			"docker": {
-				Type:     schema.TypeList,
-				Optional: true,
+				Description: "Docker specific configuration of the repository",
+				Type:        schema.TypeList,
+				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"force_basic_auth": {
@@ -108,6 +119,7 @@ func dataSourceRepository() *schema.Resource {
 				},
 			},
 			"group": {
+				Description: "Configuration for repository group",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"member_names": {
@@ -125,9 +137,11 @@ func dataSourceRepository() *schema.Resource {
 				Type:     schema.TypeList,
 			},
 			"http_client": {
+				Description: "HTTP Client configuration for proxy repositories",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"authentication": {
+							Description: "Authentication configuration of the HTTP client",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"type": {
@@ -136,17 +150,17 @@ func dataSourceRepository() *schema.Resource {
 										Type:        schema.TypeString,
 									},
 									"username": {
-										Description: "",
+										Description: "The username used by the proxy repository",
 										Optional:    true,
 										Type:        schema.TypeString,
 									},
 									"ntlm_domain": {
-										Description: "",
+										Description: "The ntlm domain to connect",
 										Optional:    true,
 										Type:        schema.TypeString,
 									},
 									"ntlm_host": {
-										Description: "",
+										Description: "The ntlm host to connect",
 										Optional:    true,
 										Type:        schema.TypeString,
 									},
@@ -167,6 +181,7 @@ func dataSourceRepository() *schema.Resource {
 							Type:        schema.TypeBool,
 						},
 						"connection": {
+							Description: "Connection configuration of the HTTP client",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"retries": {
@@ -191,28 +206,30 @@ func dataSourceRepository() *schema.Resource {
 				Type:     schema.TypeList,
 			},
 			"maven": {
-				Type:     schema.TypeList,
-				MaxItems: 1,
-				Optional: true,
+				Description: "Maven specific configuration of the repository",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"version_policy": {
-							Default:  "RELEASE",
-							Type:     schema.TypeString,
-							Optional: true,
+							Description: "What type of artifacts does this repository store",
+							Type:        schema.TypeString,
+							Optional:    true,
 						},
 						"layout_policy": {
-							Default:  "PERMISSIVE",
-							Type:     schema.TypeString,
-							Optional: true,
+							Description: "Validate that all paths are maven artifact or metadata paths",
+							Type:        schema.TypeString,
+							Optional:    true,
 						},
 					},
 				},
 			},
 			"negative_cache": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
+				Description: "Configuration of the negative cache handling",
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enabled": {
@@ -231,32 +248,37 @@ func dataSourceRepository() *schema.Resource {
 				},
 			},
 			"proxy": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
+				Description: "Configuration for the proxy repository",
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"content_max_age": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  1440,
+							Description: "How long (in minutes) to cache artifacts before rechecking the remote repository",
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Default:     1440,
 						},
 						"metadata_max_age": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  1440,
+							Description: "How long (in minutes) to cache metadata before rechecking the remote repository.",
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Default:     1440,
 						},
 						"remote_url": {
-							Type:     schema.TypeString,
-							Required: true,
+							Description: "Location of the remote repository being proxied",
+							Type:        schema.TypeString,
+							Required:    true,
 						},
 					},
 				},
 			},
 			"storage": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
+				Description: "The storage configuration of the repository",
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"blob_store_name": {
