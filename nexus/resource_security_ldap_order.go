@@ -40,6 +40,7 @@ func resourceSecurityLDAPOrder() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"order": {
+				Description: "Ordered list of LDAP server",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

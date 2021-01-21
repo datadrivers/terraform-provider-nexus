@@ -68,6 +68,7 @@ func resourceBlobstore() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"type": {
+				Description:  "The type of the blobstore. Possible values: `S3` or `File`",
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
@@ -86,17 +87,21 @@ func resourceBlobstore() *schema.Resource {
 				Optional:      true,
 			},
 			"available_space_in_bytes": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "Available space in Bytes",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"blob_count": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Description: "Count of blobs",
+				Type:        schema.TypeInt,
+				Computed:    true,
 			},
 			"bucket_configuration": {
+				Description: "The S3 bucket configuration. Needed for blobstore type 'S3'",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"advanced_bucket_connection": {
+							Description: "Additional connection configurations",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"endpoint": {
@@ -122,6 +127,7 @@ func resourceBlobstore() *schema.Resource {
 							Type:     schema.TypeList,
 						},
 						"bucket": {
+							Description: "The S3 bucket configuration",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"region": {
@@ -152,6 +158,7 @@ func resourceBlobstore() *schema.Resource {
 							Type:     schema.TypeList,
 						},
 						"bucket_security": {
+							Description: "Additional security configurations",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"access_key_id": {
@@ -183,6 +190,7 @@ func resourceBlobstore() *schema.Resource {
 							Type:     schema.TypeList,
 						},
 						"encryption": {
+							Description: "Additional bucket encryption configurations",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"encryption_key": {
@@ -232,8 +240,9 @@ func resourceBlobstore() *schema.Resource {
 				Type:     schema.TypeList,
 			},
 			"total_size_in_bytes": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Description: "The total size of the blobstore in Bytes",
+				Type:        schema.TypeInt,
+				Computed:    true,
 			},
 		},
 	}
