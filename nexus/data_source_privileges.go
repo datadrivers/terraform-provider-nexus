@@ -28,24 +28,28 @@ func dataSourcePrivileges() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"domain": {
+				Description:  "The domain of the privilege",
 				ForceNew:     true,
 				Optional:     true,
 				Type:         schema.TypeString,
 				ValidateFunc: validation.StringInSlice(nexus.PrivilegeDomains, false),
 			},
 			"format": {
+				Description:  "The format of the privilege",
 				ForceNew:     true,
 				Optional:     true,
 				Type:         schema.TypeString,
 				ValidateFunc: validation.StringInSlice(nexus.RepositoryFormats, false),
 			},
 			"name": {
-				ForceNew: true,
-				Optional: true,
-				Type:     schema.TypeString,
+				Description: "The name of the privilege",
+				ForceNew:    true,
+				Optional:    true,
+				Type:        schema.TypeString,
 			},
 			"privileges": {
-				Computed: true,
+				Computed:    true,
+				Description: "List of privileges",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"actions": {
@@ -80,8 +84,9 @@ func dataSourcePrivileges() *schema.Resource {
 							Type:        schema.TypeString,
 						},
 						"pattern": {
-							Computed: true,
-							Type:     schema.TypeBool,
+							Description: "The wildcard privilege pattern",
+							Computed:    true,
+							Type:        schema.TypeBool,
 						},
 						"read_only": {
 							Description: "Indicates whether the privilege can be changed. External values supplied to this will be ignored by the system.",
@@ -103,14 +108,16 @@ func dataSourcePrivileges() *schema.Resource {
 				Type: schema.TypeList,
 			},
 			"repository": {
-				ForceNew: true,
-				Optional: true,
-				Type:     schema.TypeString,
+				Description: "The repository of the privilege",
+				ForceNew:    true,
+				Optional:    true,
+				Type:        schema.TypeString,
 			},
 			"type": {
-				ForceNew: true,
-				Optional: true,
-				Type:     schema.TypeString,
+				Description: "The type of the privilege",
+				ForceNew:    true,
+				Optional:    true,
+				Type:        schema.TypeString,
 				// ValidateFunc: validation.StringInSlice(nexus.PrivilegeTypes, false),
 			},
 		},

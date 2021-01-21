@@ -224,6 +224,7 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	for _, k := range keys {
 		v := resource.Schema[k]
 		if v.Description == "" {
+			log.Printf("[WARN] Empty description for %s", k)
 			continue
 		}
 		if v.Required {
@@ -287,6 +288,7 @@ func getAttributes(step int, k string, v *schema.Schema) []string {
 	ident := strings.Repeat(" ", step*2)
 
 	if v.Description == "" {
+		log.Printf("[WARN] Empty description for %s", k)
 		return attributes
 	}
 
@@ -330,6 +332,7 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 	subStructs := []string{}
 
 	if v.Description == "" {
+		log.Printf("[WARN] Empty description for %s", k)
 		return subStructs
 	}
 
@@ -348,6 +351,7 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 			for _, kk := range keys {
 				vv := v.Elem.(*schema.Resource).Schema[kk]
 				if vv.Description == "" {
+					log.Printf("[WARN] Empty description for %s", kk)
 					vv.Description = "************************* Please input Description for Schema ************************* "
 				}
 				if vv.Required {

@@ -21,29 +21,36 @@ func dataSourceBlobstore() *schema.Resource {
 		Read: dataSourceBlobstoreRead,
 		Schema: map[string]*schema.Schema{
 			"type": {
-				Optional: true,
-				Type:     schema.TypeString,
+				Description: "The type of the blobstore",
+				Optional:    true,
+				Type:        schema.TypeString,
 			},
 			"name": {
-				Required: true,
-				Type:     schema.TypeString,
+				Description: "Blobstore name",
+				Required:    true,
+				Type:        schema.TypeString,
 			},
 			"path": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Description: "The path to the blobstore contents",
+				Type:        schema.TypeString,
+				Optional:    true,
 			},
 			"available_space_in_bytes": {
-				Computed: true,
-				Type:     schema.TypeInt,
+				Computed:    true,
+				Description: "Available space in Bytes",
+				Type:        schema.TypeInt,
 			},
 			"blob_count": {
-				Computed: true,
-				Type:     schema.TypeInt,
+				Computed:    true,
+				Description: "Count of blobs",
+				Type:        schema.TypeInt,
 			},
 			"bucket_configuration": {
+				Description: "The S3 bucket configuration. Needed for blobstore type 'S3'",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"advanced_bucket_connection": {
+							Description: "Additional connection configurations",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"endpoint": {
@@ -69,6 +76,7 @@ func dataSourceBlobstore() *schema.Resource {
 							Type:     schema.TypeList,
 						},
 						"bucket": {
+							Description: "The S3 bucket configuration",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"region": {
@@ -99,6 +107,7 @@ func dataSourceBlobstore() *schema.Resource {
 							Type:     schema.TypeList,
 						},
 						"bucket_security": {
+							Description: "Additional security configurations",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"access_key_id": {
@@ -130,6 +139,7 @@ func dataSourceBlobstore() *schema.Resource {
 							Type:     schema.TypeList,
 						},
 						"encryption": {
+							Description: "Additional bucket encryption configurations",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"encryption_key": {
@@ -157,15 +167,18 @@ func dataSourceBlobstore() *schema.Resource {
 				Type:     schema.TypeList,
 			},
 			"soft_quota": {
+				Description: "Soft quota of the blobstore",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"limit": {
-							Type:     schema.TypeInt,
-							Optional: true,
+							Description: "The limit in Bytes. Minimum value is 1000000",
+							Type:        schema.TypeInt,
+							Optional:    true,
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Description: "The type to use such as spaceRemainingQuota, or spaceUsedQuota",
+							Type:        schema.TypeString,
+							Optional:    true,
 						},
 					},
 				},
@@ -174,8 +187,9 @@ func dataSourceBlobstore() *schema.Resource {
 				Type:     schema.TypeList,
 			},
 			"total_size_in_bytes": {
-				Computed: true,
-				Type:     schema.TypeInt,
+				Computed:    true,
+				Description: "The total size of the blobstore in Bytes",
+				Type:        schema.TypeInt,
 			},
 		},
 	}

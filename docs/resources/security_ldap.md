@@ -59,7 +59,7 @@ The following arguments are supported:
 * `name` - (Required) LDAP server name
 * `port` - (Required) LDAP server connection port to use
 * `protocol` - (Required) LDAP server connection Protocol to use
-* `search_base` - (Required) DAP location to be added to the connection URL
+* `search_base` - (Required) LDAP location to be added to the connection URL
 * `auth_password` - (Optional) The password to bind with. Required if authScheme other than none.
 * `auth_realm` - (Optional) The SASL realm to bind to. Required if authScheme is CRAM_MD5 or DIGEST_MD5
 * `group_base_dn` - (Optional) The relative DN where group objects are found (e.g. ou=Group). This value will have the Search base DN value appended to form the full Group search base DN.

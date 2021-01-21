@@ -106,14 +106,16 @@ func resourceRepository() *schema.Resource {
 				ValidateFunc: validation.StringInSlice(nexus.RepositoryTypes, false),
 			},
 			"apt": {
+				Description:   "Apt specific configuration of the repository",
 				Type:          schema.TypeList,
 				Optional:      true,
 				ConflictsWith: []string{"bower", "docker", "docker_proxy", "maven"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"distribution": {
-							Type:     schema.TypeString,
-							Required: true,
+							Description: "The linux distribution",
+							Type:        schema.TypeString,
+							Required:    true,
 						},
 						"flat": {
 							Description: "Whether this repository is flat",
@@ -124,42 +126,49 @@ func resourceRepository() *schema.Resource {
 				},
 			},
 			"apt_signing": {
+				Description:   "Apt signing configuration for the repository",
 				Type:          schema.TypeList,
 				Optional:      true,
 				ConflictsWith: []string{"bower", "docker", "docker_proxy", "maven"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"keypair": {
-							Type:     schema.TypeString,
-							Required: true,
+							Description: "PGP signing key pair (armored private key e.g. gpg --export-secret-key --armor )",
+							Type:        schema.TypeString,
+							Required:    true,
 						},
 						"passphrase": {
-							Type:     schema.TypeString,
-							Required: true,
+							Description: "Passphrase for the keypair",
+							Type:        schema.TypeString,
+							Required:    true,
 						},
 					},
 				},
 			},
 			"bower": {
+				Description:   "Bower specific configuration of the repository",
 				Type:          schema.TypeList,
 				Optional:      true,
 				ConflictsWith: []string{"apt", "apt_signing", "docker", "docker_proxy", "maven"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"rewrite_package_urls": {
-							Type:     schema.TypeBool,
-							Optional: true,
-							Default:  false,
+							Description: "Force Bower to retrieve packages through the proxy repository",
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
 						},
 					},
 				},
 			},
 			"cleanup": {
-				Type:     schema.TypeList,
-				Optional: true,
+				Description: "Cleanup policies",
+				Type:        schema.TypeList,
+				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"policy_names": {
+							Description: "List of policy names",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
@@ -173,6 +182,7 @@ func resourceRepository() *schema.Resource {
 				},
 			},
 			"docker": {
+				Description:   "Docker specific configuration of the repository",
 				Type:          schema.TypeList,
 				Optional:      true,
 				ConflictsWith: []string{"apt", "apt_signing", "bower", "maven"},
@@ -207,6 +217,7 @@ func resourceRepository() *schema.Resource {
 			},
 			"docker_proxy": {
 				ConflictsWith: []string{"apt", "apt_signing", "bower", "maven"},
+				Description:   "Configuration for docker proxy repository",
 				Type:          schema.TypeList,
 				Optional:      true,
 				MaxItems:      1,
@@ -231,6 +242,7 @@ func resourceRepository() *schema.Resource {
 				},
 			},
 			"group": {
+				Description: "Configuration for repository group",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"member_names": {
@@ -251,9 +263,11 @@ func resourceRepository() *schema.Resource {
 				Type:     schema.TypeList,
 			},
 			"http_client": {
+				Description: "HTTP Client configuration for proxy repositories",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"authentication": {
+							Description: "Authentication configuration of the HTTP client",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"type": {
@@ -263,23 +277,23 @@ func resourceRepository() *schema.Resource {
 										ValidateFunc: validation.StringInSlice([]string{"ntlm", "username"}, false),
 									},
 									"username": {
-										Description: "",
+										Description: "The username used by the proxy repository",
 										Optional:    true,
 										Type:        schema.TypeString,
 									},
 									"password": {
-										Description: "",
+										Description: "The password used by the proxy repository",
 										Optional:    true,
 										Sensitive:   true,
 										Type:        schema.TypeString,
 									},
 									"ntlm_domain": {
-										Description: "",
+										Description: "The ntlm domain to connect",
 										Optional:    true,
 										Type:        schema.TypeString,
 									},
 									"ntlm_host": {
-										Description: "",
+										Description: "The ntlm host to connect",
 										Optional:    true,
 										Type:        schema.TypeString,
 									},
@@ -340,28 +354,32 @@ func resourceRepository() *schema.Resource {
 				Type:     schema.TypeList,
 			},
 			"maven": {
-				Type:     schema.TypeList,
-				MaxItems: 1,
-				Optional: true,
+				Description: "Maven specific configuration of the repository",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"version_policy": {
-							Default:  "RELEASE",
-							Type:     schema.TypeString,
-							Optional: true,
+							Description: "What type of artifacts does this repository store? Possible values: `RELEASE`, `SNAPSHOT` or `MIXED",
+							Default:     "RELEASE",
+							Type:        schema.TypeString,
+							Optional:    true,
 						},
 						"layout_policy": {
-							Default:  "PERMISSIVE",
-							Type:     schema.TypeString,
-							Optional: true,
+							Description: "Validate that all paths are maven artifact or metadata paths. Possible values: `PERMISSIVE` or `STRICT`",
+							Default:     "PERMISSIVE",
+							Type:        schema.TypeString,
+							Optional:    true,
 						},
 					},
 				},
 			},
 			"negative_cache": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
+				Description: "Configuration of the negative cache handling",
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enabled": {
@@ -380,6 +398,7 @@ func resourceRepository() *schema.Resource {
 				},
 			},
 			"nuget_proxy": {
+				Description: "Configuration for the nuget proxy repository",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"query_cache_item_max_age": {
@@ -394,29 +413,34 @@ func resourceRepository() *schema.Resource {
 				Type:     schema.TypeList,
 			},
 			"proxy": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
+				Description: "Configuration for the proxy repository",
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"content_max_age": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  1440,
+							Description: "How long (in minutes) to cache artifacts before rechecking the remote repository",
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Default:     1440,
 						},
 						"metadata_max_age": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  1440,
+							Description: "How long (in minutes) to cache metadata before rechecking the remote repository.",
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Default:     1440,
 						},
 						"remote_url": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Description: "Location of the remote repository being proxied",
+							Type:        schema.TypeString,
+							Optional:    true,
 						},
 					},
 				},
 			},
 			"storage": {
+				Description: "The storage configuration of the repository",
 				DefaultFunc: repositoryStorageDefault,
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -449,17 +473,20 @@ func resourceRepository() *schema.Resource {
 				},
 			},
 			"yum": {
+				Description:   "Yum specific configuration of the repository",
 				Type:          schema.TypeList,
 				Optional:      true,
 				ConflictsWith: []string{"bower", "docker", "docker_proxy", "maven", "apt"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"repodata_depth": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  0,
+							Description: "Specifies the repository depth where repodata folder(s) are created. Possible values: 0-5",
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Default:     0,
 						},
 						"deploy_policy": {
+							Description:  "Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`",
 							Type:         schema.TypeString,
 							Required:     true,
 							ValidateFunc: validation.StringInSlice([]string{"STRICT", "PERMISSIVE"}, false),
