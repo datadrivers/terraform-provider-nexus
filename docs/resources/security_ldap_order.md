@@ -37,6 +37,6 @@ resource "nexus_security_ldap_order" {
 
 The following arguments are supported:
 
-
+* `order` - (Required) Ordered list of LDAP server
 
 
