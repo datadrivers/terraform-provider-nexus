@@ -1,23 +1,19 @@
 ---
 layout: "nexus"
-page_title: "Nexus: nexus_user"
-sidebar_current: "docs-nexus-datasource-user"
+page_title: "Nexus: nexus_security_user"
+sidebar_current: "docs-nexus-datasource-security_user"
 description: |-
-  This data source is deprecated.
-Please use the data source "nexus_security_user" instead.
+  Use this data source to get a user data structure
 ---
 
-# nexus_user
-
-This data source is deprecated.
-Please use the data source "nexus_security_user" instead.
+# nexus_security_user
 
 Use this data source to get a user data structure
 
 ## Example Usage
 
 ```hcl
-data "nexus_user" "admin" {
+data "nexus_security_user" "admin" {
   userid = "admin"
 }
 ```
