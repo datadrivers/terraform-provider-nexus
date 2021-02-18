@@ -17,7 +17,7 @@ import (
 
 func dataSourceSecurityUser() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceUserRead,
+		Read: dataSourceSecurityUserRead,
 
 		Schema: map[string]*schema.Schema{
 			"userid": {
@@ -55,7 +55,7 @@ func dataSourceSecurityUser() *schema.Resource {
 	}
 }
 
-func dataSourceUserRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceSecurityUserRead(d *schema.ResourceData, m interface{}) error {
 	d.SetId(d.Get("userid").(string))
 
 	return resourceUserRead(d, m)

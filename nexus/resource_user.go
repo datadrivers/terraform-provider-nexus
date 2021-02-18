@@ -26,13 +26,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
 
-func resourceSecurityUser() *schema.Resource {
+func resourceUser() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceSecurityUserCreate,
-		Read:   resourceSecurityUserRead,
-		Update: resourceSecurityUserUpdate,
-		Delete: resourceSecurityUserDelete,
-		Exists: resourceSecurityUserExists,
+		Create: resourceUserCreate,
+		Read:   resourceUserRead,
+		Update: resourceUserUpdate,
+		Delete: resourceUserDelete,
+		Exists: resourceUserExists,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -85,7 +85,7 @@ func resourceSecurityUser() *schema.Resource {
 	}
 }
 
-func getSecurityUserFromResourceData(d *schema.ResourceData) nexus.User {
+func getUserFromResourceData(d *schema.ResourceData) nexus.User {
 	return nexus.User{
 		UserID:       d.Get("userid").(string),
 		FirstName:    d.Get("firstname").(string),
@@ -97,9 +97,9 @@ func getSecurityUserFromResourceData(d *schema.ResourceData) nexus.User {
 	}
 }
 
-func resourceSecurityUserCreate(d *schema.ResourceData, m interface{}) error {
+func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
-	user := getSecurityUserFromResourceData(d)
+	user := getUserFromResourceData(d)
 
 	if err := nexusClient.UserCreate(user); err != nil {
 		return err
@@ -109,7 +109,7 @@ func resourceSecurityUserCreate(d *schema.ResourceData, m interface{}) error {
 	return resourceUserRead(d, m)
 }
 
-func resourceSecurityUserRead(d *schema.ResourceData, m interface{}) error {
+func resourceUserRead(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
 
 	user, err := nexusClient.UserRead(d.Id())
@@ -132,7 +132,7 @@ func resourceSecurityUserRead(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func resourceSecurityUserUpdate(d *schema.ResourceData, m interface{}) error {
+func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
 
 	d.Partial(true)
@@ -153,10 +153,10 @@ func resourceSecurityUserUpdate(d *schema.ResourceData, m interface{}) error {
 			return err
 		}
 	}
-	return resourceSecurityUserRead(d, m)
+	return resourceUserRead(d, m)
 }
 
-func resourceSecurityUserDelete(d *schema.ResourceData, m interface{}) error {
+func resourceUserDelete(d *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(nexus.Client)
 
 	if err := nexusClient.UserDelete(d.Id()); err != nil {
@@ -167,7 +167,7 @@ func resourceSecurityUserDelete(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func resourceSecurityUserExists(d *schema.ResourceData, m interface{}) (bool, error) {
+func resourceUserExists(d *schema.ResourceData, m interface{}) (bool, error) {
 	nexusClient := m.(nexus.Client)
 
 	user, err := nexusClient.UserRead(d.Id())
