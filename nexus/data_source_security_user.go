@@ -1,13 +1,10 @@
 /*
-This data source is deprecated.
-Please use the data source "nexus_security_user" instead.
-
 Use this data source to get a user data structure
 
 Example Usage
 
 ```hcl
-data "nexus_user" "admin" {
+data "nexus_security_user" "admin" {
   userid = "admin"
 }
 ```
@@ -18,9 +15,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
-func dataSourceUser() *schema.Resource {
+func dataSourceSecurityUser() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceUserRead,
+		Read: dataSourceSecurityUserRead,
 
 		Schema: map[string]*schema.Schema{
 			"userid": {
@@ -58,7 +55,7 @@ func dataSourceUser() *schema.Resource {
 	}
 }
 
-func dataSourceUserRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceSecurityUserRead(d *schema.ResourceData, m interface{}) error {
 	d.SetId(d.Get("userid").(string))
 
 	return resourceUserRead(d, m)

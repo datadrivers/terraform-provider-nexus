@@ -1,23 +1,19 @@
 ---
 layout: "nexus"
-page_title: "Nexus: nexus_user"
-sidebar_current: "docs-nexus-resource-user"
+page_title: "Nexus: nexus_security_user"
+sidebar_current: "docs-nexus-resource-security_user"
 description: |-
-  This data source is deprecated.
-Please use the data source "nexus_security_user" instead.
+  Use this resource to manage users
 ---
 
-# nexus_user
-
-This data source is deprecated.
-Please use the data source "nexus_security_user" instead.
+# nexus_security_user
 
 Use this resource to manage users
 
 ## Example Usage
 
 ```hcl
-resource "nexus_user" "admin" {
+resource "nexus_security_user" "admin" {
   userid    = "admin"
   firstname = "Administrator"
   lastname  = "User"

@@ -16,6 +16,7 @@ func Provider() terraform.ResourceProvider {
 			"nexus_routing_rule":    dataSourceRoutingRule(),
 			"nexus_security_ldap":   dataSourceSecurityLDAP(),
 			"nexus_security_realms": dataSourceSecurityRealms(),
+			"nexus_security_user":   dataSourceSecurityUser(),
 			"nexus_user":            dataSourceUser(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
@@ -29,6 +30,7 @@ func Provider() terraform.ResourceProvider {
 			"nexus_security_ldap":       resourceSecurityLDAP(),
 			"nexus_security_ldap_order": resourceSecurityLDAPOrder(),
 			"nexus_security_realms":     resourceSecurityRealms(),
+			"nexus_security_user":       resourceSecurityUser(),
 			"nexus_user":                resourceUser(),
 		},
 		Schema: map[string]*schema.Schema{
