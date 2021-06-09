@@ -35,6 +35,21 @@ func dataSourceBlobstore() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 			},
+			"bucket_name": {
+				Description: "The name of the Google Cloud Storage bucket. Only present for blobstore type 'Google Cloud Storage'",
+				Type:        schema.TypeString,
+				Optional:    true,
+			},
+			"region": {
+				Description: "The region of the Google Cloud Storage bucket. Only present for blobstore type 'Google Cloud Storage'",
+				Type:        schema.TypeString,
+				Optional:    true,
+			},
+			"credential_file_path": {
+				Description: "The path to the .json containing the credentials to use to access Google Cloud Storage (unless using workload identity). Optionally present for blobstore type 'Google Cloud Storage'",
+				Type:        schema.TypeString,
+				Optional:    true,
+			},
 			"available_space_in_bytes": {
 				Computed:    true,
 				Description: "Available space in Bytes",
