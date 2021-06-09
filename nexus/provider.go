@@ -28,6 +28,7 @@ func Provider() terraform.ResourceProvider {
 			"nexus_routing_rule":        resourceRoutingRule(),
 			"nexus_script":              resourceScript(),
 			"nexus_security_ldap":       resourceSecurityLDAP(),
+			"nexus_security_saml":       resourceSecuritySAML(),
 			"nexus_security_ldap_order": resourceSecurityLDAPOrder(),
 			"nexus_security_realms":     resourceSecurityRealms(),
 			"nexus_security_user":       resourceSecurityUser(),
