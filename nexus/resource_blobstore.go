@@ -81,8 +81,26 @@ func resourceBlobstore() *schema.Resource {
 				Required:    true,
 			},
 			"path": {
-				ConflictsWith: []string{"bucket_configuration"},
+				ConflictsWith: []string{"bucket_configuration","bucket_name"},
 				Description:   "The path to the blobstore contents. This can be an absolute path to anywhere on the system nxrm has access to or it can be a path relative to the sonatype-work directory",
+				Type:          schema.TypeString,
+				Optional:      true,
+			},
+			"bucket_name": {
+				ConflictsWith: []string{"bucket_configuration","path"},
+				Description:   "The name of the Google Cloud Storage bucket. Needed for blobstore type 'Google Cloud Storage'",
+				Type:          schema.TypeString,
+				Optional:      true,
+			},
+			"region": {
+				ConflictsWith: []string{"bucket_configuration","path"},
+				Description:   "The region of the Google Cloud Storage bucket. Needed for blobstore type 'Google Cloud Storage'",
+				Type:          schema.TypeString,
+				Optional:      true,
+			},
+			"credential_file_path": {
+				ConflictsWith: []string{"bucket_configuration","path"},
+				Description:   "The path to the .json containing the credentials to use to access Google Cloud Storage (unless using workload identity). Optional for blobstore type 'Google Cloud Storage'",
 				Type:          schema.TypeString,
 				Optional:      true,
 			},
@@ -257,6 +275,10 @@ func getBlobstoreFromResourceData(d *schema.ResourceData) nexus.Blobstore {
 	switch bs.Type {
 	case nexus.BlobstoreTypeFile:
 		bs.Path = d.Get("path").(string)
+	case nexus.BlobstoreTypeGoogle:
+		bs.BucketName = d.Get("bucket_name").(string)
+		bs.Region = d.Get("region").(string)
+		bs.CredentialFilePath = d.Get("credential_file_path").(string)
 	case nexus.BlobstoreTypeS3:
 		if _, ok := d.GetOk("bucket_configuration"); ok {
 			bucketConfigurationList := d.Get("bucket_configuration").([]interface{})
@@ -363,6 +385,9 @@ func resourceBlobstoreRead(d *schema.ResourceData, m interface{}) error {
 	d.Set("blob_count", bs.BlobCount)
 	d.Set("name", bs.Name)
 	d.Set("path", bs.Path)
+	d.Set("bucket_name", bs.BucketName)
+	d.Set("region", bs.Region)
+	d.Set("credential_file_path", bs.CredentialFilePath)
 	d.Set("total_size_in_bytes", bs.TotalSizeInBytes)
 	d.Set("type", bs.Type)
 
