@@ -68,13 +68,12 @@ func resourceBlobstore() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"type": {
-				Description:  "The type of the blobstore. Possible values: `S3` or `File`",
+				Description:  "The type of the blobstore. Possible values: `S3`, `File` or `Azure`",
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validation.StringInSlice([]string{"S3", "File"}, false),
+				ValidateFunc: validation.StringInSlice([]string{"S3", "File", "Azure"}, false),
 			},
-
 			"name": {
 				Description: "Blobstore name",
 				Type:        schema.TypeString,
@@ -95,6 +94,41 @@ func resourceBlobstore() *schema.Resource {
 				Description: "Count of blobs",
 				Type:        schema.TypeInt,
 				Computed:    true,
+			},
+			"azure_configuration": {
+				Description: "The azure configuration. Needed for blobstore type 'Azure'",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"account_name": {
+							Description: "Account name",
+							Type:        schema.TypeString,
+							Required:    true,
+						},
+						"container_name": {
+							Description: "Container name",
+							Type:        schema.TypeString,
+							Required:    true,
+						},
+						"authentication": {
+							Description: "Authentication configuration",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"authentication_method": {
+										Description: "",
+										Required:    true,
+										Type:        schema.TypeString,
+									},
+								},
+							},
+							MaxItems: 1,
+							Required: true,
+							Type:     schema.TypeList,
+						},
+					},
+				},
+				MaxItems: 1,
+				Optional: true,
+				Type:     schema.TypeList,
 			},
 			"bucket_configuration": {
 				Description: "The S3 bucket configuration. Needed for blobstore type 'S3'",
@@ -255,6 +289,18 @@ func getBlobstoreFromResourceData(d *schema.ResourceData) nexus.Blobstore {
 	}
 
 	switch bs.Type {
+	case nexus.BlobstoreTypeAzure:
+		if _, ok := d.GetOk("azure_configuration"); ok {
+			bucketConfigurationList := d.Get("azure_configuration").([]interface{})
+			bucketConfiguration := bucketConfigurationList[0].(map[string]interface{})
+			bs.BlobstoreS3BucketConfiguration = &nexus.BlobstoreS3BucketConfiguration{
+				AccountName:   bucketConfiguration["account_name"].(string),
+				ContainerName: bucketConfiguration["container_name"].(string),
+				Authentication: nexus.BlobstoreAzureAuthenticationConfiguration{
+					AuthenticationMethod: "MANAGEDIDENTITY",
+				},
+			}
+		}
 	case nexus.BlobstoreTypeFile:
 		bs.Path = d.Get("path").(string)
 	case nexus.BlobstoreTypeS3:
@@ -367,7 +413,11 @@ func resourceBlobstoreRead(d *schema.ResourceData, m interface{}) error {
 	d.Set("type", bs.Type)
 
 	if bs.BlobstoreS3BucketConfiguration != nil {
-		if err := d.Set("bucket_configuration", flattenBlobstoreBucketConfiguration(bs.BlobstoreS3BucketConfiguration, d)); err != nil {
+		if bs.AccountName != "" || bs.ContainerName != "" {
+			if err := d.Set("azure_configuration", flattenBlobstoreAzureConfiguration(bs.BlobstoreS3BucketConfiguration, d)); err != nil {
+				return fmt.Errorf("Error reading Azure configuration: %s", err)
+			}
+		} else if err := d.Set("bucket_configuration", flattenBlobstoreBucketConfiguration(bs.BlobstoreS3BucketConfiguration, d)); err != nil {
 			return fmt.Errorf("Error reading bucket configuration: %s", err)
 		}
 	}
@@ -389,7 +439,7 @@ func resourceBlobstoreUpdate(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	return nil
+	return resourceBlobstoreRead(d, m)
 }
 
 func resourceBlobstoreDelete(d *schema.ResourceData, m interface{}) error {
@@ -418,6 +468,25 @@ func flattenBlobstoreSoftQuota(softQuota *nexus.BlobstoreSoftQuota) []map[string
 	data := map[string]interface{}{
 		"limit": softQuota.Limit,
 		"type":  softQuota.Type,
+	}
+	return []map[string]interface{}{data}
+}
+
+func flattenBlobstoreAzureConfiguration(bucketConfig *nexus.BlobstoreS3BucketConfiguration, d *schema.ResourceData) []map[string]interface{} {
+	if bucketConfig == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"account_name":   bucketConfig.AccountName,
+		"container_name": bucketConfig.ContainerName,
+		"authentication": flattenBlobstoreAzureAuthenticationConfiguration(bucketConfig.Authentication, d),
+	}
+	return []map[string]interface{}{data}
+}
+
+func flattenBlobstoreAzureAuthenticationConfiguration(authentication nexus.BlobstoreAzureAuthenticationConfiguration, d *schema.ResourceData) []map[string]interface{} {
+	data := map[string]interface{}{
+		"authentication_method": authentication.AuthenticationMethod,
 	}
 	return []map[string]interface{}{data}
 }
