@@ -25,6 +25,9 @@ func testAccDataSourceSecuritySaml() nexus.SAML {
 }
 
 func TestAccDataSourceSecuritySaml(t *testing.T) {
+	if getEnv("SKIP_PRO_TESTS", "false") == "true" {
+		t.Skip("Skipping Nexus Pro tests")
+	}
 	resName := "data.nexus_security_saml.acceptance"
 	saml := testAccDataSourceSecuritySaml()
 

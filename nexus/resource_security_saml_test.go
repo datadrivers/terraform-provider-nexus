@@ -25,6 +25,10 @@ func testAccResourceSecuritySAML() nexus.SAML {
 }
 
 func TestAccResourceSecuritySAML(t *testing.T) {
+	if getEnv("SKIP_PRO_TESTS", "false") == "true" {
+		t.Skip("Skipping Nexus Pro tests")
+	}
+
 	saml := testAccResourceSecuritySAML()
 	resName := "nexus_security_saml.saml"
 
