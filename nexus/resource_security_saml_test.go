@@ -25,6 +25,10 @@ func testAccResourceSecuritySAML() nexus.SAML {
 }
 
 func TestAccResourceSecuritySAML(t *testing.T) {
+	if getEnv("SKIP_PRO_TESTS", "false") == "true" {
+		t.Skip("Skipping Nexus Pro tests")
+	}
+
 	saml := testAccResourceSecuritySAML()
 	resName := "nexus_security_saml.saml"
 
@@ -58,7 +62,8 @@ func TestAccResourceSecuritySAML(t *testing.T) {
 func testAccResourceSecuritySAMLConfig(saml nexus.SAML) string {
 	return fmt.Sprintf(`
 resource "nexus_security_saml" "saml" {
-	idp_metadata                 = "%s"
+	idp_metadata                 = <<EOT
+%sEOT
 	entity_id                    = "%s"
 	validate_response_signature  = "%t"
 	validate_assertion_signature = "%t"
