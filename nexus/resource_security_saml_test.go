@@ -58,7 +58,8 @@ func TestAccResourceSecuritySAML(t *testing.T) {
 func testAccResourceSecuritySAMLConfig(saml nexus.SAML) string {
 	return fmt.Sprintf(`
 resource "nexus_security_saml" "saml" {
-	idp_metadata                 = "%s"
+	idp_metadata                 = <<EOT
+%sEOT
 	entity_id                    = "%s"
 	validate_response_signature  = "%t"
 	validate_assertion_signature = "%t"

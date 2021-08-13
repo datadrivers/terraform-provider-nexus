@@ -52,7 +52,7 @@ func TestAccDataSourceSecuritySaml(t *testing.T) {
 
 func testAccDataSourceSecuritySamlConfig() string {
 	return fmt.Sprintf(`
-data "nexus_security_user" "acceptance" {
+data "nexus_security_saml" "acceptance" {
 }
 `)
 }
