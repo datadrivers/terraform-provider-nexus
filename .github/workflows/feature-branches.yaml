@@ -1,0 +1,33 @@
+on: [pull_request_target]
+name: Test
+jobs:
+  test:
+    strategy:
+      matrix:
+        go-version: [1.16.x]
+        platform: [ubuntu-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout source codes
+        uses: actions/checkout@v2
+      - name: Install Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Test client with nexus3 instance
+        env:
+          NEXUS3_LICENSE_B64_ENCODED: ${{ secrets.NEXUS3_LICENSE_B64_ENCODED }}
+          NEXUS_URL: http://127.0.0.1:8081
+          NEXUS_USERNAME: admin
+          NEXUS_PASSWORD: admin123
+          AWS_ACCESS_KEY_ID: "minioadmin"
+          AWS_SECRET_ACCESS_KEY: "minioadmin"
+          AWS_ENDPOINT: "http://minio:9000"
+        run: |
+          make start-services
+
+          make test
+          make vet
+          make testacc
+
+          make stop-services
