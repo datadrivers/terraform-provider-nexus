@@ -7,10 +7,10 @@ description: |-
 ---
 
 # Nexus Provider
-  
+
 The Nexus provider allows Terraform to read from, write to, and configure [Sonatype Nexus Repository Manager](https://www.sonatype.com/product-nexus-repository).
 
--> **Note** This provider hat been implemented and tested with Sonatype Nexus Repository Manager OSS `3.29.0-02`.
+-> **Note** This provider hat been implemented and tested with Sonatype Nexus Repository Manager OSS `3.33.0-01`.
 
 ## Usage
 
