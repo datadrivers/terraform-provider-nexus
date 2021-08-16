@@ -90,7 +90,7 @@ func resourceAnonymousUpdate(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	return resourcePrivilegeRead(d, m)
+	return resourceAnonymousRead(d, m)
 }
 
 func resourceAnonymousDelete(d *schema.ResourceData, m interface{}) error {

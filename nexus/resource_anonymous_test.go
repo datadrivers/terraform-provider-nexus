@@ -26,7 +26,6 @@ func TestAccResourceAnonymous(t *testing.T) {
 			{
 				Config: testAccResourceAnonymousConfig(anonym),
 				Check: resource.ComposeTestCheckFunc(
-
 					resource.TestCheckResourceAttr(resName, "enabled", strconv.FormatBool(anonym.Enabled)),
 					resource.TestCheckResourceAttr(resName, "user_id", anonym.UserID),
 					resource.TestCheckResourceAttr(resName, "realm_name", anonym.RealmName),
