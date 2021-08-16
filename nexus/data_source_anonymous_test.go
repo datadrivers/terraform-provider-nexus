@@ -23,6 +23,10 @@ func TestAccDataSourceAnonymous(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
+				Config: testAccResourceAnonymousConfig(anonym),
+				Check:  nil,
+			},
+			{
 				Config: testAccResourceAnonymousConfig(anonym) + testAccDataSourceAnonymousConfig(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(dataSourceName, "enabled", strconv.FormatBool(anonym.Enabled)),
@@ -36,7 +40,6 @@ func TestAccDataSourceAnonymous(t *testing.T) {
 
 func testAccDataSourceAnonymousConfig() string {
 	return `
-data "nexus_anonymous" "acceptance" {
-}
+data "nexus_anonymous" "acceptance" {}
 `
 }

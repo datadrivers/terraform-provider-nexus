@@ -74,11 +74,6 @@ func resourceAnonymousRead(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	if anonymous == nil {
-		d.SetId("")
-		return nil
-	}
-
 	return setAnonymousToResourceData(anonymous, d)
 }
 

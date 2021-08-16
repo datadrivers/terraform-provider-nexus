@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	nexus "github.com/datadrivers/go-nexus-client"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
@@ -15,7 +14,7 @@ func TestAccResourceAnonymous(t *testing.T) {
 
 	anonym := nexus.AnonymousConfig{
 		Enabled:   true,
-		UserID:    acctest.RandString(20),
+		UserID:    "acctest",
 		RealmName: "NexusAuthenticatingRealm",
 	}
 
@@ -44,8 +43,8 @@ func TestAccResourceAnonymous(t *testing.T) {
 func testAccResourceAnonymousConfig(anonym nexus.AnonymousConfig) string {
 	return fmt.Sprintf(`
 resource "nexus_anonymous" "acceptance" {
-	enabled = "%t"
-	user_id   = "%s"
+	enabled    = "%t"
+	user_id    = "%s"
 	realm_name = "%s"
 }
 `, anonym.Enabled, anonym.UserID, anonym.RealmName)

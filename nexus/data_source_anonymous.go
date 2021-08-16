@@ -26,7 +26,7 @@ func dataSourceAnonymous() *schema.Resource {
 			"enabled": {
 				Computed:    true,
 				Description: "Activate the anonymous access to the repository manager",
-				Type:        schema.TypeString,
+				Type:        schema.TypeBool,
 			},
 			"user_id": {
 				Computed:    true,
