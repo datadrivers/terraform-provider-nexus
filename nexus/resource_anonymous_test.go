@@ -16,7 +16,7 @@ func TestAccResourceAnonymous(t *testing.T) {
 	anonym := nexus.AnonymousConfig{
 		Enabled:   true,
 		UserID:    acctest.RandString(20),
-		RealmName: acctest.RandString(20),
+		RealmName: "NexusAuthenticatingRealm",
 	}
 
 	resource.Test(t, resource.TestCase{
