@@ -24,6 +24,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: "minioadmin"
           AWS_ENDPOINT: "http://minio:9000"
         run: |
+          echo "${NEXUS3_LICENSE_B64_ENCODED}" | base64 -d > scripts/license.lic
           make start-services
 
           make test

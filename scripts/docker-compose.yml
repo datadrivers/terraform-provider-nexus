@@ -6,6 +6,7 @@ services:
     ports:
       - "${NEXUS_PORT}:8081"
     volumes:
+      - "${PWD}/license.lic:/nexus-data/etc/license.lic"
       - "${PWD}/nexus.properties:/nexus-data/etc/nexus.properties"
   minio:
     container_name: minio
@@ -13,3 +14,6 @@ services:
     ports:
       - "9000:9000"
     command: "server /data"
+    environment:
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
