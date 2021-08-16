@@ -65,7 +65,7 @@ func resourceSecuritySAML() *schema.Resource {
 			},
 			"username_attribute": {
 				Description: "IdP field mappings for username",
-				Optional:    true,
+				Required:    true,
 				Type:        schema.TypeString,
 			},
 			"first_name_attribute": {
