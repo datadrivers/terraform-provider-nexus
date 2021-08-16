@@ -1,5 +1,5 @@
 on: [pull_request]
-name: Test without PRO features
+name: Test with PRO features
 jobs:
   test:
     strategy:
@@ -23,7 +23,6 @@ jobs:
           AWS_ACCESS_KEY_ID: "minioadmin"
           AWS_SECRET_ACCESS_KEY: "minioadmin"
           AWS_ENDPOINT: "http://minio:9000"
-          SKIP_PRO_TESTS: "true"
         run: |
           make start-services
 
