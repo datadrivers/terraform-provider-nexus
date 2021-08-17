@@ -1,12 +1,9 @@
 /*
----
-**NOTE**
-
-PRO Feature
-
----
-
 Use this data source to get the saml configuration
+
+---
+**PRO Feature**
+---
 
 Example Usage
 

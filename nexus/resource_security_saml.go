@@ -1,12 +1,9 @@
 /*
----
-**NOTE**
-
-PRO Feature
-
----
-
 Use this resource to create a Nexus Security SAML
+
+---
+**PRO Feature**
+---
 
 Example Usage
 
