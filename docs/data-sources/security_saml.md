@@ -3,20 +3,16 @@ layout: "nexus"
 page_title: "Nexus: nexus_security_saml"
 sidebar_current: "docs-nexus-datasource-security_saml"
 description: |-
-  ---
-**NOTE**
+  Use this data source to get the saml configuration
 ---
 
 # nexus_security_saml
 
----
-**NOTE**
-
-PRO Feature
-
----
-
 Use this data source to get the saml configuration
+
+---
+**PRO Feature**
+---
 
 ## Example Usage
 

@@ -10,16 +10,17 @@ import (
 func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
 		DataSourcesMap: map[string]*schema.Resource{
-			"nexus_anonymous":       dataSourceAnonymous(),
-			"nexus_blobstore":       dataSourceBlobstore(),
-			"nexus_privileges":      dataSourcePrivileges(),
-			"nexus_repository":      dataSourceRepository(),
-			"nexus_routing_rule":    dataSourceRoutingRule(),
-			"nexus_security_ldap":   dataSourceSecurityLDAP(),
-			"nexus_security_realms": dataSourceSecurityRealms(),
-			"nexus_security_saml":   dataSourceSecuritySAML(),
-			"nexus_security_user":   dataSourceSecurityUser(),
-			"nexus_user":            dataSourceUser(),
+			"nexus_anonymous":           dataSourceAnonymous(),
+			"nexus_blobstore":           dataSourceBlobstore(),
+			"nexus_privileges":          dataSourcePrivileges(),
+			"nexus_repository":          dataSourceRepository(),
+			"nexus_routing_rule":        dataSourceRoutingRule(),
+			"nexus_security_ldap":       dataSourceSecurityLDAP(),
+			"nexus_security_realms":     dataSourceSecurityRealms(),
+			"nexus_security_saml":       dataSourceSecuritySAML(),
+			"nexus_security_user":       dataSourceSecurityUser(),
+			"nexus_security_user_token": dataSourceSecurityUserToken(),
+			"nexus_user":                dataSourceUser(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"nexus_anonymous":           resourceAnonymous(),
@@ -35,6 +36,7 @@ func Provider() terraform.ResourceProvider {
 			"nexus_security_realms":     resourceSecurityRealms(),
 			"nexus_security_saml":       resourceSecuritySAML(),
 			"nexus_security_user":       resourceSecurityUser(),
+			"nexus_security_user_token": resourceSecurityUserToken(),
 			"nexus_user":                resourceUser(),
 		},
 		Schema: map[string]*schema.Schema{

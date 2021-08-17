@@ -30,12 +30,6 @@ func TestAccResourceAnonymous(t *testing.T) {
 					resource.TestCheckResourceAttr(resName, "realm_name", anonym.RealmName),
 				),
 			},
-			{
-				ResourceName:      resName,
-				ImportStateId:     "anonymous",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
 		},
 	})
 }

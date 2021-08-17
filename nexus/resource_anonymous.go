@@ -23,7 +23,6 @@ func resourceAnonymous() *schema.Resource {
 		Read:   resourceAnonymousRead,
 		Update: resourceAnonymousUpdate,
 		Delete: resourceAnonymousDelete,
-		Exists: resourceAnonymousExists,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -90,11 +89,4 @@ func resourceAnonymousUpdate(d *schema.ResourceData, m interface{}) error {
 
 func resourceAnonymousDelete(d *schema.ResourceData, m interface{}) error {
 	return nil
-}
-
-func resourceAnonymousExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	client := m.(nexus.Client)
-
-	privilege, err := client.AnonymousRead()
-	return privilege != nil, err
 }
