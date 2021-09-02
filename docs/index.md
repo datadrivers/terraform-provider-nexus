@@ -32,7 +32,7 @@ The following arguments are supported:
 * `insecure`  - (Optional) Boolean to specify wether insecure SSL connections are allowed or not.
 * `password`  - (Required) Password of user to connect to API.
 * `url`       - (Required) URL of Nexus to reach API.
-* `usernamme` - (Required) Username used to connect to API.
+* `username` - (Required) Username used to connect to API.
 
 ## Author
 
