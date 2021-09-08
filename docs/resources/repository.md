@@ -71,9 +71,9 @@ resource "nexus_repository" "docker_group" {
 
 The following arguments are supported:
 
-* `format` - (Required, ForceNew) Repository format
+* `format` - (Required, ForceNew) Repository format. Possible values: `apt`, `bower`, `conan`, `docker`, `gitlfs`, `go`, `helm`, `maven2`, `npm`, `nuget`, `p2`, `pypi`, `raw`, `rubygems`, `yum`.
 * `name` - (Required) A unique identifier for this repository
-* `type` - (Required, ForceNew) Repository type
+* `type` - (Required, ForceNew) Repository type. Possible values: `group`, `hosted`, `proxy`
 * `apt_signing` - (Optional) Apt signing configuration for the repository
 * `apt` - (Optional) Apt specific configuration of the repository
 * `bower` - (Optional) Bower specific configuration of the repository
@@ -141,7 +141,7 @@ The `authentication` object supports the following:
 The `maven` object supports the following:
 
 * `layout_policy` - (Optional) Validate that all paths are maven artifact or metadata paths. Possible values: `PERMISSIVE` or `STRICT`
-* `version_policy` - (Optional) What type of artifacts does this repository store? Possible values: `RELEASE`, `SNAPSHOT` or `MIXED
+* `version_policy` - (Optional) What type of artifacts does this repository store? Possible values: `RELEASE`, `SNAPSHOT` or `MIXED`
 
 The `negative_cache` object supports the following:
 
@@ -162,11 +162,9 @@ The `storage` object supports the following:
 
 * `blob_store_name` - (Optional) Blob store used to store repository contents
 * `strict_content_type_validation` - (Optional) Whether to validate uploaded content's MIME type appropriate for the repository format
-* `write_policy` - (Optional) Controls if deployments of and updates to assets are allowed
+* `write_policy` - (Optional) Controls if deployments of and updates to assets are allowed. Possible values: `ALLOW`, `ALLOW_ONCE`, `DENY`
 
 The `yum` object supports the following:
 
 * `deploy_policy` - (Required) Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`
 * `repodata_depth` - (Optional) Specifies the repository depth where repodata folder(s) are created. Possible values: 0-5
-
-
