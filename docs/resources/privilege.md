@@ -30,7 +30,7 @@ The following arguments are supported:
 * `content_selector` - (Optional) The content selector for the privilege
 * `description` - (Optional) A description of the privilege
 * `domain` - (Optional) The domain of the privilege
-* `format` - (Optional) The format of the privilege
+* `format` - (Optional) The format of the privilege. Possible values: `apt`, `bower`, `conan`, `docker`, `gitlfs`, `go`, `helm`, `maven2`, `npm`, `nuget`, `p2`, `pypi`, `raw`, `rubygems`, `yum`
 * `pattern` - (Optional) The wildcard privilege pattern
 * `repository` - (Optional) The repository of the privilege
 * `script_name` - (Optional) The script name related to the privilege
