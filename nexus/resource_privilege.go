@@ -69,7 +69,7 @@ func resourcePrivilege() *schema.Resource {
 				Type:        schema.TypeString,
 			},
 			"type": {
-				Description:  "The type of the privilege",
+				Description:  "The type of the privilege. Possible values: `application`, `repository-admin`, `repository-content-selector`, `repository-view`, `script`, `wildcard`",
 				Required:     true,
 				Type:         schema.TypeString,
 				ValidateFunc: validation.StringInSlice([]string{"application", "repository-admin", "repository-content-selector", "repository-view", "script", "wildcard"}, false),

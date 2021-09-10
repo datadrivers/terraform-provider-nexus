@@ -26,7 +26,7 @@ The following arguments are supported:
 
 * `actions` - (Required) Actions for the privilege (browse, read, edit, add, delete, all and run)
 * `name` - (Required, ForceNew) The name of the privilege
-* `type` - (Required) The type of the privilege
+* `type` - (Required) The type of the privilege. Possible values: `application`, `repository-admin`, `repository-content-selector`, `repository-view`, `script`, `wildcard`
 * `content_selector` - (Optional) The content selector for the privilege
 * `description` - (Optional) A description of the privilege
 * `domain` - (Optional) The domain of the privilege
