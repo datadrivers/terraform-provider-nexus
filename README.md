@@ -1,12 +1,14 @@
 # Terraform provider Nexus
 
-- [Introduction](#introduction)
-- [Usage](#usage)
-  - [Provider config](#provider-config)
-- [Build](#build)
-- [Testing](#testing)
-- [Create documentation](#create-documentation)
-- [Author](#author)
+- [Terraform provider Nexus](#terraform-provider-nexus)
+  - [Introduction](#introduction)
+  - [Usage](#usage)
+    - [Provider config](#provider-config)
+  - [Development](#development)
+    - [Build](#build)
+    - [Testing](#testing)
+    - [Create documentation](#create-documentation)
+  - [Author](#author)
 
 ## Introduction
 
@@ -27,23 +29,58 @@ provider "nexus" {
 }
 ```
 
-## Build
+## Development
 
-There is a [makefile](./GNUmakefile) to build the provider.
+### Build
+
+There is a [makefile](./GNUmakefile) to build the provider and place it in repos root dir.
 
 ```sh
 make
 ```
 
-To build and install provider on macOS into `~/.terraform.d/plugins/darwin_amd64`, you can run
+To use the local build version you need tell terraform where to look for it via a terraform config override.
 
-```sh
-make darwin-build-install
+Create `dev.tfrc` in your terraform code folder (f.e. in [dev.tfrc](./examples/local-development/dev.tfrc)):
+
+```hcl
+# dev.tfrc
+provider_installation {
+
+  # Use /home/developer/tmp/terraform-nexus as an overridden package directory
+  # for the datadrivers/nexus provider. This disables the version and checksum
+  # verifications for this provider and forces Terraform to look for the
+  # nexus provider plugin in the given directory.
+  # relative path also works, but no variable or ~ evaluation
+  dev_overrides {
+    "datadrivers/nexus" = "../../"
+  }
+
+  # For all other providers, install them directly from their origin provider
+  # registries as normal. If you omit this, Terraform will _only_ use
+  # the dev_overrides block, and so no other providers will be available.
+  direct {}
+}
 ```
 
-In this case provider will be available to use with your terraform codebase (in terraform init stage).
+Tell your shell environment to use override file:
 
-## Testing
+```bash
+export TF_CLI_CONFIG_FILE=dev.tfrc
+```
+
+Now run your terraform commands (`plan` or `apply`), `init` is ***not*** required.
+
+```bash
+# start local nexus
+make start-services
+# run local terraform code
+cd examples/local-development
+terraform plan
+terraform apply
+```
+
+### Testing
 
 For testing start a local Docker containers using make
 
@@ -82,7 +119,7 @@ Use `printState()` function to discover terraform state (and resource props) dur
 
 Debug configurations are also available for VS Code.
 
-## Create documentation
+### Create documentation
 
 To generate the terraform documentation from go files, you can run
 
