@@ -8,3 +8,6 @@ terraform.tfstate.*.backup
 .DS_Store
 
 debug.test
+
+# nexus pro license file
+scripts/license.lic
