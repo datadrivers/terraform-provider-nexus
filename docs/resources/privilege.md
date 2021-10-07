@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_privilege"
+subcategory: "Other"
 sidebar_current: "docs-nexus-resource-privilege"
 description: |-
   Use this resource to create a Nexus privilege

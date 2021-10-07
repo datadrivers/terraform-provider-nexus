@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_script"
+subcategory: "Other"
 sidebar_current: "docs-nexus-resource-script"
 description: |-
   Use this resource to create and execute a custom script.

@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_security_saml"
+subcategory: "Security"
 sidebar_current: "docs-nexus-resource-security_saml"
 description: |-
   Use this resource to create a Nexus Security SAML

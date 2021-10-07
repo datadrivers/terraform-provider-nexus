@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_repository"
+subcategory: "Other"
 sidebar_current: "docs-nexus-datasource-repository"
 description: |-
   Use this data source to get a repository data structure

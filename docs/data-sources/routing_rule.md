@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_routing_rule"
+subcategory: "Routing"
 sidebar_current: "docs-nexus-datasource-routing_rule"
 description: |-
   Use this data source to work with routing rules

@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_security_ldap"
+subcategory: "Security"
 sidebar_current: "docs-nexus-resource-security_ldap"
 description: |-
   Use this resource to create a Nexus Security LDAP

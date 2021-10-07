@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_anonymous"
+subcategory: "Other"
 sidebar_current: "docs-nexus-resource-anonymous"
 description: |-
   Use this resource to change the anonymous configuration of the nexus repository manager.

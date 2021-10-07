@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_security_realms"
+subcategory: "Security"
 sidebar_current: "docs-nexus-resource-security_realms"
 description: |-
   Use this resource to activate Nexus Security LDAP and order
