@@ -11,7 +11,7 @@ import (
 )
 
 func TestAccResourceBlobstoreFile(t *testing.T) {
-	resName := "nexus_blobstore.acceptance"
+	resName := "nexus_blobstore_file.acceptance"
 
 	bs := blobstore.Legacy{
 		Name: fmt.Sprintf("test-blobstore-%d", acctest.RandIntRange(0, 99)),
@@ -36,17 +36,12 @@ func TestAccResourceBlobstoreFile(t *testing.T) {
 						resource.TestCheckResourceAttr(resName, "id", bs.Name),
 						resource.TestCheckResourceAttr(resName, "name", bs.Name),
 						resource.TestCheckResourceAttr(resName, "path", bs.Path),
-						resource.TestCheckResourceAttr(resName, "type", bs.Type),
 					),
 					// Common fields
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(resName, "soft_quota.#", "1"),
 						resource.TestCheckResourceAttr(resName, "soft_quota.0.limit", strconv.FormatInt(bs.SoftQuota.Limit, 10)),
 						resource.TestCheckResourceAttr(resName, "soft_quota.0.type", bs.SoftQuota.Type),
-					),
-					// No fields related to other types
-					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(resName, "bucket_configuration.#", "0"),
 					),
 
 					// Fields related to this type
@@ -72,10 +67,9 @@ func TestAccResourceBlobstoreFile(t *testing.T) {
 
 func testAccResourceBlobstoreFileConfig(bs blobstore.Legacy) string {
 	return fmt.Sprintf(`
-resource "nexus_blobstore" "acceptance" {
+resource "nexus_blobstore_file" "acceptance" {
 	name = "%s"
 	path = "%s"
-	type = "%s"
 
 	soft_quota {
 		limit = %d

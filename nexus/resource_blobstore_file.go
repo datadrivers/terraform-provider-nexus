@@ -48,10 +48,9 @@ func resourceBlobstoreFile() *schema.Resource {
 				Required:    true,
 			},
 			"path": {
-				ConflictsWith: []string{"bucket_configuration"},
-				Description:   "The path to the blobstore contents. This can be an absolute path to anywhere on the system nxrm has access to or it can be a path relative to the sonatype-work directory",
-				Type:          schema.TypeString,
-				Optional:      true,
+				Description: "The path to the blobstore contents. This can be an absolute path to anywhere on the system nxrm has access to or it can be a path relative to the sonatype-work directory",
+				Type:        schema.TypeString,
+				Optional:    true,
 			},
 			"available_space_in_bytes": {
 				Description: "Available space in Bytes",
@@ -97,7 +96,7 @@ func resourceBlobstoreFile() *schema.Resource {
 func getBlobstoreFileFromResourceData(resourceData *schema.ResourceData) nexus.Blobstore {
 	bs := nexus.Blobstore{
 		Name: resourceData.Get("name").(string),
-		Type: "File",
+		Type: nexus.BlobstoreTypeFile,
 	}
 
 	bs.Path = resourceData.Get("path").(string)
@@ -125,7 +124,10 @@ func resourceBlobstoreFileCreate(resourceData *schema.ResourceData, m interface{
 	}
 
 	resourceData.SetId(bs.Name)
-	resourceData.Set("name", bs.Name)
+	err := resourceData.Set("name", bs.Name)
+	if err != nil {
+		return err
+	}
 
 	return resourceBlobstoreRead(resourceData, m)
 }
@@ -144,11 +146,21 @@ func resourceBlobstoreFileRead(resourceData *schema.ResourceData, m interface{})
 		return nil
 	}
 
-	resourceData.Set("available_space_in_bytes", bs.AvailableSpaceInBytes)
-	resourceData.Set("blob_count", bs.BlobCount)
-	resourceData.Set("name", bs.Name)
-	resourceData.Set("path", bs.Path)
-	resourceData.Set("total_size_in_bytes", bs.TotalSizeInBytes)
+	if err := resourceData.Set("available_space_in_bytes", bs.AvailableSpaceInBytes); err != nil {
+		return err
+	}
+	if err := resourceData.Set("blob_count", bs.BlobCount); err != nil {
+		return err
+	}
+	if err := resourceData.Set("name", bs.Name); err != nil {
+		return err
+	}
+	if err := resourceData.Set("path", bs.Path); err != nil {
+		return err
+	}
+	if err := resourceData.Set("total_size_in_bytes", bs.TotalSizeInBytes); err != nil {
+		return err
+	}
 
 	if bs.BlobstoreSoftQuota != nil {
 		if err := resourceData.Set("soft_quota", flattenBlobstoreFileSoftQuota(bs.BlobstoreSoftQuota)); err != nil {

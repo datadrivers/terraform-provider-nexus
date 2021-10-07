@@ -13,6 +13,7 @@ func Provider() terraform.ResourceProvider {
 		DataSourcesMap: map[string]*schema.Resource{
 			"nexus_anonymous":             dataSourceAnonymous(),
 			"nexus_blobstore":             dataSourceBlobstore(),
+			"nexus_blobstore_file":        dataSourceBlobstoreFile(),
 			"nexus_privileges":            dataSourcePrivileges(),
 			"nexus_repository":            dataSourceRepository(),
 			"nexus_repository_yum_hosted": dataSourceRepositoryYumHosted(),
@@ -27,6 +28,7 @@ func Provider() terraform.ResourceProvider {
 		ResourcesMap: map[string]*schema.Resource{
 			"nexus_anonymous":             resourceAnonymous(),
 			"nexus_blobstore":             resourceBlobstore(),
+			"nexus_blobstore_file":        resourceBlobstoreFile(),
 			"nexus_content_selector":      resourceContentSelector(),
 			"nexus_privilege":             resourcePrivilege(),
 			"nexus_repository":            resourceRepository(),
