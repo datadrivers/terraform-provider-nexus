@@ -1,0 +1,20 @@
+_license_file="$PWD/license.lic"
+
+does_licence_exist() {
+  test -f "${_license_file}" && test -s "${_license_file}"
+}
+
+if does_licence_exist; then
+  echo "detected license file at ${_license_file}"
+  NEXUS_TYPE=${NEXUS_TYPE:-pro}
+else
+  NEXUS_TYPE=${NEXUS_TYPE:-oss}
+  echo "Assuming oss version for nexus,"
+  echo "since no license file detected at ${_license_file}."
+fi
+
+# docker-compose options
+COMPOSE_PROFILES=${NEXUS_TYPE}
+export COMPOSE_PROFILES
+COMPOSE_PROJECT_NAME=nexus-${NEXUS_TYPE}
+export COMPOSE_PROJECT_NAME
