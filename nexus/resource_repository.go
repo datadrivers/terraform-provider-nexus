@@ -81,7 +81,7 @@ func resourceRepository() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"format": {
-				Description:  "Repository format",
+				Description:  "Repository format. Possible values: `apt`, `bower`, `conan`, `docker`, `gitlfs`, `go`, `helm`, `maven2`, `npm`, `nuget`, `p2`, `pypi`, `raw`, `rubygems`, `yum`",
 				ForceNew:     true,
 				Required:     true,
 				Type:         schema.TypeString,
@@ -99,7 +99,7 @@ func resourceRepository() *schema.Resource {
 				Type:        schema.TypeBool,
 			},
 			"type": {
-				Description:  "Repository type",
+				Description:  "Repository type. Possible values: `group`, `hosted`, `proxy`",
 				ForceNew:     true,
 				Type:         schema.TypeString,
 				Required:     true,
@@ -361,7 +361,7 @@ func resourceRepository() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"version_policy": {
-							Description: "What type of artifacts does this repository store? Possible values: `RELEASE`, `SNAPSHOT` or `MIXED",
+							Description: "What type of artifacts does this repository store? Possible values: `RELEASE`, `SNAPSHOT` or `MIXED`",
 							Default:     "RELEASE",
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -460,7 +460,7 @@ func resourceRepository() *schema.Resource {
 							Type:        schema.TypeBool,
 						},
 						"write_policy": {
-							Description: "Controls if deployments of and updates to assets are allowed",
+							Description: "Controls if deployments of and updates to assets are allowed. Possible values: `ALLOW`, `ALLOW_ONCE`, `DENY`",
 							Optional:    true,
 							Type:        schema.TypeString,
 							ValidateFunc: validation.StringInSlice([]string{

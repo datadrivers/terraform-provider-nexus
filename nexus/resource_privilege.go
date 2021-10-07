@@ -52,7 +52,7 @@ func resourcePrivilege() *schema.Resource {
 				Type:        schema.TypeString,
 			},
 			"format": {
-				Description:  "The format of the privilege",
+				Description:  "The format of the privilege. Possible values: `apt`, `bower`, `conan`, `docker`, `gitlfs`, `go`, `helm`, `maven2`, `npm`, `nuget`, `p2`, `pypi`, `raw`, `rubygems`, `yum`",
 				Optional:     true,
 				Type:         schema.TypeString,
 				ValidateFunc: validation.StringInSlice(nexus.RepositoryFormats, false),
@@ -69,7 +69,7 @@ func resourcePrivilege() *schema.Resource {
 				Type:        schema.TypeString,
 			},
 			"type": {
-				Description:  "The type of the privilege",
+				Description:  "The type of the privilege. Possible values: `application`, `repository-admin`, `repository-content-selector`, `repository-view`, `script`, `wildcard`",
 				Required:     true,
 				Type:         schema.TypeString,
 				ValidateFunc: validation.StringInSlice([]string{"application", "repository-admin", "repository-content-selector", "repository-view", "script", "wildcard"}, false),
