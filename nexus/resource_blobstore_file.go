@@ -54,7 +54,7 @@ func resourceBlobstoreFile() *schema.Resource {
 			},
 			"available_space_in_bytes": {
 				Description: "Available space in Bytes",
-				Type:        schema.TypeString,
+				Type:        schema.TypeInt,
 				Computed:    true,
 			},
 			"blob_count": {
