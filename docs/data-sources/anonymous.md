@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_anonymous"
+subcategory: "Other"
 sidebar_current: "docs-nexus-datasource-anonymous"
 description: |-
   Use this get the anonymous configuration of the nexus repository manager.

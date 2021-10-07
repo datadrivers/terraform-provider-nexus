@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_privileges"
+subcategory: "Other"
 sidebar_current: "docs-nexus-datasource-privileges"
 description: |-
   Use this data source to work with privileges

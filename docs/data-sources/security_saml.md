@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_security_saml"
+subcategory: "Security"
 sidebar_current: "docs-nexus-datasource-security_saml"
 description: |-
   Use this data source to get the saml configuration

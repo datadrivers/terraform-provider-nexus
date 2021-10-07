@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_user"
+subcategory: "Other"
 sidebar_current: "docs-nexus-datasource-user"
 description: |-
   This data source is deprecated.

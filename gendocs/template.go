@@ -4,6 +4,7 @@ const (
 	docTPL = `---
 layout: "{{.cloud_mark}}"
 page_title: "{{.cloud_title}}: {{.name}}"
+subcategory: "{{.subcategory}}"
 sidebar_current: "docs-{{.cloud_mark}}-{{.dtype}}-{{.resource}}"
 description: |-
   {{.description_short}}

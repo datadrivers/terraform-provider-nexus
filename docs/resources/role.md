@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_role"
+subcategory: "Other"
 sidebar_current: "docs-nexus-resource-role"
 description: |-
   Use this resource to create a Nexus Role.

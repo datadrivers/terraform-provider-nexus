@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_repository"
+subcategory: "Other"
 sidebar_current: "docs-nexus-resource-repository"
 description: |-
   Use this resource to create a Nexus Repository.

@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_security_user_token"
+subcategory: "Security"
 sidebar_current: "docs-nexus-resource-security_user_token"
 description: |-
   Use this resource to manage the global configuration for the user-tokens

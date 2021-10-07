@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_security_user"
+subcategory: "Security"
 sidebar_current: "docs-nexus-datasource-security_user"
 description: |-
   Use this data source to get a user data structure

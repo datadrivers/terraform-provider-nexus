@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_security_realms"
+subcategory: "Security"
 sidebar_current: "docs-nexus-datasource-security_realms"
 description: |-
   Use this data source to work with Realms security

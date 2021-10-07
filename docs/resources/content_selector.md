@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_content_selector"
+subcategory: "Other"
 sidebar_current: "docs-nexus-resource-content_selector"
 description: |-
   Use this resource to create a Nexus Content Selector

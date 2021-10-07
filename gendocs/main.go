@@ -171,6 +171,14 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 		"description":       "",
 		"description_short": "",
 		"import":            "",
+		"subcategory":       "Other",
+	}
+
+	nameArray := strings.Split(name, "_")
+	if len(nameArray) > 2 {
+		if nameArray[1] != "content" {
+			data["subcategory"] = strings.Title(nameArray[1])
+		}
 	}
 
 	fname := fmt.Sprintf("%s_%s.go", dtype, data["resource"])

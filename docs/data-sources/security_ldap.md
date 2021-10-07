@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_security_ldap"
+subcategory: "Security"
 sidebar_current: "docs-nexus-datasource-security_ldap"
 description: |-
   Use this data source to work with LDAP security

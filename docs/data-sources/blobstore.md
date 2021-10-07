@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_blobstore"
+subcategory: "Other"
 sidebar_current: "docs-nexus-datasource-blobstore"
 description: |-
   Use this to create a Nexus blobstore.

@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_routing_rule"
+subcategory: "Routing"
 sidebar_current: "docs-nexus-resource-routing_rule"
 description: |-
   Use this resource to create a Nexus Routing Rule.

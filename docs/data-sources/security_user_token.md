@@ -1,6 +1,7 @@
 ---
 layout: "nexus"
 page_title: "Nexus: nexus_security_user_token"
+subcategory: "Security"
 sidebar_current: "docs-nexus-datasource-security_user_token"
 description: |-
   Use this data source to get the global user-token configuration.
