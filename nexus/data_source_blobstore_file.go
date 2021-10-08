@@ -1,10 +1,10 @@
 /*
-Use this to create a Nexus blobstore.
+Use this to create a Nexus file blobstore.
 
 Example Usage
 
 ```hcl
-data "nexus_blobstore" "docker" {
+data "nexus_blobstore_file" "docker" {
 	name = "docker"
 }
 ```
@@ -57,7 +57,7 @@ func dataSourceBlobstoreFile() *schema.Resource {
 				},
 				MaxItems: 1,
 				Optional: true,
-				Type:     schema.TypeList,
+				Type:     schema.TypeMap,
 			},
 			"total_size_in_bytes": {
 				Computed:    true,

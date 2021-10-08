@@ -3,8 +3,6 @@ Use this resource to create a Nexus blobstore.
 
 Example Usage
 
-Example Usage for file store
-
 ```hcl
 resource "nexus_blobstore_file" "default" {
   name = "blobstore-file"
@@ -82,7 +80,7 @@ func resourceBlobstoreFile() *schema.Resource {
 				},
 				MaxItems: 1,
 				Optional: true,
-				Type:     schema.TypeList,
+				Type:     schema.TypeMap,
 			},
 			"total_size_in_bytes": {
 				Description: "The total size of the blobstore in Bytes",
