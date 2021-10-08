@@ -78,7 +78,6 @@ func resourceBlobstoreFile() *schema.Resource {
 						},
 					},
 				},
-				MaxItems: 1,
 				Optional: true,
 				Type:     schema.TypeMap,
 			},
