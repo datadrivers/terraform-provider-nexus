@@ -39,7 +39,7 @@ func TestAccResourceBlobstoreFile(t *testing.T) {
 					),
 					// Common fields
 					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(resName, "soft_quota.#", "1"),
+						resource.TestCheckResourceAttr(resName, "soft_quota.#", "2"),
 						resource.TestCheckResourceAttr(resName, "soft_quota.0.limit", strconv.FormatInt(bs.SoftQuota.Limit, 10)),
 						resource.TestCheckResourceAttr(resName, "soft_quota.0.type", bs.SoftQuota.Type),
 					),
