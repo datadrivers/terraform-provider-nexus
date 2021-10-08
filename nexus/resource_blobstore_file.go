@@ -99,8 +99,7 @@ func getBlobstoreFileFromResourceData(resourceData *schema.ResourceData) nexus.B
 	bs.Path = resourceData.Get("path").(string)
 
 	if _, ok := resourceData.GetOk("soft_quota"); ok {
-		softQuotaList := resourceData.Get("soft_quota").([]interface{})
-		softQuotaConfig := softQuotaList[0].(map[string]interface{})
+		softQuotaConfig := resourceData.Get("soft_quota").(map[string]interface{})
 
 		bs.BlobstoreSoftQuota = &nexus.BlobstoreSoftQuota{
 			Limit: softQuotaConfig["limit"].(int),
@@ -160,7 +159,7 @@ func resourceBlobstoreFileRead(resourceData *schema.ResourceData, m interface{})
 	}
 
 	if bs.BlobstoreSoftQuota != nil {
-		if err := resourceData.Set("soft_quota", flattenBlobstoreFileSoftQuota(bs.BlobstoreSoftQuota)); err != nil {
+		if err := resourceData.Set("soft_quota", bs.BlobstoreSoftQuota); err != nil {
 			return fmt.Errorf("Error reading soft quota: %s", err)
 		}
 	}
@@ -196,15 +195,4 @@ func resourceBlobstoreFileExists(resourceData *schema.ResourceData, m interface{
 
 	bs, err := nexusClient.BlobstoreRead(resourceData.Id())
 	return bs != nil, err
-}
-
-func flattenBlobstoreFileSoftQuota(softQuota *nexus.BlobstoreSoftQuota) []map[string]interface{} {
-	if softQuota == nil {
-		return nil
-	}
-	data := map[string]interface{}{
-		"limit": softQuota.Limit,
-		"type":  softQuota.Type,
-	}
-	return []map[string]interface{}{data}
 }

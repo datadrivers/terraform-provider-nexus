@@ -1,5 +1,5 @@
 /*
-Use this to create a Nexus file blobstore.
+Use this to read an existing Nexus file blobstore.
 
 Example Usage
 
