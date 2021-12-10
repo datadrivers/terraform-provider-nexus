@@ -12,6 +12,7 @@ func testAccResourceRepositoryNugetProxy() nexus.Repository {
 	repo.RepositoryProxy.RemoteURL = "https://www.nuget.org/api/v2/"
 	repo.RepositoryNugetProxy = &nexus.RepositoryNugetProxy{
 		QueryCacheItemMaxAge: 1440,
+		NugetVersion:         nexus.NugetVersion3,
 	}
 	return repo
 }

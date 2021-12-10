@@ -152,6 +152,7 @@ The `negative_cache` object supports the following:
 The `nuget_proxy` object supports the following:
 
 * `query_cache_item_max_age` - (Required) What type of artifacts does this repository store
+* `nuget_version` - (Optional) Nuget protocol version. Possible values: `V2` or `V3` (Default)
 
 The `proxy` object supports the following:
 
