@@ -3,18 +3,7 @@ set -eo pipefail
 
 source .env
 
-IP="127.0.0.1"
-
-if command -v minikube; then
-  set +e
-  dockerEnv=$(minikube status -f '{{- if .DockerEnv }}{{.DockerEnv}}{{- end }}')
-  if [[ $? -eq 0 ]]; then
-    if [[ "${dockerEnv}" == "in-use" ]]; then
-      IP=$(minikube ip)
-    fi
-  fi
-  set -e
-fi
+IP=$(./detect-docker-env-ip.sh)
 
 if command -v wget; then
   checkcmd="wget -t 1 http://${IP}:${NEXUS_PORT} -O /dev/null -q"

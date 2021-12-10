@@ -95,25 +95,16 @@ This will start a Docker and MinIO containers and expose ports 8081 and 9000.
 Now start the tests
 
 ```shell
-NEXUS_URL="http://127.0.0.1:8081" NEXUS_USERNAME="admin" NEXUS_PASSWORD="admin123" AWS_ACCESS_KEY_ID="minioadmin" AWS_SECRET_ACCESS_KEY="minioadmin" AWS_ENDPOINT="http://minio:9000" make testacc
+make testacc
 ```
 
 or without S3 tests:
 
 ```shell
-SKIP_S3_TESTS=1 NEXUS_URL="http://127.0.0.1:8081" NEXUS_USERNAME="admin" NEXUS_PASSWORD="admin123" make testacc
+SKIP_S3_TESTS=1 make testacc
 ```
 
-**NOTE**: To test Blobstore type S3 following environment variables must be set, otherwise tests will fail:
-
-- `AWS_ACCESS_KEY_ID`,
-- `AWS_SECRET_ACCESS_KEY`,
-- `AWS_DEFAULT_REGION` the AWS region of the S3 bucket to use, defaults to `eu-central-1`,
-- `AWS_BUCKET_NAME` the name of S3 bucket to use, defaults to `terraform-provider-nexus-s3-test`.
-
-Optionally you can set `AWS_ENDPOINT` to point an alternative S3 endpoint.
-
-To debug tests
+#### To debug tests
 
 Set env variable `TF_LOG=DEBUG` to see additional output.
 
