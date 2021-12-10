@@ -406,6 +406,12 @@ func resourceRepository() *schema.Resource {
 							Required:    true,
 							Type:        schema.TypeInt,
 						},
+						"nuget_version": {
+							Description: "Nuget protocol version. Possible values: `V2` or `V3` (Default)",
+							Default:     "V3",
+							Type:        schema.TypeString,
+							Optional:    true,
+						},
 					},
 				},
 				MaxItems: 1,
@@ -675,6 +681,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 
 		repo.RepositoryNugetProxy = &nexus.RepositoryNugetProxy{
 			QueryCacheItemMaxAge: nugetProxyConfig["query_cache_item_max_age"].(int),
+			NugetVersion:         nugetProxyConfig["nuget_version"].(string),
 		}
 	}
 
