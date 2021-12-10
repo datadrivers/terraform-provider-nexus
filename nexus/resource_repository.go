@@ -681,7 +681,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 
 		repo.RepositoryNugetProxy = &nexus.RepositoryNugetProxy{
 			QueryCacheItemMaxAge: nugetProxyConfig["query_cache_item_max_age"].(int),
-			NugetVersion:         nugetProxyConfig["nuget_version"].(string),
+			NugetVersion:         nugetProxyConfig["nuget_version"].(nexus.NugetVersion),
 		}
 	}
 
