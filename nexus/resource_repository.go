@@ -972,6 +972,7 @@ func flattenRepositoryNugetProxy(nugetProxy *nexus.RepositoryNugetProxy) []map[s
 	}
 	data := map[string]interface{}{
 		"query_cache_item_max_age": nugetProxy.QueryCacheItemMaxAge,
+		"nuget_version":            nugetProxy.NugetVersion,
 	}
 	return []map[string]interface{}{data}
 }
