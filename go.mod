@@ -3,9 +3,9 @@ module github.com/datadrivers/terraform-provider-nexus
 go 1.17
 
 require (
-	github.com/datadrivers/go-nexus-client v0.19.1
-	github.com/hashicorp/terraform-plugin-sdk v1.15.0
-	github.com/stretchr/testify v1.6.1
+	github.com/datadrivers/go-nexus-client v0.21.0
+	github.com/hashicorp/terraform-plugin-sdk v1.17.2
+	github.com/stretchr/testify v1.7.0
 )
 
 require (
