@@ -14,7 +14,7 @@
 
 Terraform provider to configure Sonatype Nexus using it's API.
 
-Implemented and tested with Sonatype Nexus `3.29.0-02`.
+Implemented and tested with Sonatype Nexus `3.37.0-01`.
 
 ## Usage
 
@@ -80,7 +80,9 @@ terraform plan
 terraform apply
 ```
 
-### Testing
+### Testing / Start Nexus Environment
+
+**NOTE**: For testing Nexus Pro features, place the `license.lic` in `scripts/`.
 
 For testing start a local Docker containers using make
 
