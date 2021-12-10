@@ -271,10 +271,10 @@ func resourceRepository() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"type": {
-										Description:  "Authentication type",
+										Description:  "Authentication type. Possible values: `ntlm`, `username` or `bearerToken`. Only npm supports bearerToken authentication",
 										Optional:     true,
 										Type:         schema.TypeString,
-										ValidateFunc: validation.StringInSlice([]string{"ntlm", "username"}, false),
+										ValidateFunc: validation.StringInSlice([]string{"ntlm", "username", "bearerToken"}, false),
 									},
 									"username": {
 										Description: "The username used by the proxy repository",
