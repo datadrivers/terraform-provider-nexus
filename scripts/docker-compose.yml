@@ -5,7 +5,7 @@ services:
     ports:
       - "${NEXUS_PORT}:8081"
     volumes:
-      - "${PWD}/oss-nexus.properties:/nexus-data/etc/nexus.properties"
+      - "${PWD}/oss-nexus.properties:/nexus-data/etc/nexus.properties:ro"
     profiles:
       - oss
   nexus-pro:
@@ -13,15 +13,15 @@ services:
     ports:
       - "${NEXUS_PORT}:8081"
     volumes:
-      - "${PWD}/pro-nexus.properties:/nexus-data/etc/nexus.properties"
-      - "${PWD}/license.lic:/nexus-data/etc/license.lic"
+      - "${PWD}/pro-nexus.properties:/nexus-data/etc/nexus.properties:ro"
+      - "${PWD}/license.lic:/nexus-data/etc/license.lic:ro"
     profiles:
       - pro
   minio:
     image: "minio/minio:latest"
     ports:
       - "9000:9000"
-    command: "server /data"
+    command: "server --address :9000 /data"
     environment:
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
