@@ -263,7 +263,7 @@ func resourceRepository() *schema.Resource {
 				Type:     schema.TypeList,
 			},
 			"http_client": {
-				Description: "HTTP Client configuration for proxy repositories",
+				Description: "HTTP Client configuration for proxy repositories. Required for docker proxy repositories.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"authentication": {
