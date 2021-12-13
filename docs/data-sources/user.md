@@ -4,14 +4,12 @@ page_title: "Nexus: nexus_user"
 subcategory: "Other"
 sidebar_current: "docs-nexus-datasource-user"
 description: |-
-  This data source is deprecated.
-Please use the data source "nexus_security_user" instead.
+  This data source is deprecated. Please use the data source "nexus_security_user" instead.
 ---
 
 # nexus_user
 
-This data source is deprecated.
-Please use the data source "nexus_security_user" instead.
+This data source is deprecated. Please use the data source "nexus_security_user" instead.
 
 Use this data source to get a user data structure
 

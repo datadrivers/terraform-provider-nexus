@@ -1,6 +1,5 @@
 /*
-This data source is deprecated.
-Please use the data source "nexus_security_user" instead.
+This data source is deprecated. Please use the data source "nexus_security_user" instead.
 
 Use this data source to get a user data structure
 
