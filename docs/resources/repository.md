@@ -82,7 +82,7 @@ The following arguments are supported:
 * `docker_proxy` - (Optional) Configuration for docker proxy repository
 * `docker` - (Optional) Docker specific configuration of the repository
 * `group` - (Optional) Configuration for repository group
-* `http_client` - (Optional) HTTP Client configuration for proxy repositories
+* `http_client` - (Optional) HTTP Client configuration for proxy repositories. Required for docker proxy repositories.
 * `maven` - (Optional) Maven specific configuration of the repository
 * `negative_cache` - (Optional) Configuration of the negative cache handling
 * `nuget_proxy` - (Optional) Configuration for the nuget proxy repository
@@ -136,7 +136,7 @@ The `authentication` object supports the following:
 * `ntlm_domain` - (Optional) The ntlm domain to connect
 * `ntlm_host` - (Optional) The ntlm host to connect
 * `password` - (Optional) The password used by the proxy repository
-* `type` - (Optional) Authentication type
+* `type` - (Optional) Authentication type. Possible values: `ntlm`, `username` or `bearerToken`. Only npm supports bearerToken authentication
 * `username` - (Optional) The username used by the proxy repository
 
 The `maven` object supports the following:
