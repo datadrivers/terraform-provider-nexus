@@ -130,6 +130,7 @@ The `http_client` object supports the following:
 * `authentication` - (Optional) Authentication configuration of the HTTP client
 * `auto_block` - (Optional) Whether to auto-block outbound connections if remote peer is detected as unreachable/unresponsive
 * `blocked` - (Optional) Whether to block outbound connections on the repository
+* `connection` - (Optional) Connection configuration of the HTTP client
 
 The `authentication` object supports the following:
 
@@ -138,6 +139,14 @@ The `authentication` object supports the following:
 * `password` - (Optional) The password used by the proxy repository
 * `type` - (Optional) Authentication type. Possible values: `ntlm`, `username` or `bearerToken`. Only npm supports bearerToken authentication
 * `username` - (Optional) The username used by the proxy repository
+
+The `connection` object supports the following:
+
+* `enable_cookies` - (Optional) Whether to allow cookies to be stored and used
+* `retries` - (Optional) Total retries if the initial connection attempt suffers a timeout
+* `timeout` - (Optional) Seconds to wait for activity before stopping and retrying the connection
+* `use_trust_store` - (Optional) Use certificates stored in the Nexus Repository Manager truststore to connect to external systems
+* `user_agent_suffix` - (Optional) Custom fragment to append to User-Agent header in HTTP requests
 
 The `maven` object supports the following:
 

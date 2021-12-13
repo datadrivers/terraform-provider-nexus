@@ -315,38 +315,44 @@ func resourceRepository() *schema.Resource {
 							Optional:    true,
 							Type:        schema.TypeBool,
 						},
-						// "connection": {
-						// 	Elem: &schema.Resource{
-						// 		Schema: map[string]*schema.Schema{
-						// 			"enable_cookies": {
-						// 				Default:     false,
-						// 				Description: "Whether to allow cookies to be stored and used",
-						// 				Optional:    true,
-						// 				Type:        schema.TypeBool,
-						// 			},
-						// 			"retries": {
-						// 				Description:  "Total retries if the initial connection attempt suffers a timeout",
-						// 				Optional:     true,
-						// 				Type:         schema.TypeInt,
-						// 				ValidateFunc: validation.IntBetween(0, 10),
-						// 			},
-						// 			"timeout": {
-						// 				Description:  "Seconds to wait for activity before stopping and retrying the connection",
-						// 				Optional:     true,
-						// 				Type:         schema.TypeInt,
-						// 				ValidateFunc: validation.IntBetween(1, 3600),
-						// 			},
-						// 			"user_agent_suffix": {
-						// 				Description: "Custom fragment to append to User-Agent header in HTTP requests",
-						// 				Optional:    true,
-						// 				Type:        schema.TypeString,
-						// 			},
-						// 		},
-						// 	},
-						// 	MaxItems: 1,
-						// 	Optional: true,
-						// 	Type:     schema.TypeList,
-						// },
+						"connection": {
+							Description: "Connection configuration of the HTTP client",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enable_cookies": {
+										Description: "Whether to allow cookies to be stored and used",
+										Optional:    true,
+										Type:        schema.TypeBool,
+									},
+									"retries": {
+										Description:  "Total retries if the initial connection attempt suffers a timeout",
+										Optional:     true,
+										Type:         schema.TypeInt,
+										ValidateFunc: validation.IntBetween(0, 10),
+									},
+									"timeout": {
+										Description:  "Seconds to wait for activity before stopping and retrying the connection",
+										Optional:     true,
+										Type:         schema.TypeInt,
+										ValidateFunc: validation.IntBetween(1, 3600),
+									},
+									"user_agent_suffix": {
+										Description: "Custom fragment to append to User-Agent header in HTTP requests",
+										Optional:    true,
+										Type:        schema.TypeString,
+									},
+									"use_trust_store": {
+										Description: "Use certificates stored in the Nexus Repository Manager truststore to connect to external systems",
+										Optional:    true,
+										Default:     false,
+										Type:        schema.TypeBool,
+									},
+								},
+							},
+							MaxItems: 1,
+							Optional: true,
+							Type:     schema.TypeList,
+						},
 					},
 				},
 				MaxItems: 1,
@@ -641,19 +647,20 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 			}
 		}
 
-		// if v, ok := httpClientConfig["connection"]; ok {
-		// 	connList := v.([]interface{})
-		// 	if len(connList) == 1 && connList[0] != nil {
-		// 		connConfig := connList[0].(map[string]interface{})
+		if v, ok := httpClientConfig["connection"]; ok {
+			connList := v.([]interface{})
+			if len(connList) == 1 && connList[0] != nil {
+				connConfig := connList[0].(map[string]interface{})
 
-		// 		repo.RepositoryHTTPClient.Connection = &nexus.RepositoryHTTPClientConnection{
-		// 			EnableCookies:   connConfig["enable_cookis"].(bool),
-		// 			Retries:         connConfig["retries"].(*int),
-		// 			Timeout:         connConfig["timeout"].(*int),
-		// 			UserAgentSuffix: connConfig["user_agent_suffix"].(*string),
-		// 		}
-		// 	}
-		// }
+				repo.RepositoryHTTPClient.Connection = &nexus.RepositoryHTTPClientConnection{
+					EnableCookies:   connConfig["enable_cookies"].(*bool),
+					Retries:         connConfig["retries"].(*int),
+					Timeout:         connConfig["timeout"].(*int),
+					UserAgentSuffix: connConfig["user_agent_suffix"].(string),
+					UseTrustStore:   connConfig["use_trust_store"].(*bool),
+				}
+			}
+		}
 	}
 
 	if _, ok := d.GetOk("maven"); ok {
@@ -932,14 +939,19 @@ func flattenRepositoryHTTPClientConnection(conn *nexus.RepositoryHTTPClientConne
 		return nil
 	}
 	data := map[string]interface{}{
-		"enable_cookies":    conn.EnableCookies,
 		"user_agent_suffix": conn.UserAgentSuffix,
+	}
+	if conn.EnableCookies != nil {
+		data["enable_cookies"] = *conn.EnableCookies
 	}
 	if conn.Retries != nil {
 		data["retries"] = *conn.Retries
 	}
 	if conn.Timeout != nil {
 		data["timeout"] = *conn.Timeout
+	}
+	if conn.UseTrustStore != nil {
+		data["use_trust_store"] = *conn.UseTrustStore
 	}
 	return []map[string]interface{}{data}
 }

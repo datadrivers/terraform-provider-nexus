@@ -3,7 +3,7 @@ module github.com/datadrivers/terraform-provider-nexus
 go 1.17
 
 require (
-	github.com/datadrivers/go-nexus-client v0.21.0
+	github.com/datadrivers/go-nexus-client v0.22.0
 	github.com/hashicorp/terraform-plugin-sdk v1.17.2
 	github.com/stretchr/testify v1.7.0
 )
@@ -27,7 +27,7 @@ require (
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.4.2 // indirect
 	github.com/google/go-cmp v0.5.5 // indirect
-	github.com/google/go-querystring v1.0.0 // indirect
+	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.1.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.0.5 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
@@ -53,7 +53,7 @@ require (
 	github.com/imdario/mergo v0.3.12 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/jstemmer/go-junit-report v0.9.1 // indirect
-	github.com/klauspost/compress v1.11.2 // indirect
+	github.com/klauspost/compress v1.13.5 // indirect
 	github.com/mattn/go-colorable v0.1.1 // indirect
 	github.com/mattn/go-isatty v0.0.5 // indirect
 	github.com/mitchellh/cli v1.1.2 // indirect

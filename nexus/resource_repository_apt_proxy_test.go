@@ -14,7 +14,11 @@ func testAccResourceRepositoryAptProxy() nexus.Repository {
 		Distribution: "bionic",
 		Flat:         true,
 	}
+	useTrustStore := true
 	repo.RepositoryProxy.RemoteURL = "https://remote.repository.com"
+	repo.RepositoryHTTPClient.Connection = &nexus.RepositoryHTTPClientConnection{
+		UseTrustStore: &useTrustStore,
+	}
 	return repo
 }
 
