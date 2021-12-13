@@ -1,6 +1,5 @@
 /*
-This data source is deprecated.
-Please use the data source "nexus_security_user" instead.
+This resource is deprecated. Please use the data source "nexus_security_user" instead.
 
 Use this resource to manage users
 
