@@ -3,8 +3,6 @@ Use this resource to create a Nexus Repository.
 
 Example Usage
 
-Example Usage - Apt hosted repository
-
 ```hcl
 
 resource "nexus_repository_yum_hosted" "yum" {
@@ -52,29 +50,6 @@ func resourceRepositoryYumHosted() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"name": {
-				Description: "A unique identifier for this repository",
-				Required:    true,
-				Type:        schema.TypeString,
-			},
-			"online": {
-				Default:     true,
-				Description: "Whether this repository accepts incoming requests",
-				Optional:    true,
-				Type:        schema.TypeBool,
-			},
-			"repodata_depth": {
-				Default:     0,
-				Description: "Specifies the repository depth where repodata folder(s) are created. Possible values: 0-5",
-				Optional:    true,
-				Type:        schema.TypeInt,
-			},
-			"deploy_policy": {
-				Default:     "STRICT",
-				Description: "Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`",
-				Optional:    true,
-				Type:        schema.TypeString,
-			},
 			"cleanup": {
 				Description: "Cleanup policies",
 				Type:        schema.TypeList,
@@ -95,6 +70,29 @@ func resourceRepositoryYumHosted() *schema.Resource {
 						},
 					},
 				},
+			},
+			"deploy_policy": {
+				Default:     "STRICT",
+				Description: "Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`",
+				Optional:    true,
+				Type:        schema.TypeString,
+			},
+			"name": {
+				Description: "A unique identifier for this repository",
+				Required:    true,
+				Type:        schema.TypeString,
+			},
+			"online": {
+				Default:     true,
+				Description: "Whether this repository accepts incoming requests",
+				Optional:    true,
+				Type:        schema.TypeBool,
+			},
+			"repodata_depth": {
+				Default:     0,
+				Description: "Specifies the repository depth where repodata folder(s) are created. Possible values: 0-5",
+				Optional:    true,
+				Type:        schema.TypeInt,
 			},
 			"storage": {
 				Description: "The storage configuration of the repository",
@@ -131,30 +129,6 @@ func resourceRepositoryYumHosted() *schema.Resource {
 					},
 				},
 			},
-			/* This is remains here until the go client has been adpated */
-			"yum": {
-				Description: "Yum specific configuration of the repository",
-				Type:        schema.TypeList,
-				Optional:    true,
-				Computed:    true,
-				MaxItems:    1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"repodata_depth": {
-							Description: "Specifies the repository depth where repodata folder(s) are created. Possible values: 0-5",
-							Type:        schema.TypeInt,
-							Optional:    true,
-							Default:     0,
-						},
-						"deploy_policy": {
-							Description:  "Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`",
-							Type:         schema.TypeString,
-							Required:     true,
-							ValidateFunc: validation.StringInSlice([]string{"STRICT", "PERMISSIVE"}, false),
-						},
-					},
-				},
-			},
 			"type": {
 				Description: "Repository type",
 				Type:        schema.TypeString,
@@ -172,22 +146,19 @@ func getYumRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		Type:   "hosted",
 	}
 
-	if _, ok := d.GetOk("cleanup"); ok {
-		cleanupList := d.Get("cleanup").([]interface{})
-		cleanupConfig := cleanupList[0].(map[string]interface{})
-		repo.RepositoryCleanup = &nexus.RepositoryCleanup{
-			PolicyNames: interfaceSliceToStringSlice(cleanupConfig["policy_names"].(*schema.Set).List()),
-		}
-	} else {
-		repo.RepositoryCleanup = &nexus.RepositoryCleanup{
-			PolicyNames: []string{"string"},
+	if cleanupList, ok := d.Get("cleanup").([]interface{}); ok {
+		if cleanupConfig, ok := cleanupList[0].(map[string]interface{}); ok {
+			policy_names_slice := []string{}
+			if policy_names, ok := cleanupConfig["policy_names"]; ok {
+				policy_names_slice = interfaceSliceToStringSlice(policy_names.(*schema.Set).List())
+			}
+			repo.RepositoryCleanup = &nexus.RepositoryCleanup{
+				PolicyNames: policy_names_slice,
+			}
 		}
 	}
 
-	var storageList []interface{}
-
-	if _, ok := d.GetOk("storage"); ok {
-		storageList = d.Get("storage").([]interface{})
+	if storageList, ok := d.Get("storage").([]interface{}); ok {
 		storageConfig := storageList[0].(map[string]interface{})
 
 		repo.RepositoryStorage = &nexus.RepositoryStorage{
@@ -198,12 +169,12 @@ func getYumRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		writePolicy := storageConfig["write_policy"].(string)
 		repo.RepositoryStorage.WritePolicy = &writePolicy
 	} else {
+		writePolicy := "ALLOW"
 		repo.RepositoryStorage = &nexus.RepositoryStorage{
 			BlobStoreName:               "default",
 			StrictContentTypeValidation: true,
+			WritePolicy:                 &writePolicy,
 		}
-		writePolicy := "ALLOW"
-		repo.RepositoryStorage.WritePolicy = &writePolicy
 	}
 
 	repo.RepositoryYum = &nexus.RepositoryYum{
@@ -227,11 +198,8 @@ func setYumRepositoryToResourceData(repo *nexus.Repository, d *schema.ResourceDa
 		}
 	}
 
-	if repo.RepositoryYum != nil {
-		if err := d.Set("yum", flattenRepositoryYum(repo.RepositoryYum)); err != nil {
-			return err
-		}
-	}
+	d.Set("repodata_depth", repo.RepositoryYum.RepodataDepth)
+	d.Set("deploy_policy", repo.RepositoryYum.DeployPolicy)
 
 	if err := d.Set("storage", flattenRepositoryStorage(repo.RepositoryStorage, d)); err != nil {
 		return err
@@ -253,7 +221,7 @@ func resourceYumRepositoryCreate(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	return resourceRepositoryRead(d, m)
+	return resourceYumRepositoryRead(d, m)
 }
 
 func resourceYumRepositoryRead(d *schema.ResourceData, m interface{}) error {
@@ -286,7 +254,7 @@ func resourceYumRepositoryUpdate(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	return resourceRepositoryRead(d, m)
+	return resourceYumRepositoryRead(d, m)
 }
 
 func resourceYumRepositoryDelete(d *schema.ResourceData, m interface{}) error {

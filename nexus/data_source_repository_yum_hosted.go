@@ -101,30 +101,6 @@ func dataSourceRepositoryYumHosted() *schema.Resource {
 					},
 				},
 			},
-			/* This is remains here until the go client has been adpated */
-			"yum": {
-				Description: "Yum specific configuration of the repository",
-				Type:        schema.TypeList,
-				Optional:    true,
-				Computed:    true,
-				MaxItems:    1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"repodata_depth": {
-							Description: "Specifies the repository depth where repodata folder(s) are created. Possible values: 0-5",
-							Type:        schema.TypeInt,
-							Optional:    true,
-							Default:     0,
-						},
-						"deploy_policy": {
-							Description:  "Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`",
-							Type:         schema.TypeString,
-							Required:     true,
-							ValidateFunc: validation.StringInSlice([]string{"STRICT", "PERMISSIVE"}, false),
-						},
-					},
-				},
-			},
 			"type": {
 				Description: "Repository type",
 				Type:        schema.TypeString,
