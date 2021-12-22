@@ -24,7 +24,7 @@ resource "nexus_security_saml" "example" {
 package nexus
 
 import (
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -90,7 +90,7 @@ func resourceSecuritySAML() *schema.Resource {
 }
 
 func resourceSecuritySAMLRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	saml, err := client.SAMLRead()
 	if err != nil {
@@ -106,7 +106,7 @@ func resourceSecuritySAMLRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecuritySAMLUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	saml := getSecuritySAMLFromResourceData(d)
 
@@ -122,13 +122,13 @@ func resourceSecuritySAMLUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecuritySAMLDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	return client.SAMLDelete()
 }
 
 func resourceSecuritySAMLExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	client := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	saml, _ := client.SAMLRead()
 

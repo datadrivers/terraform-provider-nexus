@@ -5,14 +5,14 @@ import (
 	"strconv"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
 func TestAccDataSourceSecurityUser(t *testing.T) {
 	resName := "data.nexus_security_user.acceptance"
-	user := nexus.User{
+	user := security.User{
 		UserID:       fmt.Sprintf("user-test-%s", acctest.RandString(10)),
 		FirstName:    fmt.Sprintf("user-firstname-%s", acctest.RandString(10)),
 		LastName:     fmt.Sprintf("user-lastname-%s", acctest.RandString(10)),

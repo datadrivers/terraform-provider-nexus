@@ -39,7 +39,7 @@ resource "nexus_security_ldap" "example" {
 package nexus
 
 import (
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
@@ -216,7 +216,7 @@ func resourceSecurityLDAP() *schema.Resource {
 }
 
 func resourceSecurityLDAPCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	ldap := getSecurityLDAPFromResourceData(d)
 
@@ -232,7 +232,7 @@ func resourceSecurityLDAPCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecurityLDAPRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	ldap, err := client.LDAPRead(d.Id())
 	if err != nil {
@@ -248,7 +248,7 @@ func resourceSecurityLDAPRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecurityLDAPUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	ldapID := d.Id()
 	ldap := getSecurityLDAPFromResourceData(d)
@@ -265,7 +265,7 @@ func resourceSecurityLDAPUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecurityLDAPDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	return client.LDAPDelete(d.Id())
 }

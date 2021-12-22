@@ -20,7 +20,7 @@ resource "nexus_user" "admin" {
 package nexus
 
 import (
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
@@ -97,7 +97,7 @@ func getUserFromResourceData(d *schema.ResourceData) nexus.User {
 }
 
 func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 	user := getUserFromResourceData(d)
 
 	if err := nexusClient.UserCreate(user); err != nil {
@@ -109,7 +109,7 @@ func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceUserRead(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	user, err := nexusClient.UserRead(d.Id())
 	if err != nil {
@@ -132,7 +132,7 @@ func resourceUserRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	d.Partial(true)
 
@@ -156,7 +156,7 @@ func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceUserDelete(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	if err := nexusClient.UserDelete(d.Id()); err != nil {
 		return err
@@ -167,7 +167,7 @@ func resourceUserDelete(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceUserExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	user, err := nexusClient.UserRead(d.Id())
 	return user != nil, err

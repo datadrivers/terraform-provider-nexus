@@ -14,7 +14,7 @@ resource "nexus_script" "repo_pypi_internal" {
 package nexus
 
 import (
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -59,7 +59,7 @@ func getScriptFromResourceData(d *schema.ResourceData) nexus.Script {
 }
 
 func resourceScriptCreate(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 	script := getScriptFromResourceData(d)
 
 	if err := nexusClient.ScriptCreate(&script); err != nil {
@@ -75,7 +75,7 @@ func resourceScriptCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScriptRead(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	script, err := nexusClient.ScriptRead(d.Id())
 	if err != nil {
@@ -95,7 +95,7 @@ func resourceScriptRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScriptUpdate(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	if d.HasChange("content") || d.HasChange("type") {
 		script := getScriptFromResourceData(d)
@@ -112,7 +112,7 @@ func resourceScriptUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScriptDelete(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	if err := nexusClient.ScriptDelete(d.Id()); err != nil {
 		return err
@@ -123,7 +123,7 @@ func resourceScriptDelete(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScriptExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	script, err := nexusClient.ScriptRead(d.Id())
 	return script != nil, err

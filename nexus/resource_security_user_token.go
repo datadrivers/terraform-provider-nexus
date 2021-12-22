@@ -17,7 +17,7 @@ resource "nexus_security_user_token" "nexus" {
 package nexus
 
 import (
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -61,7 +61,7 @@ func setSecurityUserTokenToResourceData(token *nexus.UserTokenConfiguration, d *
 }
 
 func resourceSecurityUserTokenRead(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 	token, err := nexusClient.UserTokensRead()
 	if err != nil {
 		return err
@@ -71,7 +71,7 @@ func resourceSecurityUserTokenRead(d *schema.ResourceData, m interface{}) error 
 }
 
 func resourceSecurityUserTokenUpdate(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	token := getSecurityUserTokenFromResourceData(d)
 	if err := nexusClient.UserTokensApply(token); err != nil {

@@ -4,14 +4,14 @@ import (
 	"strconv"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func testAccResourceRepositoryYumHosted() nexus.Repository {
-	repo := testAccResourceRepositoryHosted(nexus.RepositoryFormatYum)
-	repo.RepositoryYum = &nexus.RepositoryYum{
-		DeployPolicy:  "PERMISSIVE",
+func testAccResourceRepositoryYumHosted() repository.LegacyRepository {
+	repo := testAccResourceRepositoryHosted(repository.RepositoryFormatYum)
+	repo.Yum = &repository.Yum{
+		DeployPolicy:  repository.YumDeployPolicyPermissive,
 		RepodataDepth: 0,
 	}
 	return repo

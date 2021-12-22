@@ -63,7 +63,8 @@ package nexus
 import (
 	"strings"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
@@ -85,7 +86,7 @@ func resourceRepository() *schema.Resource {
 				ForceNew:     true,
 				Required:     true,
 				Type:         schema.TypeString,
-				ValidateFunc: validation.StringInSlice(nexus.RepositoryFormats, false),
+				ValidateFunc: validation.StringInSlice(repository.RepositoryFormats, false),
 			},
 			"name": {
 				Description: "A unique identifier for this repository",
@@ -103,7 +104,7 @@ func resourceRepository() *schema.Resource {
 				ForceNew:     true,
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validation.StringInSlice(nexus.RepositoryTypes, false),
+				ValidateFunc: validation.StringInSlice(repository.RepositoryTypes, false),
 			},
 			"apt": {
 				Description:   "Apt specific configuration of the repository",
@@ -519,8 +520,8 @@ func repositoryStorageDefault() (interface{}, error) {
 	return []map[string]interface{}{data}, nil
 }
 
-func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
-	repo := nexus.Repository{
+func getRepositoryFromResourceData(d *schema.ResourceData) repository.LegacyRepository {
+	repo := repository.LegacyRepository{
 		Format: d.Get("format").(string),
 		Name:   d.Get("name").(string),
 		Online: d.Get("online").(bool),
@@ -531,7 +532,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		aptList := d.Get("apt").([]interface{})
 		aptConfig := aptList[0].(map[string]interface{})
 
-		repo.RepositoryApt = &nexus.RepositoryApt{
+		repo.Apt = &repository.Apt{
 			Distribution: aptConfig["distribution"].(string),
 			Flat:         aptConfig["flat"].(bool),
 		}
@@ -541,7 +542,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		aptSigningList := d.Get("apt_signing").([]interface{})
 		aptSigningConfig := aptSigningList[0].(map[string]interface{})
 
-		repo.RepositoryAptSigning = &nexus.RepositoryAptSigning{
+		repo.AptSigning = &repository.AptSigning{
 			Keypair:    aptSigningConfig["keypair"].(string),
 			Passphrase: aptSigningConfig["passphrase"].(string),
 		}
@@ -551,7 +552,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		bowerList := d.Get("bower").([]interface{})
 		bowerConfig := bowerList[0].(map[string]interface{})
 
-		repo.RepositoryBower = &nexus.RepositoryBower{
+		repo.Bower = &repository.Bower{
 			RewritePackageUrls: bowerConfig["rewrite_package_urls"].(bool),
 		}
 	}
@@ -559,7 +560,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 	if _, ok := d.GetOk("cleanup"); ok {
 		cleanupList := d.Get("cleanup").([]interface{})
 		cleanupConfig := cleanupList[0].(map[string]interface{})
-		repo.RepositoryCleanup = &nexus.RepositoryCleanup{
+		repo.Cleanup = &repository.Cleanup{
 			PolicyNames: interfaceSliceToStringSlice(cleanupConfig["policy_names"].(*schema.Set).List()),
 		}
 	}
@@ -567,7 +568,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 	if _, ok := d.GetOk("docker"); ok {
 		dockerList := d.Get("docker").([]interface{})
 		dockerConfig := dockerList[0].(map[string]interface{})
-		repo.RepositoryDocker = &nexus.RepositoryDocker{
+		repo.Docker = &repository.Docker{
 			ForceBasicAuth: dockerConfig["force_basic_auth"].(bool),
 			V1Enabled:      dockerConfig["v1enabled"].(bool),
 		}
@@ -577,7 +578,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 			if value > 0 {
 				port := new(int)
 				*port = value
-				repo.RepositoryDocker.HTTPPort = port
+				repo.Docker.HTTPPort = port
 			}
 		}
 
@@ -586,7 +587,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 			if value > 0 {
 				port := new(int)
 				*port = v.(int)
-				repo.RepositoryDocker.HTTPSPort = port
+				repo.Docker.HTTPSPort = port
 			}
 		}
 	}
@@ -600,7 +601,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		if indexURL != "" {
 			indexURLValue = &indexURL
 		}
-		repo.RepositoryDockerProxy = &nexus.RepositoryDockerProxy{
+		repo.DockerProxy = &repository.DockerProxy{
 			IndexType: dockerProxyConfig["index_type"].(string),
 			IndexURL:  indexURLValue,
 		}
@@ -618,7 +619,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 				groupMemberNames = append(groupMemberNames, v.(string))
 			}
 		}
-		repo.RepositoryGroup = &nexus.RepositoryGroup{
+		repo.Group = &repository.Group{
 			MemberNames: groupMemberNames,
 		}
 	}
@@ -627,7 +628,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		httpClientList := d.Get("http_client").([]interface{})
 		httpClientConfig := httpClientList[0].(map[string]interface{})
 
-		repo.RepositoryHTTPClient = &nexus.RepositoryHTTPClient{
+		repo.HTTPClient = &repository.HTTPClient{
 			AutoBlock: httpClientConfig["auto_block"].(bool),
 			Blocked:   httpClientConfig["blocked"].(bool),
 		}
@@ -637,7 +638,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 			if len(authList) == 1 && authList[0] != nil {
 				authConfig := authList[0].(map[string]interface{})
 
-				repo.RepositoryHTTPClient.Authentication = &nexus.RepositoryHTTPClientAuthentication{
+				repo.HTTPClient.Authentication = &repository.HTTPClientAuthentication{
 					NTLMDomain: authConfig["ntlm_domain"].(string),
 					NTLMHost:   authConfig["ntlm_host"].(string),
 					Type:       authConfig["type"].(string),
@@ -652,7 +653,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 			if len(connList) == 1 && connList[0] != nil {
 				connConfig := connList[0].(map[string]interface{})
 
-				repo.RepositoryHTTPClient.Connection = &nexus.RepositoryHTTPClientConnection{
+				repo.HTTPClient.Connection = &repository.HTTPClientConnection{
 					EnableCookies:   connConfig["enable_cookies"].(*bool),
 					Retries:         connConfig["retries"].(*int),
 					Timeout:         connConfig["timeout"].(*int),
@@ -667,7 +668,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		mavenList := d.Get("maven").([]interface{})
 		mavenConfig := mavenList[0].(map[string]interface{})
 
-		repo.RepositoryMaven = &nexus.RepositoryMaven{
+		repo.Maven = &repository.Maven{
 			VersionPolicy: mavenConfig["version_policy"].(string),
 			LayoutPolicy:  mavenConfig["layout_policy"].(string),
 		}
@@ -677,7 +678,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		negativeCacheList := d.Get("negative_cache").([]interface{})
 		negativeCacheConfig := negativeCacheList[0].(map[string]interface{})
 
-		repo.RepositoryNegativeCache = &nexus.RepositoryNegativeCache{
+		repo.NegativeCache = &repository.NegativeCache{
 			Enabled: negativeCacheConfig["enabled"].(bool),
 			TTL:     negativeCacheConfig["ttl"].(int),
 		}
@@ -687,16 +688,16 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		nugetProxyList := d.Get("nuget_proxy").([]interface{})
 		nugetProxyConfig := nugetProxyList[0].(map[string]interface{})
 
-		repo.RepositoryNugetProxy = &nexus.RepositoryNugetProxy{
+		repo.NugetProxy = &repository.ugetProxy{
 			QueryCacheItemMaxAge: nugetProxyConfig["query_cache_item_max_age"].(int),
-			NugetVersion:         nexus.NugetVersion(nugetProxyConfig["nuget_version"].(string)),
+			NugetVersion:         repository.NugetVersion(nugetProxyConfig["nuget_version"].(string)),
 		}
 	}
 
 	if _, ok := d.GetOk("proxy"); ok {
 		proxyList := d.Get("proxy").([]interface{})
 		proxyConfig := proxyList[0].(map[string]interface{})
-		repo.RepositoryProxy = &nexus.RepositoryProxy{
+		repo.Proxy = &repository.Proxy{
 			ContentMaxAge:  proxyConfig["content_max_age"].(int),
 			MetadataMaxAge: proxyConfig["metadata_max_age"].(int),
 			RemoteURL:      proxyConfig["remote_url"].(string),
@@ -707,14 +708,14 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		storageList := d.Get("storage").([]interface{})
 		storageConfig := storageList[0].(map[string]interface{})
 
-		repo.RepositoryStorage = &nexus.RepositoryStorage{
+		repo.Storage = &repository.HostedStorage{
 			BlobStoreName:               storageConfig["blob_store_name"].(string),
 			StrictContentTypeValidation: storageConfig["strict_content_type_validation"].(bool),
 		}
 		// Only hosted repository has attribute WritePolicy
-		if repo.Type == nexus.RepositoryTypeHosted {
+		if repo.Type == repository.RepositoryTypeHosted {
 			writePolicy := storageConfig["write_policy"].(string)
-			repo.RepositoryStorage.WritePolicy = &writePolicy
+			repo.Storage.WritePolicy = &writePolicy
 		}
 	}
 
@@ -722,7 +723,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		yumList := d.Get("yum").([]interface{})
 		yumConfig := yumList[0].(map[string]interface{})
 
-		repo.RepositoryYum = &nexus.RepositoryYum{
+		repo.Yum = &repository.Yum{
 			RepodataDepth: yumConfig["repodata_depth"].(int),
 			DeployPolicy:  yumConfig["deploy_policy"].(string),
 		}
@@ -731,99 +732,99 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 	return repo
 }
 
-func setRepositoryToResourceData(repo *nexus.Repository, d *schema.ResourceData) error {
+func setRepositoryToResourceData(repo *repository.LegacyRepository, d *schema.ResourceData) error {
 	d.SetId(repo.Name)
 	d.Set("format", repo.Format)
 	d.Set("name", repo.Name)
 	d.Set("online", repo.Online)
 	d.Set("type", repo.Type)
 
-	if repo.RepositoryApt != nil {
-		if err := d.Set("apt", flattenRepositoryApt(repo.RepositoryApt)); err != nil {
+	if repo.Apt != nil {
+		if err := d.Set("apt", flattenRepositoryApt(repo.Apt)); err != nil {
 			return err
 		}
 	}
 
-	if repo.RepositoryAptSigning != nil {
-		if err := d.Set("apt_signing", flattenRepositoryAptSigning(repo.RepositoryAptSigning)); err != nil {
+	if repo.AptSigning != nil {
+		if err := d.Set("apt_signing", flattenRepositoryAptSigning(repo.AptSigning)); err != nil {
 			return err
 		}
 	}
 
-	if repo.RepositoryBower != nil {
-		if err := d.Set("bower", flattenRepositoryBower(repo.RepositoryBower)); err != nil {
+	if repo.Bower != nil {
+		if err := d.Set("bower", flattenRepositoryBower(repo.Bower)); err != nil {
 			return err
 		}
 	}
 
-	if repo.RepositoryCleanup != nil {
-		if err := d.Set("cleanup", flattenRepositoryCleanup(repo.RepositoryCleanup)); err != nil {
+	if repo.Cleanup != nil {
+		if err := d.Set("cleanup", flattenRepositoryCleanup(repo.Cleanup)); err != nil {
 			return err
 		}
 	}
 
-	if repo.RepositoryDocker != nil {
-		if err := d.Set("docker", flattenRepositoryDocker(repo.RepositoryDocker)); err != nil {
+	if repo.Docker != nil {
+		if err := d.Set("docker", flattenRepositoryDocker(repo.Docker)); err != nil {
 			return err
 		}
 	}
 
-	if repo.RepositoryDockerProxy != nil {
-		if err := d.Set("docker_proxy", flattenRepositoryDockerProxy(repo.RepositoryDockerProxy)); err != nil {
+	if repo.DockerProxy != nil {
+		if err := d.Set("docker_proxy", flattenRepositoryDockerProxy(repo.DockerProxy)); err != nil {
 			return err
 		}
 	}
 
-	if repo.RepositoryGroup != nil {
-		if err := d.Set("group", flattenRepositoryGroup(repo.RepositoryGroup)); err != nil {
+	if repo.Group != nil {
+		if err := d.Set("group", flattenRepositoryGroup(repo.Group)); err != nil {
 			return err
 		}
 	}
 
-	if repo.RepositoryHTTPClient != nil {
-		if err := d.Set("http_client", flattenRepositoryHTTPClient(repo.RepositoryHTTPClient, d)); err != nil {
+	if repo.HTTPClient != nil {
+		if err := d.Set("http_client", flattenRepositoryHTTPClient(repo.HTTPClient, d)); err != nil {
 			return err
 		}
 	}
 
-	if repo.RepositoryMaven != nil {
-		if err := d.Set("maven", flattenRepositoryMaven(repo.RepositoryMaven)); err != nil {
+	if repo.Maven != nil {
+		if err := d.Set("maven", flattenRepositoryMaven(repo.Maven)); err != nil {
 			return err
 		}
 	}
 
-	if repo.RepositoryNegativeCache != nil {
-		if err := d.Set("negative_cache", flattenRepositoryNegativeCache(repo.RepositoryNegativeCache)); err != nil {
+	if repo.NegativeCache != nil {
+		if err := d.Set("negative_cache", flattenRepositoryNegativeCache(repo.NegativeCache)); err != nil {
 			return err
 		}
 	}
 
-	if repo.RepositoryNugetProxy != nil {
-		if err := d.Set("nuget_proxy", flattenRepositoryNugetProxy(repo.RepositoryNugetProxy)); err != nil {
+	if repo.NugetProxy != nil {
+		if err := d.Set("nuget_proxy", flattenRepositoryNugetProxy(repo.NugetProxy)); err != nil {
 			return err
 		}
 	}
 
-	if repo.RepositoryProxy != nil {
-		if err := d.Set("proxy", flattenRepositoryProxy(repo.RepositoryProxy)); err != nil {
+	if repo.Proxy != nil {
+		if err := d.Set("proxy", flattenRepositoryProxy(repo.Proxy)); err != nil {
 			return err
 		}
 	}
 
-	if repo.RepositoryYum != nil {
-		if err := d.Set("yum", flattenRepositoryYum(repo.RepositoryYum)); err != nil {
+	if repo.Yum != nil {
+		if err := d.Set("yum", flattenRepositoryYum(repo.Yum)); err != nil {
 			return err
 		}
 	}
 
-	if err := d.Set("storage", flattenRepositoryStorage(repo.RepositoryStorage, d)); err != nil {
+	if err := d.Set("storage", flattenRepositoryStorage(repo.Storage, d)); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func flattenRepositoryApt(apt *nexus.RepositoryApt) []map[string]interface{} {
+func flattenRepositoryApt(apt *repository.Apt) []map[string]interface{} {
 	if apt == nil {
 		return nil
 	}
@@ -835,7 +836,7 @@ func flattenRepositoryApt(apt *nexus.RepositoryApt) []map[string]interface{} {
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryAptSigning(aptSigning *nexus.RepositoryAptSigning) []map[string]interface{} {
+func flattenRepositoryAptSigning(aptSigning *repository.AptSigning) []map[string]interface{} {
 	if aptSigning == nil {
 		return nil
 	}
@@ -846,7 +847,7 @@ func flattenRepositoryAptSigning(aptSigning *nexus.RepositoryAptSigning) []map[s
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryBower(bower *nexus.RepositoryBower) []map[string]interface{} {
+func flattenRepositoryBower(bower *repository.Bower) []map[string]interface{} {
 	if bower == nil {
 		return nil
 	}
@@ -856,7 +857,7 @@ func flattenRepositoryBower(bower *nexus.RepositoryBower) []map[string]interface
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryCleanup(cleanup *nexus.RepositoryCleanup) []map[string]interface{} {
+func flattenRepositoryCleanup(cleanup *repository.Cleanup) []map[string]interface{} {
 	if cleanup == nil {
 		return nil
 	}
@@ -867,7 +868,7 @@ func flattenRepositoryCleanup(cleanup *nexus.RepositoryCleanup) []map[string]int
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryDocker(docker *nexus.RepositoryDocker) []map[string]interface{} {
+func flattenRepositoryDocker(docker *repository.Docker) []map[string]interface{} {
 	if docker == nil {
 		return nil
 	}
@@ -886,7 +887,7 @@ func flattenRepositoryDocker(docker *nexus.RepositoryDocker) []map[string]interf
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryDockerProxy(dockerProxy *nexus.RepositoryDockerProxy) []map[string]interface{} {
+func flattenRepositoryDockerProxy(dockerProxy *repository.DockerProxy) []map[string]interface{} {
 	if dockerProxy == nil {
 		return nil
 	}
@@ -897,7 +898,7 @@ func flattenRepositoryDockerProxy(dockerProxy *nexus.RepositoryDockerProxy) []ma
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryGroup(group *nexus.RepositoryGroup) []map[string]interface{} {
+func flattenRepositoryGroup(group *repository.Group) []map[string]interface{} {
 	if group == nil {
 		return nil
 	}
@@ -907,7 +908,7 @@ func flattenRepositoryGroup(group *nexus.RepositoryGroup) []map[string]interface
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryHTTPClient(httpClient *nexus.RepositoryHTTPClient, d *schema.ResourceData) []map[string]interface{} {
+func flattenRepositoryHTTPClient(httpClient *repository.HTTPClient, d *schema.ResourceData) []map[string]interface{} {
 	if httpClient == nil {
 		return nil
 	}
@@ -920,7 +921,7 @@ func flattenRepositoryHTTPClient(httpClient *nexus.RepositoryHTTPClient, d *sche
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryHTTPClientAuthentication(auth *nexus.RepositoryHTTPClientAuthentication, d *schema.ResourceData) []map[string]interface{} {
+func flattenRepositoryHTTPClientAuthentication(auth *repository.HTTPClientAuthentication, d *schema.ResourceData) []map[string]interface{} {
 	if auth == nil {
 		return nil
 	}
@@ -934,7 +935,7 @@ func flattenRepositoryHTTPClientAuthentication(auth *nexus.RepositoryHTTPClientA
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryHTTPClientConnection(conn *nexus.RepositoryHTTPClientConnection) []map[string]interface{} {
+func flattenRepositoryHTTPClientConnection(conn *repository.HTTPClientConnection) []map[string]interface{} {
 	if conn == nil {
 		return nil
 	}
@@ -956,7 +957,7 @@ func flattenRepositoryHTTPClientConnection(conn *nexus.RepositoryHTTPClientConne
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryMaven(maven *nexus.RepositoryMaven) []map[string]interface{} {
+func flattenRepositoryMaven(maven *repository.Maven) []map[string]interface{} {
 	if maven == nil {
 		return nil
 	}
@@ -967,7 +968,7 @@ func flattenRepositoryMaven(maven *nexus.RepositoryMaven) []map[string]interface
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryNegativeCache(negativeCache *nexus.RepositoryNegativeCache) []map[string]interface{} {
+func flattenRepositoryNegativeCache(negativeCache *repository.NegativeCache) []map[string]interface{} {
 	if negativeCache == nil {
 		return nil
 	}
@@ -978,7 +979,7 @@ func flattenRepositoryNegativeCache(negativeCache *nexus.RepositoryNegativeCache
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryNugetProxy(nugetProxy *nexus.RepositoryNugetProxy) []map[string]interface{} {
+func flattenRepositoryNugetProxy(nugetProxy *repository.NugetProxy) []map[string]interface{} {
 	if nugetProxy == nil {
 		return nil
 	}
@@ -989,7 +990,7 @@ func flattenRepositoryNugetProxy(nugetProxy *nexus.RepositoryNugetProxy) []map[s
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryProxy(proxy *nexus.RepositoryProxy) []map[string]interface{} {
+func flattenRepositoryProxy(proxy *repository.Proxy) []map[string]interface{} {
 	if proxy == nil {
 		return nil
 	}
@@ -1001,7 +1002,7 @@ func flattenRepositoryProxy(proxy *nexus.RepositoryProxy) []map[string]interface
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryStorage(storage *nexus.RepositoryStorage, d *schema.ResourceData) []map[string]interface{} {
+func flattenRepositoryStorage(storage *repository.Storage, d *schema.ResourceData) []map[string]interface{} {
 	if storage == nil {
 		return nil
 	}
@@ -1009,13 +1010,13 @@ func flattenRepositoryStorage(storage *nexus.RepositoryStorage, d *schema.Resour
 		"blob_store_name":                storage.BlobStoreName,
 		"strict_content_type_validation": storage.StrictContentTypeValidation,
 	}
-	if d.Get("type") == nexus.RepositoryTypeHosted {
+	if d.Get("type") == repository.RepositoryTypeHosted {
 		data["write_policy"] = storage.WritePolicy
 	}
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryYum(yum *nexus.RepositoryYum) []map[string]interface{} {
+func flattenRepositoryYum(yum *repository.Yum) []map[string]interface{} {
 	if yum == nil {
 		return nil
 	}
@@ -1027,11 +1028,11 @@ func flattenRepositoryYum(yum *nexus.RepositoryYum) []map[string]interface{} {
 }
 
 func resourceRepositoryCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	repo := getRepositoryFromResourceData(d)
 
-	if err := client.RepositoryCreate(repo); err != nil {
+	if err := service.Repository.Legacy.Create(repo); err != nil {
 		return err
 	}
 
@@ -1043,9 +1044,9 @@ func resourceRepositoryCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRepositoryRead(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
-	repo, err := nexusClient.RepositoryRead(d.Id())
+	repo, err := service.Repository.Legacy.Get(d.Id())
 	if err != nil {
 		return err
 	}
@@ -1059,12 +1060,12 @@ func resourceRepositoryRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRepositoryUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	repoName := d.Id()
 	repo := getRepositoryFromResourceData(d)
 
-	if err := client.RepositoryUpdate(repoName, repo); err != nil {
+	if err := service.Repository.Legacy.Update(repoName, repo); err != nil {
 		return err
 	}
 
@@ -1076,14 +1077,14 @@ func resourceRepositoryUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRepositoryDelete(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
-	return nexusClient.RepositoryDelete(d.Id())
+	return service.Repository.Legacy.Delete(d.Id())
 }
 
 func resourceRepositoryExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
-	repo, err := nexusClient.RepositoryRead(d.Id())
+	repo, err := service.Repository.Legacy.Get(d.Id())
 	return repo != nil, err
 }

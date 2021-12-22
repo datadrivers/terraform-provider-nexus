@@ -3,12 +3,12 @@ package nexus
 import (
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func testAccResourceRepositoryNugetHosted() nexus.Repository {
-	repo := testAccResourceRepositoryHosted(nexus.RepositoryFormatNuget)
+func testAccResourceRepositoryNugetHosted() repository.LegacyRepository {
+	repo := testAccResourceRepositoryHosted(repository.RepositoryFormatNuget)
 	return repo
 }
 

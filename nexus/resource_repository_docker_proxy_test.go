@@ -3,25 +3,25 @@ package nexus
 import (
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func testAccResourceRepositoryDockerProxy() nexus.Repository {
-	repo := testAccResourceRepositoryProxy(nexus.RepositoryFormatDocker)
-	repo.RepositoryDocker = &nexus.RepositoryDocker{}
+func testAccResourceDockerProxy() repository.LegacyRepository {
+	repo := testAccResourceRepositoryProxy(repository.RepositoryFormatDocker)
+	repo.Docker = &repository.Docker{}
 
 	indexURL := "https://index.docker.io/"
-	repo.RepositoryDockerProxy = &nexus.RepositoryDockerProxy{
+	repo.DockerProxy = &repository.DockerProxy{
 		IndexType: "HUB",
 		IndexURL:  &indexURL,
 	}
-	repo.RepositoryProxy.RemoteURL = "https://registry-1.docker.io"
+	repo.Proxy.RemoteURL = "https://registry-1.docker.io"
 	return repo
 }
 
-func TestAccResourceRepositoryDockerProxy(t *testing.T) {
-	repo := testAccResourceRepositoryDockerProxy()
+func TestAccResourceDockerProxy(t *testing.T) {
+	repo := testAccResourceDockerProxy()
 	resName := testAccResourceRepositoryName(repo)
 
 	resource.Test(t, resource.TestCase{

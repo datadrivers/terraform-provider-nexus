@@ -5,16 +5,16 @@ import (
 	"strconv"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func testAccResourceRepositoryDockerGroup() nexus.Repository {
+func testAccResourceRepositoryDockerGroup() repository.LegacyRepository {
 	httpPort := 8087
 	httpsPort := 8088
 
-	repo := testAccResourceRepositoryGroup(nexus.RepositoryFormatDocker)
-	repo.RepositoryDocker = &nexus.RepositoryDocker{
+	repo := testAccResourceRepositoryGroup(repository.RepositoryFormatDocker)
+	repo.Docker = &repository.Docker{
 		ForceBasicAuth: true,
 		HTTPPort:       &httpPort,
 		HTTPSPort:      &httpsPort,
@@ -57,10 +57,10 @@ func TestAccResourceRepositoryDockerGroup(t *testing.T) {
 					// Format
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(resName, "docker.#", "1"),
-						resource.TestCheckResourceAttr(resName, "docker.0.force_basic_auth", strconv.FormatBool(repo.RepositoryDocker.ForceBasicAuth)),
-						resource.TestCheckResourceAttr(resName, "docker.0.http_port", strconv.Itoa(*repo.RepositoryDocker.HTTPPort)),
-						resource.TestCheckResourceAttr(resName, "docker.0.https_port", strconv.Itoa(*repo.RepositoryDocker.HTTPSPort)),
-						resource.TestCheckResourceAttr(resName, "docker.0.v1enabled", strconv.FormatBool(repo.RepositoryDocker.V1Enabled)),
+						resource.TestCheckResourceAttr(resName, "docker.0.force_basic_auth", strconv.FormatBool(repo.Docker.ForceBasicAuth)),
+						resource.TestCheckResourceAttr(resName, "docker.0.http_port", strconv.Itoa(*repo.Docker.HTTPPort)),
+						resource.TestCheckResourceAttr(resName, "docker.0.https_port", strconv.Itoa(*repo.Docker.HTTPSPort)),
+						resource.TestCheckResourceAttr(resName, "docker.0.v1enabled", strconv.FormatBool(repo.Docker.V1Enabled)),
 					),
 				),
 			},

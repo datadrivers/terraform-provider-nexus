@@ -33,7 +33,7 @@ package nexus
 import (
 	"strings"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -102,7 +102,7 @@ func getRoleFromResourceData(d *schema.ResourceData) nexus.Role {
 }
 
 func resourceRoleCreate(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 	role := getRoleFromResourceData(d)
 	if err := nexusClient.RoleCreate(role); err != nil {
 		return err
@@ -113,7 +113,7 @@ func resourceRoleCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRoleRead(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	role, err := nexusClient.RoleRead(d.Id())
 	if err != nil {
@@ -135,7 +135,7 @@ func resourceRoleRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRoleUpdate(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 	roleID := d.Get("roleid").(string)
 
 	role := getRoleFromResourceData(d)
@@ -147,7 +147,7 @@ func resourceRoleUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRoleDelete(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	if err := nexusClient.RoleDelete(d.Id()); err != nil {
 		return err
@@ -158,7 +158,7 @@ func resourceRoleDelete(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRoleExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	role, err := nexusClient.RoleRead(d.Id())
 	return role != nil, err

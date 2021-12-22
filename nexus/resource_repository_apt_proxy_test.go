@@ -4,19 +4,19 @@ import (
 	"strconv"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func testAccResourceRepositoryAptProxy() nexus.Repository {
-	repo := testAccResourceRepositoryProxy(nexus.RepositoryFormatApt)
-	repo.RepositoryApt = &nexus.RepositoryApt{
+func testAccResourceRepositoryAptProxy() repository.LegacyRepository {
+	repo := testAccResourceRepositoryProxy(repository.RepositoryFormatApt)
+	repo.Apt = &repository.AptProxy{
 		Distribution: "bionic",
 		Flat:         true,
 	}
 	useTrustStore := true
-	repo.RepositoryProxy.RemoteURL = "https://remote.repository.com"
-	repo.RepositoryHTTPClient.Connection = &nexus.RepositoryHTTPClientConnection{
+	repo.Proxy.RemoteURL = "https://remote.repository.com"
+	repo.HTTPClient.Connection = &repository.HTTPClientConnection{
 		UseTrustStore: &useTrustStore,
 	}
 	return repo
@@ -43,8 +43,8 @@ func TestAccResourceRepositoryAptProxy(t *testing.T) {
 					),
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(resName, "apt.#", "1"),
-						resource.TestCheckResourceAttr(resName, "apt.0.distribution", repo.RepositoryApt.Distribution),
-						resource.TestCheckResourceAttr(resName, "apt.0.flat", strconv.FormatBool(repo.RepositoryApt.Flat)),
+						resource.TestCheckResourceAttr(resName, "apt.0.distribution", repo.Apt.Distribution),
+						resource.TestCheckResourceAttr(resName, "apt.0.flat", strconv.FormatBool(repo.Apt.Flat)),
 					),
 				),
 			},

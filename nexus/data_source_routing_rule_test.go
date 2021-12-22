@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
 func TestAccDataSourceRoutingRule(t *testing.T) {
 	resName := "data.nexus_routing_rule.acceptance"
-	rule := nexus.RoutingRule{
+	rule := schema.RoutingRule{
 		Name:        "acceptance",
 		Description: "acceptance test",
 		Mode:        "BLOCK",

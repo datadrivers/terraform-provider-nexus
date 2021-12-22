@@ -10,7 +10,8 @@ data "nexus_security_ldap" "default" {}
 package nexus
 
 import (
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -188,9 +189,9 @@ func dataSourceSecurityLDAP() *schema.Resource {
 }
 
 func dataSourceSecurityLDAPRead(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
-	ldapServer, err := nexusClient.LDAPList()
+	ldapServer, err := service.Security.Ldap.Read()
 	if err != nil {
 		return err
 	}
@@ -203,7 +204,7 @@ func dataSourceSecurityLDAPRead(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func flattenSecurityLDAP(ldap []nexus.LDAP) []map[string]interface{} {
+func flattenSecurityLDAP(ldap []security.LDAP) []map[string]interface{} {
 	if ldap == nil {
 		return nil
 	}

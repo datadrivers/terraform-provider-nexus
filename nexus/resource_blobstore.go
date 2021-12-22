@@ -50,7 +50,7 @@ import (
 	"fmt"
 	"log"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
@@ -331,7 +331,7 @@ func getBlobstoreFromResourceData(d *schema.ResourceData) nexus.Blobstore {
 }
 
 func resourceBlobstoreCreate(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	bs := getBlobstoreFromResourceData(d)
 
@@ -346,7 +346,7 @@ func resourceBlobstoreCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceBlobstoreRead(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	bs, err := nexusClient.BlobstoreRead(d.Id())
 	log.Print(bs)
@@ -382,7 +382,7 @@ func resourceBlobstoreRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceBlobstoreUpdate(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	bs := getBlobstoreFromResourceData(d)
 	if err := nexusClient.BlobstoreUpdate(d.Id(), bs); err != nil {
@@ -393,7 +393,7 @@ func resourceBlobstoreUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceBlobstoreDelete(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	if err := nexusClient.BlobstoreDelete(d.Id()); err != nil {
 		return err
@@ -405,7 +405,7 @@ func resourceBlobstoreDelete(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceBlobstoreExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	bs, err := nexusClient.BlobstoreRead(d.Id())
 	return bs != nil, err

@@ -81,8 +81,8 @@ github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMn
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
-github.com/datadrivers/go-nexus-client v0.22.0 h1:gISvPKwhZezvZRrOFB/e8roWb0yinNoVVyhGD2gIpw4=
-github.com/datadrivers/go-nexus-client v0.22.0/go.mod h1:yE2H94qBN5eiQZc+JUGQ7O5i9ZKSkRIF5yMkAIprUcw=
+github.com/datadrivers/go-nexus-client v1.0.0 h1:tYd3Z4T0oc0xGzfn/c5ECOGGRJHcggkn/I4nuqfZe8A=
+github.com/datadrivers/go-nexus-client v1.0.0/go.mod h1:kqr0FDRmcNnhdLo5/TuSf/3fXAQQWgmIqtDcs8jfrhs=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -277,8 +277,8 @@ github.com/mattn/go-isatty v0.0.5/go.mod h1:Iq45c/XA43vh69/j3iqttzPXn0bhXyGjM0Hd
 github.com/mattn/go-runewidth v0.0.4/go.mod h1:LwmH8dsx7+W8Uxz3IHJYH5QSwggIsqBzpuz5H//U1FU=
 github.com/minio/md5-simd v1.1.0 h1:QPfiOqlZH+Cj9teu0t9b1nTBfPbyTl16Of5MeuShdK4=
 github.com/minio/md5-simd v1.1.0/go.mod h1:XpBqgZULrMYD3R+M28PcmP0CkI7PEMzB3U77ZrKZ0Gw=
-github.com/minio/minio-go/v7 v7.0.18 h1:fncn6iacnK+i2uYfNc5aVPG7bEqQH0nU4yAGMSunY0w=
-github.com/minio/minio-go/v7 v7.0.18/go.mod h1:SyQ1IFeJuaa+eV5yEDxW7hYE1s5VVq5sgImDe27R+zg=
+github.com/minio/minio-go/v7 v7.0.19 h1:7igdH+/zj3DO3VDr3RBUXfbCnkauKWk/tIw3IA9P1GE=
+github.com/minio/minio-go/v7 v7.0.19/go.mod h1:SyQ1IFeJuaa+eV5yEDxW7hYE1s5VVq5sgImDe27R+zg=
 github.com/minio/sha256-simd v0.1.1 h1:5QHSlgo3nt5yKOJrC7W8w7X+NFl8cMPZm96iu8kKUJU=
 github.com/minio/sha256-simd v0.1.1/go.mod h1:B5e1o+1/KgNmWrSQK08Y6Z1Vb5pwIktudl0J58iy0KM=
 github.com/mitchellh/cli v1.1.2 h1:PvH+lL2B7IQ101xQL63Of8yFS2y+aDlsFcsqNc+u/Kw=

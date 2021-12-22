@@ -10,7 +10,8 @@ data "nexus_security_realms" "default" {}
 package nexus
 
 import (
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -62,19 +63,19 @@ func dataSourceSecurityRealms() *schema.Resource {
 }
 
 func dataSourceRealmsRead(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
-	availableRealms, err := nexusClient.RealmsAvailable()
+	availableRealms, err := service.Security.Realms.ListAvailable()
 	if err != nil {
 		return err
 	}
 
-	activeRealmIDs, err := nexusClient.RealmsActive()
+	activeRealmIDs, err := service.Security.Realms.ListActive()
 	if err != nil {
 		return err
 	}
 
-	activeRealms := make([]nexus.Realm, len(activeRealmIDs))
+	activeRealms := make([]security.Realm, len(activeRealmIDs))
 	for i, activeRealmID := range activeRealmIDs {
 		for _, v := range availableRealms {
 			if v.ID == activeRealmID {
@@ -95,7 +96,7 @@ func dataSourceRealmsRead(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func flattenSecurityRealms(realms []nexus.Realm) []map[string]interface{} {
+func flattenSecurityRealms(realms []security.Realm) []map[string]interface{} {
 	data := make([]map[string]interface{}, len(realms))
 	for k, v := range realms {
 		data[k] = map[string]interface{}{

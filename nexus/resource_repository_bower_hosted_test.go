@@ -4,13 +4,14 @@ import (
 	"strconv"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func testAccRepositoryBowerHosted() nexus.Repository {
+func testAccRepositoryBowerHosted() repository.LegacyRepository {
 	repo := testAccResourceRepositoryHosted(nexus.RepositoryFormatBower)
-	repo.RepositoryBower = &nexus.RepositoryBower{
+	repo.Bower = &nexus.Bower{
 		RewritePackageUrls: true,
 	}
 	return repo
@@ -39,7 +40,7 @@ func TestAccResourceRepositoryBowerHosted(t *testing.T) {
 					),
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(resName, "bower.#", "1"),
-						resource.TestCheckResourceAttr(resName, "bower.0.rewrite_package_urls", strconv.FormatBool(repo.RepositoryBower.RewritePackageUrls)),
+						resource.TestCheckResourceAttr(resName, "bower.0.rewrite_package_urls", strconv.FormatBool(repo.Bower.RewritePackageUrls)),
 					),
 				),
 			},

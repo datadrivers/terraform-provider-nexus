@@ -3,17 +3,17 @@ package nexus
 import (
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func testAccResourceRepositoryAptHosted() nexus.Repository {
-	repo := testAccResourceRepositoryHosted(nexus.RepositoryFormatApt)
-	repo.RepositoryApt = &nexus.RepositoryApt{
+func testAccResourceRepositoryAptHosted() repository.LegacyRepository {
+	repo := testAccResourceRepositoryHosted(repository.RepositoryFormatApt)
+	repo.Apt = &repository.AptProxy{
 		Distribution: "bionic",
 	}
-	repo.RepositoryAptSigning = &nexus.RepositoryAptSigning{
+	repo.AptSigning = &repository.AptSigning{
 		Keypair:    acctest.RandString(10),
 		Passphrase: acctest.RandString(10),
 	}
@@ -45,10 +45,10 @@ func TestAccResourceRepositoryAptHosted(t *testing.T) {
 					// Format
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(resName, "apt.#", "1"),
-						resource.TestCheckResourceAttr(resName, "apt.0.distribution", repo.RepositoryApt.Distribution),
+						resource.TestCheckResourceAttr(resName, "apt.0.distribution", repo.Apt.Distribution),
 						resource.TestCheckResourceAttr(resName, "apt_signing.#", "1"),
-						resource.TestCheckResourceAttr(resName, "apt_signing.0.keypair", repo.RepositoryAptSigning.Keypair),
-						resource.TestCheckResourceAttr(resName, "apt_signing.0.passphrase", repo.RepositoryAptSigning.Passphrase),
+						resource.TestCheckResourceAttr(resName, "apt_signing.0.keypair", repo.AptSigning.Keypair),
+						resource.TestCheckResourceAttr(resName, "apt_signing.0.passphrase", repo.AptSigning.Passphrase),
 					),
 				),
 			},

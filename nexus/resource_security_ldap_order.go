@@ -27,7 +27,7 @@ resource "nexus_security_ldap_order" {
 package nexus
 
 import (
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -52,7 +52,7 @@ func resourceSecurityLDAPOrder() *schema.Resource {
 }
 
 func resourceSecurityLDAPOrderCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 	order := interfaceSliceToStringSlice(d.Get("order").([]interface{}))
 	if err := client.LDAPChangeOrder(order); err != nil {
 		return err

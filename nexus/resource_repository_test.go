@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"text/template"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
@@ -158,11 +158,11 @@ var (
 	resourceRepositoryTemplate = template.Must(template.New("repository").Funcs(resourceRepositoryTemplateFuncMap).Parse(resourceRepositoryTemplateString))
 )
 
-func testAccResourceRepositoryName(repo nexus.Repository) string {
+func testAccResourceRepositoryName(repo repository.LegacyRepository) string {
 	return fmt.Sprintf("nexus_repository.%s", repo.Name)
 }
 
-func testAccResourceRepositoryConfig(repo nexus.Repository) string {
+func testAccResourceRepositoryConfig(repo repository.LegacyRepository) string {
 	buf := &bytes.Buffer{}
 	if err := resourceRepositoryTemplate.Execute(buf, repo); err != nil {
 		panic(err)
@@ -170,35 +170,35 @@ func testAccResourceRepositoryConfig(repo nexus.Repository) string {
 	return buf.String()
 }
 
-func testAccResourceRepositoryGroup(format string) nexus.Repository {
-	return nexus.Repository{
+func testAccResourceRepositoryGroup(format string) repository.LegacyRepository {
+	return repository.LegacyRepository{
 		Format: format,
 		Name:   fmt.Sprintf("test-repo-%s", acctest.RandString(10)),
 		Online: true,
-		Type:   nexus.RepositoryTypeGroup,
+		Type:   repository.RepositoryTypeGroup,
 
-		RepositoryGroup: &nexus.RepositoryGroup{},
+		Group: &repository.Group{},
 
-		RepositoryStorage: &nexus.RepositoryStorage{
+		Storage: &repository.HostedStorage{
 			BlobStoreName:               "default",
 			StrictContentTypeValidation: true,
 		},
 	}
 }
 
-func testAccResourceRepositoryHosted(format string) nexus.Repository {
+func testAccResourceRepositoryHosted(format string) repository.LegacyRepository {
 	writePolicy := "ALLOW"
-	return nexus.Repository{
+	return repository.LegacyRepository{
 		Format: format,
 		Name:   fmt.Sprintf("test-repo-%s", acctest.RandString(10)),
 		Online: true,
-		Type:   nexus.RepositoryTypeHosted,
+		Type:   repository.RepositoryTypeHosted,
 
-		RepositoryCleanup: &nexus.RepositoryCleanup{
+		Cleanup: &repository.Cleanup{
 			PolicyNames: []string{"\"cleanup-weekly\""},
 		},
 
-		RepositoryStorage: &nexus.RepositoryStorage{
+		Storage: &repository.HostedStorage{
 			BlobStoreName:               "default",
 			StrictContentTypeValidation: true,
 			WritePolicy:                 &writePolicy,
@@ -206,19 +206,19 @@ func testAccResourceRepositoryHosted(format string) nexus.Repository {
 	}
 }
 
-func testAccResourceRepositoryProxy(format string) nexus.Repository {
-	return nexus.Repository{
+func testAccResourceRepositoryProxy(format string) repository.LegacyRepository {
+	return repository.LegacyRepository{
 		Format: format,
 		Name:   fmt.Sprintf("test-repo-%s", acctest.RandString(10)),
 		Online: true,
-		Type:   nexus.RepositoryTypeProxy,
+		Type:   repository.RepositoryTypeProxy,
 
-		RepositoryCleanup: &nexus.RepositoryCleanup{
+		Cleanup: &repository.Cleanup{
 			PolicyNames: []string{"\"cleanup-weekly\""},
 		},
 
-		RepositoryHTTPClient: &nexus.RepositoryHTTPClient{
-			Authentication: &nexus.RepositoryHTTPClientAuthentication{
+		HTTPClient: &repository.HTTPClient{
+			Authentication: &repository.HTTPClientAuthentication{
 				Password: "t0ps3cr3t",
 				Type:     "username",
 				Username: "4dm1n",
@@ -227,22 +227,22 @@ func testAccResourceRepositoryProxy(format string) nexus.Repository {
 			Blocked:   false,
 		},
 
-		RepositoryNegativeCache: &nexus.RepositoryNegativeCache{},
+		NegativeCache: &repository.NegativeCache{},
 
-		RepositoryProxy: &nexus.RepositoryProxy{
+		Proxy: &repository.Proxy{
 			ContentMaxAge:  1440,
 			MetadataMaxAge: 1440,
 			RemoteURL:      "https://proxy.example.com",
 		},
 
-		RepositoryStorage: &nexus.RepositoryStorage{
+		Storage: &repository.HostedStorage{
 			BlobStoreName:               "default",
 			StrictContentTypeValidation: true,
 		},
 	}
 }
 
-func resourceRepositoryTestCheckFunc(repo nexus.Repository) resource.TestCheckFunc {
+func resourceRepositoryTestCheckFunc(repo repository.LegacyRepository) resource.TestCheckFunc {
 	resName := testAccResourceRepositoryName(repo)
 	return resource.ComposeAggregateTestCheckFunc(
 		resource.ComposeAggregateTestCheckFunc(
@@ -254,13 +254,13 @@ func resourceRepositoryTestCheckFunc(repo nexus.Repository) resource.TestCheckFu
 		),
 		resource.ComposeAggregateTestCheckFunc(
 			resource.TestCheckResourceAttr(resName, "storage.#", "1"),
-			resource.TestCheckResourceAttr(resName, "storage.0.blob_store_name", repo.RepositoryStorage.BlobStoreName),
-			resource.TestCheckResourceAttr(resName, "storage.0.strict_content_type_validation", strconv.FormatBool(repo.RepositoryStorage.StrictContentTypeValidation)),
+			resource.TestCheckResourceAttr(resName, "storage.0.blob_store_name", repo.Storage.BlobStoreName),
+			resource.TestCheckResourceAttr(resName, "storage.0.strict_content_type_validation", strconv.FormatBool(repo.Storage.StrictContentTypeValidation)),
 		),
 	)
 }
 
-func resourceRepositoryTypeGroupTestCheckFunc(repo nexus.Repository) resource.TestCheckFunc {
+func resourceRepositoryTypeGroupTestCheckFunc(repo repository.LegacyRepository) resource.TestCheckFunc {
 	resName := testAccResourceRepositoryName(repo)
 	return resource.ComposeAggregateTestCheckFunc(
 		resource.ComposeAggregateTestCheckFunc(
@@ -281,7 +281,7 @@ func resourceRepositoryTypeGroupTestCheckFunc(repo nexus.Repository) resource.Te
 	)
 }
 
-func resourceRepositoryTypeHostedTestCheckFunc(repo nexus.Repository) resource.TestCheckFunc {
+func resourceRepositoryTypeHostedTestCheckFunc(repo repository.LegacyRepository) resource.TestCheckFunc {
 	resName := testAccResourceRepositoryName(repo)
 	return resource.ComposeAggregateTestCheckFunc(
 		resource.ComposeAggregateTestCheckFunc(
@@ -290,18 +290,18 @@ func resourceRepositoryTypeHostedTestCheckFunc(repo nexus.Repository) resource.T
 			resource.TestCheckResourceAttr(resName, "negative_cache.#", "0"),
 			resource.TestCheckResourceAttr(resName, "proxy.#", "0"),
 		),
-		resource.TestCheckResourceAttr(resName, "storage.0.write_policy", *repo.RepositoryStorage.WritePolicy),
+		resource.TestCheckResourceAttr(resName, "storage.0.write_policy", *repo.Storage.WritePolicy),
 	)
 }
 
-func resourceRepositoryTypeProxyTestCheckFunc(repo nexus.Repository) resource.TestCheckFunc {
+func resourceRepositoryTypeProxyTestCheckFunc(repo repository.LegacyRepository) resource.TestCheckFunc {
 	resName := testAccResourceRepositoryName(repo)
 	return resource.ComposeAggregateTestCheckFunc(
 		resource.TestCheckResourceAttr(resName, "http_client.#", "1"),
 		resource.TestCheckResourceAttr(resName, "group.#", "0"),
 		resource.TestCheckResourceAttr(resName, "negative_cache.#", "1"),
 		resource.TestCheckResourceAttr(resName, "proxy.#", "1"),
-		resource.TestCheckResourceAttr(resName, "proxy.0.content_max_age", strconv.Itoa(repo.RepositoryProxy.ContentMaxAge)),
-		resource.TestCheckResourceAttr(resName, "proxy.0.metadata_max_age", strconv.Itoa(repo.RepositoryProxy.MetadataMaxAge)),
+		resource.TestCheckResourceAttr(resName, "proxy.0.content_max_age", strconv.Itoa(repo.Proxy.ContentMaxAge)),
+		resource.TestCheckResourceAttr(resName, "proxy.0.metadata_max_age", strconv.Itoa(repo.Proxy.MetadataMaxAge)),
 	)
 }

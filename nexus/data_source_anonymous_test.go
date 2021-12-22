@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
@@ -12,7 +12,7 @@ import (
 func TestAccDataSourceAnonymous(t *testing.T) {
 	dataSourceName := "data.nexus_anonymous.acceptance"
 
-	anonym := nexus.AnonymousConfig{
+	anonym := security.AnonymousAccessSettings{
 		Enabled:   true,
 		UserID:    acctest.RandString(20),
 		RealmName: "NexusAuthenticatingRealm",

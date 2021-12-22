@@ -20,7 +20,7 @@ package nexus
 import (
 	"strings"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
@@ -81,7 +81,7 @@ func getRoutingRuleFromResourceData(d *schema.ResourceData) nexus.RoutingRule {
 }
 
 func resourceRoutingRuleCreate(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 	rule := getRoutingRuleFromResourceData(d)
 
 	if err := nexusClient.RoutingRuleCreate(&rule); err != nil {
@@ -93,7 +93,7 @@ func resourceRoutingRuleCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRoutingRuleRead(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	rule, err := nexusClient.RoutingRuleRead(d.Id())
 	if err != nil {
@@ -114,7 +114,7 @@ func resourceRoutingRuleRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRoutingRuleUpdate(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	rule := getRoutingRuleFromResourceData(d)
 	if err := nexusClient.RoutingRuleUpdate(&rule); err != nil {
@@ -125,7 +125,7 @@ func resourceRoutingRuleUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRoutingRuleDelete(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	if err := nexusClient.RoutingRuleDelete(d.Id()); err != nil {
 		return err
@@ -136,7 +136,7 @@ func resourceRoutingRuleDelete(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRoutingRuleExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 
 	rule, err := nexusClient.RoutingRuleRead(d.Id())
 	return rule != nil, err

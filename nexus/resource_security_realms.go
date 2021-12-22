@@ -15,7 +15,7 @@ resource "nexus_security_realms" "example" {
 package nexus
 
 import (
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -43,7 +43,7 @@ func resourceSecurityRealms() *schema.Resource {
 }
 
 func resourceRealmsCreate(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 	realmIDs := interfaceSliceToStringSlice(d.Get("active").([]interface{}))
 	if err := nexusClient.RealmsActivate(realmIDs); err != nil {
 		return err
@@ -53,7 +53,7 @@ func resourceRealmsCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRealmsRead(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	service := m.(nexus.NexusService)
 	activeRealms, err := nexusClient.RealmsActive()
 	if err != nil {
 		return err

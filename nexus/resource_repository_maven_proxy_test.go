@@ -3,15 +3,15 @@ package nexus
 import (
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func testAccResourceRepositoryMavenProxy() nexus.Repository {
-	repo := testAccResourceRepositoryProxy(nexus.RepositoryFormatMaven2)
-	repo.RepositoryMaven = &nexus.RepositoryMaven{
-		LayoutPolicy:  "STRICT",
-		VersionPolicy: "SNAPSHOT",
+func testAccResourceRepositoryMavenProxy() repository.LegacyRepository {
+	repo := testAccResourceRepositoryProxy(repository.RepositoryFormatMaven2)
+	repo.Maven = &repository.Maven{
+		LayoutPolicy:  repository.MavenLayoutPolicyStrict,
+		VersionPolicy: repository.MavenVersionPolicySnapshot,
 	}
 	repo.RepositoryProxy.RemoteURL = "https://www.example.com"
 	return repo
