@@ -11,7 +11,7 @@ jobs:
       - name: Checkout source codes
         uses: actions/checkout@v2
       - name: Install Go
-        uses: actions/setup-go@v2.1.4
+        uses: actions/setup-go@v2.1.5
         with:
           go-version: ${{ matrix.go-version }}
       - name: Test client with nexus3 instance
