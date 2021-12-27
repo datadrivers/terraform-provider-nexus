@@ -3,7 +3,6 @@ package nexus
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"strconv"
 	"text/template"
 
