@@ -3,6 +3,7 @@ package nexus
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"strconv"
 	"text/template"
 
@@ -133,10 +134,8 @@ resource "nexus_repository" "{{ .Name }}" {
 {{ end -}}
 
 {{ if .RepositoryYum }}
-	yum {
 		deploy_policy  = "{{ .RepositoryYum.DeployPolicy }}"
 		repodata_depth = {{ .RepositoryYum.RepodataDepth }}
-	}
 {{ end -}}
 }
 `

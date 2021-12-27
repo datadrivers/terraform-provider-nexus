@@ -1,7 +1,7 @@
 package nexus
 
 import (
-	"strconv"
+	"fmt"
 	"testing"
 
 	nexus "github.com/datadrivers/go-nexus-client"
@@ -19,7 +19,8 @@ func testAccResourceRepositoryYumHosted() nexus.Repository {
 
 func TestAccResourceRepositoryYumHosted(t *testing.T) {
 	repo := testAccResourceRepositoryYumHosted()
-	resName := testAccResourceRepositoryName(repo)
+	//resName := testAccResourceRepositoryName(repo)
+	resName := fmt.Sprintf("nexus_repository_yum_hosted.%s", repo.Name)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -36,13 +37,6 @@ func TestAccResourceRepositoryYumHosted(t *testing.T) {
 						resource.TestCheckResourceAttr(resName, "docker.#", "0"),
 						resource.TestCheckResourceAttr(resName, "docker_proxy.#", "0"),
 						resource.TestCheckResourceAttr(resName, "maven.#", "0"),
-					),
-					// Fields related to this format and type
-					// Format
-					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(resName, "yum.#", "1"),
-						resource.TestCheckResourceAttr(resName, "yum.0.deploy_policy", repo.DeployPolicy),
-						resource.TestCheckResourceAttr(resName, "yum.0.repodata_depth", strconv.Itoa(repo.RepodataDepth)),
 					),
 				),
 			},
