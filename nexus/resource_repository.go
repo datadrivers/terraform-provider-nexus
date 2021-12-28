@@ -922,7 +922,7 @@ func flattenRepositoryHTTPClient(httpClient *repository.HTTPClient, d *schema.Re
 		"authentication": flattenRepositoryHTTPClientAuthentication(httpClient.Authentication, d),
 		"auto_block":     httpClient.AutoBlock,
 		"blocked":        httpClient.Blocked,
-		"connection":     flattenRepositoryHTTPClientConnection(httpClient.Connection),
+		// "connection":     flattenRepositoryHTTPClientConnection(httpClient.Connection),
 	}
 	return []map[string]interface{}{data}
 }
