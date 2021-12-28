@@ -150,8 +150,12 @@ func getYumRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		Type:   "hosted",
 	}
 
+	repo.RepositoryCleanup = &nexus.RepositoryCleanup{
+		PolicyNames: []string{},
+	}
+
 	cleanupList := d.Get("cleanup").([]interface{})
-	if len(cleanupList) > 0 {
+	if len(cleanupList) > 0 && cleanupList[0] != nil {
 		cleanupConfig := cleanupList[0].(map[string]interface{})
 		if len(cleanupConfig) > 0 {
 			policy_names, ok := cleanupConfig["policy_names"]
