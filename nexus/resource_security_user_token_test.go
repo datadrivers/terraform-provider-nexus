@@ -5,14 +5,14 @@ import (
 	"strconv"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
 func TestAccResourceSecurityUserToken(t *testing.T) {
 	resName := "nexus_security_user_token.acceptance"
 
-	token := nexus.UserTokenConfiguration{
+	token := security.UserTokenConfiguration{
 		Enabled:        true,
 		ProtectContent: false,
 	}
@@ -32,7 +32,7 @@ func TestAccResourceSecurityUserToken(t *testing.T) {
 	})
 }
 
-func testAccResourceSecurityUserTokenConfig(token nexus.UserTokenConfiguration) string {
+func testAccResourceSecurityUserTokenConfig(token security.UserTokenConfiguration) string {
 	return fmt.Sprintf(`
 resource "nexus_security_user_token" "acceptance" {
 	enabled         = %t

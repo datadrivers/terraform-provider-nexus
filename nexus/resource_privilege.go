@@ -143,11 +143,11 @@ func setPrivilegeToResourceData(privilege *security.Privilege, d *schema.Resourc
 }
 
 func resourcePrivilegeCreate(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
 	privilege := getPrivilegeFromResourceData(d)
 
-	if err := service.Security.Privilege.Create(privilege); err != nil {
+	if err := client.Security.Privilege.Create(privilege); err != nil {
 		return err
 	}
 
@@ -157,9 +157,9 @@ func resourcePrivilegeCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourcePrivilegeRead(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
-	privilege, err := service.Security.Privilege.Get(d.Id())
+	privilege, err := client.Security.Privilege.Get(d.Id())
 	if err != nil {
 		return err
 	}
@@ -173,10 +173,10 @@ func resourcePrivilegeRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourcePrivilegeUpdate(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
 	privilege := getPrivilegeFromResourceData(d)
-	if err := cservice.Security.Privilege.Update(d.Id(), privilege); err != nil {
+	if err := client.Security.Privilege.Update(d.Id(), privilege); err != nil {
 		return err
 	}
 
@@ -184,9 +184,9 @@ func resourcePrivilegeUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourcePrivilegeDelete(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
-	if err := service.Security.Privilege.Delete(d.Id()); err != nil {
+	if err := client.Security.Privilege.Delete(d.Id()); err != nil {
 		return err
 	}
 
@@ -196,8 +196,8 @@ func resourcePrivilegeDelete(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourcePrivilegeExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
-	privilege, err := service.Security.Privilege.Get(d.Id())
+	privilege, err := client.Security.Privilege.Get(d.Id())
 	return privilege != nil, err
 }

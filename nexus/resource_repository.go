@@ -1028,11 +1028,11 @@ func flattenRepositoryYum(yum *repository.Yum) []map[string]interface{} {
 }
 
 func resourceRepositoryCreate(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
 	repo := getRepositoryFromResourceData(d)
 
-	if err := service.Repository.Legacy.Create(repo); err != nil {
+	if err := client.Repository.Legacy.Create(repo); err != nil {
 		return err
 	}
 
@@ -1044,9 +1044,9 @@ func resourceRepositoryCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRepositoryRead(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
-	repo, err := service.Repository.Legacy.Get(d.Id())
+	repo, err := client.Repository.Legacy.Get(d.Id())
 	if err != nil {
 		return err
 	}
@@ -1060,12 +1060,12 @@ func resourceRepositoryRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRepositoryUpdate(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
 	repoName := d.Id()
 	repo := getRepositoryFromResourceData(d)
 
-	if err := service.Repository.Legacy.Update(repoName, repo); err != nil {
+	if err := client.Repository.Legacy.Update(repoName, repo); err != nil {
 		return err
 	}
 
@@ -1077,14 +1077,14 @@ func resourceRepositoryUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRepositoryDelete(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
-	return service.Repository.Legacy.Delete(d.Id())
+	return client.Repository.Legacy.Delete(d.Id())
 }
 
 func resourceRepositoryExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
-	repo, err := service.Repository.Legacy.Get(d.Id())
+	repo, err := client.Repository.Legacy.Get(d.Id())
 	return repo != nil, err
 }

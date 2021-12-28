@@ -189,9 +189,9 @@ func dataSourceSecurityLDAP() *schema.Resource {
 }
 
 func dataSourceSecurityLDAPRead(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
-	ldapServer, err := service.Security.Ldap.Read()
+	ldapServer, err := client.Security.Ldap.Read()
 	if err != nil {
 		return err
 	}

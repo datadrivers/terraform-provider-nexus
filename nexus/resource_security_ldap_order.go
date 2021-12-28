@@ -52,9 +52,9 @@ func resourceSecurityLDAPOrder() *schema.Resource {
 }
 
 func resourceSecurityLDAPOrderCreate(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 	order := interfaceSliceToStringSlice(d.Get("order").([]interface{}))
-	if err := client.LDAPChangeOrder(order); err != nil {
+	if err := client.Security.LDAP.ChangeOrder(order); err != nil {
 		return err
 	}
 

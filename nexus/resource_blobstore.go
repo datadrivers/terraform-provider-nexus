@@ -51,6 +51,7 @@ import (
 	"log"
 
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/blobstore"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
@@ -331,11 +332,11 @@ func getBlobstoreFromResourceData(d *schema.ResourceData) nexus.Blobstore {
 }
 
 func resourceBlobstoreCreate(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
 	bs := getBlobstoreFromResourceData(d)
 
-	if err := nexusClient.BlobstoreCreate(bs); err != nil {
+	if err := client.Blobstore.Legacy.Create(bs); err != nil {
 		return err
 	}
 
@@ -346,9 +347,9 @@ func resourceBlobstoreCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceBlobstoreRead(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
-	bs, err := nexusClient.BlobstoreRead(d.Id())
+	bs, err := client.Blobstore.Legacy.Get(d.Id())
 	log.Print(bs)
 	if err != nil {
 		return err
@@ -367,7 +368,7 @@ func resourceBlobstoreRead(d *schema.ResourceData, m interface{}) error {
 	d.Set("type", bs.Type)
 
 	if bs.BlobstoreS3BucketConfiguration != nil {
-		if err := d.Set("bucket_configuration", flattenBlobstoreBucketConfiguration(bs.BlobstoreS3BucketConfiguration, d)); err != nil {
+		if err := d.Set("bucket_configuration", flattenBlobstoreBucketConfiguration(bs.S3BucketConfiguration, d)); err != nil {
 			return fmt.Errorf("Error reading bucket configuration: %s", err)
 		}
 	}
@@ -382,10 +383,10 @@ func resourceBlobstoreRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceBlobstoreUpdate(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
 	bs := getBlobstoreFromResourceData(d)
-	if err := nexusClient.BlobstoreUpdate(d.Id(), bs); err != nil {
+	if err := client.Blobstore.Legacy.Update(d.Id(), bs); err != nil {
 		return err
 	}
 
@@ -393,9 +394,9 @@ func resourceBlobstoreUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceBlobstoreDelete(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
-	if err := nexusClient.BlobstoreDelete(d.Id()); err != nil {
+	if err := client.Blobstore.Legacy.Delete(d.Id()); err != nil {
 		return err
 	}
 
@@ -405,13 +406,13 @@ func resourceBlobstoreDelete(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceBlobstoreExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
-	bs, err := nexusClient.BlobstoreRead(d.Id())
+	bs, err := client.Blobstore.Legacy.Get(d.Id())
 	return bs != nil, err
 }
 
-func flattenBlobstoreSoftQuota(softQuota *nexus.BlobstoreSoftQuota) []map[string]interface{} {
+func flattenBlobstoreSoftQuota(softQuota *blobstore.SoftQuota) []map[string]interface{} {
 	if softQuota == nil {
 		return nil
 	}
@@ -422,20 +423,20 @@ func flattenBlobstoreSoftQuota(softQuota *nexus.BlobstoreSoftQuota) []map[string
 	return []map[string]interface{}{data}
 }
 
-func flattenBlobstoreBucketConfiguration(bucketConfig *nexus.BlobstoreS3BucketConfiguration, d *schema.ResourceData) []map[string]interface{} {
+func flattenBlobstoreBucketConfiguration(bucketConfig *blobstore.S3BucketConfiguration, d *schema.ResourceData) []map[string]interface{} {
 	if bucketConfig == nil {
 		return nil
 	}
 	data := map[string]interface{}{
-		"advanced_bucket_connection": flattenBlobstoreS3AdvancedBucketConnection(bucketConfig.BlobstoreS3AdvancedBucketConnection),
-		"bucket":                     flattenBlobstoreS3Bucket(bucketConfig.BlobstoreS3Bucket),
-		"bucket_security":            flattenBlobstoreS3BucketSecurity(bucketConfig.BlobstoreS3BucketSecurity, d),
-		"encryption":                 flattenBlobstoreS3Encryption(bucketConfig.BlobstoreS3Encryption),
+		"advanced_bucket_connection": flattenBlobstoreS3AdvancedBucketConnection(bucketConfig.AdvancedBucketConnection),
+		"bucket":                     flattenBlobstoreS3Bucket(bucketConfig.Bucket),
+		"bucket_security":            flattenBlobstoreS3BucketSecurity(bucketConfig.BucketSecurity, d),
+		"encryption":                 flattenBlobstoreS3Encryption(bucketConfig.Encryption),
 	}
 	return []map[string]interface{}{data}
 }
 
-func flattenBlobstoreS3AdvancedBucketConnection(bucketConnection *nexus.BlobstoreS3AdvancedBucketConnection) []map[string]interface{} {
+func flattenBlobstoreS3AdvancedBucketConnection(bucketConnection *blobstore.S3AdvancedBucketConnection) []map[string]interface{} {
 	if bucketConnection == nil {
 		return nil
 	}
@@ -447,7 +448,7 @@ func flattenBlobstoreS3AdvancedBucketConnection(bucketConnection *nexus.Blobstor
 	return []map[string]interface{}{data}
 }
 
-func flattenBlobstoreS3Bucket(bucekt *nexus.BlobstoreS3Bucket) []map[string]interface{} {
+func flattenBlobstoreS3Bucket(bucekt *blobstore.S3Bucket) []map[string]interface{} {
 	if bucekt == nil {
 		return nil
 	}
@@ -460,7 +461,7 @@ func flattenBlobstoreS3Bucket(bucekt *nexus.BlobstoreS3Bucket) []map[string]inte
 	return []map[string]interface{}{data}
 }
 
-func flattenBlobstoreS3BucketSecurity(bucketSecurity *nexus.BlobstoreS3BucketSecurity, d *schema.ResourceData) []map[string]interface{} {
+func flattenBlobstoreS3BucketSecurity(bucketSecurity *blobstore.S3BucketSecurity, d *schema.ResourceData) []map[string]interface{} {
 	if bucketSecurity == nil {
 		return nil
 	}
@@ -473,7 +474,7 @@ func flattenBlobstoreS3BucketSecurity(bucketSecurity *nexus.BlobstoreS3BucketSec
 	return []map[string]interface{}{data}
 }
 
-func flattenBlobstoreS3Encryption(encryption *nexus.BlobstoreS3Encryption) []map[string]interface{} {
+func flattenBlobstoreS3Encryption(encryption *blobstore.S3Encryption) []map[string]interface{} {
 	if encryption == nil {
 		return nil
 	}

@@ -62,7 +62,7 @@ func testAccCheckContentSelectorResourceExists(name string, contentSelector *sec
 			return fmt.Errorf("Not found: %s", name)
 		}
 
-		service := testAccProvider.Meta().(nexus.Servce)
+		client := testAccProvider.Meta().(nexus.NexusClient)
 		result, err := client.Security.ContentSelector.Get(rs.Primary.ID)
 		if err != nil {
 			return err

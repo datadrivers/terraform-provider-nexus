@@ -18,6 +18,7 @@ package nexus
 
 import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -47,22 +48,22 @@ func resourceSecurityUserToken() *schema.Resource {
 	}
 }
 
-func getSecurityUserTokenFromResourceData(d *schema.ResourceData) nexus.UserTokenConfiguration {
-	return nexus.UserTokenConfiguration{
+func getSecurityUserTokenFromResourceData(d *schema.ResourceData) security.UserTokenConfiguration {
+	return security.UserTokenConfiguration{
 		Enabled:        d.Get("enabled").(bool),
 		ProtectContent: d.Get("protect_content").(bool),
 	}
 }
 
-func setSecurityUserTokenToResourceData(token *nexus.UserTokenConfiguration, d *schema.ResourceData) {
+func setSecurityUserTokenToResourceData(token *security.UserTokenConfiguration, d *schema.ResourceData) {
 	d.SetId("golbalUserTokenConfiguration")
 	d.Set("enabled", token.Enabled)
 	d.Set("protect_content", token.ProtectContent)
 }
 
 func resourceSecurityUserTokenRead(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
-	token, err := nexusClient.UserTokensRead()
+	client := m.(nexus.NexusClient)
+	token, err := client.Security.UserTokens.Get()
 	if err != nil {
 		return err
 	}
@@ -71,10 +72,10 @@ func resourceSecurityUserTokenRead(d *schema.ResourceData, m interface{}) error 
 }
 
 func resourceSecurityUserTokenUpdate(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
 	token := getSecurityUserTokenFromResourceData(d)
-	if err := nexusClient.UserTokensApply(token); err != nil {
+	if err := client.Security.UserTokens.Apply(token); err != nil {
 		return err
 	}
 

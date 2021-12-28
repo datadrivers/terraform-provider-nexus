@@ -127,9 +127,9 @@ func dataSourcePrivileges() *schema.Resource {
 }
 
 func dataSourcePrivilegesRead(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
-	privileges, err := service.Security.Privilege.List()
+	privileges, err := client.Security.Privilege.List()
 	if err != nil {
 		return err
 	}
@@ -159,7 +159,7 @@ func dataSourcePrivilegesRead(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func filterPrivileges(privileges []nexus.Privilege, filterDomain, filterFormat, filterName, filterRepository, filterType string) ([]security.Privilege, error) {
+func filterPrivileges(privileges []security.Privilege, filterDomain, filterFormat, filterName, filterRepository, filterType string) ([]security.Privilege, error) {
 	domains := make([]int, 0)
 	formats := make([]int, 0)
 	repositories := make([]int, 0)

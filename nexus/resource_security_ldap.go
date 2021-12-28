@@ -40,6 +40,7 @@ package nexus
 
 import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
@@ -216,11 +217,11 @@ func resourceSecurityLDAP() *schema.Resource {
 }
 
 func resourceSecurityLDAPCreate(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
 	ldap := getSecurityLDAPFromResourceData(d)
 
-	if err := client.LDAPCreate(ldap); err != nil {
+	if err := client.Security.LDAP.Create(ldap); err != nil {
 		return err
 	}
 
@@ -232,9 +233,9 @@ func resourceSecurityLDAPCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecurityLDAPRead(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
-	ldap, err := client.LDAPRead(d.Id())
+	ldap, err := client.Security.LDAP.Get(d.Id())
 	if err != nil {
 		return err
 	}
@@ -248,12 +249,12 @@ func resourceSecurityLDAPRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecurityLDAPUpdate(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
 	ldapID := d.Id()
 	ldap := getSecurityLDAPFromResourceData(d)
 
-	if err := client.LDAPUpdate(ldapID, ldap); err != nil {
+	if err := client.Security.LDAP.Update(ldapID, ldap); err != nil {
 		return err
 	}
 
@@ -265,16 +266,16 @@ func resourceSecurityLDAPUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecurityLDAPDelete(d *schema.ResourceData, m interface{}) error {
-	service := m.(nexus.NexusService)
+	client := m.(nexus.NexusClient)
 
-	return client.LDAPDelete(d.Id())
+	return client.Security.LDAP.Delete(d.Id())
 }
 
 func resourceSecurityLDAPExists(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func setSecurityLDAPToResourceData(ldap *nexus.LDAP, d *schema.ResourceData) error {
+func setSecurityLDAPToResourceData(ldap *security.LDAP, d *schema.ResourceData) error {
 	d.SetId(ldap.Name)
 	// d.Set("auth_password", ldap.AuthPassword) // AuthPassword is not returned by API
 	d.Set("auth_realm", ldap.AuthRealm)
@@ -310,8 +311,8 @@ func setSecurityLDAPToResourceData(ldap *nexus.LDAP, d *schema.ResourceData) err
 	return nil
 }
 
-func getSecurityLDAPFromResourceData(d *schema.ResourceData) nexus.LDAP {
-	ldap := nexus.LDAP{
+func getSecurityLDAPFromResourceData(d *schema.ResourceData) security.LDAP {
+	ldap := security.LDAP{
 		AuthPassword:                d.Get("auth_password").(string),
 		AuthRealm:                   d.Get("auth_realm").(string),
 		AuthSchema:                  d.Get("auth_schema").(string),

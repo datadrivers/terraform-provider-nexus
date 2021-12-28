@@ -5,20 +5,20 @@ import (
 	"strconv"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func testAccResourceSecurityLDAP() nexus.LDAP {
-	return nexus.LDAP{
+func testAccResourceSecurityLDAP() security.LDAP {
+	return security.LDAP{
 		AuthPassword:                "1234567890",
 		AuthSchema:                  "SIMPLE",
 		AuthUserName:                "admin",
-		ConnectionRetryDelaySeconds: uint(1),
-		ConnectionTimeoutSeconds:    uint(1),
+		ConnectionRetryDelaySeconds: int32(1),
+		ConnectionTimeoutSeconds:    int32(1),
 		GroupType:                   "static",
 		Host:                        "127.0.0.1",
-		MaxIncidentCount:            uint(1),
+		MaxIncidentCount:            int32(1),
 		Name:                        "acceptance",
 		Port:                        389,
 		Protocol:                    "LDAP",
@@ -83,7 +83,7 @@ func TestAccResourceSecurityLDAP(t *testing.T) {
 	})
 }
 
-func testAccResourceSecurityLDAPConfig(ldap nexus.LDAP) string {
+func testAccResourceSecurityLDAPConfig(ldap security.LDAP) string {
 	return fmt.Sprintf(`
 resource "nexus_security_ldap" "%s" {
 	auth_password                  = "%s"

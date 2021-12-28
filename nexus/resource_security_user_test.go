@@ -6,13 +6,13 @@ import (
 	"strings"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func testAccResourceSecurityUser() nexus.User {
-	return nexus.User{
+func testAccResourceSecurityUser() security.User {
+	return security.User{
 		UserID:       fmt.Sprintf("user-test-%s", acctest.RandString(10)),
 		FirstName:    fmt.Sprintf("user-firstname-%s", acctest.RandString(10)),
 		LastName:     fmt.Sprintf("user-lastname-%s", acctest.RandString(10)),
@@ -64,7 +64,7 @@ func TestAccResourceSecurityUser(t *testing.T) {
 	})
 }
 
-func testAccResourceSecurityUserConfig(user nexus.User) string {
+func testAccResourceSecurityUserConfig(user security.User) string {
 	return fmt.Sprintf(`
 resource "nexus_security_user" "acceptance" {
 	userid    = "%s"

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
@@ -14,7 +14,7 @@ import (
 func TestAccResourceRole(t *testing.T) {
 	resName := "nexus_role.acceptance"
 
-	role := nexus.Role{
+	role := security.Role{
 		ID:          acctest.RandString(10),
 		Name:        acctest.RandString(10),
 		Description: acctest.RandString(30),
@@ -49,7 +49,7 @@ func TestAccResourceRole(t *testing.T) {
 	})
 }
 
-func testAccResourceRoleConfig(role nexus.Role) string {
+func testAccResourceRoleConfig(role security.Role) string {
 	return fmt.Sprintf(`
 resource "nexus_role" "acceptance" {
 	roleid = "%s"

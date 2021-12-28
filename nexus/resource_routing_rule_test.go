@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
@@ -48,7 +49,7 @@ func TestAccResourceRoutingRule(t *testing.T) {
 	})
 }
 
-func testAccResourceRoutingRuleConfig(rule nexus.RoutingRule) string {
+func testAccResourceRoutingRuleConfig(rule schema.RoutingRule) string {
 	return fmt.Sprintf(`
 	resource "nexus_routing_rule" "acceptance" {
 		name        = "%s"

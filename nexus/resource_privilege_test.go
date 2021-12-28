@@ -71,8 +71,8 @@ func testAccCheckPrivilegeResourceExists(name string, privilege *security.Privil
 			return fmt.Errorf("Not found: %s", name)
 		}
 
-		service := testAccProvider.Meta().(nexus.Service)
-		result, err := service.Security.Privilege.Get(rs.Primary.ID)
+		client := testAccProvider.Meta().(nexus.NexusClient)
+		result, err := client.Security.Privilege.Get(rs.Primary.ID)
 		if err != nil {
 			return err
 		}
