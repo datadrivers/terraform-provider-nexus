@@ -4,14 +4,13 @@ import (
 	"strconv"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
 func testAccRepositoryBowerHosted() repository.LegacyRepository {
-	repo := testAccResourceRepositoryHosted(nexus.RepositoryFormatBower)
-	repo.Bower = &nexus.Bower{
+	repo := testAccResourceRepositoryHosted(repository.RepositoryFormatBower)
+	repo.Bower = &repository.Bower{
 		RewritePackageUrls: true,
 	}
 	return repo

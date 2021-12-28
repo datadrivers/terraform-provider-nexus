@@ -15,6 +15,7 @@ package nexus
 
 import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -56,7 +57,7 @@ func resourcePrivilege() *schema.Resource {
 				Description:  "The format of the privilege. Possible values: `apt`, `bower`, `conan`, `docker`, `gitlfs`, `go`, `helm`, `maven2`, `npm`, `nuget`, `p2`, `pypi`, `raw`, `rubygems`, `yum`",
 				Optional:     true,
 				Type:         schema.TypeString,
-				ValidateFunc: validation.StringInSlice(nexus.RepositoryFormats, false),
+				ValidateFunc: validation.StringInSlice(repository.RepositoryFormats, false),
 			},
 			"name": {
 				Description: "The name of the privilege",
@@ -143,7 +144,7 @@ func setPrivilegeToResourceData(privilege *security.Privilege, d *schema.Resourc
 }
 
 func resourcePrivilegeCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	privilege := getPrivilegeFromResourceData(d)
 
@@ -157,7 +158,7 @@ func resourcePrivilegeCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourcePrivilegeRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	privilege, err := client.Security.Privilege.Get(d.Id())
 	if err != nil {
@@ -173,7 +174,7 @@ func resourcePrivilegeRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourcePrivilegeUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	privilege := getPrivilegeFromResourceData(d)
 	if err := client.Security.Privilege.Update(d.Id(), privilege); err != nil {
@@ -184,7 +185,7 @@ func resourcePrivilegeUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourcePrivilegeDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	if err := client.Security.Privilege.Delete(d.Id()); err != nil {
 		return err
@@ -196,7 +197,7 @@ func resourcePrivilegeDelete(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourcePrivilegeExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	privilege, err := client.Security.Privilege.Get(d.Id())
 	return privilege != nil, err

@@ -1,7 +1,6 @@
 package nexus
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -25,7 +24,7 @@ func TestAccDataSourceSecurityRealms(t *testing.T) {
 }
 
 func testAccDataSourceSecurityRealmsConfig() string {
-	return fmt.Sprintf(`
+	return `
 data "nexus_security_realms" "acceptance" {}
-`)
+`
 }

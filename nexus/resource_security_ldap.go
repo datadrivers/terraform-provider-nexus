@@ -51,7 +51,6 @@ func resourceSecurityLDAP() *schema.Resource {
 		Read:   resourceSecurityLDAPRead,
 		Update: resourceSecurityLDAPUpdate,
 		Delete: resourceSecurityLDAPDelete,
-		// Exists: resourceSecurityLDAPExists,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -217,7 +216,7 @@ func resourceSecurityLDAP() *schema.Resource {
 }
 
 func resourceSecurityLDAPCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	ldap := getSecurityLDAPFromResourceData(d)
 
@@ -233,7 +232,7 @@ func resourceSecurityLDAPCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecurityLDAPRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	ldap, err := client.Security.LDAP.Get(d.Id())
 	if err != nil {
@@ -249,7 +248,7 @@ func resourceSecurityLDAPRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecurityLDAPUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	ldapID := d.Id()
 	ldap := getSecurityLDAPFromResourceData(d)
@@ -266,13 +265,9 @@ func resourceSecurityLDAPUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecurityLDAPDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	return client.Security.LDAP.Delete(d.Id())
-}
-
-func resourceSecurityLDAPExists(d *schema.ResourceData, m interface{}) error {
-	return nil
 }
 
 func setSecurityLDAPToResourceData(ldap *security.LDAP, d *schema.ResourceData) error {
@@ -317,8 +312,8 @@ func getSecurityLDAPFromResourceData(d *schema.ResourceData) security.LDAP {
 		AuthRealm:                   d.Get("auth_realm").(string),
 		AuthSchema:                  d.Get("auth_schema").(string),
 		AuthUserName:                d.Get("auth_username").(string),
-		ConnectionRetryDelaySeconds: uint(d.Get("connection_retry_delay_seconds").(int)),
-		ConnectionTimeoutSeconds:    uint(d.Get("connection_timeout_seconds").(int)),
+		ConnectionRetryDelaySeconds: int32(d.Get("connection_retry_delay_seconds").(int)),
+		ConnectionTimeoutSeconds:    int32(d.Get("connection_timeout_seconds").(int)),
 		GroupBaseDn:                 d.Get("group_base_dn").(string),
 		GroupIDAttribute:            d.Get("group_id_attribute").(string),
 		GroupMemberAttribute:        d.Get("group_member_attribute").(string),
@@ -328,9 +323,9 @@ func getSecurityLDAPFromResourceData(d *schema.ResourceData) security.LDAP {
 		GroupType:                   d.Get("group_type").(string),
 		Host:                        d.Get("host").(string),
 		LDAPGroupsAsRoles:           d.Get("ldap_groups_as_roles").(bool),
-		MaxIncidentCount:            uint(d.Get("max_incident_count").(int)),
+		MaxIncidentCount:            int32(d.Get("max_incident_count").(int)),
 		Name:                        d.Get("name").(string),
-		Port:                        uint(d.Get("port").(int)),
+		Port:                        int32(d.Get("port").(int)),
 		Protocol:                    d.Get("protocol").(string),
 		SearchBase:                  d.Get("search_base").(string),
 		UseTrustStore:               d.Get("use_trust_store").(bool),

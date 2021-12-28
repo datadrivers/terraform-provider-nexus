@@ -21,7 +21,7 @@ func TestAccResourceRepositoryPyPiGroup(t *testing.T) {
 	proxyRepoResName := testAccResourceRepositoryName(proxyRepo)
 
 	repo := testAccResourceRepositoryPyPiGroup()
-	repo.RepositoryGroup.MemberNames = []string{
+	repo.Group.MemberNames = []string{
 		fmt.Sprintf("%s.name", hostedRepoResName),
 		fmt.Sprintf("%s.name", proxyRepoResName),
 	}

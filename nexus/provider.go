@@ -75,5 +75,5 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		Username: d.Get("username").(string),
 	}
 
-	return nexus.NewService(config), nil
+	return nexus.NewClient(config), nil
 }

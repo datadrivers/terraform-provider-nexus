@@ -96,7 +96,7 @@ func getSecurityUserFromResourceData(d *schema.ResourceData) security.User {
 }
 
 func resourceSecurityUserCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 	user := getSecurityUserFromResourceData(d)
 
 	if err := client.Security.User.Create(user); err != nil {
@@ -108,7 +108,7 @@ func resourceSecurityUserCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecurityUserRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	user, err := client.Security.User.Get(d.Id())
 	if err != nil {
@@ -131,19 +131,14 @@ func resourceSecurityUserRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecurityUserUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
-
-	d.Partial(true)
+	client := m.(*nexus.NexusClient)
 
 	if d.HasChange("password") {
 		password := d.Get("password").(string)
 		if err := client.Security.User.ChangePassword(d.Id(), password); err != nil {
 			return err
 		}
-		d.SetPartial("password")
 	}
-
-	d.Partial(false)
 
 	if d.HasChange("firstname") || d.HasChange("lastname") || d.HasChange("email") || d.HasChange("status") || d.HasChange("roles") {
 		user := getSecurityUserFromResourceData(d)
@@ -155,7 +150,7 @@ func resourceSecurityUserUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecurityUserDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	if err := client.Security.User.Delete(d.Id()); err != nil {
 		return err
@@ -166,7 +161,7 @@ func resourceSecurityUserDelete(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecurityUserExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	user, err := client.Security.User.Get(d.Id())
 	return user != nil, err

@@ -62,7 +62,7 @@ func setSecurityUserTokenToResourceData(token *security.UserTokenConfiguration, 
 }
 
 func resourceSecurityUserTokenRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 	token, err := client.Security.UserTokens.Get()
 	if err != nil {
 		return err
@@ -72,10 +72,10 @@ func resourceSecurityUserTokenRead(d *schema.ResourceData, m interface{}) error 
 }
 
 func resourceSecurityUserTokenUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	token := getSecurityUserTokenFromResourceData(d)
-	if err := client.Security.UserTokens.Apply(token); err != nil {
+	if err := client.Security.UserTokens.Configure(token); err != nil {
 		return err
 	}
 

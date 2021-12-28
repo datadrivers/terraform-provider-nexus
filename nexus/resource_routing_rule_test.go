@@ -6,7 +6,6 @@ import (
 	"strings"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -15,7 +14,7 @@ import (
 func TestAccResourceRoutingRule(t *testing.T) {
 	resName := "nexus_routing_rule.acceptance"
 
-	rule := nexus.RoutingRule{
+	rule := schema.RoutingRule{
 		Name:        acctest.RandString(10),
 		Description: "acceptance test",
 		Mode:        "BLOCK",

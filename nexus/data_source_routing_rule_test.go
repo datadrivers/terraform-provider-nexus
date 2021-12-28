@@ -1,7 +1,6 @@
 package nexus
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/datadrivers/go-nexus-client/nexus3/schema"
@@ -38,9 +37,9 @@ func TestAccDataSourceRoutingRule(t *testing.T) {
 }
 
 func testAccDataSourceRoutingRuleConfig() string {
-	return fmt.Sprintf(`
+	return `
 data "nexus_routing_rule" "acceptance" {
 	name = nexus_routing_rule.acceptance.name
 }
-`)
+`
 }

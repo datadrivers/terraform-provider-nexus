@@ -21,7 +21,7 @@ func TestAccResourceRepositoryNugetGroup(t *testing.T) {
 	proxyRepoResName := testAccResourceRepositoryName(proxyRepo)
 
 	repo := testAccResourceRepositoryNugetGroup()
-	repo.RepositoryGroup.MemberNames = []string{
+	repo.Group.MemberNames = []string{
 		fmt.Sprintf("%s.name", hostedRepoResName),
 		fmt.Sprintf("%s.name", proxyRepoResName),
 	}

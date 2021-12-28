@@ -9,7 +9,8 @@ import (
 
 func testAccResourceRepositoryNugetProxy() repository.LegacyRepository {
 	repo := testAccResourceRepositoryProxy(repository.RepositoryFormatNuget)
-	repo.Proxy.RemoteURL = "https://www.nuget.org/api/v2/"
+	remoteURL := "https://www.nuget.org/api/v2/"
+	repo.Proxy.RemoteURL = &remoteURL
 	repo.NugetProxy = &repository.NugetProxy{
 		QueryCacheItemMaxAge: 1440,
 		NugetVersion:         repository.NugetVersion3,

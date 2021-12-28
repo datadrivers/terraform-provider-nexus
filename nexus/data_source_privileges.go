@@ -127,7 +127,7 @@ func dataSourcePrivileges() *schema.Resource {
 }
 
 func dataSourcePrivilegesRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	privileges, err := client.Security.Privilege.List()
 	if err != nil {
@@ -206,19 +206,17 @@ func flattenPrivileges(privileges []security.Privilege) []map[string]interface{}
 	}
 
 	data := make([]map[string]interface{}, len(privileges))
-	if privileges != nil {
-		for i, priv := range privileges {
-			data[i] = map[string]interface{}{
-				"actions":          priv.Actions,
-				"content_selector": priv.ContentSelector,
-				"description":      priv.Description,
-				"domain":           priv.Domain,
-				"format":           priv.Format,
-				"name":             priv.Name,
-				"read_only":        priv.ReadOnly,
-				"repository":       priv.Repository,
-				"type":             priv.Type,
-			}
+	for i, priv := range privileges {
+		data[i] = map[string]interface{}{
+			"actions":          priv.Actions,
+			"content_selector": priv.ContentSelector,
+			"description":      priv.Description,
+			"domain":           priv.Domain,
+			"format":           priv.Format,
+			"name":             priv.Name,
+			"read_only":        priv.ReadOnly,
+			"repository":       priv.Repository,
+			"type":             priv.Type,
 		}
 	}
 

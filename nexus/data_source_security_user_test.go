@@ -45,9 +45,9 @@ func TestAccDataSourceSecurityUser(t *testing.T) {
 }
 
 func testAccDataSourceSecurityUserConfig() string {
-	return fmt.Sprintf(`
+	return `
 data "nexus_security_user" "acceptance" {
 	userid = nexus_security_user.acceptance.userid
 }
-`)
+`
 }

@@ -91,7 +91,7 @@ func resourceSecuritySAML() *schema.Resource {
 }
 
 func resourceSecuritySAMLRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	saml, err := client.Security.SAML.Read()
 	if err != nil {
@@ -107,7 +107,7 @@ func resourceSecuritySAMLRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecuritySAMLUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	saml := getSecuritySAMLFromResourceData(d)
 
@@ -123,13 +123,13 @@ func resourceSecuritySAMLUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecuritySAMLDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	return client.Security.SAML.Delete()
 }
 
 func resourceSecuritySAMLExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	saml, _ := client.Security.SAML.Read()
 

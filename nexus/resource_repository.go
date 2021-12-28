@@ -532,7 +532,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) repository.LegacyRepo
 		aptList := d.Get("apt").([]interface{})
 		aptConfig := aptList[0].(map[string]interface{})
 
-		repo.Apt = &repository.Apt{
+		repo.Apt = &repository.AptProxy{
 			Distribution: aptConfig["distribution"].(string),
 			Flat:         aptConfig["flat"].(bool),
 		}
@@ -541,10 +541,12 @@ func getRepositoryFromResourceData(d *schema.ResourceData) repository.LegacyRepo
 	if _, ok := d.GetOk("apt_signing"); ok {
 		aptSigningList := d.Get("apt_signing").([]interface{})
 		aptSigningConfig := aptSigningList[0].(map[string]interface{})
+		keypair := aptSigningConfig["keypair"].(string)
+		passphrase := aptSigningConfig["passphrase"].(string)
 
 		repo.AptSigning = &repository.AptSigning{
-			Keypair:    aptSigningConfig["keypair"].(string),
-			Passphrase: aptSigningConfig["passphrase"].(string),
+			Keypair:    &keypair,
+			Passphrase: &passphrase,
 		}
 	}
 
@@ -601,8 +603,9 @@ func getRepositoryFromResourceData(d *schema.ResourceData) repository.LegacyRepo
 		if indexURL != "" {
 			indexURLValue = &indexURL
 		}
+		indexType := repository.DockerProxyIndexType(dockerProxyConfig["index_type"].(string))
 		repo.DockerProxy = &repository.DockerProxy{
-			IndexType: dockerProxyConfig["index_type"].(string),
+			IndexType: &indexType,
 			IndexURL:  indexURLValue,
 		}
 	}
@@ -641,7 +644,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) repository.LegacyRepo
 				repo.HTTPClient.Authentication = &repository.HTTPClientAuthentication{
 					NTLMDomain: authConfig["ntlm_domain"].(string),
 					NTLMHost:   authConfig["ntlm_host"].(string),
-					Type:       authConfig["type"].(string),
+					Type:       repository.HTTPClientAuthenticationType(authConfig["type"].(string)),
 					Username:   authConfig["username"].(string),
 					Password:   authConfig["password"].(string),
 				}
@@ -668,9 +671,11 @@ func getRepositoryFromResourceData(d *schema.ResourceData) repository.LegacyRepo
 		mavenList := d.Get("maven").([]interface{})
 		mavenConfig := mavenList[0].(map[string]interface{})
 
+		versionPolicy := repository.MavenVersionPolicy(mavenConfig["version_policy"].(string))
+		layoutPolicy := repository.MavenLayoutPolicy(mavenConfig["layout_policy"].(string))
 		repo.Maven = &repository.Maven{
-			VersionPolicy: mavenConfig["version_policy"].(string),
-			LayoutPolicy:  mavenConfig["layout_policy"].(string),
+			VersionPolicy: &versionPolicy,
+			LayoutPolicy:  &layoutPolicy,
 		}
 	}
 
@@ -688,7 +693,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) repository.LegacyRepo
 		nugetProxyList := d.Get("nuget_proxy").([]interface{})
 		nugetProxyConfig := nugetProxyList[0].(map[string]interface{})
 
-		repo.NugetProxy = &repository.ugetProxy{
+		repo.NugetProxy = &repository.NugetProxy{
 			QueryCacheItemMaxAge: nugetProxyConfig["query_cache_item_max_age"].(int),
 			NugetVersion:         repository.NugetVersion(nugetProxyConfig["nuget_version"].(string)),
 		}
@@ -697,10 +702,11 @@ func getRepositoryFromResourceData(d *schema.ResourceData) repository.LegacyRepo
 	if _, ok := d.GetOk("proxy"); ok {
 		proxyList := d.Get("proxy").([]interface{})
 		proxyConfig := proxyList[0].(map[string]interface{})
+		remoteURL := proxyConfig["remote_url"].(string)
 		repo.Proxy = &repository.Proxy{
 			ContentMaxAge:  proxyConfig["content_max_age"].(int),
 			MetadataMaxAge: proxyConfig["metadata_max_age"].(int),
-			RemoteURL:      proxyConfig["remote_url"].(string),
+			RemoteURL:      &remoteURL,
 		}
 	}
 
@@ -714,7 +720,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) repository.LegacyRepo
 		}
 		// Only hosted repository has attribute WritePolicy
 		if repo.Type == repository.RepositoryTypeHosted {
-			writePolicy := storageConfig["write_policy"].(string)
+			writePolicy := repository.StorageWritePolicy(storageConfig["write_policy"].(string))
 			repo.Storage.WritePolicy = &writePolicy
 		}
 	}
@@ -722,10 +728,10 @@ func getRepositoryFromResourceData(d *schema.ResourceData) repository.LegacyRepo
 	if _, ok := d.GetOk("yum"); ok {
 		yumList := d.Get("yum").([]interface{})
 		yumConfig := yumList[0].(map[string]interface{})
-
+		deployPolicy := repository.YumDeployPolicy(yumConfig["deploy_policy"].(string))
 		repo.Yum = &repository.Yum{
 			RepodataDepth: yumConfig["repodata_depth"].(int),
-			DeployPolicy:  yumConfig["deploy_policy"].(string),
+			DeployPolicy:  &deployPolicy,
 		}
 	}
 
@@ -824,7 +830,7 @@ func setRepositoryToResourceData(repo *repository.LegacyRepository, d *schema.Re
 	return nil
 }
 
-func flattenRepositoryApt(apt *repository.Apt) []map[string]interface{} {
+func flattenRepositoryApt(apt *repository.AptProxy) []map[string]interface{} {
 	if apt == nil {
 		return nil
 	}
@@ -916,7 +922,7 @@ func flattenRepositoryHTTPClient(httpClient *repository.HTTPClient, d *schema.Re
 		"authentication": flattenRepositoryHTTPClientAuthentication(httpClient.Authentication, d),
 		"auto_block":     httpClient.AutoBlock,
 		"blocked":        httpClient.Blocked,
-		// "connection":     flattenRepositoryHTTPClientConnection(httpClient.Connection),
+		"connection":     flattenRepositoryHTTPClientConnection(httpClient.Connection),
 	}
 	return []map[string]interface{}{data}
 }
@@ -1002,7 +1008,7 @@ func flattenRepositoryProxy(proxy *repository.Proxy) []map[string]interface{} {
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryStorage(storage *repository.Storage, d *schema.ResourceData) []map[string]interface{} {
+func flattenRepositoryStorage(storage *repository.HostedStorage, d *schema.ResourceData) []map[string]interface{} {
 	if storage == nil {
 		return nil
 	}
@@ -1028,7 +1034,7 @@ func flattenRepositoryYum(yum *repository.Yum) []map[string]interface{} {
 }
 
 func resourceRepositoryCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	repo := getRepositoryFromResourceData(d)
 
@@ -1044,7 +1050,7 @@ func resourceRepositoryCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRepositoryRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	repo, err := client.Repository.Legacy.Get(d.Id())
 	if err != nil {
@@ -1060,7 +1066,7 @@ func resourceRepositoryRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRepositoryUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	repoName := d.Id()
 	repo := getRepositoryFromResourceData(d)
@@ -1077,13 +1083,13 @@ func resourceRepositoryUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRepositoryDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	return client.Repository.Legacy.Delete(d.Id())
 }
 
 func resourceRepositoryExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	repo, err := client.Repository.Legacy.Get(d.Id())
 	return repo != nil, err

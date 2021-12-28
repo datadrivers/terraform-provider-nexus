@@ -9,7 +9,7 @@ import (
 
 func testAccResourceRepositoryMavenGroup() repository.LegacyRepository {
 	repo := testAccResourceRepositoryGroup(repository.RepositoryFormatMaven2)
-	repo.RepositoryGroup.MemberNames = []string{"\"maven-releases\"", "\"maven-public\""}
+	repo.Group.MemberNames = []string{"\"maven-releases\"", "\"maven-public\""}
 	return repo
 }
 

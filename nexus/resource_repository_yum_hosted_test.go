@@ -10,8 +10,9 @@ import (
 
 func testAccResourceRepositoryYumHosted() repository.LegacyRepository {
 	repo := testAccResourceRepositoryHosted(repository.RepositoryFormatYum)
+	deployPolicy := repository.YumDeployPolicyPermissive
 	repo.Yum = &repository.Yum{
-		DeployPolicy:  repository.YumDeployPolicyPermissive,
+		DeployPolicy:  &deployPolicy,
 		RepodataDepth: 0,
 	}
 	return repo
@@ -41,7 +42,7 @@ func TestAccResourceRepositoryYumHosted(t *testing.T) {
 					// Format
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(resName, "yum.#", "1"),
-						resource.TestCheckResourceAttr(resName, "yum.0.deploy_policy", repo.DeployPolicy),
+						resource.TestCheckResourceAttr(resName, "yum.0.deploy_policy", string(*repo.DeployPolicy)),
 						resource.TestCheckResourceAttr(resName, "yum.0.repodata_depth", strconv.Itoa(repo.RepodataDepth)),
 					),
 				),

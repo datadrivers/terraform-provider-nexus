@@ -60,7 +60,7 @@ func getScriptFromResourceData(d *schema.ResourceData) nexusSchema.Script {
 }
 
 func resourceScriptCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 	script := getScriptFromResourceData(d)
 
 	if err := client.Script.Create(&script); err != nil {
@@ -76,7 +76,7 @@ func resourceScriptCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScriptRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	script, err := client.Script.Get(d.Id())
 	if err != nil {
@@ -96,7 +96,7 @@ func resourceScriptRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScriptUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	if d.HasChange("content") || d.HasChange("type") {
 		script := getScriptFromResourceData(d)
@@ -113,7 +113,7 @@ func resourceScriptUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScriptDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	if err := client.Script.Delete(d.Id()); err != nil {
 		return err
@@ -124,7 +124,7 @@ func resourceScriptDelete(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScriptExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	script, err := client.Script.Get(d.Id())
 	return script != nil, err

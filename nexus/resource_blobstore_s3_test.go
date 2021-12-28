@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/blobstore"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
@@ -20,15 +20,15 @@ func TestAccResourceBlobstoreS3(t *testing.T) {
 	awsAccessKeyID := getEnv("AWS_ACCESS_KEY_ID", "")
 	awsSecretAccessKey := getEnv("AWS_SECRET_ACCESS_KEY", "")
 
-	bs := nexus.Blobstore{
+	bs := blobstore.Legacy{
 		Name: fmt.Sprintf("test-blobstore-s3-%d", acctest.RandIntRange(0, 99)),
-		Type: nexus.BlobstoreTypeS3,
-		BlobstoreS3BucketConfiguration: &nexus.BlobstoreS3BucketConfiguration{
-			BlobstoreS3Bucket: &nexus.BlobstoreS3Bucket{
+		Type: blobstore.BlobstoreTypeS3,
+		S3BucketConfiguration: &blobstore.S3BucketConfiguration{
+			Bucket: blobstore.S3Bucket{
 				Name:   getEnv("AWS_BUCKET_NAME", "terraform-provider-nexus-s3-test"),
 				Region: getEnv("AWS_DEFAULT_REGION", "eu-central-1"),
 			},
-			BlobstoreS3AdvancedBucketConnection: &nexus.BlobstoreS3AdvancedBucketConnection{
+			AdvancedBucketConnection: &blobstore.S3AdvancedBucketConnection{
 				Endpoint:       getEnv("AWS_ENDPOINT", ""),
 				ForcePathStyle: true,
 			},
@@ -59,7 +59,7 @@ func TestAccResourceBlobstoreS3(t *testing.T) {
 	})
 }
 
-func testAccResourceBlobstoreTypeS3Config(bs nexus.Blobstore, awsAccessKeyID string, awsSecretAccessKey string) string {
+func testAccResourceBlobstoreTypeS3Config(bs blobstore.Legacy, awsAccessKeyID string, awsSecretAccessKey string) string {
 	return fmt.Sprintf(`
 resource "nexus_blobstore" "acceptance" {
 	name = "%s"
@@ -81,5 +81,5 @@ resource "nexus_blobstore" "acceptance" {
 		  force_path_style	= %s
 		}
 	}
-}`, bs.Name, bs.Type, bs.BlobstoreS3BucketConfiguration.Name, bs.BlobstoreS3BucketConfiguration.Region, awsAccessKeyID, awsSecretAccessKey, bs.BlobstoreS3AdvancedBucketConnection.Endpoint, strconv.FormatBool(bs.BlobstoreS3AdvancedBucketConnection.ForcePathStyle))
+}`, bs.Name, bs.Type, bs.S3BucketConfiguration.Bucket.Name, bs.S3BucketConfiguration.Bucket.Region, awsAccessKeyID, awsSecretAccessKey, bs.S3BucketConfiguration.AdvancedBucketConnection.Endpoint, strconv.FormatBool(bs.S3BucketConfiguration.AdvancedBucketConnection.ForcePathStyle))
 }

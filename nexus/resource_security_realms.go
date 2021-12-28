@@ -43,7 +43,7 @@ func resourceSecurityRealms() *schema.Resource {
 }
 
 func resourceRealmsCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 	realmIDs := interfaceSliceToStringSlice(d.Get("active").([]interface{}))
 	if err := client.Security.Realm.Activate(realmIDs); err != nil {
 		return err
@@ -53,7 +53,7 @@ func resourceRealmsCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRealmsRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 	activeRealms, err := client.Security.Realm.ListActive()
 	if err != nil {
 		return err

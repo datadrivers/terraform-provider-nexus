@@ -72,7 +72,7 @@ func setContentSelectorToResourceData(contentSelector *security.ContentSelector,
 }
 
 func resourceContentSelectorCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	contentSelector := getContentSelectorFromResourceData(d)
 
@@ -86,7 +86,7 @@ func resourceContentSelectorCreate(d *schema.ResourceData, m interface{}) error 
 }
 
 func resourceContentSelectorRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	contentSelector, err := client.Security.ContentSelector.Get(d.Id())
 	if err != nil {
@@ -102,7 +102,7 @@ func resourceContentSelectorRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceContentSelectorUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	contentSelector := getContentSelectorFromResourceData(d)
 	if err := client.Security.ContentSelector.Update(d.Id(), contentSelector); err != nil {
@@ -113,7 +113,7 @@ func resourceContentSelectorUpdate(d *schema.ResourceData, m interface{}) error 
 }
 
 func resourceContentSelectorDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	if err := client.Security.ContentSelector.Delete(d.Id()); err != nil {
 		return err
@@ -125,7 +125,7 @@ func resourceContentSelectorDelete(d *schema.ResourceData, m interface{}) error 
 }
 
 func resourceContentSelectorExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	contentSelector, err := client.Security.ContentSelector.Get(d.Id())
 	return contentSelector != nil, err

@@ -9,7 +9,8 @@ import (
 
 func testAccResourceRepositoryNpmProxy() repository.LegacyRepository {
 	repo := testAccResourceRepositoryProxy(repository.RepositoryFormatNPM)
-	repo.RepositoryProxy.RemoteURL = "https://npm.org"
+	remoteURL := "https://npm.org"
+	repo.Proxy.RemoteURL = &remoteURL
 	return repo
 }
 

@@ -51,9 +51,9 @@ func TestAccDataSourcePrivileges(t *testing.T) {
 }
 
 func testAccDataSourcePrivilegesConfig() string {
-	return fmt.Sprintf(`
+	return `
 data "nexus_privileges" "acceptance" {
-}`)
+}`
 }
 
 func testAccDataSourcePrivilegesByTypeConfig(privType string) string {

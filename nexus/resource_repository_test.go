@@ -19,123 +19,123 @@ resource "nexus_repository" "{{ .Name }}" {
 	online = {{ .Online }}
 	type   = "{{ .Type }}"
 
-{{ if .RepositoryApt }}
+{{ if .Apt }}
 	apt {
-		distribution = "{{ .RepositoryApt.Distribution }}"
-		flat         = {{ .RepositoryApt.Flat }}
+		distribution = "{{ .Apt.Distribution }}"
+		flat         = {{ .Apt.Flat }}
 	}
 {{ end -}}
 
-{{ if .RepositoryAptSigning }}
+{{ if .AptSigning }}
 	apt_signing {
-		keypair    = "{{ .RepositoryAptSigning.Keypair }}"
-		passphrase = "{{ .RepositoryAptSigning.Passphrase }}"
+		keypair    = "{{ .AptSigning.Keypair }}"
+		passphrase = "{{ .AptSigning.Passphrase }}"
 	}
 {{ end -}}
 
-{{ if .RepositoryBower }}
+{{ if .Bower }}
 	bower {
-		rewrite_package_urls = {{ .RepositoryBower.RewritePackageUrls }}
+		rewrite_package_urls = {{ .Bower.RewritePackageUrls }}
 	}
 {{  end -}}
 
-{{ if .RepositoryCleanup }}
+{{ if .Cleanup }}
 	cleanup {
 		policy_names = [
-		{{- range $val := .RepositoryCleanup.PolicyNames }}
+		{{- range $val := .Cleanup.PolicyNames }}
 			{{ $val }},
 		{{ end -}}
 		]
 	}
 {{ end -}}
 
-{{ if .RepositoryDocker }}
+{{ if .Docker }}
 	docker {
-		force_basic_auth = {{ .RepositoryDocker.ForceBasicAuth }}
-		{{ if .RepositoryDocker.HTTPPort -}}
-		http_port        = {{ deref .RepositoryDocker.HTTPPort }}
+		force_basic_auth = {{ .Docker.ForceBasicAuth }}
+		{{ if .Docker.HTTPPort -}}
+		http_port        = {{ deref .Docker.HTTPPort }}
 		{{ end -}}
-		{{  if .RepositoryDocker.HTTPSPort -}}
-		https_port       = {{ deref .RepositoryDocker.HTTPSPort }}
+		{{  if .Docker.HTTPSPort -}}
+		https_port       = {{ deref .Docker.HTTPSPort }}
 		{{ end -}}
-		v1enabled        = {{ .RepositoryDocker.V1Enabled }}
+		v1enabled        = {{ .Docker.V1Enabled }}
 	}
 {{ end -}}
 
-{{ if .RepositoryDockerProxy }}
+{{ if .DockerProxy }}
 	docker_proxy {
-		index_type = "{{ .RepositoryDockerProxy.IndexType }}"
-		index_url  = "{{ deref .RepositoryDockerProxy.IndexURL }}"
+		index_type = "{{ .DockerProxy.IndexType }}"
+		index_url  = "{{ deref .DockerProxy.IndexURL }}"
 	}
 {{ end -}}
 
-{{ if .RepositoryGroup }}
+{{ if .Group }}
 	group {
 		member_names = [
-		{{- range $val := .RepositoryGroup.MemberNames }}
+		{{- range $val := .Group.MemberNames }}
 			{{ $val }},
 		{{ end -}}
 		]
 	}
 {{ end -}}
 
-{{ if .RepositoryHTTPClient }}
+{{ if .HTTPClient }}
 	http_client {
-		{{ if .RepositoryHTTPClient.Authentication -}}
+		{{ if .HTTPClient.Authentication -}}
 		authentication {
-			ntlm_domain = "{{ .RepositoryHTTPClient.Authentication.NTLMDomain }}"
-			ntlm_host   = "{{ .RepositoryHTTPClient.Authentication.NTLMHost }}"
-			{{ if .RepositoryHTTPClient.Authentication.Password -}}
-			password    = "{{ deref .RepositoryHTTPClient.Authentication.Password }}"
+			ntlm_domain = "{{ .HTTPClient.Authentication.NTLMDomain }}"
+			ntlm_host   = "{{ .HTTPClient.Authentication.NTLMHost }}"
+			{{ if .HTTPClient.Authentication.Password -}}
+			password    = "{{ deref .HTTPClient.Authentication.Password }}"
 			{{ end -}}
-			type        = "{{ .RepositoryHTTPClient.Authentication.Type }}"
-			{{ if .RepositoryHTTPClient.Authentication.Username -}}
-			username    = "{{ deref .RepositoryHTTPClient.Authentication.Username }}"
+			type        = "{{ .HTTPClient.Authentication.Type }}"
+			{{ if .HTTPClient.Authentication.Username -}}
+			username    = "{{ deref .HTTPClient.Authentication.Username }}"
 			{{ end -}}
 		}
 		{{ end -}}
 	}
 {{ end -}}
 
-{{ if .RepositoryMaven }}
+{{ if .Maven }}
 	maven {
-		layout_policy  = "{{ .RepositoryMaven.LayoutPolicy }}"
-		version_policy = "{{ .RepositoryMaven.VersionPolicy }}"
+		layout_policy  = "{{ .Maven.LayoutPolicy }}"
+		version_policy = "{{ .Maven.VersionPolicy }}"
 	}
 {{ end -}}
 
-{{ if .RepositoryNegativeCache }}
+{{ if .NegativeCache }}
 	negative_cache {
 
 	}
 {{ end -}}
 
-{{ if .RepositoryNugetProxy }}
+{{ if .NugetProxy }}
 	nuget_proxy {
-		query_cache_item_max_age = {{ .RepositoryNugetProxy.QueryCacheItemMaxAge }}
+		query_cache_item_max_age = {{ .NugetProxy.QueryCacheItemMaxAge }}
 	}
 {{ end -}}
 
-{{ if .RepositoryProxy }}
+{{ if .Proxy }}
 	proxy {
-		remote_url = "{{ .RepositoryProxy.RemoteURL }}"
+		remote_url = "{{ .Proxy.RemoteURL }}"
 	}
 {{ end -}}
 
-{{ if .RepositoryStorage }}
+{{ if .Storage }}
 	storage {
-		blob_store_name                = "{{ .RepositoryStorage.BlobStoreName }}"
-		strict_content_type_validation = {{ .RepositoryStorage.StrictContentTypeValidation }}
+		blob_store_name                = "{{ .Storage.BlobStoreName }}"
+		strict_content_type_validation = {{ .Storage.StrictContentTypeValidation }}
 		{{- if eq .Type "hosted" }}
-		write_policy                   = "{{ .RepositoryStorage.WritePolicy }}"
+		write_policy                   = "{{ .Storage.WritePolicy }}"
 		{{- end }}
 	}
 {{ end -}}
 
-{{ if .RepositoryYum }}
+{{ if .Yum }}
 	yum {
-		deploy_policy  = "{{ .RepositoryYum.DeployPolicy }}"
-		repodata_depth = {{ .RepositoryYum.RepodataDepth }}
+		deploy_policy  = "{{ .Yum.DeployPolicy }}"
+		repodata_depth = {{ .Yum.RepodataDepth }}
 	}
 {{ end -}}
 }
@@ -147,7 +147,7 @@ var (
 		"deref": func(data interface{}) string {
 			switch v := data.(type) {
 			case *string:
-				return fmt.Sprintf("%s", *v)
+				return *v
 			case *int:
 				return fmt.Sprintf("%d", *v)
 			default:
@@ -187,7 +187,7 @@ func testAccResourceRepositoryGroup(format string) repository.LegacyRepository {
 }
 
 func testAccResourceRepositoryHosted(format string) repository.LegacyRepository {
-	writePolicy := "ALLOW"
+	writePolicy := repository.StorageWritePolicyAllow
 	return repository.LegacyRepository{
 		Format: format,
 		Name:   fmt.Sprintf("test-repo-%s", acctest.RandString(10)),
@@ -207,6 +207,7 @@ func testAccResourceRepositoryHosted(format string) repository.LegacyRepository 
 }
 
 func testAccResourceRepositoryProxy(format string) repository.LegacyRepository {
+	remoteURL := "https://proxy.example.com"
 	return repository.LegacyRepository{
 		Format: format,
 		Name:   fmt.Sprintf("test-repo-%s", acctest.RandString(10)),
@@ -232,7 +233,7 @@ func testAccResourceRepositoryProxy(format string) repository.LegacyRepository {
 		Proxy: &repository.Proxy{
 			ContentMaxAge:  1440,
 			MetadataMaxAge: 1440,
-			RemoteURL:      "https://proxy.example.com",
+			RemoteURL:      &remoteURL,
 		},
 
 		Storage: &repository.HostedStorage{
@@ -265,7 +266,7 @@ func resourceRepositoryTypeGroupTestCheckFunc(repo repository.LegacyRepository) 
 	return resource.ComposeAggregateTestCheckFunc(
 		resource.ComposeAggregateTestCheckFunc(
 			resource.TestCheckResourceAttr(resName, "group.#", "1"),
-			resource.TestCheckResourceAttr(resName, "group.0.member_names.#", strconv.Itoa(len(repo.RepositoryGroup.MemberNames))),
+			resource.TestCheckResourceAttr(resName, "group.0.member_names.#", strconv.Itoa(len(repo.Group.MemberNames))),
 			// FIXME: (BUG) Incorrect member_names state representation.
 			// For some reasons, 1st ans 2nd elements in array are not stored as group.0.member_names.0, but instead they're stored
 			// as group.0.member_names.2126137474 where 2126137474 is a "random" number.
@@ -290,7 +291,7 @@ func resourceRepositoryTypeHostedTestCheckFunc(repo repository.LegacyRepository)
 			resource.TestCheckResourceAttr(resName, "negative_cache.#", "0"),
 			resource.TestCheckResourceAttr(resName, "proxy.#", "0"),
 		),
-		resource.TestCheckResourceAttr(resName, "storage.0.write_policy", *repo.Storage.WritePolicy),
+		resource.TestCheckResourceAttr(resName, "storage.0.write_policy", string(*repo.Storage.WritePolicy)),
 	)
 }
 

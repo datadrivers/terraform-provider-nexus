@@ -63,14 +63,14 @@ func dataSourceSecurityRealms() *schema.Resource {
 }
 
 func dataSourceRealmsRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
-	availableRealms, err := client.Security.Realms.ListAvailable()
+	availableRealms, err := client.Security.Realm.ListAvailable()
 	if err != nil {
 		return err
 	}
 
-	activeRealmIDs, err := client.Security.Realms.ListActive()
+	activeRealmIDs, err := client.Security.Realm.ListActive()
 	if err != nil {
 		return err
 	}

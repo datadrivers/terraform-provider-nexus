@@ -27,11 +27,11 @@ func TestAccResourceRepositoryDockerGroup(t *testing.T) {
 	hostedRepo := testAccResourceRepositoryDockerHostedWithPorts()
 	hostedRepoResName := testAccResourceRepositoryName(hostedRepo)
 
-	proxyRepo := testAccResourceRepositoryDockerProxy()
+	proxyRepo := testAccResourceDockerProxy()
 	proxyRepoResName := testAccResourceRepositoryName(proxyRepo)
 
 	repo := testAccResourceRepositoryDockerGroup()
-	repo.RepositoryGroup.MemberNames = []string{
+	repo.Group.MemberNames = []string{
 		fmt.Sprintf("%s.name", hostedRepoResName),
 		fmt.Sprintf("%s.name", proxyRepoResName),
 	}

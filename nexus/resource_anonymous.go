@@ -67,7 +67,7 @@ func setAnonymousToResourceData(anonymous *security.AnonymousAccessSettings, d *
 }
 
 func resourceAnonymousRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	anonymous, err := client.Security.Anonymous.Read()
 	if err != nil {
@@ -78,7 +78,7 @@ func resourceAnonymousRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceAnonymousUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.NexusClient)
+	client := m.(*nexus.NexusClient)
 
 	anonymous := getAnonymousFromResourceData(d)
 	if err := client.Security.Anonymous.Update(anonymous); err != nil {
