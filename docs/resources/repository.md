@@ -89,6 +89,7 @@ The following arguments are supported:
 * `online` - (Optional) Whether this repository accepts incoming requests
 * `proxy` - (Optional) Configuration for the proxy repository
 * `storage` - (Optional) The storage configuration of the repository
+* `yum` - (Optional) Yum specific configuration of the repository
 
 The `apt` object supports the following:
 
@@ -173,5 +174,10 @@ The `storage` object supports the following:
 * `blob_store_name` - (Optional) Blob store used to store repository contents
 * `strict_content_type_validation` - (Optional) Whether to validate uploaded content's MIME type appropriate for the repository format
 * `write_policy` - (Optional) Controls if deployments of and updates to assets are allowed. Possible values: `ALLOW`, `ALLOW_ONCE`, `DENY`
+
+The `yum` object supports the following:
+
+* `deploy_policy` - (Required) Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`
+* `repodata_depth` - (Optional) Specifies the repository depth where repodata folder(s) are created. Possible values: 0-5
 
 
