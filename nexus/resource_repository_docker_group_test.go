@@ -9,10 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func testAccResourceRepositoryDockerGroup() repository.LegacyRepository {
-	httpPort := 8087
-	httpsPort := 8088
-
+func testAccResourceRepositoryDockerGroup(httpPort int, httpsPort int) repository.LegacyRepository {
 	repo := testAccResourceRepositoryGroup(repository.RepositoryFormatDocker)
 	repo.Docker = &repository.Docker{
 		ForceBasicAuth: true,
@@ -24,13 +21,13 @@ func testAccResourceRepositoryDockerGroup() repository.LegacyRepository {
 }
 
 func TestAccResourceRepositoryDockerGroup(t *testing.T) {
-	hostedRepo := testAccResourceRepositoryDockerHostedWithPorts()
+	hostedRepo := testAccResourceRepositoryDockerHostedWithPorts(8280, 8633)
 	hostedRepoResName := testAccResourceRepositoryName(hostedRepo)
 
 	proxyRepo := testAccResourceDockerProxy()
 	proxyRepoResName := testAccResourceRepositoryName(proxyRepo)
 
-	repo := testAccResourceRepositoryDockerGroup()
+	repo := testAccResourceRepositoryDockerGroup(8180, 8533)
 	repo.Group.MemberNames = []string{
 		fmt.Sprintf("%s.name", hostedRepoResName),
 		fmt.Sprintf("%s.name", proxyRepoResName),

@@ -8,11 +8,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func testAccResourceRepositoryDockerHostedWithPorts() repository.LegacyRepository {
+func testAccResourceRepositoryDockerHostedWithPorts(httpPort int, httpsPort int) repository.LegacyRepository {
 	repo := testAccResourceRepositoryHosted(repository.RepositoryFormatDocker)
-
-	httpPort := 8085
-	httpsPort := 8086
 
 	repo.Docker = &repository.Docker{
 		ForceBasicAuth: false,
@@ -24,7 +21,7 @@ func testAccResourceRepositoryDockerHostedWithPorts() repository.LegacyRepositor
 }
 
 func TestAccResourceRepositoryDockerHostedWithPorts(t *testing.T) {
-	repo := testAccResourceRepositoryDockerHostedWithPorts()
+	repo := testAccResourceRepositoryDockerHostedWithPorts(8380, 8733)
 	resName := testAccResourceRepositoryName(repo)
 
 	resource.Test(t, resource.TestCase{

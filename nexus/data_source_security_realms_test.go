@@ -14,7 +14,7 @@ func TestAccDataSourceSecurityRealms(t *testing.T) {
 			{
 				Config: testAccDataSourceSecurityRealmsConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("data.nexus_security_realms.acceptance", "active.#", "2"),
+					resource.TestCheckResourceAttrSet("data.nexus_security_realms.acceptance", "active.#"),
 					resource.TestCheckResourceAttrSet("data.nexus_security_realms.acceptance", "available.#"),
 				),
 			},
