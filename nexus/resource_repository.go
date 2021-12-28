@@ -485,6 +485,28 @@ func resourceRepository() *schema.Resource {
 					},
 				},
 			},
+			"yum": {
+				Description:   "Yum specific configuration of the repository",
+				Type:          schema.TypeList,
+				Optional:      true,
+				ConflictsWith: []string{"bower", "docker", "docker_proxy", "maven", "apt"},
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"repodata_depth": {
+							Description: "Specifies the repository depth where repodata folder(s) are created. Possible values: 0-5",
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Default:     0,
+						},
+						"deploy_policy": {
+							Description:  "Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`",
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: validation.StringInSlice([]string{"STRICT", "PERMISSIVE"}, false),
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -497,12 +519,10 @@ func RepositoryCleanupDefault() (interface{}, error) {
 }
 
 func repositoryStorageDefault() (interface{}, error) {
-	writePolicy := "ALLOW"
 
 	data := map[string]interface{}{
 		"blob_store_name":                "default",
 		"strict_content_type_validation": true,
-		"write_policy":                   &writePolicy,
 	}
 	return []map[string]interface{}{data}, nil
 }
@@ -706,6 +726,16 @@ func getRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		}
 	}
 
+	if _, ok := d.GetOk("yum"); ok {
+		yumList := d.Get("yum").([]interface{})
+		yumConfig := yumList[0].(map[string]interface{})
+
+		repo.RepositoryYum = &nexus.RepositoryYum{
+			RepodataDepth: yumConfig["repodata_depth"].(int),
+			DeployPolicy:  yumConfig["deploy_policy"].(string),
+		}
+	}
+
 	return repo
 }
 
@@ -784,6 +814,12 @@ func setRepositoryToResourceData(repo *nexus.Repository, d *schema.ResourceData)
 
 	if repo.RepositoryProxy != nil {
 		if err := d.Set("proxy", flattenRepositoryProxy(repo.RepositoryProxy)); err != nil {
+			return err
+		}
+	}
+
+	if repo.RepositoryYum != nil {
+		if err := d.Set("yum", flattenRepositoryYum(repo.RepositoryYum)); err != nil {
 			return err
 		}
 	}
@@ -983,6 +1019,17 @@ func flattenRepositoryStorage(storage *nexus.RepositoryStorage, d *schema.Resour
 	}
 	if d.Get("type") == nexus.RepositoryTypeHosted {
 		data["write_policy"] = storage.WritePolicy
+	}
+	return []map[string]interface{}{data}
+}
+
+func flattenRepositoryYum(yum *nexus.RepositoryYum) []map[string]interface{} {
+	if yum == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"deploy_policy":  yum.DeployPolicy,
+		"repodata_depth": yum.RepodataDepth,
 	}
 	return []map[string]interface{}{data}
 }
