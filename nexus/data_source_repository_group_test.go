@@ -3,7 +3,7 @@ package nexus
 import (
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
@@ -21,8 +21,8 @@ func TestAccDataSourceRepositoryGroup(t *testing.T) {
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(resourceName, "id", repoName),
 						resource.TestCheckResourceAttr(resourceName, "name", repoName),
-						resource.TestCheckResourceAttr(resourceName, "format", nexus.RepositoryFormatMaven2),
-						resource.TestCheckResourceAttr(resourceName, "type", nexus.RepositoryTypeGroup),
+						resource.TestCheckResourceAttr(resourceName, "format", repository.RepositoryFormatMaven2),
+						resource.TestCheckResourceAttr(resourceName, "type", repository.RepositoryTypeGroup),
 					),
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(resourceName, "online", "true"),

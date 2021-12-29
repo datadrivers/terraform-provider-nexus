@@ -1,7 +1,6 @@
 package nexus
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -15,7 +14,7 @@ func TestAccDataSourceSecurityRealms(t *testing.T) {
 			{
 				Config: testAccDataSourceSecurityRealmsConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("data.nexus_security_realms.acceptance", "active.#", "2"),
+					resource.TestCheckResourceAttrSet("data.nexus_security_realms.acceptance", "active.#"),
 					resource.TestCheckResourceAttrSet("data.nexus_security_realms.acceptance", "available.#"),
 				),
 			},
@@ -25,7 +24,7 @@ func TestAccDataSourceSecurityRealms(t *testing.T) {
 }
 
 func testAccDataSourceSecurityRealmsConfig() string {
-	return fmt.Sprintf(`
+	return `
 data "nexus_security_realms" "acceptance" {}
-`)
+`
 }

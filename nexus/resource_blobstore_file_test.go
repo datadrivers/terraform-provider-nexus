@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/blobstore"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
@@ -13,12 +13,12 @@ import (
 func TestAccResourceBlobstoreFile(t *testing.T) {
 	resName := "nexus_blobstore.acceptance"
 
-	bs := nexus.Blobstore{
+	bs := blobstore.Legacy{
 		Name: fmt.Sprintf("test-blobstore-%d", acctest.RandIntRange(0, 99)),
-		Type: nexus.BlobstoreTypeFile,
+		Type: blobstore.BlobstoreTypeFile,
 		Path: "/nexus-data/acceptance",
-		BlobstoreSoftQuota: &nexus.BlobstoreSoftQuota{
-			Limit: acctest.RandIntRange(100, 300) * 1000000,
+		SoftQuota: &blobstore.SoftQuota{
+			Limit: int64(acctest.RandIntRange(100, 300) * 1000000),
 			Type:  "spaceRemainingQuota",
 		},
 	}
@@ -41,8 +41,8 @@ func TestAccResourceBlobstoreFile(t *testing.T) {
 					// Common fields
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(resName, "soft_quota.#", "1"),
-						resource.TestCheckResourceAttr(resName, "soft_quota.0.limit", strconv.Itoa(bs.BlobstoreSoftQuota.Limit)),
-						resource.TestCheckResourceAttr(resName, "soft_quota.0.type", bs.BlobstoreSoftQuota.Type),
+						resource.TestCheckResourceAttr(resName, "soft_quota.0.limit", strconv.FormatInt(bs.SoftQuota.Limit, 10)),
+						resource.TestCheckResourceAttr(resName, "soft_quota.0.type", bs.SoftQuota.Type),
 					),
 					// No fields related to other types
 					resource.ComposeAggregateTestCheckFunc(
@@ -70,7 +70,7 @@ func TestAccResourceBlobstoreFile(t *testing.T) {
 	})
 }
 
-func testAccResourceBlobstoreFileConfig(bs nexus.Blobstore) string {
+func testAccResourceBlobstoreFileConfig(bs blobstore.Legacy) string {
 	return fmt.Sprintf(`
 resource "nexus_blobstore" "acceptance" {
 	name = "%s"
@@ -81,5 +81,5 @@ resource "nexus_blobstore" "acceptance" {
 		limit = %d
 		type  = "%s"
 	}
-}`, bs.Name, bs.Path, bs.Type, bs.BlobstoreSoftQuota.Limit, bs.BlobstoreSoftQuota.Type)
+}`, bs.Name, bs.Path, bs.Type, bs.SoftQuota.Limit, bs.SoftQuota.Type)
 }

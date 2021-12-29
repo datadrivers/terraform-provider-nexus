@@ -1,7 +1,6 @@
 package nexus
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -26,7 +25,7 @@ func TestAccDataSourceSecurityLDAP(t *testing.T) {
 }
 
 func testAccDataSourceSecurityLDAPConfig() string {
-	return fmt.Sprintf(`
+	return `
 data "nexus_security_ldap" "acceptance" {}
-`)
+`
 }

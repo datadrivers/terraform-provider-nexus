@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
@@ -12,7 +12,7 @@ import (
 func TestAccResourceScript(t *testing.T) {
 	resName := "nexus_script.acceptance"
 
-	script := nexus.Script{
+	script := schema.Script{
 		Name:    acctest.RandString(10),
 		Content: "log.info('Hello, World!')",
 		Type:    "groovy",
@@ -41,7 +41,7 @@ func TestAccResourceScript(t *testing.T) {
 	})
 }
 
-func testAccResourceScriptConfig(script nexus.Script) string {
+func testAccResourceScriptConfig(script schema.Script) string {
 	return fmt.Sprintf(`
 resource "nexus_script" "acceptance" {
 	name    = "%s"

@@ -1,7 +1,8 @@
 package nexus
 
 import (
-	client "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/pkg/client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
@@ -75,5 +76,6 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		URL:      d.Get("url").(string),
 		Username: d.Get("username").(string),
 	}
-	return client.NewClient(config), nil
+
+	return nexus.NewClient(config), nil
 }

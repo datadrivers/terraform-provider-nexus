@@ -33,25 +33,26 @@ package nexus
 import (
 	"strings"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
 
 func resourceRepositoryYumHosted() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceYumRepositoryCreate,
-		Read:   resourceYumRepositoryRead,
-		Update: resourceYumRepositoryUpdate,
-		Delete: resourceYumRepositoryDelete,
-		Exists: resourceYumRepositoryExists,
+		Create: resourceYumHostedRepositoryCreate,
+		Read:   resourceYumHostedRepositoryRead,
+		Update: resourceYumHostedRepositoryUpdate,
+		Delete: resourceYumHostedRepositoryDelete,
+		Exists: resourceYumHostedRepositoryExists,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 
 		Schema: map[string]*schema.Schema{
 			"cleanup": {
-				DefaultFunc: RepositoryCleanupDefault,
+				DefaultFunc: repositoryCleanupDefault,
 				Description: "Cleanup policies",
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -99,8 +100,7 @@ func resourceRepositoryYumHosted() *schema.Resource {
 				DefaultFunc: repositoryStorageDefault,
 				Description: "The storage configuration of the repository",
 				Type:        schema.TypeList,
-				Optional:    true,
-				Computed:    true,
+				Required:    true,
 				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -133,25 +133,27 @@ func resourceRepositoryYumHosted() *schema.Resource {
 					},
 				},
 			},
-			"type": {
-				Description: "Repository type",
-				Type:        schema.TypeString,
-				Computed:    true,
-			},
 		},
 	}
 }
 
-func getYumRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
-	repo := nexus.Repository{
-		Format: "yum",
+func getYumHostedRepositoryFromResourceData(d *schema.ResourceData) repository.YumHostedRepository {
+	storageConfig := d.Get("storage").([]interface{})[0].(map[string]interface{})
+	writePolicy := repository.StorageWritePolicy(storageConfig["write_policy"].(string))
+	deployPolicy := repository.YumDeployPolicy(d.Get("deploy_policy").(string))
+
+	repo := repository.YumHostedRepository{
 		Name:   d.Get("name").(string),
 		Online: d.Get("online").(bool),
-		Type:   "hosted",
-	}
-
-	repo.RepositoryCleanup = &nexus.RepositoryCleanup{
-		PolicyNames: []string{},
+		Storage: repository.HostedStorage{
+			BlobStoreName:               storageConfig["blob_store_name"].(string),
+			StrictContentTypeValidation: storageConfig["strict_content_type_validation"].(bool),
+			WritePolicy:                 &writePolicy,
+		},
+		Yum: repository.Yum{
+			RepodataDepth: d.Get("repodata_depth").(int),
+			DeployPolicy:  &deployPolicy,
+		},
 	}
 
 	cleanupList := d.Get("cleanup").([]interface{})
@@ -160,59 +162,29 @@ func getYumRepositoryFromResourceData(d *schema.ResourceData) nexus.Repository {
 		if len(cleanupConfig) > 0 {
 			policy_names, ok := cleanupConfig["policy_names"]
 			if ok {
-				repo.RepositoryCleanup = &nexus.RepositoryCleanup{
+				repo.Cleanup = &repository.Cleanup{
 					PolicyNames: interfaceSliceToStringSlice(policy_names.(*schema.Set).List()),
 				}
 			}
 		}
 	}
 
-	storageList := d.Get("storage").([]interface{})
-	if len(storageList) > 0 {
-		storageConfig := storageList[0].(map[string]interface{})
-
-		writePolicy := storageConfig["write_policy"].(string)
-
-		repo.RepositoryStorage = &nexus.RepositoryStorage{
-			BlobStoreName:               storageConfig["blob_store_name"].(string),
-			StrictContentTypeValidation: storageConfig["strict_content_type_validation"].(bool),
-			WritePolicy:                 &writePolicy,
-		}
-	} else {
-		writePolicy := "ALLOW"
-		repo.RepositoryStorage = &nexus.RepositoryStorage{
-			BlobStoreName:               "default",
-			StrictContentTypeValidation: true,
-			WritePolicy:                 &writePolicy,
-		}
-
-	}
-
-	repo.RepositoryYum = &nexus.RepositoryYum{
-		RepodataDepth: d.Get("repodata_depth").(int),
-		DeployPolicy:  d.Get("deploy_policy").(string),
-	}
-
 	return repo
 }
 
-func setYumRepositoryToResourceData(repo *nexus.Repository, d *schema.ResourceData) error {
+func setYumHostedRepositoryToResourceData(repo *repository.YumHostedRepository, d *schema.ResourceData) error {
 	d.SetId(repo.Name)
 	d.Set("name", repo.Name)
 	d.Set("online", repo.Online)
-	d.Set("type", "hosted")
+	d.Set("repodata_depth", repo.Yum.RepodataDepth)
+	d.Set("deploy_policy", repo.Yum.DeployPolicy)
 
-	if repo.RepositoryCleanup != nil {
-		if err := d.Set("cleanup", flattenRepositoryCleanup(repo.RepositoryCleanup)); err != nil {
-			return err
-		}
+	if err := d.Set("storage", flattenRepositoryHostedStorage(&repo.Storage, d)); err != nil {
+		return err
 	}
 
-	d.Set("repodata_depth", repo.RepositoryYum.RepodataDepth)
-	d.Set("deploy_policy", repo.RepositoryYum.DeployPolicy)
-
-	if repo.RepositoryStorage != nil {
-		if err := d.Set("storage", flattenRepositoryStorage(repo.RepositoryStorage, d)); err != nil {
+	if repo.Cleanup != nil {
+		if err := d.Set("cleanup", flattenRepositoryCleanup(repo.Cleanup)); err != nil {
 			return err
 		}
 	}
@@ -220,26 +192,23 @@ func setYumRepositoryToResourceData(repo *nexus.Repository, d *schema.ResourceDa
 	return nil
 }
 
-func resourceYumRepositoryCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.Client)
+func resourceYumHostedRepositoryCreate(d *schema.ResourceData, m interface{}) error {
+	client := m.(*nexus.NexusClient)
 
-	repo := getYumRepositoryFromResourceData(d)
+	repo := getYumHostedRepositoryFromResourceData(d)
 
-	if err := client.RepositoryCreate(repo); err != nil {
+	if err := client.Repository.Yum.Hosted.Create(repo); err != nil {
 		return err
 	}
+	d.SetId(repo.Name)
 
-	if err := setYumRepositoryToResourceData(&repo, d); err != nil {
-		return err
-	}
-
-	return resourceYumRepositoryRead(d, m)
+	return resourceYumHostedRepositoryRead(d, m)
 }
 
-func resourceYumRepositoryRead(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+func resourceYumHostedRepositoryRead(d *schema.ResourceData, m interface{}) error {
+	client := m.(*nexus.NexusClient)
 
-	repo, err := nexusClient.RepositoryRead(d.Id())
+	repo, err := client.Repository.Yum.Hosted.Get(d.Id())
 	if err != nil {
 		return err
 	}
@@ -249,35 +218,30 @@ func resourceYumRepositoryRead(d *schema.ResourceData, m interface{}) error {
 		return nil
 	}
 
-	return setYumRepositoryToResourceData(repo, d)
+	return setYumHostedRepositoryToResourceData(repo, d)
 }
 
-func resourceYumRepositoryUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.Client)
+func resourceYumHostedRepositoryUpdate(d *schema.ResourceData, m interface{}) error {
+	client := m.(*nexus.NexusClient)
 
 	repoName := d.Id()
-	repo := getYumRepositoryFromResourceData(d)
+	repo := getYumHostedRepositoryFromResourceData(d)
 
-	if err := client.RepositoryUpdate(repoName, repo); err != nil {
+	if err := client.Repository.Yum.Hosted.Update(repoName, repo); err != nil {
 		return err
 	}
 
-	if err := setYumRepositoryToResourceData(&repo, d); err != nil {
-		return err
-	}
-
-	return resourceYumRepositoryRead(d, m)
+	return resourceYumHostedRepositoryRead(d, m)
 }
 
-func resourceYumRepositoryDelete(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
-
-	return nexusClient.RepositoryDelete(d.Id())
+func resourceYumHostedRepositoryDelete(d *schema.ResourceData, m interface{}) error {
+	client := m.(*nexus.NexusClient)
+	return client.Repository.Yum.Hosted.Delete(d.Id())
 }
 
-func resourceYumRepositoryExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	nexusClient := m.(nexus.Client)
+func resourceYumHostedRepositoryExists(d *schema.ResourceData, m interface{}) (bool, error) {
+	client := m.(*nexus.NexusClient)
 
-	repo, err := nexusClient.RepositoryRead(d.Id())
+	repo, err := client.Repository.Yum.Hosted.Get(d.Id())
 	return repo != nil, err
 }

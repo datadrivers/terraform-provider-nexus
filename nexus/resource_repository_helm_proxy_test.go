@@ -3,13 +3,14 @@ package nexus
 import (
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func testAccResourceRepositoryHelmProxy() nexus.Repository {
-	repo := testAccResourceRepositoryProxy(nexus.RepositoryFormatHelm)
-	repo.RepositoryProxy.RemoteURL = "https://kubernetes-charts.storage.googleapis.com/"
+func testAccResourceRepositoryHelmProxy() repository.LegacyRepository {
+	repo := testAccResourceRepositoryProxy(repository.RepositoryFormatHelm)
+	remoteURL := "https://kubernetes-charts.storage.googleapis.com/"
+	repo.Proxy.RemoteURL = &remoteURL
 	return repo
 }
 

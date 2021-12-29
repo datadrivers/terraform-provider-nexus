@@ -24,7 +24,8 @@ resource "nexus_security_saml" "example" {
 package nexus
 
 import (
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -90,9 +91,9 @@ func resourceSecuritySAML() *schema.Resource {
 }
 
 func resourceSecuritySAMLRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.Client)
+	client := m.(*nexus.NexusClient)
 
-	saml, err := client.SAMLRead()
+	saml, err := client.Security.SAML.Read()
 	if err != nil {
 		return err
 	}
@@ -106,11 +107,11 @@ func resourceSecuritySAMLRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecuritySAMLUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.Client)
+	client := m.(*nexus.NexusClient)
 
 	saml := getSecuritySAMLFromResourceData(d)
 
-	if err := client.SAMLApply(saml); err != nil {
+	if err := client.Security.SAML.Apply(saml); err != nil {
 		return err
 	}
 
@@ -122,20 +123,20 @@ func resourceSecuritySAMLUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecuritySAMLDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.Client)
+	client := m.(*nexus.NexusClient)
 
-	return client.SAMLDelete()
+	return client.Security.SAML.Delete()
 }
 
 func resourceSecuritySAMLExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	client := m.(nexus.Client)
+	client := m.(*nexus.NexusClient)
 
-	saml, _ := client.SAMLRead()
+	saml, _ := client.Security.SAML.Read()
 
 	return saml != nil, nil
 }
 
-func setSecuritySAMLToResourceData(saml *nexus.SAML, d *schema.ResourceData) error {
+func setSecuritySAMLToResourceData(saml *security.SAML, d *schema.ResourceData) error {
 	d.SetId("saml")
 	d.Set("idp_metadata", saml.IdpMetadata)
 	d.Set("entity_id", saml.EntityId)
@@ -150,8 +151,8 @@ func setSecuritySAMLToResourceData(saml *nexus.SAML, d *schema.ResourceData) err
 	return nil
 }
 
-func getSecuritySAMLFromResourceData(d *schema.ResourceData) nexus.SAML {
-	saml := nexus.SAML{
+func getSecuritySAMLFromResourceData(d *schema.ResourceData) security.SAML {
+	saml := security.SAML{
 		IdpMetadata:                d.Get("idp_metadata").(string),
 		EntityId:                   d.Get("entity_id").(string),
 		ValidateResponseSignature:  d.Get("validate_response_signature").(bool),

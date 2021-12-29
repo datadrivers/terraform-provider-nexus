@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func testAccResourceRepositoryNugetGroup() nexus.Repository {
-	repo := testAccResourceRepositoryGroup(nexus.RepositoryFormatNuget)
+func testAccResourceRepositoryNugetGroup() repository.LegacyRepository {
+	repo := testAccResourceRepositoryGroup(repository.RepositoryFormatNuget)
 	return repo
 }
 
@@ -21,7 +21,7 @@ func TestAccResourceRepositoryNugetGroup(t *testing.T) {
 	proxyRepoResName := testAccResourceRepositoryName(proxyRepo)
 
 	repo := testAccResourceRepositoryNugetGroup()
-	repo.RepositoryGroup.MemberNames = []string{
+	repo.Group.MemberNames = []string{
 		fmt.Sprintf("%s.name", hostedRepoResName),
 		fmt.Sprintf("%s.name", proxyRepoResName),
 	}

@@ -3,13 +3,14 @@ package nexus
 import (
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func testAccResourceRepositoryNpmProxy() nexus.Repository {
-	repo := testAccResourceRepositoryProxy(nexus.RepositoryFormatNPM)
-	repo.RepositoryProxy.RemoteURL = "https://npm.org"
+func testAccResourceRepositoryNpmProxy() repository.LegacyRepository {
+	repo := testAccResourceRepositoryProxy(repository.RepositoryFormatNPM)
+	remoteURL := "https://npm.org"
+	repo.Proxy.RemoteURL = &remoteURL
 	return repo
 }
 

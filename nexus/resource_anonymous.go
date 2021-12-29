@@ -13,7 +13,8 @@ resource "nexus_anonymous" "example" {
 package nexus
 
 import (
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -49,15 +50,15 @@ func resourceAnonymous() *schema.Resource {
 	}
 }
 
-func getAnonymousFromResourceData(d *schema.ResourceData) nexus.AnonymousConfig {
-	return nexus.AnonymousConfig{
+func getAnonymousFromResourceData(d *schema.ResourceData) security.AnonymousAccessSettings {
+	return security.AnonymousAccessSettings{
 		Enabled:   d.Get("enabled").(bool),
 		UserID:    d.Get("user_id").(string),
 		RealmName: d.Get("realm_name").(string),
 	}
 }
 
-func setAnonymousToResourceData(anonymous *nexus.AnonymousConfig, d *schema.ResourceData) error {
+func setAnonymousToResourceData(anonymous *security.AnonymousAccessSettings, d *schema.ResourceData) error {
 	d.SetId("anonymous")
 	d.Set("enabled", anonymous.Enabled)
 	d.Set("user_id", anonymous.UserID)
@@ -66,9 +67,9 @@ func setAnonymousToResourceData(anonymous *nexus.AnonymousConfig, d *schema.Reso
 }
 
 func resourceAnonymousRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.Client)
+	client := m.(*nexus.NexusClient)
 
-	anonymous, err := client.AnonymousRead()
+	anonymous, err := client.Security.Anonymous.Read()
 	if err != nil {
 		return err
 	}
@@ -77,10 +78,10 @@ func resourceAnonymousRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceAnonymousUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(nexus.Client)
+	client := m.(*nexus.NexusClient)
 
 	anonymous := getAnonymousFromResourceData(d)
-	if err := client.AnonymousUpdate(anonymous); err != nil {
+	if err := client.Security.Anonymous.Update(anonymous); err != nil {
 		return err
 	}
 

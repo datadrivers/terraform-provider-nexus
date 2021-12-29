@@ -6,21 +6,21 @@ import (
 	"strconv"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/stretchr/testify/assert"
 )
 
-func testAccResourceSecuritySAML() (*nexus.SAML, error) {
+func testAccResourceSecuritySAML() (*security.SAML, error) {
 	dat, err := ioutil.ReadFile("../examples/saml-testconfig.xml")
 	if err != nil {
 		return nil, err
 	}
 
-	return &nexus.SAML{
+	return &security.SAML{
 		// https://samltest.id/saml/idp
 		IdpMetadata:                string(dat),
-		EntityId:                   "http://example.test/service/rest/v1/security/saml/metadata",
+		EntityId:                   "http://example.test/client/rest/v1/security/saml/metadata",
 		ValidateAssertionSignature: false,
 		ValidateResponseSignature:  true,
 		UsernameAttribute:          "username2",
@@ -67,7 +67,7 @@ func TestAccResourceSecuritySAML(t *testing.T) {
 	})
 }
 
-func testAccResourceSecuritySAMLConfig(saml nexus.SAML) string {
+func testAccResourceSecuritySAMLConfig(saml security.SAML) string {
 	return fmt.Sprintf(`
 resource "nexus_security_saml" "acceptance" {
 	idp_metadata                 = <<-EOF

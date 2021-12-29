@@ -3,13 +3,13 @@ package nexus
 import (
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func testAccResourceRepositoryMavenGroup() nexus.Repository {
-	repo := testAccResourceRepositoryGroup(nexus.RepositoryFormatMaven2)
-	repo.RepositoryGroup.MemberNames = []string{"\"maven-releases\"", "\"maven-public\""}
+func testAccResourceRepositoryMavenGroup() repository.LegacyRepository {
+	repo := testAccResourceRepositoryGroup(repository.RepositoryFormatMaven2)
+	repo.Group.MemberNames = []string{"\"maven-releases\"", "\"maven-public\""}
 	return repo
 }
 

@@ -17,7 +17,9 @@ package nexus
 import (
 	"fmt"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
@@ -32,14 +34,14 @@ func dataSourcePrivileges() *schema.Resource {
 				ForceNew:     true,
 				Optional:     true,
 				Type:         schema.TypeString,
-				ValidateFunc: validation.StringInSlice(nexus.PrivilegeDomains, false),
+				ValidateFunc: validation.StringInSlice(security.PrivilegeDomains, false),
 			},
 			"format": {
 				Description:  "The format of the privilege",
 				ForceNew:     true,
 				Optional:     true,
 				Type:         schema.TypeString,
-				ValidateFunc: validation.StringInSlice(nexus.RepositoryFormats, false),
+				ValidateFunc: validation.StringInSlice(repository.RepositoryFormats, false),
 			},
 			"name": {
 				Description: "The name of the privilege",
@@ -125,9 +127,9 @@ func dataSourcePrivileges() *schema.Resource {
 }
 
 func dataSourcePrivilegesRead(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	client := m.(*nexus.NexusClient)
 
-	privileges, err := nexusClient.Privileges()
+	privileges, err := client.Security.Privilege.List()
 	if err != nil {
 		return err
 	}
@@ -145,7 +147,7 @@ func dataSourcePrivilegesRead(d *schema.ResourceData, m interface{}) error {
 	d.Set("repository", dsRepository)
 	d.Set("type", dsType)
 
-	var filteredPrivileges []nexus.Privilege
+	var filteredPrivileges []security.Privilege
 	if filteredPrivileges, err = filterPrivileges(privileges, dsDomain, dsFormat, dsName, dsRepository, dsType); err != nil {
 		return err
 	}
@@ -157,7 +159,7 @@ func dataSourcePrivilegesRead(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func filterPrivileges(privileges []nexus.Privilege, filterDomain, filterFormat, filterName, filterRepository, filterType string) ([]nexus.Privilege, error) {
+func filterPrivileges(privileges []security.Privilege, filterDomain, filterFormat, filterName, filterRepository, filterType string) ([]security.Privilege, error) {
 	domains := make([]int, 0)
 	formats := make([]int, 0)
 	repositories := make([]int, 0)
@@ -190,7 +192,7 @@ func filterPrivileges(privileges []nexus.Privilege, filterDomain, filterFormat, 
 
 	intSlice := intersection(intersection(intersection(domains, repositories), formats), types)
 
-	result := make([]nexus.Privilege, len(intSlice))
+	result := make([]security.Privilege, len(intSlice))
 	for i, v := range intSlice {
 		result[i] = privileges[v]
 	}
@@ -198,25 +200,23 @@ func filterPrivileges(privileges []nexus.Privilege, filterDomain, filterFormat, 
 	return result, nil
 }
 
-func flattenPrivileges(privileges []nexus.Privilege) []map[string]interface{} {
+func flattenPrivileges(privileges []security.Privilege) []map[string]interface{} {
 	if privileges == nil {
 		return nil
 	}
 
 	data := make([]map[string]interface{}, len(privileges))
-	if privileges != nil {
-		for i, priv := range privileges {
-			data[i] = map[string]interface{}{
-				"actions":          priv.Actions,
-				"content_selector": priv.ContentSelector,
-				"description":      priv.Description,
-				"domain":           priv.Domain,
-				"format":           priv.Format,
-				"name":             priv.Name,
-				"read_only":        priv.ReadOnly,
-				"repository":       priv.Repository,
-				"type":             priv.Type,
-			}
+	for i, priv := range privileges {
+		data[i] = map[string]interface{}{
+			"actions":          priv.Actions,
+			"content_selector": priv.ContentSelector,
+			"description":      priv.Description,
+			"domain":           priv.Domain,
+			"format":           priv.Format,
+			"name":             priv.Name,
+			"read_only":        priv.ReadOnly,
+			"repository":       priv.Repository,
+			"type":             priv.Type,
 		}
 	}
 

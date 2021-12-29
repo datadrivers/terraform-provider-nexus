@@ -6,17 +6,19 @@ import (
 	"strings"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
 func TestAccResourcePrivilegeTypeApplication(t *testing.T) {
-	var privilege nexus.Privilege
+	var privilege security.Privilege
 
 	resName := "nexus_privilege.application"
-	priv := nexus.Privilege{
+	priv := security.Privilege{
 		Actions:     []string{"READ"},
 		Description: acctest.RandString(30),
 		Domain:      "users",
@@ -50,7 +52,7 @@ func TestAccResourcePrivilegeTypeApplication(t *testing.T) {
 	})
 }
 
-func testAccResourcePrivilegeTypeApplicationConfig(priv nexus.Privilege) string {
+func testAccResourcePrivilegeTypeApplicationConfig(priv security.Privilege) string {
 	return fmt.Sprintf(`
 	resource "nexus_privilege" "application" {
 		actions     = ["%s",]
@@ -62,15 +64,15 @@ func testAccResourcePrivilegeTypeApplicationConfig(priv nexus.Privilege) string 
 	`, strings.Join(priv.Actions, ",\n"), priv.Name, priv.Description, priv.Domain, priv.Type)
 }
 
-func testAccCheckPrivilegeResourceExists(name string, privilege *nexus.Privilege) resource.TestCheckFunc {
+func testAccCheckPrivilegeResourceExists(name string, privilege *security.Privilege) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[name]
 		if !ok {
 			return fmt.Errorf("Not found: %s", name)
 		}
 
-		client := testAccProvider.Meta().(nexus.Client)
-		result, err := client.PrivilegeRead(rs.Primary.ID)
+		client := testAccProvider.Meta().(*nexus.NexusClient)
+		result, err := client.Security.Privilege.Get(rs.Primary.ID)
 		if err != nil {
 			return err
 		}
@@ -82,13 +84,13 @@ func testAccCheckPrivilegeResourceExists(name string, privilege *nexus.Privilege
 }
 
 func TestAccResourcePrivilegeTypeRepositoryView(t *testing.T) {
-	var privilege nexus.Privilege
+	var privilege security.Privilege
 
 	resName := "nexus_privilege.repository_view"
-	priv := nexus.Privilege{
+	priv := security.Privilege{
 		Actions:     []string{"READ"},
 		Description: acctest.RandString(30),
-		Format:      nexus.RepositoryFormatMaven2,
+		Format:      repository.RepositoryFormatMaven2,
 		Name:        acctest.RandString(10),
 		Repository:  "maven-releases",
 	}
@@ -120,7 +122,7 @@ func TestAccResourcePrivilegeTypeRepositoryView(t *testing.T) {
 	})
 }
 
-func testAccResourcePrivilegeTypeRepositoryViewConfig(priv nexus.Privilege) string {
+func testAccResourcePrivilegeTypeRepositoryViewConfig(priv security.Privilege) string {
 	return fmt.Sprintf(`
 resource "nexus_privilege" "repository_view" {
   actions     = ["%s",]
@@ -135,7 +137,7 @@ resource "nexus_privilege" "repository_view" {
 
 func TestAccResourcePrivilegeTypeScript(t *testing.T) {
 
-	privilege := nexus.Privilege{
+	privilege := security.Privilege{
 		Actions:     []string{"READ"},
 		Description: acctest.RandString(30),
 		Name:        acctest.RandString(10),
@@ -168,7 +170,7 @@ func TestAccResourcePrivilegeTypeScript(t *testing.T) {
 	})
 }
 
-func testAccResourcePrivilegeResourceTypeScriptConfig(priv nexus.Privilege) string {
+func testAccResourcePrivilegeResourceTypeScriptConfig(priv security.Privilege) string {
 	return fmt.Sprintf(`
 resource "nexus_script" "%[1]s" {
   name    = "%[1]s"

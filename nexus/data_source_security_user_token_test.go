@@ -4,14 +4,14 @@ import (
 	"strconv"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
 func TestAccDataSourceSecurityUserToken(t *testing.T) {
 	dataSourceName := "data.nexus_security_user_token.acceptance"
 
-	token := nexus.UserTokenConfiguration{
+	token := security.UserTokenConfiguration{
 		Enabled:        true,
 		ProtectContent: false,
 	}

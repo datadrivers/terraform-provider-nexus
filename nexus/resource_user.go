@@ -20,7 +20,8 @@ resource "nexus_user" "admin" {
 package nexus
 
 import (
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
@@ -84,8 +85,8 @@ func resourceUser() *schema.Resource {
 	}
 }
 
-func getUserFromResourceData(d *schema.ResourceData) nexus.User {
-	return nexus.User{
+func getUserFromResourceData(d *schema.ResourceData) security.User {
+	return security.User{
 		UserID:       d.Get("userid").(string),
 		FirstName:    d.Get("firstname").(string),
 		LastName:     d.Get("lastname").(string),
@@ -97,10 +98,10 @@ func getUserFromResourceData(d *schema.ResourceData) nexus.User {
 }
 
 func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	client := m.(*nexus.NexusClient)
 	user := getUserFromResourceData(d)
 
-	if err := nexusClient.UserCreate(user); err != nil {
+	if err := client.Security.User.Create(user); err != nil {
 		return err
 	}
 
@@ -109,9 +110,9 @@ func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceUserRead(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	client := m.(*nexus.NexusClient)
 
-	user, err := nexusClient.UserRead(d.Id())
+	user, err := client.Security.User.Get(d.Id())
 	if err != nil {
 		return err
 	}
@@ -132,23 +133,18 @@ func resourceUserRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
-
-	d.Partial(true)
+	client := m.(*nexus.NexusClient)
 
 	if d.HasChange("password") {
 		password := d.Get("password").(string)
-		if err := nexusClient.UserChangePassword(d.Id(), password); err != nil {
+		if err := client.Security.User.ChangePassword(d.Id(), password); err != nil {
 			return err
 		}
-		d.SetPartial("password")
 	}
-
-	d.Partial(false)
 
 	if d.HasChange("firstname") || d.HasChange("lastname") || d.HasChange("email") || d.HasChange("status") || d.HasChange("roles") {
 		user := getUserFromResourceData(d)
-		if err := nexusClient.UserUpdate(d.Id(), user); err != nil {
+		if err := client.Security.User.Update(d.Id(), user); err != nil {
 			return err
 		}
 	}
@@ -156,9 +152,9 @@ func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceUserDelete(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	client := m.(*nexus.NexusClient)
 
-	if err := nexusClient.UserDelete(d.Id()); err != nil {
+	if err := client.Security.User.Delete(d.Id()); err != nil {
 		return err
 	}
 
@@ -167,8 +163,8 @@ func resourceUserDelete(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceUserExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	nexusClient := m.(nexus.Client)
+	client := m.(*nexus.NexusClient)
 
-	user, err := nexusClient.UserRead(d.Id())
+	user, err := client.Security.User.Get(d.Id())
 	return user != nil, err
 }

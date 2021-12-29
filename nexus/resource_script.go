@@ -14,7 +14,8 @@ resource "nexus_script" "repo_pypi_internal" {
 package nexus
 
 import (
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	nexusSchema "github.com/datadrivers/go-nexus-client/nexus3/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -50,8 +51,8 @@ func resourceScript() *schema.Resource {
 	}
 }
 
-func getScriptFromResourceData(d *schema.ResourceData) nexus.Script {
-	return nexus.Script{
+func getScriptFromResourceData(d *schema.ResourceData) nexusSchema.Script {
+	return nexusSchema.Script{
 		Name:    d.Get("name").(string),
 		Content: d.Get("content").(string),
 		Type:    d.Get("type").(string),
@@ -59,14 +60,14 @@ func getScriptFromResourceData(d *schema.ResourceData) nexus.Script {
 }
 
 func resourceScriptCreate(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	client := m.(*nexus.NexusClient)
 	script := getScriptFromResourceData(d)
 
-	if err := nexusClient.ScriptCreate(&script); err != nil {
+	if err := client.Script.Create(&script); err != nil {
 		return err
 	}
 	// TODO: It should be possible to configure whether to run script or not
-	if err := nexusClient.ScriptRun(script.Name); err != nil {
+	if err := client.Script.Run(script.Name); err != nil {
 		return err
 	}
 
@@ -75,9 +76,9 @@ func resourceScriptCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScriptRead(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	client := m.(*nexus.NexusClient)
 
-	script, err := nexusClient.ScriptRead(d.Id())
+	script, err := client.Script.Get(d.Id())
 	if err != nil {
 		return err
 	}
@@ -95,15 +96,15 @@ func resourceScriptRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScriptUpdate(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	client := m.(*nexus.NexusClient)
 
 	if d.HasChange("content") || d.HasChange("type") {
 		script := getScriptFromResourceData(d)
-		if err := nexusClient.ScriptUpdate(&script); err != nil {
+		if err := client.Script.Update(&script); err != nil {
 			return err
 		}
 
-		if err := nexusClient.ScriptRun(script.Name); err != nil {
+		if err := client.Script.Run(script.Name); err != nil {
 			return err
 		}
 	}
@@ -112,9 +113,9 @@ func resourceScriptUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScriptDelete(d *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	client := m.(*nexus.NexusClient)
 
-	if err := nexusClient.ScriptDelete(d.Id()); err != nil {
+	if err := client.Script.Delete(d.Id()); err != nil {
 		return err
 	}
 
@@ -123,8 +124,8 @@ func resourceScriptDelete(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScriptExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	nexusClient := m.(nexus.Client)
+	client := m.(*nexus.NexusClient)
 
-	script, err := nexusClient.ScriptRead(d.Id())
+	script, err := client.Script.Get(d.Id())
 	return script != nil, err
 }
