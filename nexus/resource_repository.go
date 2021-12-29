@@ -512,7 +512,7 @@ func resourceRepository() *schema.Resource {
 	}
 }
 
-func RepositoryCleanupDefault() (interface{}, error) {
+func repositoryCleanupDefault() (interface{}, error) {
 	data := map[string]interface{}{
 		"policy_names": []string{},
 	}
@@ -831,7 +831,7 @@ func setRepositoryToResourceData(repo *repository.LegacyRepository, d *schema.Re
 		}
 	}
 
-	if err := d.Set("storage", flattenRepositoryStorage(repo.Storage, d)); err != nil {
+	if err := d.Set("storage", flattenRepositoryHostedStorage(repo.Storage, d)); err != nil {
 		return err
 	}
 
@@ -1016,7 +1016,18 @@ func flattenRepositoryProxy(proxy *repository.Proxy) []map[string]interface{} {
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryStorage(storage *repository.HostedStorage, d *schema.ResourceData) []map[string]interface{} {
+func flattenRepositoryStorage(storage *repository.Storage, d *schema.ResourceData) []map[string]interface{} {
+	if storage == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"blob_store_name":                storage.BlobStoreName,
+		"strict_content_type_validation": storage.StrictContentTypeValidation,
+	}
+	return []map[string]interface{}{data}
+}
+
+func flattenRepositoryHostedStorage(storage *repository.HostedStorage, d *schema.ResourceData) []map[string]interface{} {
 	if storage == nil {
 		return nil
 	}

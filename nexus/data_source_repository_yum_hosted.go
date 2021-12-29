@@ -12,9 +12,9 @@ data "nexus_repository_yum_hosted" "yummy" {
 package nexus
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"strings"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func dataSourceRepositoryYumHosted() *schema.Resource {
@@ -28,28 +28,24 @@ func dataSourceRepositoryYumHosted() *schema.Resource {
 				Type:        schema.TypeString,
 			},
 			"online": {
-				Default:     true,
 				Description: "Whether this repository accepts incoming requests",
-				Optional:    true,
 				Type:        schema.TypeBool,
+				Computed:    true,
 			},
 			"repodata_depth": {
-				Default:     0,
 				Description: "Specifies the repository depth where repodata folder(s) are created. Possible values: 0-5",
-				Optional:    true,
 				Type:        schema.TypeInt,
+				Computed:    true,
 			},
 			"deploy_policy": {
-				Default:     "STRICT",
 				Description: "Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`",
-				Optional:    true,
 				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"cleanup": {
 				Description: "Cleanup policies",
 				Type:        schema.TypeList,
 				Computed:    true,
-				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"policy_names": {
@@ -68,43 +64,28 @@ func dataSourceRepositoryYumHosted() *schema.Resource {
 			},
 			"storage": {
 				Description: "The storage configuration of the repository",
-				DefaultFunc: repositoryStorageDefault,
 				Type:        schema.TypeList,
-				Optional:    true,
 				Computed:    true,
 				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"blob_store_name": {
-							Default:     "default",
 							Description: "Blob store used to store repository contents",
-							Optional:    true,
+							Computed:    true,
 							Type:        schema.TypeString,
 						},
 						"strict_content_type_validation": {
-							Default:     true,
 							Description: "Whether to validate uploaded content's MIME type appropriate for the repository format",
-							Optional:    true,
+							Computed:    true,
 							Type:        schema.TypeBool,
 						},
 						"write_policy": {
 							Description: "Controls if deployments of and updates to assets are allowed",
-							Default:     "ALLOW",
-							Optional:    true,
+							Computed:    true,
 							Type:        schema.TypeString,
-							ValidateFunc: validation.StringInSlice([]string{
-								"ALLOW",
-								"ALLOW_ONCE",
-								"DENY",
-							}, false),
 						},
 					},
 				},
-			},
-			"type": {
-				Description: "Repository type",
-				Type:        schema.TypeString,
-				Computed:    true,
 			},
 		},
 	}

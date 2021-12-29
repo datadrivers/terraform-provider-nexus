@@ -1,25 +1,69 @@
 package nexus
 
 import (
+	"bytes"
 	"fmt"
 	"strconv"
 	"testing"
+	"text/template"
 
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func testAccResourceRepositoryYumHosted() repository.LegacyRepository {
-	repo := testAccResourceRepositoryHosted(repository.RepositoryFormatYum)
-	deployPolicy := repository.YumDeployPolicyPermissive
-	repo.Yum = &repository.Yum{
-		DeployPolicy:  &deployPolicy,
-		RepodataDepth: 0,
+const (
+	resourceRepositoryYumHostedTemplateString = `
+resource "nexus_repository_yum_hosted" "{{ .Name }}" {
+	name   = "{{ .Name }}"
+	online = {{ .Online }}
+
+	deploy_policy  = "{{ .Yum.DeployPolicy }}"
+	repodata_depth = "{{ .Yum.RepodataDepth }}"
+
+	storage {
+		blob_store_name                = "{{ .Storage.BlobStoreName }}"
+		strict_content_type_validation = {{ .Storage.StrictContentTypeValidation }}
+		write_policy                   = "{{ .Storage.WritePolicy }}"
 	}
-	return repo
+
+{{ if .Cleanup }}
+	cleanup {
+		policy_names = [
+		{{- range $val := .Cleanup.PolicyNames }}
+			{{ $val }},
+		{{ end -}}
+		]
+	}
+{{ end -}}
+}
+`
+)
+
+var ()
+
+func testAccResourceRepositoryYumHosted() repository.YumHostedRepository {
+	writePolicy := repository.StorageWritePolicyAllow
+	deployPolicy := repository.YumDeployPolicyPermissive
+	return repository.YumHostedRepository{
+		Name:   fmt.Sprintf("test-repo-%s", acctest.RandString(10)),
+		Online: true,
+		Yum: repository.Yum{
+			DeployPolicy:  &deployPolicy,
+			RepodataDepth: 0,
+		},
+		Storage: repository.HostedStorage{
+			BlobStoreName:               "default",
+			StrictContentTypeValidation: true,
+			WritePolicy:                 &writePolicy,
+		},
+		Cleanup: &repository.Cleanup{
+			PolicyNames: []string{"\"cleanup-weekly\""},
+		},
+	}
 }
 
-func resourceYumRepositoryTestCheckFunc(repo nexus.Repository) resource.TestCheckFunc {
+func resourceYumRepositoryTestCheckFunc(repo repository.YumHostedRepository) resource.TestCheckFunc {
 	resName := fmt.Sprintf("nexus_repository_yum_hosted.%s", repo.Name)
 	return resource.ComposeAggregateTestCheckFunc(
 		resource.ComposeAggregateTestCheckFunc(
@@ -29,13 +73,13 @@ func resourceYumRepositoryTestCheckFunc(repo nexus.Repository) resource.TestChec
 		),
 		resource.ComposeAggregateTestCheckFunc(
 			resource.TestCheckResourceAttr(resName, "storage.#", "1"),
-			resource.TestCheckResourceAttr(resName, "storage.0.blob_store_name", repo.RepositoryStorage.BlobStoreName),
-			resource.TestCheckResourceAttr(resName, "storage.0.strict_content_type_validation", strconv.FormatBool(repo.RepositoryStorage.StrictContentTypeValidation)),
+			resource.TestCheckResourceAttr(resName, "storage.0.blob_store_name", repo.Storage.BlobStoreName),
+			resource.TestCheckResourceAttr(resName, "storage.0.strict_content_type_validation", strconv.FormatBool(repo.Storage.StrictContentTypeValidation)),
 		),
 	)
 }
 
-func resourceYumRepositoryTypeHostedTestCheckFunc(repo nexus.Repository) resource.TestCheckFunc {
+func resourceYumRepositoryTypeHostedTestCheckFunc(repo repository.YumHostedRepository) resource.TestCheckFunc {
 	resName := fmt.Sprintf("nexus_repository_yum_hosted.%s", repo.Name)
 	return resource.ComposeAggregateTestCheckFunc(
 		resource.ComposeAggregateTestCheckFunc(
@@ -44,8 +88,17 @@ func resourceYumRepositoryTypeHostedTestCheckFunc(repo nexus.Repository) resourc
 			resource.TestCheckResourceAttr(resName, "negative_cache.#", "0"),
 			resource.TestCheckResourceAttr(resName, "proxy.#", "0"),
 		),
-		resource.TestCheckResourceAttr(resName, "storage.0.write_policy", *repo.RepositoryStorage.WritePolicy),
+		resource.TestCheckResourceAttr(resName, "storage.0.write_policy", string(*repo.Storage.WritePolicy)),
 	)
+}
+
+func testAccResourceRepositoryYumHostedConfig(repo repository.YumHostedRepository) string {
+	buf := &bytes.Buffer{}
+	resourceRepositoryYumHostedTemplate := template.Must(template.New("repository").Funcs(resourceRepositoryTemplateFuncMap).Parse(resourceRepositoryYumHostedTemplateString))
+	if err := resourceRepositoryYumHostedTemplate.Execute(buf, repo); err != nil {
+		panic(err)
+	}
+	return buf.String()
 }
 
 func TestAccResourceRepositoryYumHosted(t *testing.T) {
@@ -57,19 +110,10 @@ func TestAccResourceRepositoryYumHosted(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceRepositoryConfig(repo),
+				Config: testAccResourceRepositoryYumHostedConfig(repo),
 				Check: resource.ComposeTestCheckFunc(
 					resourceYumRepositoryTestCheckFunc(repo),
 					resourceYumRepositoryTypeHostedTestCheckFunc(repo),
-					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(resName, "apt.#", "0"),
-						resource.TestCheckResourceAttr(resName, "bower.#", "0"),
-						resource.TestCheckResourceAttr(resName, "docker.#", "0"),
-						resource.TestCheckResourceAttr(resName, "docker_proxy.#", "0"),
-						resource.TestCheckResourceAttr(resName, "maven.#", "0"),
-					),
-					// Fields related to this format and type
-					// Format
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(resName, "deploy_policy", string(*repo.DeployPolicy)),
 						resource.TestCheckResourceAttr(resName, "repodata_depth", strconv.Itoa(repo.RepodataDepth)),
