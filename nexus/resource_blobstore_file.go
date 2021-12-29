@@ -1,5 +1,5 @@
 /*
-Use this resource to create a Nexus blobstore.
+Use this resource to create a Nexus file blobstore.
 
 Example Usage
 
@@ -23,7 +23,8 @@ import (
 	"fmt"
 	"log"
 
-	nexus "github.com/datadrivers/go-nexus-client"
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/blobstore"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
@@ -78,8 +79,9 @@ func resourceBlobstoreFile() *schema.Resource {
 						},
 					},
 				},
+				MaxItems: 1,
 				Optional: true,
-				Type:     schema.TypeMap,
+				Type:     schema.TypeList,
 			},
 			"total_size_in_bytes": {
 				Description: "The total size of the blobstore in Bytes",
@@ -90,19 +92,20 @@ func resourceBlobstoreFile() *schema.Resource {
 	}
 }
 
-func getBlobstoreFileFromResourceData(resourceData *schema.ResourceData) nexus.Blobstore {
-	bs := nexus.Blobstore{
+func getBlobstoreFileFromResourceData(resourceData *schema.ResourceData) blobstore.File {
+	bs := blobstore.File{
 		Name: resourceData.Get("name").(string),
-		Type: nexus.BlobstoreTypeFile,
 	}
 
-	bs.Path = resourceData.Get("path").(string)
+	if _, ok := resourceData.GetOk("path"); ok {
+		bs.Path = resourceData.Get("path").(string)
+	}
 
 	if _, ok := resourceData.GetOk("soft_quota"); ok {
-		softQuotaConfig := resourceData.Get("soft_quota").(map[string]interface{})
+		softQuotaConfig := resourceData.Get("soft_quota").([]interface{})[0].(map[string]interface{})
 
-		bs.BlobstoreSoftQuota = &nexus.BlobstoreSoftQuota{
-			Limit: softQuotaConfig["limit"].(int),
+		bs.SoftQuota = &blobstore.SoftQuota{
+			Limit: int64(softQuotaConfig["limit"].(int)),
 			Type:  softQuotaConfig["type"].(string),
 		}
 	}
@@ -111,11 +114,11 @@ func getBlobstoreFileFromResourceData(resourceData *schema.ResourceData) nexus.B
 }
 
 func resourceBlobstoreFileCreate(resourceData *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	nexusClient := m.(*nexus.NexusClient)
 
 	bs := getBlobstoreFileFromResourceData(resourceData)
 
-	if err := nexusClient.BlobstoreCreate(bs); err != nil {
+	if err := nexusClient.BlobStore.File.Create(&bs); err != nil {
 		return err
 	}
 
@@ -129,12 +132,23 @@ func resourceBlobstoreFileCreate(resourceData *schema.ResourceData, m interface{
 }
 
 func resourceBlobstoreFileRead(resourceData *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	nexusClient := m.(*nexus.NexusClient)
 
-	bs, err := nexusClient.BlobstoreRead(resourceData.Id())
+	bs, err := nexusClient.BlobStore.File.Get(resourceData.Id())
 	log.Print(bs)
 	if err != nil {
 		return err
+	}
+
+	var genericBlobstoreInformation blobstore.Generic
+	genericBlobstores, err := nexusClient.BlobStore.List()
+	if err != nil {
+		return err
+	}
+	for _, generic := range genericBlobstores {
+		if generic.Name == bs.Name {
+			genericBlobstoreInformation = generic
+		}
 	}
 
 	if bs == nil {
@@ -142,10 +156,10 @@ func resourceBlobstoreFileRead(resourceData *schema.ResourceData, m interface{})
 		return nil
 	}
 
-	if err := resourceData.Set("available_space_in_bytes", bs.AvailableSpaceInBytes); err != nil {
+	if err := resourceData.Set("available_space_in_bytes", genericBlobstoreInformation.AvailableSpaceInBytes); err != nil {
 		return err
 	}
-	if err := resourceData.Set("blob_count", bs.BlobCount); err != nil {
+	if err := resourceData.Set("blob_count", genericBlobstoreInformation.BlobCount); err != nil {
 		return err
 	}
 	if err := resourceData.Set("name", bs.Name); err != nil {
@@ -154,13 +168,13 @@ func resourceBlobstoreFileRead(resourceData *schema.ResourceData, m interface{})
 	if err := resourceData.Set("path", bs.Path); err != nil {
 		return err
 	}
-	if err := resourceData.Set("total_size_in_bytes", bs.TotalSizeInBytes); err != nil {
+	if err := resourceData.Set("total_size_in_bytes", genericBlobstoreInformation.TotalSizeInBytes); err != nil {
 		return err
 	}
 
-	if bs.BlobstoreSoftQuota != nil {
-		if err := resourceData.Set("soft_quota", bs.BlobstoreSoftQuota); err != nil {
-			return fmt.Errorf("Error reading soft quota: %s", err)
+	if bs.SoftQuota != nil {
+		if err := resourceData.Set("soft_quota", flattenBlobstoreSoftQuota(bs.SoftQuota)); err != nil {
+			return fmt.Errorf("error reading soft quota: %s", err)
 		}
 	}
 
@@ -168,10 +182,10 @@ func resourceBlobstoreFileRead(resourceData *schema.ResourceData, m interface{})
 }
 
 func resourceBlobstoreFileUpdate(resourceData *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	nexusClient := m.(*nexus.NexusClient)
 
 	bs := getBlobstoreFileFromResourceData(resourceData)
-	if err := nexusClient.BlobstoreUpdate(resourceData.Id(), bs); err != nil {
+	if err := nexusClient.BlobStore.File.Update(resourceData.Id(), &bs); err != nil {
 		return err
 	}
 
@@ -179,9 +193,9 @@ func resourceBlobstoreFileUpdate(resourceData *schema.ResourceData, m interface{
 }
 
 func resourceBlobstoreFileDelete(resourceData *schema.ResourceData, m interface{}) error {
-	nexusClient := m.(nexus.Client)
+	nexusClient := m.(*nexus.NexusClient)
 
-	if err := nexusClient.BlobstoreDelete(resourceData.Id()); err != nil {
+	if err := nexusClient.BlobStore.File.Delete(resourceData.Id()); err != nil {
 		return err
 	}
 
@@ -191,8 +205,8 @@ func resourceBlobstoreFileDelete(resourceData *schema.ResourceData, m interface{
 }
 
 func resourceBlobstoreFileExists(resourceData *schema.ResourceData, m interface{}) (bool, error) {
-	nexusClient := m.(nexus.Client)
+	nexusClient := m.(*nexus.NexusClient)
 
-	bs, err := nexusClient.BlobstoreRead(resourceData.Id())
+	bs, err := nexusClient.BlobStore.File.Get(resourceData.Id())
 	return bs != nil, err
 }

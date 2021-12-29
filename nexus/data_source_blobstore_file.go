@@ -4,8 +4,8 @@ Use this to read an existing Nexus file blobstore.
 Example Usage
 
 ```hcl
-data "nexus_blobstore_file" "docker" {
-	name = "docker"
+data "nexus_blobstore_file" "default" {
+	name = "default"
 }
 ```
 */
@@ -27,7 +27,7 @@ func dataSourceBlobstoreFile() *schema.Resource {
 			"path": {
 				Description: "The path to the blobstore contents",
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 			},
 			"available_space_in_bytes": {
 				Computed:    true,
@@ -46,17 +46,18 @@ func dataSourceBlobstoreFile() *schema.Resource {
 						"limit": {
 							Description: "The limit in Bytes. Minimum value is 1000000",
 							Type:        schema.TypeInt,
-							Optional:    true,
+							Computed:    true,
 						},
 						"type": {
 							Description: "The type to use such as spaceRemainingQuota, or spaceUsedQuota",
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 						},
 					},
 				},
-				Optional: true,
-				Type:     schema.TypeMap,
+				MaxItems: 1,
+				Computed: true,
+				Type:     schema.TypeList,
 			},
 			"total_size_in_bytes": {
 				Computed:    true,
