@@ -512,7 +512,15 @@ func resourceRepository() *schema.Resource {
 	}
 }
 
+func RepositoryCleanupDefault() (interface{}, error) {
+	data := map[string]interface{}{
+		"policy_names": []string{},
+	}
+	return []map[string]interface{}{data}, nil
+}
+
 func repositoryStorageDefault() (interface{}, error) {
+
 	data := map[string]interface{}{
 		"blob_store_name":                "default",
 		"strict_content_type_validation": true,

@@ -13,11 +13,15 @@ import (
 
 const (
 	resourceRepositoryTemplateString = `
+{{ if and (.RepositoryYum) (eq .Type "hosted") }}
+resource "nexus_repository_yum_hosted" "{{ .Name }}" {
+{{ else }}
 resource "nexus_repository" "{{ .Name }}" {
 	format = "{{ .Format }}"
+	type   = "{{ .Type }}"
+{{ end }}
 	name   = "{{ .Name }}"
 	online = {{ .Online }}
-	type   = "{{ .Type }}"
 
 {{ if .Apt }}
 	apt {
@@ -137,6 +141,9 @@ resource "nexus_repository" "{{ .Name }}" {
 		deploy_policy  = "{{ .Yum.DeployPolicy }}"
 		repodata_depth = {{ .Yum.RepodataDepth }}
 	}
+{{ if .RepositoryYum }}
+		deploy_policy  = "{{ .RepositoryYum.DeployPolicy }}"
+		repodata_depth = {{ .RepositoryYum.RepodataDepth }}
 {{ end -}}
 }
 `
