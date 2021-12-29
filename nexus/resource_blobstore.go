@@ -49,11 +49,12 @@ package nexus
 import (
 	"fmt"
 	"log"
+	"strconv"
 
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/blobstore"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func resourceBlobstore() *schema.Resource {
@@ -360,7 +361,7 @@ func resourceBlobstoreRead(d *schema.ResourceData, m interface{}) error {
 		return nil
 	}
 
-	d.Set("available_space_in_bytes", bs.AvailableSpaceInBytes)
+	d.Set("available_space_in_bytes", strconv.Itoa(bs.AvailableSpaceInBytes))
 	d.Set("blob_count", bs.BlobCount)
 	d.Set("name", bs.Name)
 	d.Set("path", bs.Path)

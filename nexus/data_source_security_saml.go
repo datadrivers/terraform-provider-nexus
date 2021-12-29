@@ -19,7 +19,7 @@ output "saml_entity_id" {
 package nexus
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceSecuritySAML() *schema.Resource {

@@ -16,7 +16,7 @@ output "nexus_anonymous_enabled" {
 package nexus
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceAnonymous() *schema.Resource {
