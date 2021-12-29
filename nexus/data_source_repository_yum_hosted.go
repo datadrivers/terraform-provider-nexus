@@ -1,5 +1,5 @@
 /*
-Use this data source to get a repository data structure
+Use this data source to get an existing yum repository
 
 Example Usage
 

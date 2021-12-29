@@ -1,5 +1,5 @@
 /*
-Use this resource to create a Nexus Repository.
+Use this resource to create a hosted yum repository.
 
 Example Usage
 

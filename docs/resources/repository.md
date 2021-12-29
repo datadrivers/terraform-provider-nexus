@@ -72,7 +72,7 @@ resource "nexus_repository" "docker_group" {
 
 The following arguments are supported:
 
-* `format` - (Required, ForceNew) Repository format. Possible values: `apt`, `bower`, `conan`, `docker`, `gitlfs`, `go`, `helm`, `maven2`, `npm`, `nuget`, `p2`, `pypi`, `raw`, `rubygems`
+* `format` - (Required, ForceNew) Repository format. Possible values: `apt`, `bower`, `conan`, `docker`, `gitlfs`, `go`, `helm`, `maven2`, `npm`, `nuget`, `p2`, `pypi`, `raw`, `rubygems`, `yum`
 * `name` - (Required) A unique identifier for this repository
 * `type` - (Required, ForceNew) Repository type. Possible values: `group`, `hosted`, `proxy`
 * `apt_signing` - (Optional) Apt signing configuration for the repository
