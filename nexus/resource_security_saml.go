@@ -10,7 +10,7 @@ Example Usage
 ```hcl
 resource "nexus_security_saml" "example" {
   idp_metadata                  = "<EntityDescriptor ...>...</EntityDescriptor>"
-  entity_id                     = "http://nexus.example/client/rest/v1/security/saml/metadata"
+  entity_id                     = "http://nexus.example/service/rest/v1/security/saml/metadata"
   validate_response_signature   = true
   validate_assertion_signature  = true
   username_attribute            = "username"

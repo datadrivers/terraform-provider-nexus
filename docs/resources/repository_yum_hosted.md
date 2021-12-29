@@ -4,12 +4,12 @@ page_title: "Nexus: nexus_repository_yum_hosted"
 subcategory: "Repository"
 sidebar_current: "docs-nexus-resource-repository_yum_hosted"
 description: |-
-  Use this resource to create a Nexus Repository.
+  Use this resource to create a hosted yum repository.
 ---
 
 # nexus_repository_yum_hosted
 
-Use this resource to create a Nexus Repository.
+Use this resource to create a hosted yum repository.
 
 ## Example Usage
 
@@ -43,11 +43,11 @@ resource "nexus_repository_yum_hosted" "yum1" {
 The following arguments are supported:
 
 * `name` - (Required) A unique identifier for this repository
+* `storage` - (Required) The storage configuration of the repository
 * `cleanup` - (Optional) Cleanup policies
 * `deploy_policy` - (Optional) Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`
 * `online` - (Optional) Whether this repository accepts incoming requests
 * `repodata_depth` - (Optional) Specifies the repository depth where repodata folder(s) are created. Possible values: 0-5
-* `storage` - (Optional) The storage configuration of the repository
 
 The `cleanup` object supports the following:
 
