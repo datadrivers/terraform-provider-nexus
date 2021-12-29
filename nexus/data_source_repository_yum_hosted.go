@@ -94,5 +94,5 @@ func dataSourceRepositoryYumHosted() *schema.Resource {
 func dataSourceRepositoryYumHostedRead(d *schema.ResourceData, m interface{}) error {
 	d.SetId(d.Get("name").(string))
 
-	return resourceRepositoryRead(d, m)
+	return resourceYumHostedRepositoryRead(d, m)
 }

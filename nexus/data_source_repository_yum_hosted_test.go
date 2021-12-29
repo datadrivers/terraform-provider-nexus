@@ -13,7 +13,7 @@ import (
 func testAccDataSourceRepositoryYumHostedConfig(name string) string {
 	return fmt.Sprintf(`
 data "nexus_repository_yum_hosted" "acceptance" {
-	name   = "%s"
+	name   = nexus_repository_yum_hosted.%s.id
 }`, name)
 }
 
@@ -29,9 +29,6 @@ func TestAccDataSourceRepositoryYumHosted(t *testing.T) {
 			RepodataDepth: 0,
 		},
 	}
-	nexusClient := getTestClient()
-	nexusClient.Repository.Yum.Hosted.Create(repo)
-	defer nexusClient.Repository.Yum.Hosted.Delete(repo.Name)
 	dataSourceName := "data.nexus_repository_yum_hosted.acceptance"
 
 	resource.Test(t, resource.TestCase{
@@ -39,7 +36,7 @@ func TestAccDataSourceRepositoryYumHosted(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceRepositoryYumHostedConfig(repo.Name),
+				Config: testAccResourceRepositoryYumHostedConfig(repo) + testAccDataSourceRepositoryYumHostedConfig(repo.Name),
 				Check: resource.ComposeTestCheckFunc(
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(dataSourceName, "id", repo.Name),

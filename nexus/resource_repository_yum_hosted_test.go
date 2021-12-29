@@ -18,13 +18,17 @@ resource "nexus_repository_yum_hosted" "{{ .Name }}" {
 	name   = "{{ .Name }}"
 	online = {{ .Online }}
 
+	{{- if .Yum.DeployPolicy }}
 	deploy_policy  = "{{ .Yum.DeployPolicy }}"
-	repodata_depth = "{{ .Yum.RepodataDepth }}"
+	{{- end }}
+	repodata_depth = {{ .Yum.RepodataDepth }}
 
 	storage {
 		blob_store_name                = "{{ .Storage.BlobStoreName }}"
 		strict_content_type_validation = {{ .Storage.StrictContentTypeValidation }}
+		{{- if .Storage.WritePolicy }}
 		write_policy                   = "{{ .Storage.WritePolicy }}"
+		{{- end }}
 	}
 
 {{ if .Cleanup }}

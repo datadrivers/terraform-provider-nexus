@@ -133,18 +133,12 @@ func resourceRepositoryYumHosted() *schema.Resource {
 					},
 				},
 			},
-			"type": {
-				Description: "Repository type",
-				Type:        schema.TypeString,
-				Computed:    true,
-			},
 		},
 	}
 }
 
-func getYumRepositoryFromResourceData(d *schema.ResourceData) repository.YumHostedRepository {
-	storageList := d.Get("storage").([]interface{})
-	storageConfig := storageList[0].(map[string]interface{})
+func getYumHostedRepositoryFromResourceData(d *schema.ResourceData) repository.YumHostedRepository {
+	storageConfig := d.Get("storage").([]interface{})[0].(map[string]interface{})
 	writePolicy := repository.StorageWritePolicy(storageConfig["write_policy"].(string))
 	deployPolicy := repository.YumDeployPolicy(d.Get("deploy_policy").(string))
 
@@ -178,11 +172,10 @@ func getYumRepositoryFromResourceData(d *schema.ResourceData) repository.YumHost
 	return repo
 }
 
-func setYumRepositoryToResourceData(repo *repository.YumHostedRepository, d *schema.ResourceData) error {
+func setYumHostedRepositoryToResourceData(repo *repository.YumHostedRepository, d *schema.ResourceData) error {
 	d.SetId(repo.Name)
 	d.Set("name", repo.Name)
 	d.Set("online", repo.Online)
-	d.Set("type", "hosted")
 	d.Set("repodata_depth", repo.Yum.RepodataDepth)
 	d.Set("deploy_policy", repo.Yum.DeployPolicy)
 
@@ -202,15 +195,12 @@ func setYumRepositoryToResourceData(repo *repository.YumHostedRepository, d *sch
 func resourceYumHostedRepositoryCreate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
-	repo := getYumRepositoryFromResourceData(d)
+	repo := getYumHostedRepositoryFromResourceData(d)
 
 	if err := client.Repository.Yum.Hosted.Create(repo); err != nil {
 		return err
 	}
-
-	if err := setYumRepositoryToResourceData(&repo, d); err != nil {
-		return err
-	}
+	d.SetId(repo.Name)
 
 	return resourceYumHostedRepositoryRead(d, m)
 }
@@ -228,20 +218,16 @@ func resourceYumHostedRepositoryRead(d *schema.ResourceData, m interface{}) erro
 		return nil
 	}
 
-	return setYumRepositoryToResourceData(repo, d)
+	return setYumHostedRepositoryToResourceData(repo, d)
 }
 
 func resourceYumHostedRepositoryUpdate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	repoName := d.Id()
-	repo := getYumRepositoryFromResourceData(d)
+	repo := getYumHostedRepositoryFromResourceData(d)
 
 	if err := client.Repository.Yum.Hosted.Update(repoName, repo); err != nil {
-		return err
-	}
-
-	if err := setYumRepositoryToResourceData(&repo, d); err != nil {
 		return err
 	}
 

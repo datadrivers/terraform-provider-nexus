@@ -831,7 +831,7 @@ func setRepositoryToResourceData(repo *repository.LegacyRepository, d *schema.Re
 		}
 	}
 
-	if err := d.Set("storage", flattenRepositoryHostedStorage(repo.Storage, d)); err != nil {
+	if err := d.Set("storage", flattenRepositoryLegacyStorage(repo.Storage, d)); err != nil {
 		return err
 	}
 
@@ -1027,7 +1027,7 @@ func flattenRepositoryStorage(storage *repository.Storage, d *schema.ResourceDat
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryHostedStorage(storage *repository.HostedStorage, d *schema.ResourceData) []map[string]interface{} {
+func flattenRepositoryLegacyStorage(storage *repository.HostedStorage, d *schema.ResourceData) []map[string]interface{} {
 	if storage == nil {
 		return nil
 	}
@@ -1036,6 +1036,20 @@ func flattenRepositoryHostedStorage(storage *repository.HostedStorage, d *schema
 		"strict_content_type_validation": storage.StrictContentTypeValidation,
 	}
 	if d.Get("type") == repository.RepositoryTypeHosted {
+		data["write_policy"] = storage.WritePolicy
+	}
+	return []map[string]interface{}{data}
+}
+
+func flattenRepositoryHostedStorage(storage *repository.HostedStorage, d *schema.ResourceData) []map[string]interface{} {
+	if storage == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"blob_store_name":                storage.BlobStoreName,
+		"strict_content_type_validation": storage.StrictContentTypeValidation,
+	}
+	if storage.WritePolicy != nil {
 		data["write_policy"] = storage.WritePolicy
 	}
 	return []map[string]interface{}{data}
