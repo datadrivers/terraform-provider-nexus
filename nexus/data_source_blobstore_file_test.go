@@ -29,9 +29,8 @@ func TestAccDataSourceBlobstoreFile(t *testing.T) {
 
 					// Fields related to this type
 					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(resourceName, "blob_count", "0"),          // empty
-						resource.TestCheckResourceAttr(resourceName, "total_size_in_bytes", "0"), // empty
-						// TODO: check that value is non-zero
+						resource.TestCheckResourceAttr(resourceName, "blob_count", "0"),
+						resource.TestCheckResourceAttrSet(resourceName, "total_size_in_bytes"),
 						resource.TestCheckResourceAttrSet(resourceName, "available_space_in_bytes"),
 					),
 				),
