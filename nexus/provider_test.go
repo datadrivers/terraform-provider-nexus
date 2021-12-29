@@ -4,6 +4,8 @@ import (
 	"os"
 	"testing"
 
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/pkg/client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
@@ -40,4 +42,14 @@ func testAccPreCheck(t *testing.T) {
 	if v := os.Getenv("NEXUS_PASSWORD"); v == "" {
 		t.Fatalf("NEXUS_PASSWORD must be set for acceptance tests")
 	}
+}
+
+func getTestClient() *nexus.NexusClient {
+	config := client.Config{
+		Insecure: true,
+		Password: "admin123",
+		URL:      "http://127.0.0.1:8080",
+		Username: "admin",
+	}
+	return nexus.NewClient(config)
 }
