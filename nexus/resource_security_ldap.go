@@ -41,8 +41,8 @@ package nexus
 import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func resourceSecurityLDAP() *schema.Resource {
@@ -292,8 +292,8 @@ func setSecurityLDAPToResourceData(ldap *security.LDAP, d *schema.ResourceData) 
 	d.Set("port", ldap.Port)
 	d.Set("protocol", ldap.Protocol)
 	d.Set("search_base", ldap.SearchBase)
+	d.Set("use_trust_store", ldap.UseTrustStore)
 	d.Set("user_base_dn", ldap.UserBaseDN)
-	d.Set("user_trust_store", ldap.UseTrustStore)
 	d.Set("user_email_address_attribute", ldap.UserEmailAddressAttribute)
 	d.Set("user_id_attribute", ldap.UserIDAttribute)
 	d.Set("user_ldap_filter", ldap.UserLDAPFilter)

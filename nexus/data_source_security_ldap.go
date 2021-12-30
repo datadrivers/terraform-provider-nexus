@@ -12,7 +12,7 @@ package nexus
 import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceSecurityLDAP() *schema.Resource {
@@ -241,7 +241,7 @@ func flattenSecurityLDAP(ldap []security.LDAP) []map[string]interface{} {
 			"user_password_attribute":        server.UserPasswordAttribute,
 			"user_real_name_attribute":       server.UserRealNameAttribute,
 			"user_subtree":                   server.UserSubtree,
-			"user_trust_store":               server.UseTrustStore,
+			"use_trust_store":                server.UseTrustStore,
 		}
 	}
 	return nil

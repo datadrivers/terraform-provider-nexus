@@ -16,7 +16,7 @@ package nexus
 import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	nexusSchema "github.com/datadrivers/go-nexus-client/nexus3/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceScript() *schema.Resource {

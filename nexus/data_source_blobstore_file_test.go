@@ -4,19 +4,19 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccDataSourceBlobstoreFile(t *testing.T) {
 	bsName := "default"
-	resourceName := "data.nexus_blobstore.acceptance"
+	resourceName := "data.nexus_blobstore_file.acceptance"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceBlobstoreConfig(bsName),
+				Config: testAccDataSourceBlobstoreFileConfig(bsName),
 				Check: resource.ComposeTestCheckFunc(
 					// Base and common resource props
 					// Identity fields
@@ -24,7 +24,6 @@ func TestAccDataSourceBlobstoreFile(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "id", "default"),
 						resource.TestCheckResourceAttr(resourceName, "name", "default"),
 						resource.TestCheckResourceAttr(resourceName, "path", "default"),
-						resource.TestCheckResourceAttr(resourceName, "type", "File"),
 					),
 
 					// Fields related to this type
@@ -39,9 +38,9 @@ func TestAccDataSourceBlobstoreFile(t *testing.T) {
 	})
 }
 
-func testAccDataSourceBlobstoreConfig(name string) string {
+func testAccDataSourceBlobstoreFileConfig(name string) string {
 	return fmt.Sprintf(`
-data "nexus_blobstore" "acceptance" {
+data "nexus_blobstore_file" "acceptance" {
 	name = "%s"
 }`, name)
 }

@@ -12,7 +12,7 @@ data "nexus_routing_rule" "stop_leaks" {
 package nexus
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceRoutingRule() *schema.Resource {

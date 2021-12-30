@@ -13,7 +13,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	// cloud "github.com/terraform-providers/terraform-provider-baiducloud/baiducloud"
 	cloud "github.com/datadrivers/terraform-provider-nexus/nexus"
@@ -35,12 +35,12 @@ func main() {
 	log.Printf("generating doc from: %s\n", fpath)
 
 	// document for DataSources
-	for k, v := range provider.(*schema.Provider).DataSourcesMap {
+	for k, v := range provider.DataSourcesMap {
 		genDoc("data_source", fpath, k, v)
 	}
 
 	// document for Resources
-	for k, v := range provider.(*schema.Provider).ResourcesMap {
+	for k, v := range provider.ResourcesMap {
 		genDoc("resource", fpath, k, v)
 	}
 

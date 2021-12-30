@@ -12,7 +12,7 @@ data "nexus_blobstore_file" "default" {
 package nexus
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceBlobstoreFile() *schema.Resource {
@@ -55,7 +55,6 @@ func dataSourceBlobstoreFile() *schema.Resource {
 						},
 					},
 				},
-				MaxItems: 1,
 				Computed: true,
 				Type:     schema.TypeList,
 			},
@@ -71,5 +70,5 @@ func dataSourceBlobstoreFile() *schema.Resource {
 func dataSourceBlobstoreFileRead(resourceData *schema.ResourceData, m interface{}) error {
 	resourceData.SetId(resourceData.Get("name").(string))
 
-	return resourceBlobstoreRead(resourceData, m)
+	return resourceBlobstoreFileRead(resourceData, m)
 }

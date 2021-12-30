@@ -19,7 +19,7 @@ output "nexus_user_token_enabled" {
 package nexus
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceSecurityUserToken() *schema.Resource {

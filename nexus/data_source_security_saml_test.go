@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -60,11 +60,6 @@ func TestAccDataSourceSecuritySaml(t *testing.T) {
 					resource.TestCheckResourceAttr(resName, "email_attribute", saml.EmailAttribute),
 					resource.TestCheckResourceAttr(resName, "groups_attribute", saml.GroupsAttribute),
 				),
-			},
-			{
-				ResourceName:      resName,
-				ImportState:       true,
-				ImportStateVerify: true,
 			},
 		},
 	})

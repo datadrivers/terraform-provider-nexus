@@ -14,7 +14,7 @@ package nexus
 import (
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceRepositoryYumHosted() *schema.Resource {
@@ -66,7 +66,6 @@ func dataSourceRepositoryYumHosted() *schema.Resource {
 				Description: "The storage configuration of the repository",
 				Type:        schema.TypeList,
 				Computed:    true,
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"blob_store_name": {

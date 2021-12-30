@@ -9,9 +9,9 @@ import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func TestAccResourcePrivilegeTypeApplication(t *testing.T) {
@@ -43,7 +43,7 @@ func TestAccResourcePrivilegeTypeApplication(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "nexus_privilege.acceptance",
+				ResourceName:      resName,
 				ImportStateId:     priv.Name,
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -161,7 +161,7 @@ func TestAccResourcePrivilegeTypeScript(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "nexus_privilege.acceptance",
+				ResourceName:      "nexus_privilege.script-privilege",
 				ImportStateId:     privilege.Name,
 				ImportState:       true,
 				ImportStateVerify: true,

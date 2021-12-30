@@ -25,8 +25,8 @@ import (
 
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/blobstore"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func resourceBlobstoreFile() *schema.Resource {
@@ -128,7 +128,7 @@ func resourceBlobstoreFileCreate(resourceData *schema.ResourceData, m interface{
 		return err
 	}
 
-	return resourceBlobstoreRead(resourceData, m)
+	return resourceBlobstoreFileRead(resourceData, m)
 }
 
 func resourceBlobstoreFileRead(resourceData *schema.ResourceData, m interface{}) error {
