@@ -1,0 +1,87 @@
+package provider
+
+import (
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/pkg/client"
+	"github.com/datadrivers/terraform-provider-nexus/internal/services/blobstore"
+	"github.com/datadrivers/terraform-provider-nexus/internal/services/deprecated"
+	"github.com/datadrivers/terraform-provider-nexus/internal/services/other"
+	"github.com/datadrivers/terraform-provider-nexus/internal/services/repository"
+	"github.com/datadrivers/terraform-provider-nexus/internal/services/security"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
+
+// Provider returns a terraform.Provider
+func Provider() *schema.Provider {
+	return &schema.Provider{
+		DataSourcesMap: map[string]*schema.Resource{
+			"nexus_anonymous":             deprecated.DataSourceAnonymous(),
+			"nexus_blobstore":             deprecated.DataSourceBlobstore(),
+			"nexus_blobstore_file":        blobstore.DataSourceBlobstoreFile(),
+			"nexus_privileges":            deprecated.DataSourcePrivileges(),
+			"nexus_repository":            deprecated.DataSourceRepository(),
+			"nexus_repository_yum_hosted": repository.DataSourceRepositoryYumHosted(),
+			"nexus_routing_rule":          other.DataSourceRoutingRule(),
+			"nexus_security_ldap":         security.DataSourceSecurityLDAP(),
+			"nexus_security_realms":       security.DataSourceSecurityRealms(),
+			"nexus_security_saml":         security.DataSourceSecuritySAML(),
+			"nexus_security_user":         security.DataSourceSecurityUser(),
+			"nexus_security_user_token":   security.DataSourceSecurityUserToken(),
+			"nexus_user":                  deprecated.DataSourceUser(),
+		},
+		ResourcesMap: map[string]*schema.Resource{
+			"nexus_anonymous":             deprecated.ResourceAnonymous(),
+			"nexus_blobstore":             deprecated.ResourceBlobstore(),
+			"nexus_blobstore_file":        blobstore.ResourceBlobstoreFile(),
+			"nexus_content_selector":      deprecated.ResourceContentSelector(),
+			"nexus_privilege":             deprecated.ResourcePrivilege(),
+			"nexus_repository":            deprecated.ResourceRepository(),
+			"nexus_repository_yum_hosted": repository.ResourceRepositoryYumHosted(),
+			"nexus_role":                  deprecated.ResourceRole(),
+			"nexus_routing_rule":          other.ResourceRoutingRule(),
+			"nexus_script":                other.ResourceScript(),
+			"nexus_security_ldap":         security.ResourceSecurityLDAP(),
+			"nexus_security_ldap_order":   security.ResourceSecurityLDAPOrder(),
+			"nexus_security_realms":       security.ResourceSecurityRealms(),
+			"nexus_security_saml":         security.ResourceSecuritySAML(),
+			"nexus_security_user":         security.ResourceSecurityUser(),
+			"nexus_security_user_token":   security.ResourceSecurityUserToken(),
+			"nexus_user":                  deprecated.ResourceUser(),
+		},
+		Schema: map[string]*schema.Schema{
+			"insecure": {
+				Default:     false,
+				DefaultFunc: schema.EnvDefaultFunc("NEXUS_INSECURE_SKIP_VERIFY", "true"),
+				Optional:    true,
+				Type:        schema.TypeBool,
+			},
+			"password": {
+				DefaultFunc: schema.EnvDefaultFunc("NEXUS_PASSWORD", "admin123"),
+				Required:    true,
+				Type:        schema.TypeString,
+			},
+			"url": {
+				DefaultFunc: schema.EnvDefaultFunc("NEXUS_URL", "http://127.0.0.1:8080"),
+				Required:    true,
+				Type:        schema.TypeString,
+			},
+			"username": {
+				DefaultFunc: schema.EnvDefaultFunc("NEXUS_USERNAME", "admin"),
+				Required:    true,
+				Type:        schema.TypeString,
+			},
+		},
+		ConfigureFunc: providerConfigure,
+	}
+}
+
+func providerConfigure(d *schema.ResourceData) (interface{}, error) {
+	config := client.Config{
+		Insecure: d.Get("insecure").(bool),
+		Password: d.Get("password").(string),
+		URL:      d.Get("url").(string),
+		Username: d.Get("username").(string),
+	}
+
+	return nexus.NewClient(config), nil
+}

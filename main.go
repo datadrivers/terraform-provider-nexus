@@ -5,7 +5,7 @@ import (
 	"flag"
 	"log"
 
-	"github.com/datadrivers/terraform-provider-nexus/nexus"
+	"github.com/datadrivers/terraform-provider-nexus/internal/provider"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 )
 
@@ -16,15 +16,15 @@ func main() {
 	flag.Parse()
 
 	if debugMode {
-		err := plugin.Debug(context.Background(), "registry.terraform.io/namespace/provider",
+		err := plugin.Debug(context.Background(), "registry.terraform.io/datadrivers/nexus",
 			&plugin.ServeOpts{
-				ProviderFunc: nexus.Provider,
+				ProviderFunc: provider.Provider,
 			})
 		if err != nil {
 			log.Println(err.Error())
 		}
 	} else {
 		plugin.Serve(&plugin.ServeOpts{
-			ProviderFunc: nexus.Provider})
+			ProviderFunc: provider.Provider})
 	}
 }

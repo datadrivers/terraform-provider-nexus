@@ -16,7 +16,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	// cloud "github.com/terraform-providers/terraform-provider-baiducloud/baiducloud"
-	cloud "github.com/datadrivers/terraform-provider-nexus/nexus"
+	"github.com/datadrivers/terraform-provider-nexus/internal/provider"
 )
 
 const (
@@ -27,20 +27,20 @@ const (
 )
 
 func main() {
-	provider := cloud.Provider()
-	vProvider := runtime.FuncForPC(reflect.ValueOf(cloud.Provider).Pointer())
+	nexusProvider := provider.Provider()
+	vProvider := runtime.FuncForPC(reflect.ValueOf(provider.Provider).Pointer())
 
 	fname, _ := vProvider.FileLine(0)
 	fpath := filepath.Dir(fname)
 	log.Printf("generating doc from: %s\n", fpath)
 
 	// document for DataSources
-	for k, v := range provider.DataSourcesMap {
+	for k, v := range nexusProvider.DataSourcesMap {
 		genDoc("data_source", fpath, k, v)
 	}
 
 	// document for Resources
-	for k, v := range provider.ResourcesMap {
+	for k, v := range nexusProvider.ResourcesMap {
 		genDoc("resource", fpath, k, v)
 	}
 
