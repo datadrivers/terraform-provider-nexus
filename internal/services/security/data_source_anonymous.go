@@ -1,17 +1,14 @@
-package deprecated
+package security
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func DataSourceAnonymous() *schema.Resource {
+func DataSourceSecurityAnonymous() *schema.Resource {
 	return &schema.Resource{
-		DeprecationMessage: "This data source is deprecated. Please use the data source nexus_security_anonymous instead.",
-		Description: `!> This data source is deprecated. Please use the data source "nexus_security_anonymous" instead.
+		Description: "Use this get the anonymous configuration of the nexus repository manager.",
 
-Use this get the anonymous configuration of the nexus repository manager.`,
-
-		Read: dataSourceAnonymousRead,
+		Read: dataSourceSecurityAnonymousRead,
 		Schema: map[string]*schema.Schema{
 			"enabled": {
 				Computed:    true,
@@ -32,6 +29,6 @@ Use this get the anonymous configuration of the nexus repository manager.`,
 	}
 }
 
-func dataSourceAnonymousRead(d *schema.ResourceData, m interface{}) error {
-	return resourceAnonymousRead(d, m)
+func dataSourceSecurityAnonymousRead(d *schema.ResourceData, m interface{}) error {
+	return resourceSecurityAnonymousRead(d, m)
 }
