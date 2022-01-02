@@ -1,5 +1,5 @@
 # Example Usage - Create a group with roles
-resource "nexus_role" "nx_admin" {
+resource "nexus_security_role" "nx_admin" {
   roleid      = "nx-admin"
   name        = "nx-admin"
   description = "Administrator role"
@@ -8,7 +8,7 @@ resource "nexus_role" "nx_admin" {
 }
 
 # Example Usage - Create a group with privileges
-resource "nexus_role" "docker_deploy" {
+resource "nexus_security_role" "docker_deploy" {
   description = "Docker deployment role"
   name        = "docker-deploy"
   privileges = [

@@ -1,4 +1,4 @@
-package deprecated
+package security
 
 import (
 	"strings"
@@ -9,18 +9,15 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func ResourceRole() *schema.Resource {
+func ResourceSecurityRole() *schema.Resource {
 	return &schema.Resource{
-		DeprecationMessage: "This resource is deprecated. Please use the resource nexus_security_role instead.",
-		Description: `!> This resource is deprecated. Please use the data source "nexus_security_role" instead.
+		Description: "Use this resource to create a Nexus Role.",
 
-Use this resource to create a Nexus Role.`,
-
-		Create: resourceRoleCreate,
-		Read:   resourceRoleRead,
-		Update: resourceRoleUpdate,
-		Delete: resourceRoleDelete,
-		Exists: resourceRoleExists,
+		Create: resourceSecurityRoleCreate,
+		Read:   resourceSecurityRoleRead,
+		Update: resourceSecurityRoleUpdate,
+		Delete: resourceSecurityRoleDelete,
+		Exists: resourceSecurityRoleExists,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
@@ -68,7 +65,7 @@ Use this resource to create a Nexus Role.`,
 	}
 }
 
-func getRoleFromResourceData(d *schema.ResourceData) security.Role {
+func getSecurityRoleFromResourceData(d *schema.ResourceData) security.Role {
 	return security.Role{
 		ID:          d.Get("roleid").(string),
 		Name:        d.Get("name").(string),
@@ -78,18 +75,18 @@ func getRoleFromResourceData(d *schema.ResourceData) security.Role {
 	}
 }
 
-func resourceRoleCreate(d *schema.ResourceData, m interface{}) error {
+func resourceSecurityRoleCreate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
-	role := getRoleFromResourceData(d)
+	role := getSecurityRoleFromResourceData(d)
 	if err := client.Security.Role.Create(role); err != nil {
 		return err
 	}
 
 	d.SetId(role.ID)
-	return resourceRoleRead(d, m)
+	return resourceSecurityRoleRead(d, m)
 }
 
-func resourceRoleRead(d *schema.ResourceData, m interface{}) error {
+func resourceSecurityRoleRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	role, err := client.Security.Role.Get(d.Id())
@@ -111,19 +108,19 @@ func resourceRoleRead(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func resourceRoleUpdate(d *schema.ResourceData, m interface{}) error {
+func resourceSecurityRoleUpdate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 	roleID := d.Get("roleid").(string)
 
-	role := getRoleFromResourceData(d)
+	role := getSecurityRoleFromResourceData(d)
 	if err := client.Security.Role.Update(roleID, role); err != nil {
 		return err
 	}
 
-	return resourceRoleRead(d, m)
+	return resourceSecurityRoleRead(d, m)
 }
 
-func resourceRoleDelete(d *schema.ResourceData, m interface{}) error {
+func resourceSecurityRoleDelete(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	if err := client.Security.Role.Delete(d.Id()); err != nil {
@@ -134,7 +131,7 @@ func resourceRoleDelete(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func resourceRoleExists(d *schema.ResourceData, m interface{}) (bool, error) {
+func resourceSecurityRoleExists(d *schema.ResourceData, m interface{}) (bool, error) {
 	client := m.(*nexus.NexusClient)
 
 	role, err := client.Security.Role.Get(d.Id())
