@@ -1,4 +1,4 @@
-package deprecated
+package security
 
 import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
@@ -6,17 +6,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func ResourceAnonymous() *schema.Resource {
+func ResourceSecurityAnonymous() *schema.Resource {
 	return &schema.Resource{
-		DeprecationMessage: "This resource is deprecated. Please use the resource nexus_security_anonymous instead.",
-		Description: `!> This resource is deprecated. Please use the data source "nexus_security_anonymous" instead.
+		Description: "Use this resource to change the anonymous configuration of the nexus repository manager.",
 
-Use this resource to change the anonymous configuration of the nexus repository manager.`,
-
-		Create: resourceAnonymousUpdate,
-		Read:   resourceAnonymousRead,
-		Update: resourceAnonymousUpdate,
-		Delete: resourceAnonymousDelete,
+		Create: resourceSecurityAnonymousUpdate,
+		Read:   resourceSecurityAnonymousRead,
+		Update: resourceSecurityAnonymousUpdate,
+		Delete: resourceSecurityAnonymousDelete,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
@@ -59,7 +56,7 @@ func setAnonymousToResourceData(anonymous *security.AnonymousAccessSettings, d *
 	return nil
 }
 
-func resourceAnonymousRead(d *schema.ResourceData, m interface{}) error {
+func resourceSecurityAnonymousRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	anonymous, err := client.Security.Anonymous.Read()
@@ -70,7 +67,7 @@ func resourceAnonymousRead(d *schema.ResourceData, m interface{}) error {
 	return setAnonymousToResourceData(anonymous, d)
 }
 
-func resourceAnonymousUpdate(d *schema.ResourceData, m interface{}) error {
+func resourceSecurityAnonymousUpdate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	anonymous := getAnonymousFromResourceData(d)
@@ -78,9 +75,9 @@ func resourceAnonymousUpdate(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	return resourceAnonymousRead(d, m)
+	return resourceSecurityAnonymousRead(d, m)
 }
 
-func resourceAnonymousDelete(d *schema.ResourceData, m interface{}) error {
+func resourceSecurityAnonymousDelete(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
