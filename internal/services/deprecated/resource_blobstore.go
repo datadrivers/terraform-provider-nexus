@@ -1,49 +1,3 @@
-/*
-Use this resource to create a Nexus blobstore.
-
-Example Usage
-
-Example Usage for file store
-
-```hcl
-resource "nexus_blobstore" "default" {
-  name = "blobstore-file"
-  type = "File"
-  path = "/nexus-data/blobstore-file"
-
-  soft_quota {
-    limit = 1024000000
-    type  = "spaceRemainingQuota"
-  }
-}
-```
-
-Example Usage with S3 bucket
-
-```hcl
-resource "nexus_blobstore" "aws" {
-  name = "blobstore-s3"
-  type = "S3"
-
-  bucket_configuration {
-    bucket {
-      name   = "aws-bucket-name"
-      region = "us-central-1"
-    }
-
-    bucket_security {
-      access_key_id = "<your-aws-access-key-id>"
-      secret_access_key = "<your-aws-secret-access-key>"
-    }
-  }
-
-  soft_quota {
-    limit = 1024
-    type  = "spaceRemainingQuota"
-  }
-}
-```
-*/
 package deprecated
 
 import (
@@ -59,6 +13,8 @@ import (
 
 func ResourceBlobstore() *schema.Resource {
 	return &schema.Resource{
+		Description: "Use this resource to create a Nexus blobstore.",
+
 		Create: resourceBlobstoreCreate,
 		Read:   resourceBlobstoreRead,
 		Update: resourceBlobstoreUpdate,

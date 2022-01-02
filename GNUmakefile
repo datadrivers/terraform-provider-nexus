@@ -83,29 +83,7 @@ tools:
 	go install github.com/client9/misspell/cmd/misspell
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint
 
-website:
-ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
-	echo "$(WEBSITE_REPO) not found in your GOPATH (necessary for layouts and assets), get-ting..."
-	git clone https://$(WEBSITE_REPO) $(GOPATH)/src/$(WEBSITE_REPO)
-endif
-	(cd $(GOPATH)/src/$(WEBSITE_REPO); \
-	  ln -fs ../../../ext/providers/$(PKG_NAME)/$(PKG_NAME).erb content/source/layouts/$(PKG_NAME).erb; \
-	  ln -Fs ../../../../ext/providers/$(PKG_NAME)/docs content/source/docs/providers/$(PKG_NAME) \
-	)
-	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
-
-website-test:
-ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
-	echo "$(WEBSITE_REPO) not found in your GOPATH (necessary for layouts and assets), get-ting..."
-	git clone https://$(WEBSITE_REPO) $(GOPATH)/src/$(WEBSITE_REPO)
-endif
-	(cd $(GOPATH)/src/$(WEBSITE_REPO); \
-	  ln -fs ../../../ext/providers/$(PKG_NAME)/$(PKG_NAME).erb content/source/layouts/$(PKG_NAME).erb; \
-	  ln -Fs ../../../../ext/providers/$(PKG_NAME)/docs content/source/docs/providers/$(PKG_NAME) \
-	)
-	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
-
 docs:
-	go run ./gendocs/*.go
+	go generate ./...
 
-.PHONY: build test testacc fmt fmtcheck lint tools website website-test docs
+.PHONY: build start-services stop-services test testacc fmt fmtcheck lint tools docs

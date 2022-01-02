@@ -1,17 +1,3 @@
-/*
-Use this data source to work with privileges
-
-Example Usage
-
-```hcl
-data "nexus_privileges" "example" {
-  domain     = "application"
-  format     = "maven2"
-  repository = "maven-public"
-  type       = "repository-admin"
-}
-```
-*/
 package deprecated
 
 import (
@@ -27,8 +13,9 @@ import (
 
 func DataSourcePrivileges() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourcePrivilegesRead,
+		Description: "Use this data source to work with privileges.",
 
+		Read: dataSourcePrivilegesRead,
 		Schema: map[string]*schema.Schema{
 			"domain": {
 				Description:  "The domain of the privilege",

@@ -1,12 +1,3 @@
-/*
-Use this data source to work with LDAP security
-
-Example Usage
-
-```hcl
-data "nexus_security_ldap" "default" {}
-```
-*/
 package security
 
 import (
@@ -17,8 +8,9 @@ import (
 
 func DataSourceSecurityLDAP() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceSecurityLDAPRead,
+		Description: "Use this data source to read the LDAP configurations.",
 
+		Read: dataSourceSecurityLDAPRead,
 		Schema: map[string]*schema.Schema{
 			"ldap": {
 				Computed:    true,

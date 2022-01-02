@@ -1,20 +1,3 @@
-/*
-Use this resource to create a Nexus Routing Rule.
-
-Example Usage
-
-```hcl
-resource "nexus_routing_rule" "stop_leaks" {
-  name        = "stop-leaks"
-  description = "Prevent requests of internal names"
-  mode        = "BLOCK"
-  matchers    = [
-	"^/com/example/.*",
-	"^/org/example/.*",
-  ]
-}
-```
-*/
 package other
 
 import (
@@ -29,6 +12,8 @@ import (
 
 func ResourceRoutingRule() *schema.Resource {
 	return &schema.Resource{
+		Description: "Use this resource to create a Nexus Routing Rule.",
+
 		Create: resourceRoutingRuleCreate,
 		Read:   resourceRoutingRuleRead,
 		Update: resourceRoutingRuleUpdate,

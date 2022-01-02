@@ -1,14 +1,3 @@
-/*
-Use this data source to work with routing rules
-
-Example Usage
-
-```hcl
-data "nexus_routing_rule" "stop_leaks" {
-  name = "stop-leaks"
-}
-```
-*/
 package other
 
 import (
@@ -17,8 +6,9 @@ import (
 
 func DataSourceRoutingRule() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceRoutingRuleRead,
+		Description: "Use this data source to work with routing rules.",
 
+		Read: dataSourceRoutingRuleRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Description: "The name of the routing rule",

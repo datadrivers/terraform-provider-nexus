@@ -1,18 +1,3 @@
-/*
-Use this get the anonymous configuration of the nexus repository manager.
-
-Example Usage
-
-```hcl
-data "nexus_anonymous" "nexus" {
-}
-
-output "nexus_anonymous_enabled" {
-  description = "Anonymous enabled?"
-  value       = data.nexus_anonymous.nexus.enabled
-}
-```
-*/
 package deprecated
 
 import (
@@ -21,6 +6,8 @@ import (
 
 func DataSourceAnonymous() *schema.Resource {
 	return &schema.Resource{
+		Description: "Use this get the anonymous configuration of the nexus repository manager.",
+
 		Read: dataSourceAnonymousRead,
 		Schema: map[string]*schema.Schema{
 			"enabled": {

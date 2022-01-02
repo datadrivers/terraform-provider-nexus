@@ -1,14 +1,3 @@
-/*
-Use this to create a Nexus blobstore.
-
-Example Usage
-
-```hcl
-data "nexus_blobstore" "docker" {
-	name = "docker"
-}
-```
-*/
 package deprecated
 
 import (
@@ -18,6 +7,8 @@ import (
 
 func DataSourceBlobstore() *schema.Resource {
 	return &schema.Resource{
+		Description: "Use this to create a Nexus blobstore.",
+
 		Read: dataSourceBlobstoreRead,
 		Schema: map[string]*schema.Schema{
 			"type": {

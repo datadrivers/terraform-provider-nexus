@@ -1,16 +1,3 @@
-/*
-Use this resource to create a Nexus Content Selector
-
-Example Usage
-
-```hcl
-resource "nexus_content_selector" "docker-public" {
-  name        = "docker-public"
-  description = "A content selector matching public docker images."
-  expression  = "path =^ \"/v2/public/\""
-}
-```
-*/
 package deprecated
 
 import (
@@ -21,6 +8,8 @@ import (
 
 func ResourceContentSelector() *schema.Resource {
 	return &schema.Resource{
+		Description: "Use this resource to create a Nexus Content Selector.",
+
 		Create: resourceContentSelectorCreate,
 		Read:   resourceContentSelectorRead,
 		Update: resourceContentSelectorUpdate,

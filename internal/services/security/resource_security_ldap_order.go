@@ -1,29 +1,3 @@
-/*
-Use this resource to change the LDAP order.
-
-Example Usage
-
-Set order of LDAP server
-
-```hcl
-resource "nexus_security_ldap" "server1" {
-  ...
-  name = "server1"
-}
-
-resource "nexus_security_ldap" "server2" {
-  ...
-  name = "server2"
-}
-
-resource "nexus_security_ldap_order" {
-  order = [
-    nexus_security_ldap.server1.name,
-    nexus_security_ldap.server2.name,
-  ]
-}
-```
-*/
 package security
 
 import (
@@ -34,6 +8,8 @@ import (
 
 func ResourceSecurityLDAPOrder() *schema.Resource {
 	return &schema.Resource{
+		Description: "Use this resource to change the LDAP order.",
+
 		Create: resourceSecurityLDAPOrderCreate,
 		Read:   resourceSecurityLDAPOrderRead,
 		Update: resourceSecurityLDAPOrderUpdate,

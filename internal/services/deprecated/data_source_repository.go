@@ -1,14 +1,3 @@
-/*
-Use this data source to get a repository data structure
-
-Example Usage
-
-```hcl
-data "nexus_repository" "maven-central" {
-  name = "maven-central"
-}
-```
-*/
 package deprecated
 
 import (
@@ -18,8 +7,9 @@ import (
 
 func DataSourceRepository() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceRepositoryRead,
+		Description: "Use this data source to get a repository data structure.",
 
+		Read: dataSourceRepositoryRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Description: "A unique identifier for this repository",

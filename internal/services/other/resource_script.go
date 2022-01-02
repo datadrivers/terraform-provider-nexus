@@ -1,16 +1,3 @@
-/*
-Use this resource to create and execute a custom script.
-
-Example Usage
-
-```hcl
-resource "nexus_script" "repo_pypi_internal" {
-  name    = "create-repo-pypi-internal"
-  type    = "groovy"
-  content = "repository.createPyPiHosted('pypi-internal')"
-}
-```
-*/
 package other
 
 import (
@@ -21,6 +8,8 @@ import (
 
 func ResourceScript() *schema.Resource {
 	return &schema.Resource{
+		Description: "Use this resource to create and execute a custom script.",
+
 		Create: resourceScriptCreate,
 		Read:   resourceScriptRead,
 		Update: resourceScriptUpdate,

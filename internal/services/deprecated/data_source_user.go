@@ -1,16 +1,3 @@
-/*
-This data source is deprecated. Please use the data source "nexus_security_user" instead.
-
-Use this data source to get a user data structure
-
-Example Usage
-
-```hcl
-data "nexus_user" "admin" {
-  userid = "admin"
-}
-```
-*/
 package deprecated
 
 import (
@@ -20,6 +7,9 @@ import (
 func DataSourceUser() *schema.Resource {
 	return &schema.Resource{
 		DeprecationMessage: "This data source is deprecated. Please use the data source nexus_security_user instead.",
+		Description: `!> This data source is deprecated. Please use the data source "nexus_security_user" instead.
+
+Use this data source to get a user data structure.`,
 
 		Read: dataSourceUserRead,
 

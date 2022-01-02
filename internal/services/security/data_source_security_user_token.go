@@ -1,21 +1,3 @@
-/*
-Use this data source to get the global user-token configuration.
-
----
-**PRO Feature**
----
-
-Example Usage
-
-```hcl
-data "nexus_security_user_token" "nexus" {}
-
-output "nexus_user_token_enabled" {
-  description = "User Tokens enabled?"
-  value       = data.nexus_security_user_token.nexus.enabled
-}
-```
-*/
 package security
 
 import (
@@ -24,8 +6,11 @@ import (
 
 func DataSourceSecurityUserToken() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceSecurityUserTokenRead,
+		Description: `~> PRO Feature
 
+Use this data source to get the global user-token configuration.`,
+
+		Read: dataSourceSecurityUserTokenRead,
 		Schema: map[string]*schema.Schema{
 			"enabled": {
 				Computed:    true,

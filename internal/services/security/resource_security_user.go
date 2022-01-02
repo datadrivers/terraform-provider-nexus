@@ -1,20 +1,3 @@
-/*
-Use this resource to manage users
-
-Example Usage
-
-```hcl
-resource "nexus_security_user" "admin" {
-  userid    = "admin"
-  firstname = "Administrator"
-  lastname  = "User"
-  email     = "nexus@example.com"
-  password  = "admin123"
-  roles     = ["nx-admin"]
-  status    = "active"
-}
-```
-*/
 package security
 
 import (
@@ -27,6 +10,8 @@ import (
 
 func ResourceSecurityUser() *schema.Resource {
 	return &schema.Resource{
+		Description: "Use this resource to manage users.",
+
 		Create: resourceSecurityUserCreate,
 		Read:   resourceSecurityUserRead,
 		Update: resourceSecurityUserUpdate,

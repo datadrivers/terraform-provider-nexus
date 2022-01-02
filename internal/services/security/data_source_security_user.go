@@ -1,14 +1,3 @@
-/*
-Use this data source to get a user data structure
-
-Example Usage
-
-```hcl
-data "nexus_security_user" "admin" {
-  userid = "admin"
-}
-```
-*/
 package security
 
 import (
@@ -17,8 +6,9 @@ import (
 
 func DataSourceSecurityUser() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceSecurityUserRead,
+		Description: "Use this data source to get a user data structure.",
 
+		Read: dataSourceSecurityUserRead,
 		Schema: map[string]*schema.Schema{
 			"userid": {
 				Description: "The userid which is required for login",

@@ -1,22 +1,3 @@
-/*
-This resource is deprecated. Please use the data source "nexus_security_user" instead.
-
-Use this resource to manage users
-
-Example Usage
-
-```hcl
-resource "nexus_user" "admin" {
-  userid    = "admin"
-  firstname = "Administrator"
-  lastname  = "User"
-  email     = "nexus@example.com"
-  password  = "admin123"
-  roles     = ["nx-admin"]
-  status    = "active"
-}
-```
-*/
 package deprecated
 
 import (
@@ -31,6 +12,9 @@ import (
 func ResourceUser() *schema.Resource {
 	return &schema.Resource{
 		DeprecationMessage: "This resource is deprecated. Please use the resource nexus_security_user instead.",
+		Description: `!> This resource is deprecated. Please use the data source "nexus_security_user" instead.
+
+Use this resource to manage users.`,
 
 		Create: resourceUserCreate,
 		Read:   resourceUserRead,

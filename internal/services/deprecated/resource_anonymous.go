@@ -1,5 +1,5 @@
 /*
-Use this resource to change the anonymous configuration of the nexus repository manager.
+
 
 Example Usage
 
@@ -20,6 +20,8 @@ import (
 
 func ResourceAnonymous() *schema.Resource {
 	return &schema.Resource{
+		Description: "Use this resource to change the anonymous configuration of the nexus repository manager.",
+
 		Create: resourceAnonymousUpdate,
 		Read:   resourceAnonymousRead,
 		Update: resourceAnonymousUpdate,

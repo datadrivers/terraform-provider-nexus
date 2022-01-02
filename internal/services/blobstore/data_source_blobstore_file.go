@@ -1,14 +1,3 @@
-/*
-Use this to read an existing Nexus file blobstore.
-
-Example Usage
-
-```hcl
-data "nexus_blobstore_file" "default" {
-	name = "default"
-}
-```
-*/
 package blobstore
 
 import (
@@ -17,6 +6,8 @@ import (
 
 func DataSourceBlobstoreFile() *schema.Resource {
 	return &schema.Resource{
+		Description: "Use this to read an existing Nexus file blobstore.",
+
 		Read: dataSourceBlobstoreFileRead,
 		Schema: map[string]*schema.Schema{
 			"name": {

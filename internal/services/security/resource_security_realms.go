@@ -1,17 +1,3 @@
-/*
-Use this resource to activate Nexus Security LDAP and order
-
-Example Usage
-
-```hcl
-resource "nexus_security_realms" "example" {
-  active = [
-	"NexusAuthenticatingRealm",
-	"NexusAuthorizingRealm",
-  ]
-}
-```
-*/
 package security
 
 import (
@@ -22,6 +8,8 @@ import (
 
 func ResourceSecurityRealms() *schema.Resource {
 	return &schema.Resource{
+		Description: "Use this resource to activate Nexus Security realms.",
+
 		Create: resourceRealmsCreate,
 		Read:   resourceRealmsRead,
 		Update: resourceRealmsUpdate,

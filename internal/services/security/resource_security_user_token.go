@@ -1,19 +1,3 @@
-/*
-Use this resource to manage the global configuration for the user-tokens
-
----
-**PRO Feature**
----
-
-Example Usage
-
-```hcl
-resource "nexus_security_user_token" "nexus" {
-    enabled         = true
-	protect_content = false
-}
-```
-*/
 package security
 
 import (
@@ -24,6 +8,10 @@ import (
 
 func ResourceSecurityUserToken() *schema.Resource {
 	return &schema.Resource{
+		Description: `~> PRO Feature
+
+Use this resource to manage the global configuration for the user-tokens.`,
+
 		Create: resourceSecurityUserTokenUpdate,
 		Read:   resourceSecurityUserTokenRead,
 		Update: resourceSecurityUserTokenUpdate,

@@ -50,22 +50,26 @@ func Provider() *schema.Provider {
 		},
 		Schema: map[string]*schema.Schema{
 			"insecure": {
+				Description: "Boolean to specify wether insecure SSL connections are allowed or not. Reading environment variable NEXUS_INSECURE_SKIP_VERIFY. Default:`true`",
 				Default:     false,
 				DefaultFunc: schema.EnvDefaultFunc("NEXUS_INSECURE_SKIP_VERIFY", "true"),
 				Optional:    true,
 				Type:        schema.TypeBool,
 			},
 			"password": {
+				Description: "Password of user to connect to API. Reading environment variable NEXUS_PASSWORD. Default:`admin123`",
 				DefaultFunc: schema.EnvDefaultFunc("NEXUS_PASSWORD", "admin123"),
 				Required:    true,
 				Type:        schema.TypeString,
 			},
 			"url": {
+				Description: "URL of Nexus to reach API. Reading environment variable NEXUS_URL. Default:`http://127.0.0.1:8080`",
 				DefaultFunc: schema.EnvDefaultFunc("NEXUS_URL", "http://127.0.0.1:8080"),
 				Required:    true,
 				Type:        schema.TypeString,
 			},
 			"username": {
+				Description: "Username used to connect to API. Reading environment variable NEXUS_USERNAME. Default:`admin`",
 				DefaultFunc: schema.EnvDefaultFunc("NEXUS_USERNAME", "admin"),
 				Required:    true,
 				Type:        schema.TypeString,

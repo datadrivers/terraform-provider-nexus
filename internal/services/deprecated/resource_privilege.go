@@ -1,16 +1,3 @@
-/*
-Use this resource to create a Nexus privilege
-
-Example Usage
-
-```hcl
-resource "nexus_privilege" "example" {
-  name    = "example-privilige"
-  actions = "all"
-  type    = "repository-admin"
-}
-```
-*/
 package deprecated
 
 import (
@@ -24,6 +11,8 @@ import (
 
 func ResourcePrivilege() *schema.Resource {
 	return &schema.Resource{
+		Description: "Use this resource to create a Nexus privilege.",
+
 		Create: resourcePrivilegeCreate,
 		Read:   resourcePrivilegeRead,
 		Update: resourcePrivilegeUpdate,

@@ -1,14 +1,3 @@
-/*
-
-
-Example Usage
-
-```hcl
-data "nexus_repository_yum_hosted" "yummy" {
-  name = "yummy"
-}
-```
-*/
 package repository
 
 import (
@@ -17,10 +6,9 @@ import (
 
 func DataSourceRepositoryYumHosted() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this data source to get an existing yum repository",
+		Description: "Use this data source to get an existing yum repository.",
 
 		Read: dataSourceRepositoryYumHostedRead,
-
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Description: "A unique identifier for this repository",

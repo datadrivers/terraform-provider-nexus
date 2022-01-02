@@ -1,5 +1,5 @@
 /*
-Use this data source to work with Realms security
+Use this data source to list all security realms.
 
 Example Usage
 
@@ -17,8 +17,9 @@ import (
 
 func DataSourceSecurityRealms() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceRealmsRead,
+		Description: "Use this data source to list all security realms.",
 
+		Read: dataSourceRealmsRead,
 		Schema: map[string]*schema.Schema{
 			"active": {
 				Description: "List of active security realms",

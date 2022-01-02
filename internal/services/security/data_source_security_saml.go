@@ -1,21 +1,3 @@
-/*
-Use this data source to get the saml configuration
-
----
-**PRO Feature**
----
-
-Example Usage
-
-```hcl
-data "nexus_security_saml" "saml" {}
-
-output "saml_entity_id" {
-  description = "Entity ID URI of saml config"
-  value       = data.nexus_security_saml.saml.entity_id
-}
-```
-*/
 package security
 
 import (
@@ -24,8 +6,11 @@ import (
 
 func DataSourceSecuritySAML() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceSecuritySamlRead,
+		Description: `~> PRO Feature
 
+Use this data source to get the saml configuration.`,
+
+		Read: dataSourceSecuritySamlRead,
 		Schema: map[string]*schema.Schema{
 			"idp_metadata": {
 				Description: "SAML Identity Provider Metadata XML",

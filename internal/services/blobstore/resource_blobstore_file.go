@@ -1,22 +1,3 @@
-/*
-Use this resource to create a Nexus file blobstore.
-
-Example Usage
-
-```hcl
-resource "nexus_blobstore_file" "default" {
-  name = "blobstore-file"
-  type = "File"
-  path = "/nexus-data/blobstore-file"
-
-  soft_quota {
-    limit = 1024000000
-    type  = "spaceRemainingQuota"
-  }
-}
-```
-
-*/
 package blobstore
 
 import (
@@ -30,6 +11,8 @@ import (
 
 func ResourceBlobstoreFile() *schema.Resource {
 	return &schema.Resource{
+		Description: "Use this resource to create a Nexus file blobstore.",
+
 		Create: resourceBlobstoreFileCreate,
 		Read:   resourceBlobstoreFileRead,
 		Update: resourceBlobstoreFileUpdate,
