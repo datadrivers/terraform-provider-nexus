@@ -28,7 +28,7 @@ func TestAccDataSourceSecurityRole(t *testing.T) {
 			{
 				Config: testAccResourceSecurityRoleConfig(role) + testAccDataSourceSecurityRoleConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(dataSourceName, "name", role.Name),
+					resource.TestCheckResourceAttr(dataSourceName, "id", role.ID),
 					resource.TestCheckResourceAttr(dataSourceName, "roleid", role.ID),
 					resource.TestCheckResourceAttr(dataSourceName, "name", role.Name),
 					resource.TestCheckResourceAttr(dataSourceName, "description", role.Description),

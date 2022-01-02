@@ -1,4 +1,4 @@
-package deprecated
+package security
 
 import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
@@ -6,18 +6,15 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func ResourceContentSelector() *schema.Resource {
+func ResourceSecurityContentSelector() *schema.Resource {
 	return &schema.Resource{
-		DeprecationMessage: "This resource is deprecated. Please use the resource nexus_security_content_selector instead.",
-		Description: `!> This resource is deprecated. Please use the data source "nexus_security_content_selector" instead.
+		Description: "Use this resource to create a Nexus Content Selector.",
 
-Use this resource to create a Nexus Content Selector.`,
-
-		Create: resourceContentSelectorCreate,
-		Read:   resourceContentSelectorRead,
-		Update: resourceContentSelectorUpdate,
-		Delete: resourceContentSelectorDelete,
-		Exists: resourceContentSelectorExists,
+		Create: resourceSecurityContentSelectorCreate,
+		Read:   resourceSecurityContentSelectorRead,
+		Update: resourceSecurityContentSelectorUpdate,
+		Delete: resourceSecurityContentSelectorDelete,
+		Exists: resourceSecurityContentSelectorExists,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
@@ -63,7 +60,7 @@ func setContentSelectorToResourceData(contentSelector *security.ContentSelector,
 	return nil
 }
 
-func resourceContentSelectorCreate(d *schema.ResourceData, m interface{}) error {
+func resourceSecurityContentSelectorCreate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	contentSelector := getContentSelectorFromResourceData(d)
@@ -74,10 +71,10 @@ func resourceContentSelectorCreate(d *schema.ResourceData, m interface{}) error 
 
 	d.SetId(contentSelector.Name)
 
-	return resourceContentSelectorRead(d, m)
+	return resourceSecurityContentSelectorRead(d, m)
 }
 
-func resourceContentSelectorRead(d *schema.ResourceData, m interface{}) error {
+func resourceSecurityContentSelectorRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	contentSelector, err := client.Security.ContentSelector.Get(d.Id())
@@ -93,7 +90,7 @@ func resourceContentSelectorRead(d *schema.ResourceData, m interface{}) error {
 	return setContentSelectorToResourceData(contentSelector, d)
 }
 
-func resourceContentSelectorUpdate(d *schema.ResourceData, m interface{}) error {
+func resourceSecurityContentSelectorUpdate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	contentSelector := getContentSelectorFromResourceData(d)
@@ -101,10 +98,10 @@ func resourceContentSelectorUpdate(d *schema.ResourceData, m interface{}) error 
 		return err
 	}
 
-	return resourceContentSelectorRead(d, m)
+	return resourceSecurityContentSelectorRead(d, m)
 }
 
-func resourceContentSelectorDelete(d *schema.ResourceData, m interface{}) error {
+func resourceSecurityContentSelectorDelete(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	if err := client.Security.ContentSelector.Delete(d.Id()); err != nil {
@@ -116,7 +113,7 @@ func resourceContentSelectorDelete(d *schema.ResourceData, m interface{}) error 
 	return nil
 }
 
-func resourceContentSelectorExists(d *schema.ResourceData, m interface{}) (bool, error) {
+func resourceSecurityContentSelectorExists(d *schema.ResourceData, m interface{}) (bool, error) {
 	client := m.(*nexus.NexusClient)
 
 	contentSelector, err := client.Security.ContentSelector.Get(d.Id())

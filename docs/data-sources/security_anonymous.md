@@ -2,10 +2,10 @@
 page_title: "Data Source nexus_security_anonymous"
 subcategory: "Security"
 description: |-
-  Use this get the anonymous configuration of the nexus repository manager.
+  Use this to get the anonymous configuration of the nexus repository manager.
 ---
 # Data Source nexus_security_anonymous
-Use this get the anonymous configuration of the nexus repository manager.
+Use this to get the anonymous configuration of the nexus repository manager.
 ## Example Usage
 ```terraform
 data "nexus_security_anonymous" "nexus" {
