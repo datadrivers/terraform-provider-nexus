@@ -37,6 +37,6 @@ resource "nexus_security_user" "admin" {
 ## Import
 Import is supported using the following syntax:
 ```shell
-# import using the name of the user
+# import using the userid of the user
 terraform import nexus_security_user.admin admin
 ```
