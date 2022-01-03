@@ -8,7 +8,7 @@ import (
 
 func DataSourceSecurityRole() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this get the anonymous configuration of the nexus repository manager.",
+		Description: "Use this to get a specified secrity role.",
 
 		Read: dataSourceSecurityRoleRead,
 		Schema: map[string]*schema.Schema{

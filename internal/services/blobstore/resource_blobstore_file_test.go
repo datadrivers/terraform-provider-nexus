@@ -12,7 +12,7 @@ import (
 )
 
 func TestAccResourceBlobstoreFile(t *testing.T) {
-	resName := "nexus_blobstore_file.acceptance"
+	resourceName := "nexus_blobstore_file.acceptance"
 
 	bs := blobstore.File{
 		Name: fmt.Sprintf("test-blobstore-%d", acctest.RandIntRange(0, 99)),
@@ -30,32 +30,21 @@ func TestAccResourceBlobstoreFile(t *testing.T) {
 			{
 				Config: testAccResourceBlobstoreFileConfig(bs),
 				Check: resource.ComposeTestCheckFunc(
-					// Base and common resource props
-					// Identity fields
+					resource.TestCheckResourceAttr(resourceName, "id", bs.Name),
+					resource.TestCheckResourceAttr(resourceName, "name", bs.Name),
+					resource.TestCheckResourceAttr(resourceName, "path", bs.Path),
 					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(resName, "id", bs.Name),
-						resource.TestCheckResourceAttr(resName, "name", bs.Name),
-						resource.TestCheckResourceAttr(resName, "path", bs.Path),
+						resource.TestCheckResourceAttr(resourceName, "soft_quota.#", "1"),
+						resource.TestCheckResourceAttr(resourceName, "soft_quota.0.limit", strconv.FormatInt(bs.SoftQuota.Limit, 10)),
+						resource.TestCheckResourceAttr(resourceName, "soft_quota.0.type", bs.SoftQuota.Type),
 					),
-					// Common fields
-					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(resName, "soft_quota.#", "1"),
-						resource.TestCheckResourceAttr(resName, "soft_quota.0.limit", strconv.FormatInt(bs.SoftQuota.Limit, 10)),
-						resource.TestCheckResourceAttr(resName, "soft_quota.0.type", bs.SoftQuota.Type),
-					),
-
-					// Fields related to this type
-					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(resName, "blob_count", "0"),          // empty
-						resource.TestCheckResourceAttr(resName, "total_size_in_bytes", "0"), // empty
-						// FIXME: The value is unavailable, but should be
-						// TODO: check that value is non-zero
-						// resource.TestCheckResourceAttrSet(resName, "available_space_in_bytes"),
-					),
+					resource.TestCheckResourceAttrSet(resourceName, "blob_count"),
+					resource.TestCheckResourceAttrSet(resourceName, "total_size_in_bytes"),
+					resource.TestCheckResourceAttrSet(resourceName, "available_space_in_bytes"),
 				),
 			},
 			{
-				ResourceName:            resName,
+				ResourceName:            resourceName,
 				ImportState:             true,
 				ImportStateId:           bs.Name,
 				ImportStateVerify:       true,

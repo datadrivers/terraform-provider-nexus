@@ -2,10 +2,10 @@
 page_title: "Data Source nexus_security_role"
 subcategory: "Security"
 description: |-
-  Use this get the anonymous configuration of the nexus repository manager.
+  Use this to get a specified secrity role.
 ---
 # Data Source nexus_security_role
-Use this get the anonymous configuration of the nexus repository manager.
+Use this to get a specified secrity role.
 ## Example Usage
 ```terraform
 data "nexus_security_role" "nx_admin" {

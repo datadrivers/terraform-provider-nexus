@@ -1,4 +1,4 @@
-package deprecated_test
+package security_test
 
 import (
 	"fmt"
@@ -12,14 +12,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccResourceContentSelector(t *testing.T) {
+func TestAccResourceSecurityContentSelector(t *testing.T) {
 	var contentSelector security.ContentSelector
 
 	resName := "nexus_security_content_selector.acceptance"
 	cs := security.ContentSelector{
 		Name:        acctest.RandString(10),
 		Description: acctest.RandString(30),
-		Expression:  fmt.Sprintf("format == \\\"%s\\\" and path == \\\"%s\\\"", acctest.RandString(15), acctest.RandString(15)),
+		Expression:  fmt.Sprintf("format == '%s' and path == '%s'", acctest.RandString(15), acctest.RandString(15)),
 	}
 
 	resource.Test(t, resource.TestCase{
@@ -28,10 +28,10 @@ func TestAccResourceContentSelector(t *testing.T) {
 		Steps: []resource.TestStep{
 			// The first step creates a basic content selector
 			{
-				Config: testAccResourceContentSelectorConfig(cs),
+				Config: testAccResourceSecurityContentSelectorConfig(cs),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resName, "description", cs.Description),
-					//resource.TestCheckResourceAttr("nexus_content_selector.acceptance", "expression", contentSelectorExpression),
+					resource.TestCheckResourceAttr(resName, "expression", cs.Expression),
 					resource.TestCheckResourceAttr(resName, "name", cs.Name),
 					testAccCheckContentSelectorResourceExists(resName, &contentSelector),
 				),
@@ -46,7 +46,7 @@ func TestAccResourceContentSelector(t *testing.T) {
 	})
 }
 
-func testAccResourceContentSelectorConfig(cs security.ContentSelector) string {
+func testAccResourceSecurityContentSelectorConfig(cs security.ContentSelector) string {
 	return fmt.Sprintf(`
 resource "nexus_security_content_selector" "acceptance" {
 	description = "%s"

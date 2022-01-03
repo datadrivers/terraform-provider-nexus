@@ -6,7 +6,7 @@ import (
 
 func DataSourceSecurityAnonymous() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this get the anonymous configuration of the nexus repository manager.",
+		Description: "Use this to get the anonymous configuration of the nexus repository manager.",
 
 		Read: dataSourceSecurityAnonymousRead,
 		Schema: map[string]*schema.Schema{

@@ -10,7 +10,7 @@ import (
 
 func TestAccDataSourceBlobstoreFile(t *testing.T) {
 	bsName := "default"
-	resourceName := "data.nexus_blobstore_file.acceptance"
+	dataSourceName := "data.nexus_blobstore_file.acceptance"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { acceptance.AccPreCheck(t) },
@@ -19,20 +19,12 @@ func TestAccDataSourceBlobstoreFile(t *testing.T) {
 			{
 				Config: testAccDataSourceBlobstoreFileConfig(bsName),
 				Check: resource.ComposeTestCheckFunc(
-					// Base and common resource props
-					// Identity fields
-					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(resourceName, "id", "default"),
-						resource.TestCheckResourceAttr(resourceName, "name", "default"),
-						resource.TestCheckResourceAttr(resourceName, "path", "default"),
-					),
-
-					// Fields related to this type
-					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(resourceName, "blob_count", "0"),
-						resource.TestCheckResourceAttrSet(resourceName, "total_size_in_bytes"),
-						resource.TestCheckResourceAttrSet(resourceName, "available_space_in_bytes"),
-					),
+					resource.TestCheckResourceAttr(dataSourceName, "id", "default"),
+					resource.TestCheckResourceAttr(dataSourceName, "name", "default"),
+					resource.TestCheckResourceAttr(dataSourceName, "path", "default"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "blob_count"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "total_size_in_bytes"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "available_space_in_bytes"),
 				),
 			},
 		},
