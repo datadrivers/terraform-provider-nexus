@@ -2,11 +2,11 @@
 page_title: "Resource nexus_role"
 subcategory: "Other"
 description: |-
-  !> This resource is deprecated. Please use the data source "nexussecurityrole" instead.
+  !> This resource is deprecated. Please use the resource "nexussecurityrole" instead.
   Use this resource to create a Nexus Role.
 ---
 # Resource nexus_role
-!> This resource is deprecated. Please use the data source "nexus_security_role" instead.
+!> This resource is deprecated. Please use the resource "nexus_security_role" instead.
 
 Use this resource to create a Nexus Role.
 

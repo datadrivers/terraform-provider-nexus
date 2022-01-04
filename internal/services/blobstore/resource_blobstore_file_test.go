@@ -15,7 +15,7 @@ func TestAccResourceBlobstoreFile(t *testing.T) {
 	resourceName := "nexus_blobstore_file.acceptance"
 
 	bs := blobstore.File{
-		Name: fmt.Sprintf("test-blobstore-%d", acctest.RandIntRange(0, 99)),
+		Name: fmt.Sprintf("test-blobstore-%s", acctest.RandString(5)),
 		Path: "/nexus-data/acceptance",
 		SoftQuota: &blobstore.SoftQuota{
 			Limit: int64(acctest.RandIntRange(100, 300) * 1000000),

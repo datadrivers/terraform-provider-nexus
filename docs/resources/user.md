@@ -2,11 +2,11 @@
 page_title: "Resource nexus_user"
 subcategory: "Other"
 description: |-
-  !> This resource is deprecated. Please use the data source "nexussecurityuser" instead.
+  !> This resource is deprecated. Please use the resource "nexussecurityuser" instead.
   Use this resource to manage users.
 ---
 # Resource nexus_user
-!> This resource is deprecated. Please use the data source "nexus_security_user" instead.
+!> This resource is deprecated. Please use the resource "nexus_security_user" instead.
 
 Use this resource to manage users.
 

@@ -2,10 +2,13 @@
 page_title: "Data Source nexus_blobstore"
 subcategory: "Other"
 description: |-
-  Use this to create a Nexus blobstore.
+  !> This data source is deprecated. Please use the data source "nexusblobstore*" instead.
+  Use this to get informations about a Nexus blobstore.
 ---
 # Data Source nexus_blobstore
-Use this to create a Nexus blobstore.
+!> This data source is deprecated. Please use the data source "nexus_blobstore_*" instead.
+
+Use this to get informations about a Nexus blobstore.
 ## Example Usage
 ```terraform
 data "nexus_blobstore" "default" {

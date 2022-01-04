@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/pkg/tools"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/blobstore"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -13,7 +14,10 @@ import (
 
 func ResourceBlobstore() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this resource to create a Nexus blobstore.",
+		DeprecationMessage: "This resource is deprecated. Please use the resource nexus_blobstore_* instead.",
+		Description: `!> This resource is deprecated. Please use the resource "nexus_blobstore_*" instead.
+
+Use this resource to create a Nexus blobstore.`,
 
 		Create: resourceBlobstoreCreate,
 		Read:   resourceBlobstoreRead,
@@ -230,7 +234,7 @@ func getBlobstoreFromResourceData(d *schema.ResourceData) blobstore.Legacy {
 					bs.S3BucketConfiguration.AdvancedBucketConnection = &blobstore.S3AdvancedBucketConnection{
 						Endpoint:       advancedBucketConfiguration["endpoint"].(string),
 						SignerType:     advancedBucketConfiguration["signer_type"].(string),
-						ForcePathStyle: advancedBucketConfiguration["force_path_style"].(bool),
+						ForcePathStyle: tools.GetBoolPointer(advancedBucketConfiguration["force_path_style"].(bool)),
 					}
 				}
 			}

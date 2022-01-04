@@ -9,7 +9,7 @@ import (
 func ResourceAnonymous() *schema.Resource {
 	return &schema.Resource{
 		DeprecationMessage: "This resource is deprecated. Please use the resource nexus_security_anonymous instead.",
-		Description: `!> This resource is deprecated. Please use the data source "nexus_security_anonymous" instead.
+		Description: `!> This resource is deprecated. Please use the resource "nexus_security_anonymous" instead.
 
 Use this resource to change the anonymous configuration of the nexus repository manager.`,
 

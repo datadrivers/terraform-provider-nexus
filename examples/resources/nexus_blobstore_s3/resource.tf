@@ -1,6 +1,5 @@
-resource "nexus_blobstore" "aws" {
+resource "nexus_blobstore_s3" "aws" {
   name = "blobstore-s3"
-  type = "S3"
 
   bucket_configuration {
     bucket {
