@@ -45,6 +45,8 @@ func TestAccResourceBlobstoreS3(t *testing.T) {
 				Config: testAccResourceBlobstoreTypeS3Config(bs, awsAccessKeyID, awsSecretAccessKey),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", bs.Name),
+					resource.TestCheckResourceAttrSet(resourceName, "blob_count"),
+					resource.TestCheckResourceAttrSet(resourceName, "total_size_in_bytes"),
 					resource.TestCheckResourceAttr(resourceName, "bucket_configuration.0.bucket.0.name", bs.BucketConfiguration.Bucket.Name),
 					resource.TestCheckResourceAttr(resourceName, "bucket_configuration.0.bucket.0.region", bs.BucketConfiguration.Bucket.Region),
 					resource.TestCheckResourceAttr(resourceName, "bucket_configuration.0.bucket.0.expiration", strconv.FormatInt(int64(bs.BucketConfiguration.Bucket.Expiration), 10)),

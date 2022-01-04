@@ -30,11 +30,6 @@ func ResourceBlobstoreS3() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 			},
-			"available_space_in_bytes": {
-				Description: "Available space in Bytes",
-				Type:        schema.TypeInt,
-				Computed:    true,
-			},
 			"blob_count": {
 				Description: "Count of blobs",
 				Type:        schema.TypeInt,
@@ -285,9 +280,6 @@ func resourceBlobstoreS3Read(resourceData *schema.ResourceData, m interface{}) e
 	}
 
 	if err := resourceData.Set("name", bs.Name); err != nil {
-		return err
-	}
-	if err := resourceData.Set("available_space_in_bytes", genericBlobstoreInformation.AvailableSpaceInBytes); err != nil {
 		return err
 	}
 	if err := resourceData.Set("blob_count", genericBlobstoreInformation.BlobCount); err != nil {

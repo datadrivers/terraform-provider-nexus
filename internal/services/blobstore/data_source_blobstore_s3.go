@@ -15,11 +15,6 @@ func DataSourceBlobstoreS3() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeString,
 			},
-			"available_space_in_bytes": {
-				Computed:    true,
-				Description: "Available space in Bytes",
-				Type:        schema.TypeInt,
-			},
 			"blob_count": {
 				Computed:    true,
 				Description: "Count of blobs",

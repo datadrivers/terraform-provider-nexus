@@ -52,7 +52,6 @@ func TestAccDataSourceBlobstoreS3(t *testing.T) {
 					resource.TestCheckResourceAttr(dataSourceName, "bucket_configuration.0.advanced_bucket_connection.0.force_path_style", strconv.FormatBool(*bs.BucketConfiguration.AdvancedBucketConnection.ForcePathStyle)),
 					resource.TestCheckResourceAttrSet(dataSourceName, "blob_count"),
 					resource.TestCheckResourceAttrSet(dataSourceName, "total_size_in_bytes"),
-					resource.TestCheckResourceAttrSet(dataSourceName, "available_space_in_bytes"),
 				),
 			},
 		},
