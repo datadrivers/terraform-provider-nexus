@@ -2,11 +2,11 @@
 page_title: "Resource nexus_blobstore"
 subcategory: "Other"
 description: |-
-  !> This data source is deprecated. Please use the data source "nexusblobstore*" instead.
+  !> This resource is deprecated. Please use the resource "nexusblobstore*" instead.
   Use this resource to create a Nexus blobstore.
 ---
 # Resource nexus_blobstore
-!> This data source is deprecated. Please use the data source "nexus_blobstore_*" instead.
+!> This resource is deprecated. Please use the resource "nexus_blobstore_*" instead.
 
 Use this resource to create a Nexus blobstore.
 

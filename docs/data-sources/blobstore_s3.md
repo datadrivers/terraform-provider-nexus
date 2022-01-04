@@ -25,7 +25,6 @@ data "nexus_blobstore_s3" "aws" {
 
 ### Read-Only
 
-- **available_space_in_bytes** (Number) Available space in Bytes
 - **blob_count** (Number) Count of blobs
 - **bucket_configuration** (List of Object) The S3 bucket configuration. (see [below for nested schema](#nestedatt--bucket_configuration))
 - **soft_quota** (List of Object) Soft quota of the blobstore (see [below for nested schema](#nestedatt--soft_quota))

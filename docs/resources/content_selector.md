@@ -2,11 +2,11 @@
 page_title: "Resource nexus_content_selector"
 subcategory: "Content"
 description: |-
-  !> This resource is deprecated. Please use the data source "nexussecuritycontent_selector" instead.
+  !> This resource is deprecated. Please use the resource "nexussecuritycontent_selector" instead.
   Use this resource to create a Nexus Content Selector.
 ---
 # Resource nexus_content_selector
-!> This resource is deprecated. Please use the data source "nexus_security_content_selector" instead.
+!> This resource is deprecated. Please use the resource "nexus_security_content_selector" instead.
 
 Use this resource to create a Nexus Content Selector.
 ## Example Usage

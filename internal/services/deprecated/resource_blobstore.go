@@ -14,8 +14,8 @@ import (
 
 func ResourceBlobstore() *schema.Resource {
 	return &schema.Resource{
-		DeprecationMessage: "This data source is deprecated. Please use the data source nexus_blobstore_* instead.",
-		Description: `!> This data source is deprecated. Please use the data source "nexus_blobstore_*" instead.
+		DeprecationMessage: "This resource is deprecated. Please use the resource nexus_blobstore_* instead.",
+		Description: `!> This resource is deprecated. Please use the resource "nexus_blobstore_*" instead.
 
 Use this resource to create a Nexus blobstore.`,
 

@@ -6,7 +6,7 @@ import (
 
 func DataSourceBlobstoreFile() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this to read an existing Nexus file blobstore.",
+		Description: "Use this to get details of a nexus blobstore s3.",
 
 		Read: dataSourceBlobstoreFileRead,
 		Schema: map[string]*schema.Schema{

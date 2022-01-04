@@ -44,7 +44,6 @@ resource "nexus_blobstore_s3" "aws" {
 
 ### Read-Only
 
-- **available_space_in_bytes** (Number) Available space in Bytes
 - **blob_count** (Number) Count of blobs
 - **total_size_in_bytes** (Number) The total size of the blobstore in Bytes
 

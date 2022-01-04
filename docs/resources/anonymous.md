@@ -2,11 +2,11 @@
 page_title: "Resource nexus_anonymous"
 subcategory: "Other"
 description: |-
-  !> This resource is deprecated. Please use the data source "nexussecurityanonymous" instead.
+  !> This resource is deprecated. Please use the resource "nexussecurityanonymous" instead.
   Use this resource to change the anonymous configuration of the nexus repository manager.
 ---
 # Resource nexus_anonymous
-!> This resource is deprecated. Please use the data source "nexus_security_anonymous" instead.
+!> This resource is deprecated. Please use the resource "nexus_security_anonymous" instead.
 
 Use this resource to change the anonymous configuration of the nexus repository manager.
 

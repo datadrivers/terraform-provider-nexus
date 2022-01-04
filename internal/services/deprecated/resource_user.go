@@ -12,7 +12,7 @@ import (
 func ResourceUser() *schema.Resource {
 	return &schema.Resource{
 		DeprecationMessage: "This resource is deprecated. Please use the resource nexus_security_user instead.",
-		Description: `!> This resource is deprecated. Please use the data source "nexus_security_user" instead.
+		Description: `!> This resource is deprecated. Please use the resource "nexus_security_user" instead.
 
 Use this resource to manage users.`,
 
