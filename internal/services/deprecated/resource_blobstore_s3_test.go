@@ -20,6 +20,7 @@ func TestAccResourceBlobstoreS3(t *testing.T) {
 	resName := "nexus_blobstore.acceptance"
 	awsAccessKeyID := tools.GetEnv("AWS_ACCESS_KEY_ID", "")
 	awsSecretAccessKey := tools.GetEnv("AWS_SECRET_ACCESS_KEY", "")
+	forcePathStyle := true
 
 	bs := blobstore.Legacy{
 		Name: fmt.Sprintf("test-blobstore-s3-%d", acctest.RandIntRange(0, 99)),
@@ -31,7 +32,7 @@ func TestAccResourceBlobstoreS3(t *testing.T) {
 			},
 			AdvancedBucketConnection: &blobstore.S3AdvancedBucketConnection{
 				Endpoint:       tools.GetEnv("AWS_ENDPOINT", ""),
-				ForcePathStyle: true,
+				ForcePathStyle: &forcePathStyle,
 			},
 		},
 	}
@@ -82,5 +83,5 @@ resource "nexus_blobstore" "acceptance" {
 		  force_path_style	= %s
 		}
 	}
-}`, bs.Name, bs.Type, bs.S3BucketConfiguration.Bucket.Name, bs.S3BucketConfiguration.Bucket.Region, awsAccessKeyID, awsSecretAccessKey, bs.S3BucketConfiguration.AdvancedBucketConnection.Endpoint, strconv.FormatBool(bs.S3BucketConfiguration.AdvancedBucketConnection.ForcePathStyle))
+}`, bs.Name, bs.Type, bs.S3BucketConfiguration.Bucket.Name, bs.S3BucketConfiguration.Bucket.Region, awsAccessKeyID, awsSecretAccessKey, bs.S3BucketConfiguration.AdvancedBucketConnection.Endpoint, strconv.FormatBool(*bs.S3BucketConfiguration.AdvancedBucketConnection.ForcePathStyle))
 }

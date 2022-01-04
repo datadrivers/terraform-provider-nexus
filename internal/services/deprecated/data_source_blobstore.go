@@ -7,7 +7,10 @@ import (
 
 func DataSourceBlobstore() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this to create a Nexus blobstore.",
+		DeprecationMessage: "This data source is deprecated. Please use the data source nexus_blobstore_* instead.",
+		Description: `!> This data source is deprecated. Please use the data source "nexus_blobstore_*" instead.
+
+Use this to get informations about a Nexus blobstore.`,
 
 		Read: dataSourceBlobstoreRead,
 		Schema: map[string]*schema.Schema{

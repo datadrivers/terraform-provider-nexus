@@ -5,6 +5,7 @@ import (
 	"log"
 
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/go-nexus-client/nexus3/pkg/tools"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/blobstore"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -31,7 +32,7 @@ func ResourceBlobstoreS3() *schema.Resource {
 			},
 			"available_space_in_bytes": {
 				Description: "Available space in Bytes",
-				Type:        schema.TypeString,
+				Type:        schema.TypeInt,
 				Computed:    true,
 			},
 			"blob_count": {
@@ -55,23 +56,23 @@ func ResourceBlobstoreS3() *schema.Resource {
 								Schema: map[string]*schema.Schema{
 									"endpoint": {
 										Description: "A custom endpoint URL for third party object stores using the S3 API.",
-										Required:    true,
+										Optional:    true,
 										Type:        schema.TypeString,
 									},
 									"force_path_style": {
 										Default:     false,
 										Description: "Setting this flag will result in path-style access being used for all requests.",
-										Required:    true,
+										Optional:    true,
 										Type:        schema.TypeBool,
 									},
 									"signer_type": {
 										Description: "An API signature version which may be required for third party object stores using the S3 API.",
-										Required:    true,
+										Optional:    true,
 										Type:        schema.TypeString,
 									},
 									"max_connection_pool_size": {
 										Description: "Setting this value will override the default connection pool size of Nexus of the s3 client for this blobstore.",
-										Required:    true,
+										Optional:    true,
 										Type:        schema.TypeInt,
 									},
 								},
@@ -199,7 +200,7 @@ func getBlobstoreS3FromResourceData(d *schema.ResourceData) blobstore.S3 {
 			bs.BucketConfiguration.AdvancedBucketConnection = &blobstore.S3AdvancedBucketConnection{
 				Endpoint:       advancedBucketConfiguration["endpoint"].(string),
 				SignerType:     advancedBucketConfiguration["signer_type"].(string),
-				ForcePathStyle: advancedBucketConfiguration["force_path_style"].(bool),
+				ForcePathStyle: tools.GetBoolPointer(advancedBucketConfiguration["force_path_style"].(bool)),
 			}
 		}
 	}
