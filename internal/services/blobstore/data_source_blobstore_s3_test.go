@@ -47,7 +47,7 @@ func TestAccDataSourceBlobstoreS3(t *testing.T) {
 					resource.TestCheckResourceAttr(dataSourceName, "name", bs.Name),
 					resource.TestCheckResourceAttr(dataSourceName, "bucket_configuration.0.bucket.0.name", bs.BucketConfiguration.Bucket.Name),
 					resource.TestCheckResourceAttr(dataSourceName, "bucket_configuration.0.bucket.0.region", bs.BucketConfiguration.Bucket.Region),
-					resource.TestCheckResourceAttr(dataSourceName, "bucket_configuration.0.bucket.0.expiration", bs.BucketConfiguration.Bucket.Region),
+					resource.TestCheckResourceAttr(dataSourceName, "bucket_configuration.0.bucket.0.expiration", strconv.FormatInt(int64(bs.BucketConfiguration.Bucket.Expiration), 10)),
 					resource.TestCheckResourceAttr(dataSourceName, "bucket_configuration.0.advanced_bucket_connection.0.endpoint", bs.BucketConfiguration.AdvancedBucketConnection.Endpoint),
 					resource.TestCheckResourceAttr(dataSourceName, "bucket_configuration.0.advanced_bucket_connection.0.force_path_style", strconv.FormatBool(*bs.BucketConfiguration.AdvancedBucketConnection.ForcePathStyle)),
 					resource.TestCheckResourceAttrSet(dataSourceName, "blob_count"),
