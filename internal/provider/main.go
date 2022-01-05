@@ -21,6 +21,7 @@ func Provider() *schema.Provider {
 			"nexus_blobstore_s3":              blobstore.DataSourceBlobstoreS3(),
 			"nexus_privileges":                deprecated.DataSourcePrivileges(),
 			"nexus_repository":                deprecated.DataSourceRepository(),
+			"nexus_repository_list":           repository.DataSourceRepositoryList(),
 			"nexus_repository_yum_hosted":     repository.DataSourceRepositoryYumHosted(),
 			"nexus_routing_rule":              other.DataSourceRoutingRule(),
 			"nexus_security_anonymous":        security.DataSourceSecurityAnonymous(),
