@@ -25,7 +25,6 @@ data "nexus_blobstore" "default" {
 ### Optional
 
 - **bucket_configuration** (Block List, Max: 1) The S3 bucket configuration. Needed for blobstore type 'S3' (see [below for nested schema](#nestedblock--bucket_configuration))
-- **id** (String) The ID of this resource.
 - **path** (String) The path to the blobstore contents
 - **soft_quota** (Block List, Max: 1) Soft quota of the blobstore (see [below for nested schema](#nestedblock--soft_quota))
 - **type** (String) The type of the blobstore
@@ -34,6 +33,7 @@ data "nexus_blobstore" "default" {
 
 - **available_space_in_bytes** (Number) Available space in Bytes
 - **blob_count** (Number) Count of blobs
+- **id** (String) Used to identify data source at nexus
 - **total_size_in_bytes** (Number) The total size of the blobstore in Bytes
 
 <a id="nestedblock--bucket_configuration"></a>

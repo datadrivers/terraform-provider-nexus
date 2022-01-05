@@ -19,14 +19,11 @@ data "nexus_blobstore_file" "default" {
 
 - **name** (String) Blobstore name
 
-### Optional
-
-- **id** (String) The ID of this resource.
-
 ### Read-Only
 
 - **available_space_in_bytes** (Number) Available space in Bytes
 - **blob_count** (Number) Count of blobs
+- **id** (String) Used to identify data source at nexus
 - **path** (String) The path to the blobstore contents
 - **soft_quota** (List of Object) Soft quota of the blobstore (see [below for nested schema](#nestedatt--soft_quota))
 - **total_size_in_bytes** (Number) The total size of the blobstore in Bytes

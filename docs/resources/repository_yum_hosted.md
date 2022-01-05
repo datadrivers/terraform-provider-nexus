@@ -41,9 +41,12 @@ resource "nexus_repository_yum_hosted" "yum1" {
 
 - **cleanup** (Block List) Cleanup policies (see [below for nested schema](#nestedblock--cleanup))
 - **deploy_policy** (String) Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`
-- **id** (String) The ID of this resource.
 - **online** (Boolean) Whether this repository accepts incoming requests
 - **repodata_depth** (Number) Specifies the repository depth where repodata folder(s) are created. Possible values: 0-5
+
+### Read-Only
+
+- **id** (String) Used to identify resource at nexus
 
 <a id="nestedblock--storage"></a>
 ### Nested Schema for `storage`

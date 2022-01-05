@@ -3,6 +3,7 @@ package security
 import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -12,6 +13,7 @@ func DataSourceSecurityLDAP() *schema.Resource {
 
 		Read: dataSourceSecurityLDAPRead,
 		Schema: map[string]*schema.Schema{
+			"id": common.DataSourceID,
 			"ldap": {
 				Computed:    true,
 				Description: "List of ldap configrations",

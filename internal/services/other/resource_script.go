@@ -3,6 +3,7 @@ package other
 import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	nexusSchema "github.com/datadrivers/go-nexus-client/nexus3/schema"
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -20,6 +21,7 @@ func ResourceScript() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
+			"id": common.ResourceID,
 			"name": {
 				Description: "The name of the script.",
 				Required:    true,

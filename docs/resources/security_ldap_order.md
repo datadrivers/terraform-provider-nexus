@@ -32,7 +32,7 @@ resource "nexus_security_ldap_order" "system" {
 
 - **order** (List of String) Ordered list of LDAP server
 
-### Optional
+### Read-Only
 
-- **id** (String) The ID of this resource.
+- **id** (String) Used to identify resource at nexus
 

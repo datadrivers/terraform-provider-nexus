@@ -19,14 +19,11 @@ data "nexus_repository_yum_hosted" "yummy" {
 
 - **name** (String) A unique identifier for this repository
 
-### Optional
-
-- **id** (String) The ID of this resource.
-
 ### Read-Only
 
 - **cleanup** (List of Object) Cleanup policies (see [below for nested schema](#nestedatt--cleanup))
 - **deploy_policy** (String) Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`
+- **id** (String) Used to identify data source at nexus
 - **online** (Boolean) Whether this repository accepts incoming requests
 - **repodata_depth** (Number) Specifies the repository depth where repodata folder(s) are created. Possible values: 0-5
 - **storage** (List of Object) The storage configuration of the repository (see [below for nested schema](#nestedatt--storage))

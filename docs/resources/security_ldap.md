@@ -66,7 +66,6 @@ resource "nexus_security_ldap" "example" {
 - **group_member_format** (String) The format of user ID stored in the group member attribute. Required if groupType is static
 - **group_object_class** (String) LDAP class for group objects. Required if groupType is static
 - **group_subtree** (Boolean) Are groups located in structures below the group base DN
-- **id** (String) The ID of this resource.
 - **ldap_groups_as_roles** (Boolean) Denotes whether LDAP assigned roles are used as Nexus Repository Manager roles
 - **use_trust_store** (Boolean) Whether to use certificates stored in Nexus Repository Manager's truststore
 - **user_base_dn** (String) The relative DN where user objects are found (e.g. ou=people). This value will have the Search base DN value appended to form the full User search base DN.
@@ -78,6 +77,10 @@ resource "nexus_security_ldap" "example" {
 - **user_password_attribute** (String) If this field is blank the user will be authenticated against a bind with the LDAP server
 - **user_real_name_attribute** (String) This is used to find a real name given the user ID
 - **user_subtree** (Boolean) Are users located in structures below the user base DN?
+
+### Read-Only
+
+- **id** (String) Used to identify resource at nexus
 ## Import
 Import is supported using the following syntax:
 ```shell

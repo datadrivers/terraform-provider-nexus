@@ -1,6 +1,7 @@
 package security
 
 import (
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -10,6 +11,7 @@ func DataSourceSecurityContentSelector() *schema.Resource {
 
 		Read: dataSourceSecurityContentSelectorRead,
 		Schema: map[string]*schema.Schema{
+			"id": common.DataSourceID,
 			"name": {
 				Description: "Content selector name",
 				Required:    true,

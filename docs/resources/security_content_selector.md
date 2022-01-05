@@ -25,7 +25,10 @@ resource "nexus_security_content_selector" "example" {
 ### Optional
 
 - **description** (String) A description of the content selector
-- **id** (String) The ID of this resource.
+
+### Read-Only
+
+- **id** (String) Used to identify resource at nexus
 ## Import
 Import is supported using the following syntax:
 ```shell

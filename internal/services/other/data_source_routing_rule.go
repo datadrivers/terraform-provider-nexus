@@ -1,6 +1,7 @@
 package other
 
 import (
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -10,6 +11,7 @@ func DataSourceRoutingRule() *schema.Resource {
 
 		Read: dataSourceRoutingRuleRead,
 		Schema: map[string]*schema.Schema{
+			"id": common.DataSourceID,
 			"name": {
 				Description: "The name of the routing rule",
 				Required:    true,

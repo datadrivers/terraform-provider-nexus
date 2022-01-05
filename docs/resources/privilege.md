@@ -22,8 +22,11 @@ Use this resource to create a Nexus privilege.
 - **description** (String) A description of the privilege
 - **domain** (String) The domain of the privilege
 - **format** (String) The format of the privilege. Possible values: `apt`, `bower`, `conan`, `docker`, `gitlfs`, `go`, `helm`, `maven2`, `npm`, `nuget`, `p2`, `pypi`, `raw`, `rubygems`, `yum`
-- **id** (String) The ID of this resource.
 - **pattern** (String) The wildcard privilege pattern
 - **repository** (String) The repository of the privilege
 - **script_name** (String) The script name related to the privilege
+
+### Read-Only
+
+- **id** (String) Used to identify resource at nexus
 

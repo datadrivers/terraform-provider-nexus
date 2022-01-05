@@ -8,6 +8,7 @@ import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/pkg/tools"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/blobstore"
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
@@ -29,6 +30,7 @@ Use this resource to create a Nexus blobstore.`,
 		},
 
 		Schema: map[string]*schema.Schema{
+			"id": common.ResourceID,
 			"type": {
 				Description:  "The type of the blobstore. Possible values: `S3` or `File`",
 				Type:         schema.TypeString,

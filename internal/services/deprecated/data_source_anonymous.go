@@ -1,6 +1,7 @@
 package deprecated
 
 import (
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -13,6 +14,7 @@ Use this get the anonymous configuration of the nexus repository manager.`,
 
 		Read: dataSourceAnonymousRead,
 		Schema: map[string]*schema.Schema{
+			"id": common.DataSourceID,
 			"enabled": {
 				Computed:    true,
 				Description: "Activate the anonymous access to the repository manager",

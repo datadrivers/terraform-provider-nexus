@@ -2,6 +2,7 @@ package security
 
 import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -16,6 +17,7 @@ func ResourceSecurityLDAPOrder() *schema.Resource {
 		Delete: resourceSecurityLDAPOrderDelete,
 
 		Schema: map[string]*schema.Schema{
+			"id": common.ResourceID,
 			"order": {
 				Description: "Ordered list of LDAP server",
 				Elem: &schema.Schema{

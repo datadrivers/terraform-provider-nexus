@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -10,6 +11,7 @@ func DataSourceRepositoryYumHosted() *schema.Resource {
 
 		Read: dataSourceRepositoryYumHostedRead,
 		Schema: map[string]*schema.Schema{
+			"id": common.DataSourceID,
 			"name": {
 				Description: "A unique identifier for this repository",
 				Required:    true,

@@ -24,8 +24,11 @@ resource "nexus_script" "repo_pypi_internal" {
 
 ### Optional
 
-- **id** (String) The ID of this resource.
 - **type** (String) The type of the script. Default: `groovy`
+
+### Read-Only
+
+- **id** (String) Used to identify resource at nexus
 ## Import
 Import is supported using the following syntax:
 ```shell

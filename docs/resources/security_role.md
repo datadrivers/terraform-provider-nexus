@@ -38,9 +38,12 @@ resource "nexus_security_role" "docker_deploy" {
 ### Optional
 
 - **description** (String) The description of this role.
-- **id** (String) The ID of this resource.
 - **privileges** (Set of String) The privileges of this role.
 - **roles** (Set of String) The roles of this role.
+
+### Read-Only
+
+- **id** (String) Used to identify resource at nexus
 ## Import
 Import is supported using the following syntax:
 ```shell

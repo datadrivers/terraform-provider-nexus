@@ -25,8 +25,11 @@ resource "nexus_security_user_token" "nexus" {
 
 ### Optional
 
-- **id** (String) The ID of this resource.
 - **protect_content** (Boolean) Require user tokens for repository authentication. This does not effect UI access.
+
+### Read-Only
+
+- **id** (String) Used to identify resource at nexus
 ## Import
 Import is supported using the following syntax:
 ```shell
