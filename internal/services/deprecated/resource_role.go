@@ -5,6 +5,7 @@ import (
 
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -26,6 +27,7 @@ Use this resource to create a Nexus Role.`,
 		},
 
 		Schema: map[string]*schema.Schema{
+			"id": common.ResourceID,
 			"roleid": {
 				Description: "The id of the role.",
 				ForceNew:    true,

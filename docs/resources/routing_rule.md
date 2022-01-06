@@ -29,8 +29,11 @@ resource "nexus_routing_rule" "stop_leaks" {
 ### Optional
 
 - **description** (String) The description of the routing rule
-- **id** (String) The ID of this resource.
 - **mode** (String) The mode describe how to hande with mathing requests. Possible values: `BLOCK` or `ALLOW` Default: `BLOCK`
+
+### Read-Only
+
+- **id** (String) Used to identify resource at nexus
 ## Import
 Import is supported using the following syntax:
 ```shell

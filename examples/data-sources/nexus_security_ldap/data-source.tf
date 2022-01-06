@@ -1,1 +1,1 @@
-data "nexus_security_realms" "default" {}
+data "nexus_security_ldap" "default" {}

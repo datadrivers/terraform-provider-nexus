@@ -21,7 +21,6 @@ Use this resource to create a Nexus blobstore.
 ### Optional
 
 - **bucket_configuration** (Block List, Max: 1) The S3 bucket configuration. Needed for blobstore type 'S3' (see [below for nested schema](#nestedblock--bucket_configuration))
-- **id** (String) The ID of this resource.
 - **path** (String) The path to the blobstore contents. This can be an absolute path to anywhere on the system nxrm has access to or it can be a path relative to the sonatype-work directory
 - **soft_quota** (Block List, Max: 1) Soft quota of the blobstore (see [below for nested schema](#nestedblock--soft_quota))
 
@@ -29,6 +28,7 @@ Use this resource to create a Nexus blobstore.
 
 - **available_space_in_bytes** (String) Available space in Bytes
 - **blob_count** (Number) Count of blobs
+- **id** (String) Used to identify resource at nexus
 - **total_size_in_bytes** (Number) The total size of the blobstore in Bytes
 
 <a id="nestedblock--bucket_configuration"></a>

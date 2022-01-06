@@ -76,7 +76,6 @@ resource "nexus_repository" "docker_group" {
 - **docker_proxy** (Block List, Max: 1) Configuration for docker proxy repository (see [below for nested schema](#nestedblock--docker_proxy))
 - **group** (Block List, Max: 1) Configuration for repository group (see [below for nested schema](#nestedblock--group))
 - **http_client** (Block List, Max: 1) HTTP Client configuration for proxy repositories. Required for docker proxy repositories. (see [below for nested schema](#nestedblock--http_client))
-- **id** (String) The ID of this resource.
 - **maven** (Block List, Max: 1) Maven specific configuration of the repository (see [below for nested schema](#nestedblock--maven))
 - **negative_cache** (Block List, Max: 1) Configuration of the negative cache handling (see [below for nested schema](#nestedblock--negative_cache))
 - **nuget_proxy** (Block List, Max: 1) Configuration for the nuget proxy repository (see [below for nested schema](#nestedblock--nuget_proxy))
@@ -84,6 +83,10 @@ resource "nexus_repository" "docker_group" {
 - **proxy** (Block List, Max: 1) Configuration for the proxy repository (see [below for nested schema](#nestedblock--proxy))
 - **storage** (Block List, Max: 1) The storage configuration of the repository (see [below for nested schema](#nestedblock--storage))
 - **yum** (Block List) Yum specific configuration of the repository (see [below for nested schema](#nestedblock--yum))
+
+### Read-Only
+
+- **id** (String) Used to identify resource at nexus
 
 <a id="nestedblock--apt"></a>
 ### Nested Schema for `apt`

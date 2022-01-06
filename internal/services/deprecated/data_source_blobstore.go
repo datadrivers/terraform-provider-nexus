@@ -1,6 +1,7 @@
 package deprecated
 
 import (
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
@@ -14,6 +15,7 @@ Use this to get informations about a Nexus blobstore.`,
 
 		Read: dataSourceBlobstoreRead,
 		Schema: map[string]*schema.Schema{
+			"id": common.DataSourceID,
 			"type": {
 				Description: "The type of the blobstore",
 				Optional:    true,

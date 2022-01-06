@@ -4,6 +4,7 @@ import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -22,6 +23,7 @@ func ResourcePrivilege() *schema.Resource {
 			StateContext: schema.ImportStatePassthroughContext,
 		},
 		Schema: map[string]*schema.Schema{
+			"id": common.ResourceID,
 			"actions": {
 				Description: "Actions for the privilege (browse, read, edit, add, delete, all and run)",
 				Elem:        &schema.Schema{Type: schema.TypeString},

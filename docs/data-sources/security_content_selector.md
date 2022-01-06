@@ -19,12 +19,9 @@ data "nexus_security_content_selector" "example" {
 
 - **name** (String) Content selector name
 
-### Optional
-
-- **id** (String) The ID of this resource.
-
 ### Read-Only
 
 - **description** (String) A description of the content selector
 - **expression** (String) The content selector expression
+- **id** (String) Used to identify data source at nexus
 

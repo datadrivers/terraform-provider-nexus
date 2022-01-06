@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 )
 
@@ -26,6 +27,7 @@ Use this resource to manage users.`,
 		},
 
 		Schema: map[string]*schema.Schema{
+			"id": common.ResourceID,
 			"userid": {
 				Description: "The userid which is required for login. This value cannot be changed.",
 				ForceNew:    true,

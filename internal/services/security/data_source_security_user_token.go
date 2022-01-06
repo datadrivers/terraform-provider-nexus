@@ -1,6 +1,7 @@
 package security
 
 import (
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -12,6 +13,7 @@ Use this data source to get the global user-token configuration.`,
 
 		Read: dataSourceSecurityUserTokenRead,
 		Schema: map[string]*schema.Schema{
+			"id": common.DataSourceID,
 			"enabled": {
 				Computed:    true,
 				Description: "Activate the feature of user tokens.",

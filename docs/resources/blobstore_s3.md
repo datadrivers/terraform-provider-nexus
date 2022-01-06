@@ -39,12 +39,12 @@ resource "nexus_blobstore_s3" "aws" {
 
 ### Optional
 
-- **id** (String) The ID of this resource.
 - **soft_quota** (Block List, Max: 1) Soft quota of the blobstore (see [below for nested schema](#nestedblock--soft_quota))
 
 ### Read-Only
 
 - **blob_count** (Number) Count of blobs
+- **id** (String) Used to identify resource at nexus
 - **total_size_in_bytes** (Number) The total size of the blobstore in Bytes
 
 <a id="nestedblock--bucket_configuration"></a>

@@ -6,6 +6,7 @@ import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -17,6 +18,7 @@ func DataSourcePrivileges() *schema.Resource {
 
 		Read: dataSourcePrivilegesRead,
 		Schema: map[string]*schema.Schema{
+			"id": common.DataSourceID,
 			"domain": {
 				Description:  "The domain of the privilege",
 				ForceNew:     true,

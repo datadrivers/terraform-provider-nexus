@@ -19,13 +19,10 @@ data "nexus_security_role" "nx_admin" {
 
 - **roleid** (String) The id of the role.
 
-### Optional
-
-- **id** (String) The ID of this resource.
-
 ### Read-Only
 
 - **description** (String) The description of this role.
+- **id** (String) Used to identify data source at nexus
 - **name** (String) The name of the role.
 - **privileges** (Set of String) The privileges of this role.
 - **roles** (Set of String) The roles of this role.

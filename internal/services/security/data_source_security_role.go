@@ -3,6 +3,7 @@ package security
 import (
 	"strings"
 
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -12,6 +13,7 @@ func DataSourceSecurityRole() *schema.Resource {
 
 		Read: dataSourceSecurityRoleRead,
 		Schema: map[string]*schema.Schema{
+			"id": common.DataSourceID,
 			"roleid": {
 				Description: "The id of the role.",
 				Required:    true,

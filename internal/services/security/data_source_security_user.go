@@ -1,6 +1,7 @@
 package security
 
 import (
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -10,6 +11,7 @@ func DataSourceSecurityUser() *schema.Resource {
 
 		Read: dataSourceSecurityUserRead,
 		Schema: map[string]*schema.Schema{
+			"id": common.DataSourceID,
 			"userid": {
 				Description: "The userid which is required for login",
 				Type:        schema.TypeString,

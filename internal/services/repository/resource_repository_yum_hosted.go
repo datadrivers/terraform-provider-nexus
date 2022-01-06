@@ -3,6 +3,7 @@ package repository
 import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -21,6 +22,7 @@ func ResourceRepositoryYumHosted() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
+			"id":      common.ResourceID,
 			"cleanup": getResourceCleanupSchema(),
 			"deploy_policy": {
 				Default:     "STRICT",

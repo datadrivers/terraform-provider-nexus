@@ -22,13 +22,13 @@ data "nexus_privileges" "example" {
 
 - **domain** (String) The domain of the privilege
 - **format** (String) The format of the privilege
-- **id** (String) The ID of this resource.
 - **name** (String) The name of the privilege
 - **repository** (String) The repository of the privilege
 - **type** (String) The type of the privilege
 
 ### Read-Only
 
+- **id** (String) Used to identify data source at nexus
 - **privileges** (List of Object) List of privileges (see [below for nested schema](#nestedatt--privileges))
 
 <a id="nestedatt--privileges"></a>

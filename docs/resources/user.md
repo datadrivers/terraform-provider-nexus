@@ -23,7 +23,10 @@ Use this resource to manage users.
 
 ### Optional
 
-- **id** (String) The ID of this resource.
 - **roles** (Set of String) The roles which the user has been assigned within Nexus.
 - **status** (String) The user's status, e.g. active or disabled.
+
+### Read-Only
+
+- **id** (String) Used to identify resource at nexus
 
