@@ -43,3 +43,15 @@ func Intersection(a, b []int) (c []int) {
 	}
 	return
 }
+
+func GetIntPointer(number int) *int {
+	return &number
+}
+
+func GetStringPointer(s string) *string {
+	return &s
+}
+
+func GetBoolPointer(b bool) *bool {
+	return &b
+}
