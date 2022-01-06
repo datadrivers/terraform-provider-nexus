@@ -601,11 +601,11 @@ func getRepositoryFromResourceData(d *schema.ResourceData) repository.LegacyRepo
 				connConfig := connList[0].(map[string]interface{})
 
 				repo.HTTPClient.Connection = &repository.HTTPClientConnection{
-					EnableCookies:   connConfig["enable_cookies"].(*bool),
-					Retries:         connConfig["retries"].(*int),
-					Timeout:         connConfig["timeout"].(*int),
+					EnableCookies:   tools.GetBoolPointer(connConfig["enable_cookies"].(bool)),
+					Retries:         tools.GetIntPointer(connConfig["retries"].(int)),
+					Timeout:         tools.GetIntPointer(connConfig["timeout"].(int)),
 					UserAgentSuffix: connConfig["user_agent_suffix"].(string),
-					UseTrustStore:   connConfig["use_trust_store"].(*bool),
+					UseTrustStore:   tools.GetBoolPointer(connConfig["use_trust_store"].(bool)),
 				}
 			}
 		}
