@@ -10,7 +10,6 @@ Use this resource to create a Nexus file blobstore.
 ```terraform
 resource "nexus_blobstore_file" "file" {
   name = "blobstore-file"
-  type = "File"
   path = "/nexus-data/blobstore-file"
 
   soft_quota {

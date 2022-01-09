@@ -1,12 +1,11 @@
 package repository
 
 import (
-	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func getResourceNegativeCacheSchema() *schema.Schema {
-	return &schema.Schema{
+var (
+	ResourceNegativeCache = &schema.Schema{
 		Description: "Configuration of the negative cache handling",
 		Type:        schema.TypeList,
 		Optional:    true,
@@ -28,15 +27,4 @@ func getResourceNegativeCacheSchema() *schema.Schema {
 			},
 		},
 	}
-}
-
-func flattenRepositoryNegativeCache(negativeCache *repository.NegativeCache) []map[string]interface{} {
-	if negativeCache == nil {
-		return nil
-	}
-	data := map[string]interface{}{
-		"enabled": negativeCache.Enabled,
-		"ttl":     negativeCache.TTL,
-	}
-	return []map[string]interface{}{data}
-}
+)

@@ -40,6 +40,7 @@ resource "nexus_repository_yum_hosted" "yum1" {
 ### Optional
 
 - **cleanup** (Block List) Cleanup policies (see [below for nested schema](#nestedblock--cleanup))
+- **component** (Block List, Max: 1) Component configuration for the hosted repository (see [below for nested schema](#nestedblock--component))
 - **deploy_policy** (String) Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`
 - **online** (Boolean) Whether this repository accepts incoming requests
 - **repodata_depth** (Number) Specifies the repository depth where repodata folder(s) are created. Possible values: 0-5
@@ -64,6 +65,14 @@ Optional:
 Optional:
 
 - **policy_names** (Set of String) List of policy names
+
+
+<a id="nestedblock--component"></a>
+### Nested Schema for `component`
+
+Required:
+
+- **proprietary_components** (Boolean) Components in this repository count as proprietary for namespace conflict attacks (requires Sonatype Nexus Firewall)
 ## Import
 Import is supported using the following syntax:
 ```shell

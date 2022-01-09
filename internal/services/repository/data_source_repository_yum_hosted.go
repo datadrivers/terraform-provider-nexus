@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -11,15 +12,18 @@ func DataSourceRepositoryYumHosted() *schema.Resource {
 
 		Read: dataSourceRepositoryYumHostedRead,
 		Schema: map[string]*schema.Schema{
-			"id": common.DataSourceID,
-			"name": {
-				Description: "A unique identifier for this repository",
-				Required:    true,
+			// Common schemas
+			"id":     common.DataSourceID,
+			"name":   repository.DataSourceName,
+			"online": repository.DataSourceOnline,
+			// Hosted schemas
+			"cleanup":   repository.DataSourceCleanup,
+			"component": repository.DataSourceComponent,
+			"storage":   repository.DataSourceHostedStorage,
+			// Yum hosted schemas
+			"deploy_policy": {
+				Description: "Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`",
 				Type:        schema.TypeString,
-			},
-			"online": {
-				Description: "Whether this repository accepts incoming requests",
-				Type:        schema.TypeBool,
 				Computed:    true,
 			},
 			"repodata_depth": {
@@ -27,13 +31,6 @@ func DataSourceRepositoryYumHosted() *schema.Resource {
 				Type:        schema.TypeInt,
 				Computed:    true,
 			},
-			"deploy_policy": {
-				Description: "Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`",
-				Type:        schema.TypeString,
-				Computed:    true,
-			},
-			"cleanup": getDataSourceCleanupSchema(),
-			"storage": getDataSourceHostedStorageSchema(),
 		},
 	}
 }

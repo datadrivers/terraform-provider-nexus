@@ -4,6 +4,7 @@ import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
+	repositorySchema "github.com/datadrivers/terraform-provider-nexus/internal/schema/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -22,24 +23,20 @@ func ResourceRepositoryYumHosted() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"id":      common.ResourceID,
-			"cleanup": getResourceCleanupSchema(),
+			// Common schemas
+			"id":     common.ResourceID,
+			"name":   repositorySchema.ResourceName,
+			"online": repositorySchema.ResourceOnline,
+			// Hosted schemas
+			"cleanup":   repositorySchema.ResourceCleanup,
+			"component": repositorySchema.ResourceComponent,
+			"storage":   repositorySchema.ResourceHostedStorage,
+			// Yum hosted schemas
 			"deploy_policy": {
 				Default:     "STRICT",
 				Description: "Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`",
 				Optional:    true,
 				Type:        schema.TypeString,
-			},
-			"name": {
-				Description: "A unique identifier for this repository",
-				Required:    true,
-				Type:        schema.TypeString,
-			},
-			"online": {
-				Default:     true,
-				Description: "Whether this repository accepts incoming requests",
-				Optional:    true,
-				Type:        schema.TypeBool,
 			},
 			"repodata_depth": {
 				Default:     0,
@@ -47,7 +44,6 @@ func ResourceRepositoryYumHosted() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeInt,
 			},
-			"storage": getResourceHostedStorageSchema(),
 		},
 	}
 }
@@ -84,6 +80,16 @@ func getYumHostedRepositoryFromResourceData(d *schema.ResourceData) repository.Y
 		}
 	}
 
+	componentList := d.Get("component").([]interface{})
+	if len(componentList) > 0 && componentList[0] != nil {
+		componentConfig := componentList[0].(map[string]interface{})
+		if len(componentConfig) > 0 {
+			repo.Component = &repository.Component{
+				ProprietaryComponents: componentConfig["proprietary_components"].(bool),
+			}
+		}
+	}
+
 	return repo
 }
 
@@ -100,6 +106,12 @@ func setYumHostedRepositoryToResourceData(repo *repository.YumHostedRepository, 
 
 	if repo.Cleanup != nil {
 		if err := d.Set("cleanup", flattenCleanup(repo.Cleanup)); err != nil {
+			return err
+		}
+	}
+
+	if repo.Component != nil {
+		if err := d.Set("component", flattenComponent(repo.Component)); err != nil {
 			return err
 		}
 	}
