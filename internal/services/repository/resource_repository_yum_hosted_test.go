@@ -36,16 +36,19 @@ resource "nexus_repository_yum_hosted" "{{ .Name }}" {
 	cleanup {
 		policy_names = [
 		{{- range $val := .Cleanup.PolicyNames }}
-			{{ $val }},
+			"{{ $val }}",
 		{{ end -}}
 		]
+	}
+{{ end -}}
+{{ if .Component }}
+	component {
+		proprietary_components = {{ .Component.ProprietaryComponents }}
 	}
 {{ end -}}
 }
 `
 )
-
-var ()
 
 func testAccResourceRepositoryYumHosted() repository.YumHostedRepository {
 	writePolicy := repository.StorageWritePolicyAllow
@@ -63,38 +66,12 @@ func testAccResourceRepositoryYumHosted() repository.YumHostedRepository {
 			WritePolicy:                 &writePolicy,
 		},
 		Cleanup: &repository.Cleanup{
-			PolicyNames: []string{"\"cleanup-weekly\""},
+			PolicyNames: []string{"cleanup-weekly"},
+		},
+		Component: &repository.Component{
+			ProprietaryComponents: true,
 		},
 	}
-}
-
-func resourceYumRepositoryTestCheckFunc(repo repository.YumHostedRepository) resource.TestCheckFunc {
-	resName := fmt.Sprintf("nexus_repository_yum_hosted.%s", repo.Name)
-	return resource.ComposeAggregateTestCheckFunc(
-		resource.ComposeAggregateTestCheckFunc(
-			resource.TestCheckResourceAttr(resName, "id", repo.Name),
-			resource.TestCheckResourceAttr(resName, "name", repo.Name),
-			resource.TestCheckResourceAttr(resName, "online", strconv.FormatBool(repo.Online)),
-		),
-		resource.ComposeAggregateTestCheckFunc(
-			resource.TestCheckResourceAttr(resName, "storage.#", "1"),
-			resource.TestCheckResourceAttr(resName, "storage.0.blob_store_name", repo.Storage.BlobStoreName),
-			resource.TestCheckResourceAttr(resName, "storage.0.strict_content_type_validation", strconv.FormatBool(repo.Storage.StrictContentTypeValidation)),
-		),
-	)
-}
-
-func resourceYumRepositoryTypeHostedTestCheckFunc(repo repository.YumHostedRepository) resource.TestCheckFunc {
-	resName := fmt.Sprintf("nexus_repository_yum_hosted.%s", repo.Name)
-	return resource.ComposeAggregateTestCheckFunc(
-		resource.ComposeAggregateTestCheckFunc(
-			resource.TestCheckResourceAttr(resName, "http_client.#", "0"),
-			resource.TestCheckResourceAttr(resName, "group.#", "0"),
-			resource.TestCheckResourceAttr(resName, "negative_cache.#", "0"),
-			resource.TestCheckResourceAttr(resName, "proxy.#", "0"),
-		),
-		resource.TestCheckResourceAttr(resName, "storage.0.write_policy", string(*repo.Storage.WritePolicy)),
-	)
 }
 
 func testAccResourceRepositoryYumHostedConfig(repo repository.YumHostedRepository) string {
@@ -108,7 +85,7 @@ func testAccResourceRepositoryYumHostedConfig(repo repository.YumHostedRepositor
 
 func TestAccResourceRepositoryYumHosted(t *testing.T) {
 	repo := testAccResourceRepositoryYumHosted()
-	resName := fmt.Sprintf("nexus_repository_yum_hosted.%s", repo.Name)
+	resourceName := fmt.Sprintf("nexus_repository_yum_hosted.%s", repo.Name)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { acceptance.AccPreCheck(t) },
@@ -117,16 +94,30 @@ func TestAccResourceRepositoryYumHosted(t *testing.T) {
 			{
 				Config: testAccResourceRepositoryYumHostedConfig(repo),
 				Check: resource.ComposeTestCheckFunc(
-					resourceYumRepositoryTestCheckFunc(repo),
-					resourceYumRepositoryTypeHostedTestCheckFunc(repo),
 					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(resName, "deploy_policy", string(*repo.DeployPolicy)),
-						resource.TestCheckResourceAttr(resName, "repodata_depth", strconv.Itoa(repo.RepodataDepth)),
+						resource.TestCheckResourceAttr(resourceName, "id", repo.Name),
+						resource.TestCheckResourceAttr(resourceName, "name", repo.Name),
+						resource.TestCheckResourceAttr(resourceName, "online", strconv.FormatBool(repo.Online)),
+					),
+					resource.ComposeAggregateTestCheckFunc(
+						resource.TestCheckResourceAttr(resourceName, "storage.#", "1"),
+						resource.TestCheckResourceAttr(resourceName, "storage.0.blob_store_name", repo.Storage.BlobStoreName),
+						resource.TestCheckResourceAttr(resourceName, "storage.0.strict_content_type_validation", strconv.FormatBool(repo.Storage.StrictContentTypeValidation)),
+						resource.TestCheckResourceAttr(resourceName, "storage.0.write_policy", string(*repo.Storage.WritePolicy)),
+						resource.TestCheckResourceAttr(resourceName, "cleanup.#", "1"),
+						resource.TestCheckResourceAttr(resourceName, "cleanup.0.policy_names.#", "1"),
+						resource.TestCheckResourceAttr(resourceName, "cleanup.0.policy_names.0", repo.Cleanup.PolicyNames[0]),
+						resource.TestCheckResourceAttr(resourceName, "component.#", "1"),
+						resource.TestCheckResourceAttr(resourceName, "component.0.proprietary_components", strconv.FormatBool(repo.Component.ProprietaryComponents)),
+					),
+					resource.ComposeAggregateTestCheckFunc(
+						resource.TestCheckResourceAttr(resourceName, "deploy_policy", string(*repo.DeployPolicy)),
+						resource.TestCheckResourceAttr(resourceName, "repodata_depth", strconv.Itoa(repo.RepodataDepth)),
 					),
 				),
 			},
 			{
-				ResourceName:      resName,
+				ResourceName:      resourceName,
 				ImportStateId:     repo.Name,
 				ImportState:       true,
 				ImportStateVerify: true,

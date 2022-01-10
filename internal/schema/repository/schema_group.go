@@ -3,13 +3,11 @@ package repository
 import (
 	"strings"
 
-	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
-	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func getResourceGroupSchema() *schema.Schema {
-	return &schema.Schema{
+var (
+	ResourceGroup = &schema.Schema{
 		Description: "Configuration for repository group",
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
@@ -30,14 +28,4 @@ func getResourceGroupSchema() *schema.Schema {
 		Optional: true,
 		Type:     schema.TypeList,
 	}
-}
-
-func flattenRepositoryGroup(group *repository.Group) []map[string]interface{} {
-	if group == nil {
-		return nil
-	}
-	data := map[string]interface{}{
-		"member_names": tools.StringSliceToInterfaceSlice(group.MemberNames),
-	}
-	return []map[string]interface{}{data}
-}
+)

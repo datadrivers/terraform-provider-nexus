@@ -1,12 +1,11 @@
 package repository
 
 import (
-	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func getResourceProxySchema() *schema.Schema {
-	return &schema.Schema{
+var (
+	ResourceProxy = &schema.Schema{
 		Description: "Configuration for the proxy repository",
 		Type:        schema.TypeList,
 		Optional:    true,
@@ -33,16 +32,4 @@ func getResourceProxySchema() *schema.Schema {
 			},
 		},
 	}
-}
-
-func flattenRepositoryProxy(proxy *repository.Proxy) []map[string]interface{} {
-	if proxy == nil {
-		return nil
-	}
-	data := map[string]interface{}{
-		"content_max_age":  proxy.ContentMaxAge,
-		"metadata_max_age": proxy.MetadataMaxAge,
-		"remote_url":       proxy.RemoteURL,
-	}
-	return []map[string]interface{}{data}
-}
+)

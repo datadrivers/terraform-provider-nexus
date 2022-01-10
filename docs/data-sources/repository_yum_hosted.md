@@ -22,6 +22,7 @@ data "nexus_repository_yum_hosted" "yummy" {
 ### Read-Only
 
 - **cleanup** (List of Object) Cleanup policies (see [below for nested schema](#nestedatt--cleanup))
+- **component** (List of Object) Component configuration for the hosted repository (see [below for nested schema](#nestedatt--component))
 - **deploy_policy** (String) Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`
 - **id** (String) Used to identify data source at nexus
 - **online** (Boolean) Whether this repository accepts incoming requests
@@ -34,6 +35,14 @@ data "nexus_repository_yum_hosted" "yummy" {
 Read-Only:
 
 - **policy_names** (Set of String)
+
+
+<a id="nestedatt--component"></a>
+### Nested Schema for `component`
+
+Read-Only:
+
+- **proprietary_components** (Boolean)
 
 
 <a id="nestedatt--storage"></a>

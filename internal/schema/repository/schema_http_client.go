@@ -1,13 +1,12 @@
 package repository
 
 import (
-	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-func getResourceHTTPClientSchema() *schema.Schema {
-	return &schema.Schema{
+var (
+	ResourceHTTPClient = &schema.Schema{
 		Description: "HTTP Client configuration for proxy repositories. Required for docker proxy repositories.",
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
@@ -104,53 +103,4 @@ func getResourceHTTPClientSchema() *schema.Schema {
 		Optional: true,
 		Type:     schema.TypeList,
 	}
-}
-
-func flattenRepositoryHTTPClient(httpClient *repository.HTTPClient, d *schema.ResourceData) []map[string]interface{} {
-	if httpClient == nil {
-		return nil
-	}
-	data := map[string]interface{}{
-		"authentication": flattenRepositoryHTTPClientAuthentication(httpClient.Authentication, d),
-		"auto_block":     httpClient.AutoBlock,
-		"blocked":        httpClient.Blocked,
-		// "connection":     flattenRepositoryHTTPClientConnection(httpClient.Connection),
-	}
-	return []map[string]interface{}{data}
-}
-
-func flattenRepositoryHTTPClientAuthentication(auth *repository.HTTPClientAuthentication, d *schema.ResourceData) []map[string]interface{} {
-	if auth == nil {
-		return nil
-	}
-	data := map[string]interface{}{
-		"ntlm_domain": auth.NTLMDomain,
-		"ntlm_host":   auth.NTLMHost,
-		"type":        auth.Type,
-		"username":    auth.Username,
-		"password":    d.Get("http_client.0.authentication.0.password").(string),
-	}
-	return []map[string]interface{}{data}
-}
-
-func flattenRepositoryHTTPClientConnection(conn *repository.HTTPClientConnection) []map[string]interface{} {
-	if conn == nil {
-		return nil
-	}
-	data := map[string]interface{}{
-		"user_agent_suffix": conn.UserAgentSuffix,
-	}
-	if conn.EnableCookies != nil {
-		data["enable_cookies"] = *conn.EnableCookies
-	}
-	if conn.Retries != nil {
-		data["retries"] = *conn.Retries
-	}
-	if conn.Timeout != nil {
-		data["timeout"] = *conn.Timeout
-	}
-	if conn.UseTrustStore != nil {
-		data["use_trust_store"] = *conn.UseTrustStore
-	}
-	return []map[string]interface{}{data}
-}
+)
