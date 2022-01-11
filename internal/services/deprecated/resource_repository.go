@@ -491,7 +491,7 @@ func getRepositoryFromResourceData(d *schema.ResourceData) repository.LegacyRepo
 		passphrase := aptSigningConfig["passphrase"].(string)
 
 		repo.AptSigning = &repository.AptSigning{
-			Keypair:    &keypair,
+			Keypair:    keypair,
 			Passphrase: &passphrase,
 		}
 	}

@@ -9,15 +9,15 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func ResourceRepositoryYumHosted() *schema.Resource {
+func ResourceRepositoryAptHosted() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this resource to create a hosted yum repository.",
+		Description: "Use this resource to create a hosted apt repository.",
 
-		Create: resourceYumHostedRepositoryCreate,
-		Delete: resourceYumHostedRepositoryDelete,
-		Exists: resourceYumHostedRepositoryExists,
-		Read:   resourceYumHostedRepositoryRead,
-		Update: resourceYumHostedRepositoryUpdate,
+		Create: resourceAptHostedRepositoryCreate,
+		Delete: resourceAptHostedRepositoryDelete,
+		Exists: resourceAptHostedRepositoryExists,
+		Read:   resourceAptHostedRepositoryRead,
+		Update: resourceAptHostedRepositoryUpdate,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
@@ -31,29 +31,44 @@ func ResourceRepositoryYumHosted() *schema.Resource {
 			"cleanup":   repositorySchema.ResourceCleanup,
 			"component": repositorySchema.ResourceComponent,
 			"storage":   repositorySchema.ResourceHostedStorage,
-			// Yum hosted schemas
-			"deploy_policy": {
-				Default:     "STRICT",
-				Description: "Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`",
-				Optional:    true,
+			// Apt hosted schemas
+			"distribution": {
+				Description: "Distribution to fetch",
+				Required:    true,
 				Type:        schema.TypeString,
 			},
-			"repodata_depth": {
-				Default:     0,
-				Description: "Specifies the repository depth where repodata folder(s) are created. Possible values: 0-5",
-				Optional:    true,
-				Type:        schema.TypeInt,
+			"signing": {
+				Description: "Signing contains signing data of hosted repositores of format Apt",
+				Type:        schema.TypeList,
+				Required:    true,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"keypair": {
+							Description: "PGP signing key pair (armored private key e.g. gpg --export-secret-key --armor)",
+							Type:        schema.TypeString,
+							Required:    true,
+							Sensitive:   true,
+						},
+						"passphrase": {
+							Description: "Passphrase to access PGP signing key",
+							Type:        schema.TypeString,
+							Optional:    true,
+							Sensitive:   true,
+						},
+					},
+				},
 			},
 		},
 	}
 }
 
-func getYumHostedRepositoryFromResourceData(resourceData *schema.ResourceData) repository.YumHostedRepository {
+func getAptHostedRepositoryFromResourceData(resourceData *schema.ResourceData) repository.AptHostedRepository {
 	storageConfig := resourceData.Get("storage").([]interface{})[0].(map[string]interface{})
 	writePolicy := repository.StorageWritePolicy(storageConfig["write_policy"].(string))
-	deployPolicy := repository.YumDeployPolicy(resourceData.Get("deploy_policy").(string))
+	signingConfig := resourceData.Get("signing").([]interface{})[0].(map[string]interface{})
 
-	repo := repository.YumHostedRepository{
+	repo := repository.AptHostedRepository{
 		Name:   resourceData.Get("name").(string),
 		Online: resourceData.Get("online").(bool),
 		Storage: repository.HostedStorage{
@@ -61,10 +76,16 @@ func getYumHostedRepositoryFromResourceData(resourceData *schema.ResourceData) r
 			StrictContentTypeValidation: storageConfig["strict_content_type_validation"].(bool),
 			WritePolicy:                 &writePolicy,
 		},
-		Yum: repository.Yum{
-			RepodataDepth: resourceData.Get("repodata_depth").(int),
-			DeployPolicy:  &deployPolicy,
+		Apt: repository.AptHosted{
+			Distribution: resourceData.Get("distribution").(string),
 		},
+		AptSigning: repository.AptSigning{
+			Keypair: signingConfig["keypair"].(string),
+		},
+	}
+
+	if signingConfig["passphrase"] != nil {
+		repo.AptSigning.Passphrase = tools.GetStringPointer(signingConfig["passphrase"].(string))
 	}
 
 	cleanupList := resourceData.Get("cleanup").([]interface{})
@@ -93,12 +114,11 @@ func getYumHostedRepositoryFromResourceData(resourceData *schema.ResourceData) r
 	return repo
 }
 
-func setYumHostedRepositoryToResourceData(repo *repository.YumHostedRepository, resourceData *schema.ResourceData) error {
+func setAptHostedRepositoryToResourceData(repo *repository.AptHostedRepository, resourceData *schema.ResourceData) error {
 	resourceData.SetId(repo.Name)
 	resourceData.Set("name", repo.Name)
 	resourceData.Set("online", repo.Online)
-	resourceData.Set("repodata_depth", repo.Yum.RepodataDepth)
-	resourceData.Set("deploy_policy", repo.Yum.DeployPolicy)
+	resourceData.Set("distribution", repo.Apt.Distribution)
 
 	if err := resourceData.Set("storage", flattenHostedStorage(&repo.Storage, resourceData)); err != nil {
 		return err
@@ -119,23 +139,23 @@ func setYumHostedRepositoryToResourceData(repo *repository.YumHostedRepository, 
 	return nil
 }
 
-func resourceYumHostedRepositoryCreate(resourceData *schema.ResourceData, m interface{}) error {
+func resourceAptHostedRepositoryCreate(resourceData *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
-	repo := getYumHostedRepositoryFromResourceData(resourceData)
+	repo := getAptHostedRepositoryFromResourceData(resourceData)
 
-	if err := client.Repository.Yum.Hosted.Create(repo); err != nil {
+	if err := client.Repository.Apt.Hosted.Create(repo); err != nil {
 		return err
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceYumHostedRepositoryRead(resourceData, m)
+	return resourceAptHostedRepositoryRead(resourceData, m)
 }
 
-func resourceYumHostedRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
+func resourceAptHostedRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
-	repo, err := client.Repository.Yum.Hosted.Get(resourceData.Id())
+	repo, err := client.Repository.Apt.Hosted.Get(resourceData.Id())
 	if err != nil {
 		return err
 	}
@@ -145,30 +165,30 @@ func resourceYumHostedRepositoryRead(resourceData *schema.ResourceData, m interf
 		return nil
 	}
 
-	return setYumHostedRepositoryToResourceData(repo, resourceData)
+	return setAptHostedRepositoryToResourceData(repo, resourceData)
 }
 
-func resourceYumHostedRepositoryUpdate(resourceData *schema.ResourceData, m interface{}) error {
+func resourceAptHostedRepositoryUpdate(resourceData *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	repoName := resourceData.Id()
-	repo := getYumHostedRepositoryFromResourceData(resourceData)
+	repo := getAptHostedRepositoryFromResourceData(resourceData)
 
-	if err := client.Repository.Yum.Hosted.Update(repoName, repo); err != nil {
+	if err := client.Repository.Apt.Hosted.Update(repoName, repo); err != nil {
 		return err
 	}
 
-	return resourceYumHostedRepositoryRead(resourceData, m)
+	return resourceAptHostedRepositoryRead(resourceData, m)
 }
 
-func resourceYumHostedRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {
+func resourceAptHostedRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
-	return client.Repository.Yum.Hosted.Delete(resourceData.Id())
+	return client.Repository.Apt.Hosted.Delete(resourceData.Id())
 }
 
-func resourceYumHostedRepositoryExists(resourceData *schema.ResourceData, m interface{}) (bool, error) {
+func resourceAptHostedRepositoryExists(resourceData *schema.ResourceData, m interface{}) (bool, error) {
 	client := m.(*nexus.NexusClient)
 
-	repo, err := client.Repository.Yum.Hosted.Get(resourceData.Id())
+	repo, err := client.Repository.Apt.Hosted.Get(resourceData.Id())
 	return repo != nil, err
 }

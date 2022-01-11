@@ -17,7 +17,7 @@ func testAccResourceRepositoryAptHosted() repository.LegacyRepository {
 	keypair := acctest.RandString(10)
 	passphrase := acctest.RandString(10)
 	repo.AptSigning = &repository.AptSigning{
-		Keypair:    &keypair,
+		Keypair:    keypair,
 		Passphrase: &passphrase,
 	}
 	return repo
@@ -50,7 +50,7 @@ func TestAccResourceRepositoryAptHosted(t *testing.T) {
 						resource.TestCheckResourceAttr(resName, "apt.#", "1"),
 						resource.TestCheckResourceAttr(resName, "apt.0.distribution", repo.Apt.Distribution),
 						resource.TestCheckResourceAttr(resName, "apt_signing.#", "1"),
-						resource.TestCheckResourceAttr(resName, "apt_signing.0.keypair", *repo.AptSigning.Keypair),
+						resource.TestCheckResourceAttr(resName, "apt_signing.0.keypair", repo.AptSigning.Keypair),
 						resource.TestCheckResourceAttr(resName, "apt_signing.0.passphrase", *repo.AptSigning.Passphrase),
 					),
 				),
