@@ -6,7 +6,6 @@ import (
 
 var (
 	ResourceComponent = &schema.Schema{
-		DefaultFunc: repositoryComponentDefault,
 		Description: "Component configuration for the hosted repository",
 		Type:        schema.TypeList,
 		Computed:    true,
@@ -38,11 +37,3 @@ var (
 		},
 	}
 )
-
-func repositoryComponentDefault() (interface{}, error) {
-	return []map[string]interface{}{
-		{
-			"proprietary_components": false,
-		},
-	}, nil
-}
