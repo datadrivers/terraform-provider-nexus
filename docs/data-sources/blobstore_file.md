@@ -2,10 +2,10 @@
 page_title: "Data Source nexus_blobstore_file"
 subcategory: "Blobstore"
 description: |-
-  Use this to get details of a nexus blobstore s3.
+  Use this resource to get details of an existing Nexus File blobstore.
 ---
 # Data Source nexus_blobstore_file
-Use this to get details of a nexus blobstore s3.
+Use this resource to get details of an existing Nexus File blobstore.
 ## Example Usage
 ```terraform
 data "nexus_blobstore_file" "default" {

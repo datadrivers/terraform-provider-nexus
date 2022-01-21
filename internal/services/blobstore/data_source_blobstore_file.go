@@ -1,43 +1,28 @@
 package blobstore
 
 import (
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/blobstore"
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSourceBlobstoreFile() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this to get details of a nexus blobstore s3.",
+		Description: "Use this resource to get details of an existing Nexus File blobstore.",
 
 		Read: dataSourceBlobstoreFileRead,
 		Schema: map[string]*schema.Schema{
-			"id": common.DataSourceID,
-			"name": {
-				Description: "Blobstore name",
-				Required:    true,
-				Type:        schema.TypeString,
-			},
+			"id":   common.DataSourceID,
+			"name": blobstore.DataSourceName,
 			"path": {
 				Description: "The path to the blobstore contents",
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
-			"available_space_in_bytes": {
-				Computed:    true,
-				Description: "Available space in Bytes",
-				Type:        schema.TypeInt,
-			},
-			"blob_count": {
-				Computed:    true,
-				Description: "Count of blobs",
-				Type:        schema.TypeInt,
-			},
-			"soft_quota": getDataSourceSoftQuotaSchema(),
-			"total_size_in_bytes": {
-				Computed:    true,
-				Description: "The total size of the blobstore in Bytes",
-				Type:        schema.TypeInt,
-			},
+			"available_space_in_bytes": blobstore.DataSourceAvailableSpaceInBytes,
+			"blob_count":               blobstore.DataSourceBlobCount,
+			"soft_quota":               blobstore.DataSourceSoftQuota,
+			"total_size_in_bytes":      blobstore.DataSourceTotalSizeInBytes,
 		},
 	}
 }

@@ -1,33 +1,22 @@
 package blobstore
 
 import (
+	"github.com/datadrivers/terraform-provider-nexus/internal/schema/blobstore"
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSourceBlobstoreS3() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this to create a Nexus blobstore.",
+		Description: "Use this data source to get details of an existing Nexus S3 blobstore.",
 
 		Read: dataSourceBlobstoreS3Read,
 		Schema: map[string]*schema.Schema{
-			"id": common.DataSourceID,
-			"name": {
-				Description: "Blobstore name",
-				Required:    true,
-				Type:        schema.TypeString,
-			},
-			"blob_count": {
-				Computed:    true,
-				Description: "Count of blobs",
-				Type:        schema.TypeInt,
-			},
-			"soft_quota": getDataSourceSoftQuotaSchema(),
-			"total_size_in_bytes": {
-				Computed:    true,
-				Description: "The total size of the blobstore in Bytes",
-				Type:        schema.TypeInt,
-			},
+			"id":                  common.DataSourceID,
+			"name":                blobstore.DataSourceName,
+			"blob_count":          blobstore.DataSourceBlobCount,
+			"soft_quota":          blobstore.DataSourceSoftQuota,
+			"total_size_in_bytes": blobstore.DataSourceTotalSizeInBytes,
 			"bucket_configuration": {
 				Description: "The S3 bucket configuration.",
 				Elem: &schema.Resource{
