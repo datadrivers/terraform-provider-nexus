@@ -2,6 +2,9 @@ package tools
 
 import (
 	"os"
+	"sort"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func InterfaceSliceToStringSlice(data []interface{}) []string {
@@ -54,4 +57,14 @@ func GetStringPointer(s string) *string {
 
 func GetBoolPointer(b bool) *bool {
 	return &b
+}
+
+func ConvertStringSet(set *schema.Set) []string {
+	s := make([]string, 0, set.Len())
+	for _, v := range set.List() {
+		s = append(s, v.(string))
+	}
+	sort.Strings(s)
+
+	return s
 }
