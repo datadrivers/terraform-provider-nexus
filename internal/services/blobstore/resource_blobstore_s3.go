@@ -7,6 +7,7 @@ import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/pkg/tools"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/blobstore"
+	blobstoreSchema "github.com/datadrivers/terraform-provider-nexus/internal/schema/blobstore"
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -26,23 +27,11 @@ func ResourceBlobstoreS3() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"id": common.ResourceID,
-			"name": {
-				Description: "Blobstore name",
-				Type:        schema.TypeString,
-				Required:    true,
-			},
-			"blob_count": {
-				Description: "Count of blobs",
-				Type:        schema.TypeInt,
-				Computed:    true,
-			},
-			"soft_quota": getResourceSoftQuotaSchema(),
-			"total_size_in_bytes": {
-				Description: "The total size of the blobstore in Bytes",
-				Type:        schema.TypeInt,
-				Computed:    true,
-			},
+			"id":                  common.ResourceID,
+			"name":                blobstoreSchema.ResourceName,
+			"blob_count":          blobstoreSchema.ResourceBlobCount,
+			"soft_quota":          blobstoreSchema.ResourceSoftQuota,
+			"total_size_in_bytes": blobstoreSchema.ResourceTotalSizeInBytes,
 			"bucket_configuration": {
 				Description: "The S3 bucket configuration.",
 				Elem: &schema.Resource{
@@ -241,19 +230,19 @@ func getBlobstoreS3FromResourceData(d *schema.ResourceData) blobstore.S3 {
 	return bs
 }
 
-func resourceBlobstoreS3Create(d *schema.ResourceData, m interface{}) error {
+func resourceBlobstoreS3Create(resourceData *schema.ResourceData, m interface{}) error {
 	nexusClient := m.(*nexus.NexusClient)
 
-	bs := getBlobstoreS3FromResourceData(d)
+	bs := getBlobstoreS3FromResourceData(resourceData)
 
 	if err := nexusClient.BlobStore.S3.Create(&bs); err != nil {
 		return err
 	}
 
-	d.SetId(bs.Name)
-	d.Set("name", bs.Name)
+	resourceData.SetId(bs.Name)
+	resourceData.Set("name", bs.Name)
 
-	return resourceBlobstoreS3Read(d, m)
+	return resourceBlobstoreS3Read(resourceData, m)
 }
 
 func resourceBlobstoreS3Read(resourceData *schema.ResourceData, m interface{}) error {
@@ -290,7 +279,7 @@ func resourceBlobstoreS3Read(resourceData *schema.ResourceData, m interface{}) e
 	if err := resourceData.Set("total_size_in_bytes", genericBlobstoreInformation.TotalSizeInBytes); err != nil {
 		return err
 	}
-	if err := resourceData.Set("bucket_configuration", flattenBucketConfiguration(&bs.BucketConfiguration, resourceData)); err != nil {
+	if err := resourceData.Set("bucket_configuration", flattenS3BucketConfiguration(&bs.BucketConfiguration, resourceData)); err != nil {
 		return fmt.Errorf("error reading bucket configuration: %s", err)
 	}
 
@@ -331,63 +320,4 @@ func resourceBlobstoreS3Exists(resourceData *schema.ResourceData, m interface{})
 
 	bs, err := nexusClient.BlobStore.S3.Get(resourceData.Id())
 	return bs != nil, err
-}
-
-func flattenBucketConfiguration(bucketConfig *blobstore.S3BucketConfiguration, resourceData *schema.ResourceData) []map[string]interface{} {
-	if bucketConfig == nil {
-		return nil
-	}
-	data := map[string]interface{}{
-		"advanced_bucket_connection": flattenAdvancedBucketConnection(bucketConfig.AdvancedBucketConnection),
-		"bucket":                     flattenBucket(bucketConfig.Bucket),
-		"bucket_security":            flattenBucketSecurity(bucketConfig.BucketSecurity, resourceData),
-		"encryption":                 flattenEncryption(bucketConfig.Encryption),
-	}
-	return []map[string]interface{}{data}
-}
-
-func flattenAdvancedBucketConnection(bucketConnection *blobstore.S3AdvancedBucketConnection) []map[string]interface{} {
-	if bucketConnection == nil {
-		return nil
-	}
-	data := map[string]interface{}{
-		"endpoint":         bucketConnection.Endpoint,
-		"force_path_style": bucketConnection.ForcePathStyle,
-		"signer_type":      bucketConnection.SignerType,
-	}
-	return []map[string]interface{}{data}
-}
-
-func flattenBucket(bucket blobstore.S3Bucket) []map[string]interface{} {
-	data := map[string]interface{}{
-		"expiration": bucket.Expiration,
-		"name":       bucket.Name,
-		"prefix":     bucket.Prefix,
-		"region":     bucket.Region,
-	}
-	return []map[string]interface{}{data}
-}
-
-func flattenBucketSecurity(bucketSecurity *blobstore.S3BucketSecurity, resourceData *schema.ResourceData) []map[string]interface{} {
-	if bucketSecurity == nil {
-		return nil
-	}
-	data := map[string]interface{}{
-		"access_key_id":     bucketSecurity.AccessKeyID,
-		"role":              bucketSecurity.Role,
-		"secret_access_key": resourceData.Get("bucket_configuration.0.bucket_security.0.secret_access_key"), // secret_access_key",
-		"session_token":     bucketSecurity.SessionToken,
-	}
-	return []map[string]interface{}{data}
-}
-
-func flattenEncryption(encryption *blobstore.S3Encryption) []map[string]interface{} {
-	if encryption == nil {
-		return nil
-	}
-	data := map[string]interface{}{
-		"encryption_key":  encryption.Key,
-		"encryption_type": encryption.Type,
-	}
-	return []map[string]interface{}{data}
 }

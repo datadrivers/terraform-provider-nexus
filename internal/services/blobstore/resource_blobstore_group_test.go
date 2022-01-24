@@ -9,15 +9,20 @@ import (
 
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/blobstore"
 	"github.com/datadrivers/terraform-provider-nexus/internal/acceptance"
+	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 const (
-	resourceBlobstoreFileTemplateString = `
-resource "nexus_blobstore_file" "acceptance" {
-	name = "{{ .Name }}"
-	path = "{{ .Path }}"
+	resourceBlobstoreGroupTemplateString = `
+resource "nexus_blobstore_group" "acceptance" {
+	name        = "{{ .Name }}"
+    fill_policy = "{{ .FillPolicy }}"
+	members = [
+		nexus_blobstore_file.acceptance.name
+	]
+
 {{- if .SoftQuota }}
 	soft_quota {
 		limit = {{ .SoftQuota.Limit }}
@@ -27,24 +32,39 @@ resource "nexus_blobstore_file" "acceptance" {
 }`
 )
 
-func testAccResourceBlobstoreFileConfig(bs blobstore.File) string {
+func testAccResourceBlobstoreGroupConfig(bs blobstore.Group) string {
 	buf := &bytes.Buffer{}
-	resourceTemplate := template.Must(template.New("BlobstoreFile").Funcs(acceptance.TemplateFuncMap).Parse(resourceBlobstoreFileTemplateString))
+	resourceTemplate := template.Must(template.New("BlobstoreGroup").Funcs(acceptance.TemplateFuncMap).Parse(resourceBlobstoreGroupTemplateString))
 	if err := resourceTemplate.Execute(buf, bs); err != nil {
 		panic(err)
 	}
 	return buf.String()
 }
 
-func TestAccResourceBlobstoreFile(t *testing.T) {
-	resourceName := "nexus_blobstore_file.acceptance"
+func TestAccResourceBlobstoreGroup(t *testing.T) {
+	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "true" {
+		t.Skip("Skipping Nexus Pro tests")
+	}
 
-	bs := blobstore.File{
-		Name: fmt.Sprintf("test-blobstore-%s", acctest.RandString(5)),
-		Path: "/nexus-data/acceptance",
+	resourceName := "nexus_blobstore_group.acceptance"
+
+	memberBlobStore := blobstore.File{
+		Name: fmt.Sprintf("test_file_%s", acctest.RandString(5)),
+		Path: fmt.Sprintf("/nexus-data/test-file-%s", acctest.RandString(5)),
 		SoftQuota: &blobstore.SoftQuota{
 			Limit: int64(acctest.RandIntRange(100, 300) * 1000000),
 			Type:  "spaceRemainingQuota",
+		},
+	}
+	bs := blobstore.Group{
+		Name: fmt.Sprintf("test-blobstore-%s", acctest.RandString(5)),
+		SoftQuota: &blobstore.SoftQuota{
+			Limit: int64(acctest.RandIntRange(100, 300) * 1000000),
+			Type:  "spaceRemainingQuota",
+		},
+		FillPolicy: blobstore.GroupFillPolicyWriteToFirst,
+		Members: []string{
+			memberBlobStore.Name,
 		},
 	}
 
@@ -53,11 +73,13 @@ func TestAccResourceBlobstoreFile(t *testing.T) {
 		Providers: acceptance.TestAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceBlobstoreFileConfig(bs),
+				Config: testAccResourceBlobstoreFileConfig(memberBlobStore) + testAccResourceBlobstoreGroupConfig(bs),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "id", bs.Name),
 					resource.TestCheckResourceAttr(resourceName, "name", bs.Name),
-					resource.TestCheckResourceAttr(resourceName, "path", bs.Path),
+					resource.TestCheckResourceAttr(resourceName, "fill_policy", bs.FillPolicy),
+					resource.TestCheckResourceAttr(resourceName, "members.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "members.0", bs.Members[0]),
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(resourceName, "soft_quota.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "soft_quota.0.limit", strconv.FormatInt(bs.SoftQuota.Limit, 10)),
