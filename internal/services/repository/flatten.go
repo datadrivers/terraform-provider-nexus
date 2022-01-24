@@ -75,6 +75,9 @@ func flattenHTTPClientConnection(conn *repository.HTTPClientConnection) []map[st
 	data := map[string]interface{}{
 		"user_agent_suffix": conn.UserAgentSuffix,
 	}
+	if conn.EnableCircularRedirects != nil {
+		data["enable_circular_redirects"] = *conn.EnableCircularRedirects
+	}
 	if conn.EnableCookies != nil {
 		data["enable_cookies"] = *conn.EnableCookies
 	}

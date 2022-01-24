@@ -16,8 +16,7 @@ func testAccResourceRepositoryMavenProxy() repository.LegacyRepository {
 		LayoutPolicy:  &layoutPolicy,
 		VersionPolicy: &versionPolicy,
 	}
-	remoteURL := "https://www.example.com"
-	repo.Proxy.RemoteURL = &remoteURL
+	repo.Proxy.RemoteURL = "https://www.example.com"
 	return repo
 }
 

@@ -10,8 +10,7 @@ import (
 
 func testAccResourceRepositoryRAWProxy() repository.LegacyRepository {
 	repo := testAccResourceRepositoryProxy(repository.RepositoryFormatRAW)
-	remoteURL := "https://nodejs.org/dist/"
-	repo.Proxy.RemoteURL = &remoteURL
+	repo.Proxy.RemoteURL = "https://nodejs.org/dist/"
 	return repo
 }
 

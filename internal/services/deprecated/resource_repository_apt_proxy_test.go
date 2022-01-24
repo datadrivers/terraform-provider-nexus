@@ -16,8 +16,7 @@ func testAccResourceRepositoryAptProxy() repository.LegacyRepository {
 		Flat:         true,
 	}
 	useTrustStore := true
-	remoteURL := "https://remote.repository.com"
-	repo.Proxy.RemoteURL = &remoteURL
+	repo.Proxy.RemoteURL = "https://remote.repository.com"
 	repo.HTTPClient.Connection = &repository.HTTPClientConnection{
 		UseTrustStore: &useTrustStore,
 	}

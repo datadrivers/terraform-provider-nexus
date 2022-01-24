@@ -52,10 +52,13 @@ resource "nexus_repository_yum_hosted" "yum1" {
 <a id="nestedblock--storage"></a>
 ### Nested Schema for `storage`
 
-Optional:
+Required:
 
 - **blob_store_name** (String) Blob store used to store repository contents
 - **strict_content_type_validation** (Boolean) Whether to validate uploaded content's MIME type appropriate for the repository format
+
+Optional:
+
 - **write_policy** (String) Controls if deployments of and updates to assets are allowed
 
 

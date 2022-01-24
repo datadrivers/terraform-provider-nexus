@@ -207,7 +207,6 @@ func testAccResourceRepositoryHosted(format string) repository.LegacyRepository 
 }
 
 func testAccResourceRepositoryProxy(format string) repository.LegacyRepository {
-	remoteURL := "https://proxy.example.com"
 	return repository.LegacyRepository{
 		Format: format,
 		Name:   fmt.Sprintf("test-repo-%s", acctest.RandString(10)),
@@ -233,7 +232,7 @@ func testAccResourceRepositoryProxy(format string) repository.LegacyRepository {
 		Proxy: &repository.Proxy{
 			ContentMaxAge:  1440,
 			MetadataMaxAge: 1440,
-			RemoteURL:      &remoteURL,
+			RemoteURL:      "https://proxy.example.com",
 		},
 
 		Storage: &repository.HostedStorage{

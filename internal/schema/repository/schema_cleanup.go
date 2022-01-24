@@ -8,7 +8,6 @@ import (
 
 var (
 	ResourceCleanup = &schema.Schema{
-		DefaultFunc: cleanupDefault,
 		Description: "Cleanup policies",
 		Type:        schema.TypeList,
 		Optional:    true,
@@ -49,10 +48,3 @@ var (
 		},
 	}
 )
-
-func cleanupDefault() (interface{}, error) {
-	data := map[string]interface{}{
-		"policy_names": []string{},
-	}
-	return []map[string]interface{}{data}, nil
-}

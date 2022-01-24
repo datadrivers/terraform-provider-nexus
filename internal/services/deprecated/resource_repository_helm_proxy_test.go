@@ -10,8 +10,7 @@ import (
 
 func testAccResourceRepositoryHelmProxy() repository.LegacyRepository {
 	repo := testAccResourceRepositoryProxy(repository.RepositoryFormatHelm)
-	remoteURL := "https://kubernetes-charts.storage.googleapis.com/"
-	repo.Proxy.RemoteURL = &remoteURL
+	repo.Proxy.RemoteURL = "https://kubernetes-charts.storage.googleapis.com/"
 	return repo
 }
 
