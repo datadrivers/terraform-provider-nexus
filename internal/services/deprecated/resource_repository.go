@@ -646,13 +646,11 @@ func getRepositoryFromResourceData(d *schema.ResourceData) repository.LegacyRepo
 	}
 
 	if _, ok := d.GetOk("proxy"); ok {
-		proxyList := d.Get("proxy").([]interface{})
-		proxyConfig := proxyList[0].(map[string]interface{})
-		remoteURL := proxyConfig["remote_url"].(string)
+		proxyConfig := d.Get("proxy").([]interface{})[0].(map[string]interface{})
 		repo.Proxy = &repository.Proxy{
 			ContentMaxAge:  proxyConfig["content_max_age"].(int),
 			MetadataMaxAge: proxyConfig["metadata_max_age"].(int),
-			RemoteURL:      &remoteURL,
+			RemoteURL:      proxyConfig["remote_url"].(string),
 		}
 	}
 

@@ -10,8 +10,7 @@ import (
 
 func testAccResourceRepositoryPyPiProxy() repository.LegacyRepository {
 	repo := testAccResourceRepositoryProxy(repository.RepositoryFormatPyPi)
-	remoteURL := "https://pypi.org"
-	repo.Proxy.RemoteURL = &remoteURL
+	repo.Proxy.RemoteURL = "https://pypi.org"
 	return repo
 }
 
