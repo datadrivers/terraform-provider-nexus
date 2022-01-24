@@ -56,11 +56,16 @@ func getDockerHostedRepositoryFromResourceData(resourceData *schema.ResourceData
 		},
 	}
 
-	if dockerConfig["http_port"] != nil {
-		repo.Docker.HTTPPort = tools.GetIntPointer(dockerConfig["http_port"].(int))
+	if httpPort, ok := dockerConfig["http_port"]; ok {
+		if httpPort.(int) > 0 {
+			repo.Docker.HTTPPort = tools.GetIntPointer(httpPort.(int))
+		}
 	}
-	if dockerConfig["https_port"] != nil {
-		repo.Docker.HTTPSPort = tools.GetIntPointer(dockerConfig["https_port"].(int))
+
+	if httpsPort, ok := dockerConfig["https_port"]; ok {
+		if httpsPort.(int) > 0 {
+			repo.Docker.HTTPSPort = tools.GetIntPointer(httpsPort.(int))
+		}
 	}
 
 	cleanupList := resourceData.Get("cleanup").([]interface{})

@@ -19,12 +19,12 @@ var (
 				},
 				"http_port": {
 					Description: "Create an HTTP connector at specified port",
-					Required:    true,
+					Optional:    true,
 					Type:        schema.TypeInt,
 				},
 				"https_port": {
 					Description: "Create an HTTPS connector at specified port",
-					Required:    true,
+					Optional:    true,
 					Type:        schema.TypeInt,
 				},
 				"v1_enabled": {
