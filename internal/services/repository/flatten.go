@@ -17,6 +17,22 @@ func flattenCleanup(cleanup *repository.Cleanup) []map[string]interface{} {
 	}
 }
 
+func flattenDocker(docker *repository.Docker) []map[string]interface{} {
+	data := map[string]interface{}{
+		"force_basic_auth": docker.ForceBasicAuth,
+		"v1_enabled":       docker.V1Enabled,
+	}
+
+	if docker.HTTPPort != nil {
+		data["http_port"] = *docker.HTTPPort
+	}
+	if docker.HTTPSPort != nil {
+		data["https_port"] = *docker.HTTPSPort
+	}
+
+	return []map[string]interface{}{data}
+}
+
 func flattenComponent(component *repository.Component) []map[string]interface{} {
 	if component == nil {
 		return nil
