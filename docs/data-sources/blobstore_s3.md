@@ -2,10 +2,10 @@
 page_title: "Data Source nexus_blobstore_s3"
 subcategory: "Blobstore"
 description: |-
-  Use this to create a Nexus blobstore.
+  Use this data source to get details of an existing Nexus S3 blobstore.
 ---
 # Data Source nexus_blobstore_s3
-Use this to create a Nexus blobstore.
+Use this data source to get details of an existing Nexus S3 blobstore.
 ## Example Usage
 ```terraform
 data "nexus_blobstore_s3" "aws" {

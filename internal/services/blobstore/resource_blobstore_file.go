@@ -6,6 +6,7 @@ import (
 
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/blobstore"
+	blobstoreSchema "github.com/datadrivers/terraform-provider-nexus/internal/schema/blobstore"
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -24,33 +25,17 @@ func ResourceBlobstoreFile() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"id": common.ResourceID,
-			"name": {
-				Description: "Blobstore name",
-				Type:        schema.TypeString,
-				Required:    true,
-			},
+			"id":   common.ResourceID,
+			"name": blobstoreSchema.ResourceName,
 			"path": {
 				Description: "The path to the blobstore contents. This can be an absolute path to anywhere on the system nxrm has access to or it can be a path relative to the sonatype-work directory",
 				Type:        schema.TypeString,
 				Optional:    true,
 			},
-			"available_space_in_bytes": {
-				Description: "Available space in Bytes",
-				Type:        schema.TypeInt,
-				Computed:    true,
-			},
-			"blob_count": {
-				Description: "Count of blobs",
-				Type:        schema.TypeInt,
-				Computed:    true,
-			},
-			"soft_quota": getResourceSoftQuotaSchema(),
-			"total_size_in_bytes": {
-				Description: "The total size of the blobstore in Bytes",
-				Type:        schema.TypeInt,
-				Computed:    true,
-			},
+			"available_space_in_bytes": blobstoreSchema.ResourceAvailableSpaceInBytes,
+			"blob_count":               blobstoreSchema.ResourceBlobCount,
+			"soft_quota":               blobstoreSchema.ResourceSoftQuota,
+			"total_size_in_bytes":      blobstoreSchema.ResourceTotalSizeInBytes,
 		},
 	}
 }

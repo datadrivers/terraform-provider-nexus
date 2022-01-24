@@ -57,12 +57,11 @@ func TestAccResourceBlobstoreS3(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      resourceName,
-				ImportState:       true,
-				ImportStateId:     bs.Name,
-				ImportStateVerify: true,
-				// available_space_in_bytes changes too frequently.
-				ImportStateVerifyIgnore: []string{"available_space_in_bytes", "bucket_configuration.0.bucket_security.0.secret_access_key"},
+				ResourceName:            resourceName,
+				ImportState:             true,
+				ImportStateId:           bs.Name,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"bucket_configuration.0.bucket_security.0.secret_access_key"},
 			},
 		},
 	})

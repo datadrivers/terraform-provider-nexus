@@ -49,18 +49,24 @@ resource "nexus_repository_docker_hosted" "example" {
 Required:
 
 - **force_basic_auth** (Boolean) Whether to force authentication (Docker Bearer Token Realm required if false)
+- **v1_enabled** (Boolean) Whether to allow clients to use the V1 API to interact with this repository
+
+Optional:
+
 - **http_port** (Number) Create an HTTP connector at specified port
 - **https_port** (Number) Create an HTTPS connector at specified port
-- **v1_enabled** (Boolean) Whether to allow clients to use the V1 API to interact with this repository
 
 
 <a id="nestedblock--storage"></a>
 ### Nested Schema for `storage`
 
-Optional:
+Required:
 
 - **blob_store_name** (String) Blob store used to store repository contents
 - **strict_content_type_validation** (Boolean) Whether to validate uploaded content's MIME type appropriate for the repository format
+
+Optional:
+
 - **write_policy** (String) Controls if deployments of and updates to assets are allowed
 
 

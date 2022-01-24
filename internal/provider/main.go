@@ -17,7 +17,9 @@ func Provider() *schema.Provider {
 		DataSourcesMap: map[string]*schema.Resource{
 			"nexus_anonymous":                 deprecated.DataSourceAnonymous(),
 			"nexus_blobstore":                 deprecated.DataSourceBlobstore(),
+			"nexus_blobstore_azure":           blobstore.DataSourceBlobstoreAzure(),
 			"nexus_blobstore_file":            blobstore.DataSourceBlobstoreFile(),
+			"nexus_blobstore_group":           blobstore.DataSourceBlobstoreGroup(),
 			"nexus_blobstore_s3":              blobstore.DataSourceBlobstoreS3(),
 			"nexus_privileges":                deprecated.DataSourcePrivileges(),
 			"nexus_repository":                deprecated.DataSourceRepository(),
@@ -40,7 +42,9 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"nexus_anonymous":                 deprecated.ResourceAnonymous(),
 			"nexus_blobstore":                 deprecated.ResourceBlobstore(),
+			"nexus_blobstore_azure":           blobstore.ResourceBlobstoreAzure(),
 			"nexus_blobstore_file":            blobstore.ResourceBlobstoreFile(),
+			"nexus_blobstore_group":           blobstore.ResourceBlobstoreGroup(),
 			"nexus_blobstore_s3":              blobstore.ResourceBlobstoreS3(),
 			"nexus_content_selector":          deprecated.ResourceContentSelector(),
 			"nexus_privilege":                 deprecated.ResourcePrivilege(),

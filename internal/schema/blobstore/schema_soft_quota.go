@@ -1,13 +1,12 @@
 package blobstore
 
 import (
-	"github.com/datadrivers/go-nexus-client/nexus3/schema/blobstore"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-func getResourceSoftQuotaSchema() *schema.Schema {
-	return &schema.Schema{
+var (
+	ResourceSoftQuota = &schema.Schema{
 		Description: "Soft quota of the blobstore",
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
@@ -29,10 +28,8 @@ func getResourceSoftQuotaSchema() *schema.Schema {
 		Optional: true,
 		Type:     schema.TypeList,
 	}
-}
 
-func getDataSourceSoftQuotaSchema() *schema.Schema {
-	return &schema.Schema{
+	DataSourceSoftQuota = &schema.Schema{
 		Description: "Soft quota of the blobstore",
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
@@ -51,15 +48,4 @@ func getDataSourceSoftQuotaSchema() *schema.Schema {
 		Computed: true,
 		Type:     schema.TypeList,
 	}
-}
-
-func flattenSoftQuota(softQuota *blobstore.SoftQuota) []map[string]interface{} {
-	if softQuota == nil {
-		return nil
-	}
-	data := map[string]interface{}{
-		"limit": softQuota.Limit,
-		"type":  softQuota.Type,
-	}
-	return []map[string]interface{}{data}
-}
+)
