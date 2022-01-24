@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func testAccDataSourceRepositoryAptHostedConfig(name string) string {
+func testAccDataSourceRepositoryAptHostedConfig() string {
 	return `
 data "nexus_repository_apt_hosted" "acceptance" {
 	name   = nexus_repository_apt_hosted.acceptance.id
@@ -40,7 +40,7 @@ func TestAccDataSourceRepositoryAptHosted(t *testing.T) {
 		Providers: acceptance.TestAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceRepositoryAptHostedConfig(repo) + testAccDataSourceRepositoryAptHostedConfig(repo.Name),
+				Config: testAccResourceRepositoryAptHostedConfig(repo) + testAccDataSourceRepositoryAptHostedConfig(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(dataSourceName, "id", repo.Name),

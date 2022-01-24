@@ -9,7 +9,6 @@ import (
 
 var (
 	ResourceStorage = &schema.Schema{
-		DefaultFunc: repositoryStorageDefault,
 		Description: "The storage configuration of the repository",
 		Type:        schema.TypeList,
 		Required:    true,
@@ -17,9 +16,8 @@ var (
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"blob_store_name": {
-					Default:     "default",
 					Description: "Blob store used to store repository contents",
-					Optional:    true,
+					Required:    true,
 					Set: func(v interface{}) int {
 						return schema.HashString(strings.ToLower(v.(string)))
 					},
@@ -55,7 +53,6 @@ var (
 	}
 
 	ResourceHostedStorage = &schema.Schema{
-		DefaultFunc: repositoryStorageHostedDefault,
 		Description: "The storage configuration of the repository",
 		Type:        schema.TypeList,
 		Required:    true,
@@ -63,18 +60,16 @@ var (
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"blob_store_name": {
-					Default:     "default",
 					Description: "Blob store used to store repository contents",
-					Optional:    true,
+					Required:    true,
 					Set: func(v interface{}) int {
 						return schema.HashString(strings.ToLower(v.(string)))
 					},
 					Type: schema.TypeString,
 				},
 				"strict_content_type_validation": {
-					Default:     true,
 					Description: "Whether to validate uploaded content's MIME type appropriate for the repository format",
-					Optional:    true,
+					Required:    true,
 					Type:        schema.TypeBool,
 				},
 				"write_policy": {
@@ -116,22 +111,3 @@ var (
 		},
 	}
 )
-
-func repositoryStorageDefault() (interface{}, error) {
-	return []map[string]interface{}{
-		{
-			"blob_store_name":                "default",
-			"strict_content_type_validation": true,
-		},
-	}, nil
-}
-
-func repositoryStorageHostedDefault() (interface{}, error) {
-	return []map[string]interface{}{
-		{
-			"blob_store_name":                "default",
-			"strict_content_type_validation": true,
-			"write_policy":                   "ALLOW",
-		},
-	}, nil
-}

@@ -180,8 +180,8 @@ github.com/creack/pty v1.1.7/go.mod h1:lj5s0c3V2DBrqTV7llrYr5NG6My20zk30Fl46Y7Do
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/daixiang0/gci v0.2.9 h1:iwJvwQpBZmMg31w+QQ6jsyZ54KEATn6/nfARbBNW294=
 github.com/daixiang0/gci v0.2.9/go.mod h1:+4dZ7TISfSmqfAGv59ePaHfNzgGtIkHAhhdKggP1JAc=
-github.com/datadrivers/go-nexus-client v1.3.1 h1:xQ6/envTt37dM9F9nRSrjlajZ2oL24JQpDJtk/aaP2k=
-github.com/datadrivers/go-nexus-client v1.3.1/go.mod h1:n1ehELnCCVWC64vzGf9/pilmKPPGnD7g4FhVWjA/PJw=
+github.com/datadrivers/go-nexus-client v1.3.3 h1:Saie+BaDOJ1fHKZ/k74BRZWqwRA0S86SwH52E7lHam4=
+github.com/datadrivers/go-nexus-client v1.3.3/go.mod h1:n1ehELnCCVWC64vzGf9/pilmKPPGnD7g4FhVWjA/PJw=
 github.com/datadrivers/terraform-plugin-docs v0.5.1-6 h1:jTSOa5eFmgqiouknsbufCnE0Dlh9dJuei0Lvy0BxdL4=
 github.com/datadrivers/terraform-plugin-docs v0.5.1-6/go.mod h1:D/2r21ib7kvnLS8PfoNAA61ROroeeucs1A5DHzAOrOE=
 github.com/davecgh/go-spew v0.0.0-20161028175848-04cdfd42973b/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

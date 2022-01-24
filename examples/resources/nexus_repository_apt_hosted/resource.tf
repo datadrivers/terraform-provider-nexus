@@ -1,8 +1,8 @@
 resource "nexus_repository_apt_hosted" "bullseye_stable" {
-  name = "bullseye-stable"
+  name   = "bullseye-stable"
   online = true
 
-  distribution = "bullseys"
+  distribution = "bullseye"
   signing {
     keypair    = "keypair"
     passphrase = "passphrase"
