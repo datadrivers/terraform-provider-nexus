@@ -13,9 +13,8 @@ func testAccResourceDockerProxy() repository.LegacyRepository {
 	repo.Docker = &repository.Docker{}
 
 	indexURL := "https://index.docker.io/"
-	indexType := repository.DockerProxyIndexTypeHub
 	repo.DockerProxy = &repository.DockerProxy{
-		IndexType: &indexType,
+		IndexType: repository.DockerProxyIndexTypeHub,
 		IndexURL:  &indexURL,
 	}
 	repo.Proxy.RemoteURL = "https://registry-1.docker.io"
