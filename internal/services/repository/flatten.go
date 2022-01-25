@@ -33,6 +33,18 @@ func flattenDocker(docker *repository.Docker) []map[string]interface{} {
 	return []map[string]interface{}{data}
 }
 
+func flattenDockerProxy(dockerProxy *repository.DockerProxy) []map[string]interface{} {
+	data := map[string]interface{}{
+		"index_type": string(dockerProxy.IndexType),
+	}
+
+	if dockerProxy.IndexURL != nil {
+		data["index_url"] = *dockerProxy.IndexURL
+	}
+
+	return []map[string]interface{}{data}
+}
+
 func flattenComponent(component *repository.Component) []map[string]interface{} {
 	if component == nil {
 		return nil
