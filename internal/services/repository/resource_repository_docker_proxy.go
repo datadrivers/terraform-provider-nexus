@@ -1,23 +1,27 @@
 package repository
 
 import (
+	"regexp"
+	"strings"
+
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	repositorySchema "github.com/datadrivers/terraform-provider-nexus/internal/schema/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-func ResourceRepositoryAptProxy() *schema.Resource {
+func ResourceRepositoryDockerProxy() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this resource to create a hosted apt repository.",
+		Description: "Use this resource to create a hosted docker repository.",
 
-		Create: resourceAptProxyRepositoryCreate,
-		Delete: resourceAptProxyRepositoryDelete,
-		Exists: resourceAptProxyRepositoryExists,
-		Read:   resourceAptProxyRepositoryRead,
-		Update: resourceAptProxyRepositoryUpdate,
+		Create: resourceDockerProxyRepositoryCreate,
+		Delete: resourceDockerProxyRepositoryDelete,
+		Exists: resourceDockerProxyRepositoryExists,
+		Read:   resourceDockerProxyRepositoryRead,
+		Update: resourceDockerProxyRepositoryUpdate,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
@@ -34,37 +38,55 @@ func ResourceRepositoryAptProxy() *schema.Resource {
 			"proxy":          repositorySchema.ResourceProxy,
 			"routing_rule":   repositorySchema.ResourceRoutingRule,
 			"storage":        repositorySchema.ResourceStorage,
-			// Apt proxy schemas
-			"distribution": {
-				Description: "Distribution to fetch",
+			// Docker proxy schemas
+			"docker": repositorySchema.ResourceDocker,
+			"docker_proxy": {
+				Description: "docker_proxy contains the configuration of the docker index",
+				Type:        schema.TypeList,
 				Required:    true,
-				Type:        schema.TypeString,
-			},
-			"flat": {
-				Description: "Distribution to fetch",
-				Required:    true,
-				Type:        schema.TypeBool,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"index_type": {
+							Description:  "Type of Docker Index. Possible values: `HUB`, `REGISTRY` or `CUSTOM`",
+							Required:     true,
+							Type:         schema.TypeString,
+							ValidateFunc: validation.StringInSlice([]string{string(repository.DockerProxyIndexTypeHub), string(repository.DockerProxyIndexTypeRegistry), string(repository.DockerProxyIndexTypeCustom)}, false),
+						},
+						"index_url": {
+							Description:  "Url of Docker Index to use",
+							Optional:     true,
+							Type:         schema.TypeString,
+							ValidateFunc: validation.StringMatch(regexp.MustCompile("http[s]?://.*"), "index_url should be in the format 'http://www.example.com'"),
+						},
+					},
+				},
 			},
 		},
 	}
 }
 
-func getAptProxyRepositoryFromResourceData(resourceData *schema.ResourceData) repository.AptProxyRepository {
+func getDockerProxyRepositoryFromResourceData(resourceData *schema.ResourceData) repository.DockerProxyRepository {
 	httpClientConfig := resourceData.Get("http_client").([]interface{})[0].(map[string]interface{})
 	negativeCacheConfig := resourceData.Get("negative_cache").([]interface{})[0].(map[string]interface{})
 	proxyConfig := resourceData.Get("proxy").([]interface{})[0].(map[string]interface{})
 	storageConfig := resourceData.Get("storage").([]interface{})[0].(map[string]interface{})
+	dockerConfig := resourceData.Get("docker").([]interface{})[0].(map[string]interface{})
+	dockerProxyConfig := resourceData.Get("docker_proxy").([]interface{})[0].(map[string]interface{})
 
-	repo := repository.AptProxyRepository{
+	repo := repository.DockerProxyRepository{
 		Name:   resourceData.Get("name").(string),
 		Online: resourceData.Get("online").(bool),
 		Storage: repository.Storage{
 			BlobStoreName:               storageConfig["blob_store_name"].(string),
 			StrictContentTypeValidation: storageConfig["strict_content_type_validation"].(bool),
 		},
-		Apt: repository.AptProxy{
-			Distribution: resourceData.Get("distribution").(string),
-			Flat:         resourceData.Get("flat").(bool),
+		Docker: repository.Docker{
+			ForceBasicAuth: dockerConfig["force_basic_auth"].(bool),
+			V1Enabled:      dockerConfig["v1_enabled"].(bool),
+		},
+		DockerProxy: repository.DockerProxy{
+			IndexType: repository.DockerProxyIndexType(dockerProxyConfig["index_type"].(string)),
 		},
 		HTTPClient: repository.HTTPClient{
 			AutoBlock: httpClientConfig["auto_block"].(bool),
@@ -79,6 +101,22 @@ func getAptProxyRepositoryFromResourceData(resourceData *schema.ResourceData) re
 			MetadataMaxAge: proxyConfig["metadata_max_age"].(int),
 			RemoteURL:      proxyConfig["remote_url"].(string),
 		},
+	}
+
+	if httpPort, ok := dockerConfig["http_port"]; ok {
+		if httpPort.(int) > 0 {
+			repo.Docker.HTTPPort = tools.GetIntPointer(httpPort.(int))
+		}
+	}
+
+	if httpsPort, ok := dockerConfig["https_port"]; ok {
+		if httpsPort.(int) > 0 {
+			repo.Docker.HTTPSPort = tools.GetIntPointer(httpsPort.(int))
+		}
+	}
+
+	if dockerProxyConfig["index_url"].(string) != "" {
+		repo.DockerProxy.IndexURL = tools.GetStringPointer(strings.TrimSpace(dockerProxyConfig["index_url"].(string)))
 	}
 
 	if routingRule, ok := resourceData.GetOk("routing_rule"); ok {
@@ -132,12 +170,18 @@ func getAptProxyRepositoryFromResourceData(resourceData *schema.ResourceData) re
 	return repo
 }
 
-func setAptProxyRepositoryToResourceData(repo *repository.AptProxyRepository, resourceData *schema.ResourceData) error {
+func setDockerProxyRepositoryToResourceData(repo *repository.DockerProxyRepository, resourceData *schema.ResourceData) error {
 	resourceData.SetId(repo.Name)
 	resourceData.Set("name", repo.Name)
 	resourceData.Set("online", repo.Online)
-	resourceData.Set("distribution", repo.Apt.Distribution)
-	resourceData.Set("flat", repo.Apt.Flat)
+
+	if err := resourceData.Set("docker", flattenDocker(&repo.Docker)); err != nil {
+		return err
+	}
+
+	if err := resourceData.Set("docker_proxy", flattenDockerProxy(&repo.DockerProxy)); err != nil {
+		return err
+	}
 
 	if repo.RoutingRuleName != nil {
 		resourceData.Set("routing_rule", repo.RoutingRuleName)
@@ -169,23 +213,23 @@ func setAptProxyRepositoryToResourceData(repo *repository.AptProxyRepository, re
 	return nil
 }
 
-func resourceAptProxyRepositoryCreate(resourceData *schema.ResourceData, m interface{}) error {
+func resourceDockerProxyRepositoryCreate(resourceData *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
-	repo := getAptProxyRepositoryFromResourceData(resourceData)
+	repo := getDockerProxyRepositoryFromResourceData(resourceData)
 
-	if err := client.Repository.Apt.Proxy.Create(repo); err != nil {
+	if err := client.Repository.Docker.Proxy.Create(repo); err != nil {
 		return err
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceAptProxyRepositoryRead(resourceData, m)
+	return resourceDockerProxyRepositoryRead(resourceData, m)
 }
 
-func resourceAptProxyRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
+func resourceDockerProxyRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
-	repo, err := client.Repository.Apt.Proxy.Get(resourceData.Id())
+	repo, err := client.Repository.Docker.Proxy.Get(resourceData.Id())
 	if err != nil {
 		return err
 	}
@@ -195,30 +239,30 @@ func resourceAptProxyRepositoryRead(resourceData *schema.ResourceData, m interfa
 		return nil
 	}
 
-	return setAptProxyRepositoryToResourceData(repo, resourceData)
+	return setDockerProxyRepositoryToResourceData(repo, resourceData)
 }
 
-func resourceAptProxyRepositoryUpdate(resourceData *schema.ResourceData, m interface{}) error {
+func resourceDockerProxyRepositoryUpdate(resourceData *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	repoName := resourceData.Id()
-	repo := getAptProxyRepositoryFromResourceData(resourceData)
+	repo := getDockerProxyRepositoryFromResourceData(resourceData)
 
-	if err := client.Repository.Apt.Proxy.Update(repoName, repo); err != nil {
+	if err := client.Repository.Docker.Proxy.Update(repoName, repo); err != nil {
 		return err
 	}
 
-	return resourceAptProxyRepositoryRead(resourceData, m)
+	return resourceDockerProxyRepositoryRead(resourceData, m)
 }
 
-func resourceAptProxyRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {
+func resourceDockerProxyRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
-	return client.Repository.Apt.Proxy.Delete(resourceData.Id())
+	return client.Repository.Docker.Proxy.Delete(resourceData.Id())
 }
 
-func resourceAptProxyRepositoryExists(resourceData *schema.ResourceData, m interface{}) (bool, error) {
+func resourceDockerProxyRepositoryExists(resourceData *schema.ResourceData, m interface{}) (bool, error) {
 	client := m.(*nexus.NexusClient)
 
-	repo, err := client.Repository.Apt.Proxy.Get(resourceData.Id())
+	repo, err := client.Repository.Docker.Proxy.Get(resourceData.Id())
 	return repo != nil, err
 }

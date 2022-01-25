@@ -549,9 +549,8 @@ func getRepositoryFromResourceData(d *schema.ResourceData) repository.LegacyRepo
 		if indexURL != "" {
 			indexURLValue = &indexURL
 		}
-		indexType := repository.DockerProxyIndexType(dockerProxyConfig["index_type"].(string))
 		repo.DockerProxy = &repository.DockerProxy{
-			IndexType: &indexType,
+			IndexType: repository.DockerProxyIndexType(dockerProxyConfig["index_type"].(string)),
 			IndexURL:  indexURLValue,
 		}
 	}
