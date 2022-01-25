@@ -1,4 +1,4 @@
-resource "nexus_repository_apt_proxy" "dockerhub" {
+resource "nexus_repository_docker_proxy" "dockerhub" {
   name   = "dockerhub"
   online = true
 
