@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func testAccDataSourceRepositoryDockerHostedConfig(name string) string {
+func testAccDataSourceRepositoryDockerHostedConfig() string {
 	return `
 data "nexus_repository_docker_hosted" "acceptance" {
 	name   = nexus_repository_docker_hosted.acceptance.id
@@ -38,7 +38,7 @@ func TestAccDataSourceRepositoryDockerHosted(t *testing.T) {
 		Providers: acceptance.TestAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceRepositoryDockerHostedConfig(repo) + testAccDataSourceRepositoryDockerHostedConfig(repo.Name),
+				Config: testAccResourceRepositoryDockerHostedConfig(repo) + testAccDataSourceRepositoryDockerHostedConfig(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(dataSourceName, "id", repo.Name),

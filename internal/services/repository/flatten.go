@@ -57,14 +57,21 @@ func flattenComponent(component *repository.Component) []map[string]interface{} 
 }
 
 func flattenGroup(group *repository.Group) []map[string]interface{} {
-	if group == nil {
-		return nil
-	}
 	return []map[string]interface{}{
 		{
 			"member_names": tools.StringSliceToInterfaceSlice(group.MemberNames),
 		},
 	}
+}
+
+func flattenGroupDeploy(group *repository.GroupDeploy) []map[string]interface{} {
+	data := map[string]interface{}{
+		"member_names": tools.StringSliceToInterfaceSlice(group.MemberNames),
+	}
+	if group.WritableMember != nil {
+		data["writable_member"] = *group.WritableMember
+	}
+	return []map[string]interface{}{data}
 }
 
 func flattenHTTPClient(httpClient *repository.HTTPClient, d *schema.ResourceData) []map[string]interface{} {
