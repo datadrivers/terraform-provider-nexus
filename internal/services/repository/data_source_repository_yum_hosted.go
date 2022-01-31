@@ -8,7 +8,7 @@ import (
 
 func DataSourceRepositoryYumHosted() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this data source to get an existing yum repository.",
+		Description: "Use this data source to get an existing hosted yum repository.",
 
 		Read: dataSourceRepositoryYumHostedRead,
 		Schema: map[string]*schema.Schema{

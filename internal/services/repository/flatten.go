@@ -153,7 +153,7 @@ func flattenProxy(proxy *repository.Proxy) []map[string]interface{} {
 	}
 }
 
-func flattenStorage(storage *repository.Storage, d *schema.ResourceData) []map[string]interface{} {
+func flattenStorage(storage *repository.Storage) []map[string]interface{} {
 	if storage == nil {
 		return nil
 	}
@@ -165,7 +165,7 @@ func flattenStorage(storage *repository.Storage, d *schema.ResourceData) []map[s
 	}
 }
 
-func flattenHostedStorage(storage *repository.HostedStorage, d *schema.ResourceData) []map[string]interface{} {
+func flattenHostedStorage(storage *repository.HostedStorage) []map[string]interface{} {
 	if storage == nil {
 		return nil
 	}

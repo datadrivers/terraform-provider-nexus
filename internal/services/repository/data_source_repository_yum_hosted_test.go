@@ -11,11 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func testAccDataSourceRepositoryYumHostedConfig(name string) string {
-	return fmt.Sprintf(`
+func testAccDataSourceRepositoryYumHostedConfig() string {
+	return `
 data "nexus_repository_yum_hosted" "acceptance" {
-	name   = nexus_repository_yum_hosted.%s.id
-}`, name)
+	name   = nexus_repository_yum_hosted.acceptance.id
+}`
 }
 
 func TestAccDataSourceRepositoryYumHosted(t *testing.T) {
@@ -37,7 +37,7 @@ func TestAccDataSourceRepositoryYumHosted(t *testing.T) {
 		Providers: acceptance.TestAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceRepositoryYumHostedConfig(repo) + testAccDataSourceRepositoryYumHostedConfig(repo.Name),
+				Config: testAccResourceRepositoryYumHostedConfig(repo) + testAccDataSourceRepositoryYumHostedConfig(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(dataSourceName, "id", repo.Name),
