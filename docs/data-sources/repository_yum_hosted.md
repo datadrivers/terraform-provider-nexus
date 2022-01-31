@@ -2,10 +2,10 @@
 page_title: "Data Source nexus_repository_yum_hosted"
 subcategory: "Repository"
 description: |-
-  Use this data source to get an existing yum repository.
+  Use this data source to get an existing hosted yum repository.
 ---
 # Data Source nexus_repository_yum_hosted
-Use this data source to get an existing yum repository.
+Use this data source to get an existing hosted yum repository.
 ## Example Usage
 ```terraform
 data "nexus_repository_yum_hosted" "yummy" {
@@ -53,4 +53,3 @@ Read-Only:
 - **blob_store_name** (String)
 - **strict_content_type_validation** (Boolean)
 - **write_policy** (String)
-
