@@ -15,7 +15,7 @@ import (
 
 const (
 	resourceRepositoryYumHostedTemplateString = `
-resource "nexus_repository_yum_hosted" "{{ .Name }}" {
+resource "nexus_repository_yum_hosted" "acceptance" {
 	name   = "{{ .Name }}"
 	online = {{ .Online }}
 
@@ -85,7 +85,7 @@ func testAccResourceRepositoryYumHostedConfig(repo repository.YumHostedRepositor
 
 func TestAccResourceRepositoryYumHosted(t *testing.T) {
 	repo := testAccResourceRepositoryYumHosted()
-	resourceName := fmt.Sprintf("nexus_repository_yum_hosted.%s", repo.Name)
+	resourceName := "nexus_repository_yum_hosted.acceptance"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { acceptance.AccPreCheck(t) },

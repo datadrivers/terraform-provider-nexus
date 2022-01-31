@@ -89,7 +89,7 @@ func setDockerGroupRepositoryToResourceData(repo *repository.DockerGroupReposito
 		return err
 	}
 
-	if err := resourceData.Set("storage", flattenStorage(&repo.Storage, resourceData)); err != nil {
+	if err := resourceData.Set("storage", flattenStorage(&repo.Storage)); err != nil {
 		return err
 	}
 

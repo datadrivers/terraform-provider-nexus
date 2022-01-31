@@ -103,7 +103,7 @@ func setDockerHostedRepositoryToResourceData(repo *repository.DockerHostedReposi
 		return err
 	}
 
-	if err := resourceData.Set("storage", flattenHostedStorage(&repo.Storage, resourceData)); err != nil {
+	if err := resourceData.Set("storage", flattenHostedStorage(&repo.Storage)); err != nil {
 		return err
 	}
 

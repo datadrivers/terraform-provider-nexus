@@ -100,7 +100,7 @@ func setYumHostedRepositoryToResourceData(repo *repository.YumHostedRepository, 
 	resourceData.Set("repodata_depth", repo.Yum.RepodataDepth)
 	resourceData.Set("deploy_policy", repo.Yum.DeployPolicy)
 
-	if err := resourceData.Set("storage", flattenHostedStorage(&repo.Storage, resourceData)); err != nil {
+	if err := resourceData.Set("storage", flattenHostedStorage(&repo.Storage)); err != nil {
 		return err
 	}
 

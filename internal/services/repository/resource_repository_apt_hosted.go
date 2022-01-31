@@ -120,7 +120,7 @@ func setAptHostedRepositoryToResourceData(repo *repository.AptHostedRepository, 
 	resourceData.Set("online", repo.Online)
 	resourceData.Set("distribution", repo.Apt.Distribution)
 
-	if err := resourceData.Set("storage", flattenHostedStorage(&repo.Storage, resourceData)); err != nil {
+	if err := resourceData.Set("storage", flattenHostedStorage(&repo.Storage)); err != nil {
 		return err
 	}
 
