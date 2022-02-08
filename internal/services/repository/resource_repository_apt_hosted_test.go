@@ -14,46 +14,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-const (
-	resourceRepositoryAptHostedTemplateString = `
-resource "nexus_repository_apt_hosted" "acceptance" {
-	name   = "{{ .Name }}"
-	online = {{ .Online }}
-
-	distribution = "{{ .Apt.Distribution }}"
-	signing {
-		keypair = "{{ .AptSigning.Keypair }}"
-{{- if .AptSigning.Passphrase }}
-		passphrase = "{{ .AptSigning.Passphrase }}"
-{{- end }}
-	}
-
-	storage {
-		blob_store_name                = "{{ .Storage.BlobStoreName }}"
-		strict_content_type_validation = {{ .Storage.StrictContentTypeValidation }}
-		{{- if .Storage.WritePolicy }}
-		write_policy                   = "{{ .Storage.WritePolicy }}"
-		{{- end }}
-	}
-
-{{ if .Cleanup }}
-	cleanup {
-		policy_names = [
-		{{- range $val := .Cleanup.PolicyNames }}
-			"{{ $val }}",
-		{{ end -}}
-		]
-	}
-{{ end -}}
-{{ if .Component }}
-	component {
-		proprietary_components = {{ .Component.ProprietaryComponents }}
-	}
-{{ end -}}
-}
-`
-)
-
 func testAccResourceRepositoryAptHosted() repository.AptHostedRepository {
 	writePolicy := repository.StorageWritePolicyAllow
 
@@ -83,7 +43,7 @@ func testAccResourceRepositoryAptHosted() repository.AptHostedRepository {
 
 func testAccResourceRepositoryAptHostedConfig(repo repository.AptHostedRepository) string {
 	buf := &bytes.Buffer{}
-	resourceRepositoryAptHostedTemplate := template.Must(template.New("AptHostedRepository").Funcs(acceptance.TemplateFuncMap).Parse(resourceRepositoryAptHostedTemplateString))
+	resourceRepositoryAptHostedTemplate := template.Must(template.New("AptHostedRepository").Funcs(acceptance.TemplateFuncMap).Parse(acceptance.TemplateStringRepositoryAptHosted))
 	if err := resourceRepositoryAptHostedTemplate.Execute(buf, repo); err != nil {
 		panic(err)
 	}

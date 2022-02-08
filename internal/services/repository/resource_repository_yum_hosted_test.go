@@ -13,43 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-const (
-	resourceRepositoryYumHostedTemplateString = `
-resource "nexus_repository_yum_hosted" "acceptance" {
-	name   = "{{ .Name }}"
-	online = {{ .Online }}
-
-	{{- if .Yum.DeployPolicy }}
-	deploy_policy  = "{{ .Yum.DeployPolicy }}"
-	{{- end }}
-	repodata_depth = {{ .Yum.RepodataDepth }}
-
-	storage {
-		blob_store_name                = "{{ .Storage.BlobStoreName }}"
-		strict_content_type_validation = {{ .Storage.StrictContentTypeValidation }}
-		{{- if .Storage.WritePolicy }}
-		write_policy                   = "{{ .Storage.WritePolicy }}"
-		{{- end }}
-	}
-
-{{ if .Cleanup }}
-	cleanup {
-		policy_names = [
-		{{- range $val := .Cleanup.PolicyNames }}
-			"{{ $val }}",
-		{{ end -}}
-		]
-	}
-{{ end -}}
-{{ if .Component }}
-	component {
-		proprietary_components = {{ .Component.ProprietaryComponents }}
-	}
-{{ end -}}
-}
-`
-)
-
 func testAccResourceRepositoryYumHosted() repository.YumHostedRepository {
 	writePolicy := repository.StorageWritePolicyAllow
 	deployPolicy := repository.YumDeployPolicyPermissive
@@ -76,7 +39,7 @@ func testAccResourceRepositoryYumHosted() repository.YumHostedRepository {
 
 func testAccResourceRepositoryYumHostedConfig(repo repository.YumHostedRepository) string {
 	buf := &bytes.Buffer{}
-	resourceRepositoryYumHostedTemplate := template.Must(template.New("YumHostedRepository").Funcs(acceptance.TemplateFuncMap).Parse(resourceRepositoryYumHostedTemplateString))
+	resourceRepositoryYumHostedTemplate := template.Must(template.New("YumHostedRepository").Funcs(acceptance.TemplateFuncMap).Parse(acceptance.TemplateStringRepositoryYumHosted))
 	if err := resourceRepositoryYumHostedTemplate.Execute(buf, repo); err != nil {
 		panic(err)
 	}

@@ -15,49 +15,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-const (
-	resourceRepositoryDockerHostedTemplateString = `
-resource "nexus_repository_docker_hosted" "acceptance" {
-	name   = "{{ .Name }}"
-	online = {{ .Online }}
-
-	docker {
-		force_basic_auth = "{{ .Docker.ForceBasicAuth }}"
-{{- if .Docker.HTTPPort }}
-		http_port = "{{ .Docker.HTTPPort }}"
-{{- end }}
-{{- if .Docker.HTTPSPort }}
-		https_port = "{{ .Docker.HTTPSPort }}"
-{{- end }}
-		v1_enabled = "{{ .Docker.V1Enabled }}"
-	}
-
-	storage {
-		blob_store_name                = "{{ .Storage.BlobStoreName }}"
-		strict_content_type_validation = {{ .Storage.StrictContentTypeValidation }}
-		{{- if .Storage.WritePolicy }}
-		write_policy                   = "{{ .Storage.WritePolicy }}"
-		{{- end }}
-	}
-
-{{ if .Cleanup }}
-	cleanup {
-		policy_names = [
-		{{- range $val := .Cleanup.PolicyNames }}
-			"{{ $val }}",
-		{{ end -}}
-		]
-	}
-{{ end -}}
-{{ if .Component }}
-	component {
-		proprietary_components = {{ .Component.ProprietaryComponents }}
-	}
-{{ end -}}
-}
-`
-)
-
 func testAccResourceRepositoryDockerHosted() repository.DockerHostedRepository {
 	writePolicy := repository.StorageWritePolicyAllow
 
@@ -86,7 +43,7 @@ func testAccResourceRepositoryDockerHosted() repository.DockerHostedRepository {
 
 func testAccResourceRepositoryDockerHostedConfig(repo repository.DockerHostedRepository) string {
 	buf := &bytes.Buffer{}
-	resourceRepositoryDockerHostedTemplate := template.Must(template.New("DockerHostedRepository").Funcs(acceptance.TemplateFuncMap).Parse(resourceRepositoryDockerHostedTemplateString))
+	resourceRepositoryDockerHostedTemplate := template.Must(template.New("DockerHostedRepository").Funcs(acceptance.TemplateFuncMap).Parse(acceptance.TemplateStringRepositoryDockerHosted))
 	if err := resourceRepositoryDockerHostedTemplate.Execute(buf, repo); err != nil {
 		panic(err)
 	}
