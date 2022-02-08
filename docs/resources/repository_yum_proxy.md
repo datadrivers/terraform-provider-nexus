@@ -1,25 +1,16 @@
 ---
-page_title: "Resource nexus_repository_docker_proxy"
+page_title: "Resource nexus_repository_yum_proxy"
 subcategory: "Repository"
 description: |-
-  Use this resource to create a docker proxy repository.
+  Use this resource to create a yum proxy repository.
 ---
-# Resource nexus_repository_docker_proxy
-Use this resource to create a docker proxy repository.
+# Resource nexus_repository_yum_proxy
+Use this resource to create a yum proxy repository.
 ## Example Usage
 ```terraform
-resource "nexus_repository_docker_proxy" "dockerhub" {
-  name   = "dockerhub"
+resource "nexus_repository_yum_proxy" "centos" {
+  name   = "centos"
   online = true
-
-  docker {
-    force_basic_auth = false
-    v1_enabled       = false
-  }
-
-  docker_proxy {
-    index_hub = "HUB"
-  }
 
   storage {
     blob_store_name                = "default"
@@ -27,7 +18,7 @@ resource "nexus_repository_docker_proxy" "dockerhub" {
   }
 
   proxy {
-    remote_url       = "https://registry-1.docker.io"
+    remote_url       = "http://mirror.centos.org/centos/"
     content_max_age  = 1440
     metadata_max_age = 1440
   }
@@ -48,8 +39,6 @@ resource "nexus_repository_docker_proxy" "dockerhub" {
 
 ### Required
 
-- **docker** (Block List, Min: 1, Max: 1) docker contains the configuration of the docker repository (see [below for nested schema](#nestedblock--docker))
-- **docker_proxy** (Block List, Min: 1, Max: 1) docker_proxy contains the configuration of the docker index (see [below for nested schema](#nestedblock--docker_proxy))
 - **name** (String) A unique identifier for this repository
 - **proxy** (Block List, Min: 1, Max: 1) Configuration for the proxy repository (see [below for nested schema](#nestedblock--proxy))
 - **storage** (Block List, Min: 1, Max: 1) The storage configuration of the repository (see [below for nested schema](#nestedblock--storage))
@@ -61,36 +50,11 @@ resource "nexus_repository_docker_proxy" "dockerhub" {
 - **negative_cache** (Block List, Max: 1) Configuration of the negative cache handling (see [below for nested schema](#nestedblock--negative_cache))
 - **online** (Boolean) Whether this repository accepts incoming requests
 - **routing_rule** (String) The name of the routing rule assigned to this repository
+- **yum_signing** (Block List, Max: 1) Contains signing data of repositores (see [below for nested schema](#nestedblock--yum_signing))
 
 ### Read-Only
 
 - **id** (String) Used to identify resource at nexus
-
-<a id="nestedblock--docker"></a>
-### Nested Schema for `docker`
-
-Required:
-
-- **force_basic_auth** (Boolean) Whether to force authentication (Docker Bearer Token Realm required if false)
-- **v1_enabled** (Boolean) Whether to allow clients to use the V1 API to interact with this repository
-
-Optional:
-
-- **http_port** (Number) Create an HTTP connector at specified port
-- **https_port** (Number) Create an HTTPS connector at specified port
-
-
-<a id="nestedblock--docker_proxy"></a>
-### Nested Schema for `docker_proxy`
-
-Required:
-
-- **index_type** (String) Type of Docker Index. Possible values: `HUB`, `REGISTRY` or `CUSTOM`
-
-Optional:
-
-- **index_url** (String) Url of Docker Index to use
-
 
 <a id="nestedblock--proxy"></a>
 ### Nested Schema for `proxy`
@@ -171,9 +135,21 @@ Optional:
 
 - **enabled** (Boolean) Whether to cache responses for content not present in the proxied repository
 - **ttl** (Number) How long to cache the fact that a file was not found in the repository (in minutes)
+
+
+<a id="nestedblock--yum_signing"></a>
+### Nested Schema for `yum_signing`
+
+Required:
+
+- **keypair** (String, Sensitive) PGP signing key pair (armored private key e.g. gpg --export-secret-key --armor)
+
+Optional:
+
+- **passphrase** (String, Sensitive) Passphrase to access PGP signing key
 ## Import
 Import is supported using the following syntax:
 ```shell
 # import using the name of repository
-terraform import nexus_repository_docker_proxy.dockerhub dockerhub
+terraform import nexus_repository_yum_proxy.centos centos
 ```

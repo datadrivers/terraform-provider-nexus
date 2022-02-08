@@ -1,27 +1,23 @@
 package repository
 
 import (
-	"regexp"
-	"strings"
-
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	repositorySchema "github.com/datadrivers/terraform-provider-nexus/internal/schema/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-func ResourceRepositoryDockerProxy() *schema.Resource {
+func ResourceRepositoryYumProxy() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this resource to create a docker proxy repository.",
+		Description: "Use this resource to create a yum proxy repository.",
 
-		Create: resourceDockerProxyRepositoryCreate,
-		Delete: resourceDockerProxyRepositoryDelete,
-		Exists: resourceDockerProxyRepositoryExists,
-		Read:   resourceDockerProxyRepositoryRead,
-		Update: resourceDockerProxyRepositoryUpdate,
+		Create: resourceYumProxyRepositoryCreate,
+		Delete: resourceYumProxyRepositoryDelete,
+		Exists: resourceYumProxyRepositoryExists,
+		Read:   resourceYumProxyRepositoryRead,
+		Update: resourceYumProxyRepositoryUpdate,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
@@ -38,55 +34,24 @@ func ResourceRepositoryDockerProxy() *schema.Resource {
 			"proxy":          repositorySchema.ResourceProxy,
 			"routing_rule":   repositorySchema.ResourceRoutingRule,
 			"storage":        repositorySchema.ResourceStorage,
-			// Docker proxy schemas
-			"docker": repositorySchema.ResourceDocker,
-			"docker_proxy": {
-				Description: "docker_proxy contains the configuration of the docker index",
-				Type:        schema.TypeList,
-				Required:    true,
-				MaxItems:    1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"index_type": {
-							Description:  "Type of Docker Index. Possible values: `HUB`, `REGISTRY` or `CUSTOM`",
-							Required:     true,
-							Type:         schema.TypeString,
-							ValidateFunc: validation.StringInSlice([]string{string(repository.DockerProxyIndexTypeHub), string(repository.DockerProxyIndexTypeRegistry), string(repository.DockerProxyIndexTypeCustom)}, false),
-						},
-						"index_url": {
-							Description:  "Url of Docker Index to use",
-							Optional:     true,
-							Type:         schema.TypeString,
-							ValidateFunc: validation.StringMatch(regexp.MustCompile("http[s]?://.*"), "index_url should be in the format 'http://www.example.com'"),
-						},
-					},
-				},
-			},
+			// Yum proxy schemas
+			"yum_signing": repositorySchema.ResourceYumSigning,
 		},
 	}
 }
 
-func getDockerProxyRepositoryFromResourceData(resourceData *schema.ResourceData) repository.DockerProxyRepository {
+func getYumProxyRepositoryFromResourceData(resourceData *schema.ResourceData) repository.YumProxyRepository {
 	httpClientConfig := resourceData.Get("http_client").([]interface{})[0].(map[string]interface{})
 	negativeCacheConfig := resourceData.Get("negative_cache").([]interface{})[0].(map[string]interface{})
 	proxyConfig := resourceData.Get("proxy").([]interface{})[0].(map[string]interface{})
 	storageConfig := resourceData.Get("storage").([]interface{})[0].(map[string]interface{})
-	dockerConfig := resourceData.Get("docker").([]interface{})[0].(map[string]interface{})
-	dockerProxyConfig := resourceData.Get("docker_proxy").([]interface{})[0].(map[string]interface{})
 
-	repo := repository.DockerProxyRepository{
+	repo := repository.YumProxyRepository{
 		Name:   resourceData.Get("name").(string),
 		Online: resourceData.Get("online").(bool),
 		Storage: repository.Storage{
 			BlobStoreName:               storageConfig["blob_store_name"].(string),
 			StrictContentTypeValidation: storageConfig["strict_content_type_validation"].(bool),
-		},
-		Docker: repository.Docker{
-			ForceBasicAuth: dockerConfig["force_basic_auth"].(bool),
-			V1Enabled:      dockerConfig["v1_enabled"].(bool),
-		},
-		DockerProxy: repository.DockerProxy{
-			IndexType: repository.DockerProxyIndexType(dockerProxyConfig["index_type"].(string)),
 		},
 		HTTPClient: repository.HTTPClient{
 			AutoBlock: httpClientConfig["auto_block"].(bool),
@@ -103,20 +68,16 @@ func getDockerProxyRepositoryFromResourceData(resourceData *schema.ResourceData)
 		},
 	}
 
-	if httpPort, ok := dockerConfig["http_port"]; ok {
-		if httpPort.(int) > 0 {
-			repo.Docker.HTTPPort = tools.GetIntPointer(httpPort.(int))
-		}
-	}
+	yumSigningList := resourceData.Get("yum_signing").([]interface{})
+	if len(yumSigningList) > 0 && yumSigningList[0] != nil {
+		yumSigningConfig := yumSigningList[0].(map[string]interface{})
 
-	if httpsPort, ok := dockerConfig["https_port"]; ok {
-		if httpsPort.(int) > 0 {
-			repo.Docker.HTTPSPort = tools.GetIntPointer(httpsPort.(int))
+		repo.YumSigning = &repository.YumSigning{
+			Keypair: tools.GetStringPointer(yumSigningConfig["keypair"].(string)),
 		}
-	}
-
-	if dockerProxyConfig["index_url"].(string) != "" {
-		repo.DockerProxy.IndexURL = tools.GetStringPointer(strings.TrimSpace(dockerProxyConfig["index_url"].(string)))
+		if yumSigningConfig["passphrase"].(string) != "" {
+			repo.YumSigning.Passphrase = tools.GetStringPointer(yumSigningConfig["passphrase"].(string))
+		}
 	}
 
 	if routingRule, ok := resourceData.GetOk("routing_rule"); ok {
@@ -170,18 +131,10 @@ func getDockerProxyRepositoryFromResourceData(resourceData *schema.ResourceData)
 	return repo
 }
 
-func setDockerProxyRepositoryToResourceData(repo *repository.DockerProxyRepository, resourceData *schema.ResourceData) error {
+func setYumProxyRepositoryToResourceData(repo *repository.YumProxyRepository, resourceData *schema.ResourceData) error {
 	resourceData.SetId(repo.Name)
 	resourceData.Set("name", repo.Name)
 	resourceData.Set("online", repo.Online)
-
-	if err := resourceData.Set("docker", flattenDocker(&repo.Docker)); err != nil {
-		return err
-	}
-
-	if err := resourceData.Set("docker_proxy", flattenDockerProxy(&repo.DockerProxy)); err != nil {
-		return err
-	}
 
 	if repo.RoutingRuleName != nil {
 		resourceData.Set("routing_rule", repo.RoutingRuleName)
@@ -213,23 +166,23 @@ func setDockerProxyRepositoryToResourceData(repo *repository.DockerProxyReposito
 	return nil
 }
 
-func resourceDockerProxyRepositoryCreate(resourceData *schema.ResourceData, m interface{}) error {
+func resourceYumProxyRepositoryCreate(resourceData *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
-	repo := getDockerProxyRepositoryFromResourceData(resourceData)
+	repo := getYumProxyRepositoryFromResourceData(resourceData)
 
-	if err := client.Repository.Docker.Proxy.Create(repo); err != nil {
+	if err := client.Repository.Yum.Proxy.Create(repo); err != nil {
 		return err
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceDockerProxyRepositoryRead(resourceData, m)
+	return resourceYumProxyRepositoryRead(resourceData, m)
 }
 
-func resourceDockerProxyRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
+func resourceYumProxyRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
-	repo, err := client.Repository.Docker.Proxy.Get(resourceData.Id())
+	repo, err := client.Repository.Yum.Proxy.Get(resourceData.Id())
 	if err != nil {
 		return err
 	}
@@ -239,30 +192,30 @@ func resourceDockerProxyRepositoryRead(resourceData *schema.ResourceData, m inte
 		return nil
 	}
 
-	return setDockerProxyRepositoryToResourceData(repo, resourceData)
+	return setYumProxyRepositoryToResourceData(repo, resourceData)
 }
 
-func resourceDockerProxyRepositoryUpdate(resourceData *schema.ResourceData, m interface{}) error {
+func resourceYumProxyRepositoryUpdate(resourceData *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	repoName := resourceData.Id()
-	repo := getDockerProxyRepositoryFromResourceData(resourceData)
+	repo := getYumProxyRepositoryFromResourceData(resourceData)
 
-	if err := client.Repository.Docker.Proxy.Update(repoName, repo); err != nil {
+	if err := client.Repository.Yum.Proxy.Update(repoName, repo); err != nil {
 		return err
 	}
 
-	return resourceDockerProxyRepositoryRead(resourceData, m)
+	return resourceYumProxyRepositoryRead(resourceData, m)
 }
 
-func resourceDockerProxyRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {
+func resourceYumProxyRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
-	return client.Repository.Docker.Proxy.Delete(resourceData.Id())
+	return client.Repository.Yum.Proxy.Delete(resourceData.Id())
 }
 
-func resourceDockerProxyRepositoryExists(resourceData *schema.ResourceData, m interface{}) (bool, error) {
+func resourceYumProxyRepositoryExists(resourceData *schema.ResourceData, m interface{}) (bool, error) {
 	client := m.(*nexus.NexusClient)
 
-	repo, err := client.Repository.Docker.Proxy.Get(resourceData.Id())
+	repo, err := client.Repository.Yum.Proxy.Get(resourceData.Id())
 	return repo != nil, err
 }
