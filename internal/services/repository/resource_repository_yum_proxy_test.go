@@ -15,110 +15,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-const (
-	resourceRepositoryYumProxyTemplateString = `
-resource "nexus_repository_yum_proxy" "acceptance" {
-	name   = "{{ .Name }}"
-	online = {{ .Online }}
-
-{{ if .YumSigning }}
-	yum_signing {
-		keypair = "{{ .YumSigning.Keypair }}"
-{{ if .YumSigning.Passphrase }}
-		passphrase = "{{ .YumSigning.Passphrase }}"
-{{ end -}}
-	}
-{{ end -}}
-
-{{ if .RoutingRule }}
-	routing_rule = nexus_routing_rule.acceptance.name
-{{ end -}}
-
-{{ if .Storage }}
-	storage {
-		blob_store_name                = "{{ .Storage.BlobStoreName }}"
-		strict_content_type_validation = {{ .Storage.StrictContentTypeValidation }}
-	}
-{{ end -}}
-
-	proxy {
-		remote_url = "{{ .Proxy.RemoteURL }}"
-		{{ if .Proxy.ContentMaxAge }}
-			content_max_age = "{{ .Proxy.ContentMaxAge }}"
-		{{ end -}}
-		{{ if .Proxy.MetadataMaxAge }}
-			metadata_max_age = "{{ .Proxy.MetadataMaxAge }}"
-		{{ end -}}
-	}
-
-{{ if .Cleanup }}
-	cleanup {
-		policy_names = [
-		{{- range $val := .Cleanup.PolicyNames }}
-			"{{ $val }}",
-		{{ end -}}
-		]
-	}
-{{ end -}}
-
-{{ if .HTTPClient }}
-	http_client {
-		auto_block = {{ .HTTPClient.AutoBlock }}
-		blocked    = {{ .HTTPClient.Blocked }}
-
-		{{ if .HTTPClient.Authentication -}}
-		authentication {
-			ntlm_domain = "{{ .HTTPClient.Authentication.NTLMDomain }}"
-			ntlm_host   = "{{ .HTTPClient.Authentication.NTLMHost }}"
-			{{ if .HTTPClient.Authentication.Password -}}
-			password    = "{{ .HTTPClient.Authentication.Password }}"
-			{{ end -}}
-			type        = "{{ .HTTPClient.Authentication.Type }}"
-			{{ if .HTTPClient.Authentication.Username -}}
-			username    = "{{ .HTTPClient.Authentication.Username }}"
-			{{ end -}}
-		}
-		{{ end -}}
-
-		{{ if .HTTPClient.Connection -}}
-		connection {
-			{{ if .HTTPClient.Connection.EnableCircularRedirects -}}
-			enable_circular_redirects = {{ .HTTPClient.Connection.EnableCircularRedirects }}
-			{{ end -}}
-			{{ if .HTTPClient.Connection.EnableCookies -}}
-			enable_cookies = {{ .HTTPClient.Connection.EnableCookies }}
-			{{ end -}}
-			{{ if .HTTPClient.Connection.Retries -}}
-			retries = {{ .HTTPClient.Connection.Retries }}
-			{{ end -}}
-			{{ if .HTTPClient.Connection.Timeout -}}
-			timeout = {{ .HTTPClient.Connection.Timeout }}
-			{{ end -}}
-			{{ if .HTTPClient.Connection.UserAgentSuffix -}}
-			user_agent_suffix = "{{ .HTTPClient.Connection.UserAgentSuffix }}"
-			{{ end -}}
-			{{ if .HTTPClient.Connection.UseTrustStore -}}
-			use_trust_store = {{ .HTTPClient.Connection.UseTrustStore }}
-			{{ end -}}
-		}
-		{{ end -}}
-	}
-{{ end -}}
-
-{{ if .NegativeCache }}
-	negative_cache {
-		{{ if .NegativeCache.Enabled }}
-		enabled = {{ .NegativeCache.Enabled }}
-		{{ end -}}
-		{{ if .NegativeCache.TTL }}
-		ttl = {{ .NegativeCache.TTL }}
-		{{ end }}
-	}
-{{ end -}}
-}
-`
-)
-
 func testAccResourceRepositoryYumProxy() repository.YumProxyRepository {
 	enableCircularRedirects := true
 	enableCookies := true
@@ -171,7 +67,7 @@ func testAccResourceRepositoryYumProxy() repository.YumProxyRepository {
 
 func testAccResourceRepositoryYumProxyConfig(repo repository.YumProxyRepository) string {
 	buf := &bytes.Buffer{}
-	resourceRepositoryYumProxyTemplate := template.Must(template.New("YumProxyRepository").Funcs(acceptance.TemplateFuncMap).Parse(resourceRepositoryYumProxyTemplateString))
+	resourceRepositoryYumProxyTemplate := template.Must(template.New("YumProxyRepository").Funcs(acceptance.TemplateFuncMap).Parse(acceptance.TemplateStringRepositoryYumProxy))
 	if err := resourceRepositoryYumProxyTemplate.Execute(buf, repo); err != nil {
 		panic(err)
 	}

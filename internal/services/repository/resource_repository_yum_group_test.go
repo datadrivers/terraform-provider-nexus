@@ -14,41 +14,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-const (
-	resourceRepositoryYumGroupTemplateString = `
-resource "nexus_repository_yum_group" "acceptance" {
-	name   = "{{ .Name }}"
-	online = {{ .Online }}
-
-	storage {
-		blob_store_name                = "{{ .Storage.BlobStoreName }}"
-		strict_content_type_validation = {{ .Storage.StrictContentTypeValidation }}
-	}
-
-	group {
-		member_names = [
-		{{- range $val := .Group.MemberNames }}
-			"{{ $val }}",
-		{{ end -}}
-		]
-	}
-
-{{ if .YumSigning }}
-	yum_signing {
-		keypair = "{{ .YumSigning.Keypair }}"
-{{ if .YumSigning.Passphrase }}
-		passphrase = "{{ .YumSigning.Passphrase }}"
-{{ end -}}
-	}
-{{ end -}}
-
-	depends_on = [
-		nexus_repository_yum_hosted.acceptance
-	]
-}
-`
-)
-
 func testAccResourceRepositoryYumGroup() repository.YumGroupRepository {
 	return repository.YumGroupRepository{
 		Name:   fmt.Sprintf("test-repo-%s", acctest.RandString(10)),
@@ -69,7 +34,7 @@ func testAccResourceRepositoryYumGroup() repository.YumGroupRepository {
 
 func testAccResourceRepositoryYumGroupConfig(repo repository.YumGroupRepository) string {
 	buf := &bytes.Buffer{}
-	resourceRepositoryYumGroupTemplate := template.Must(template.New("YumGroupRepository").Funcs(acceptance.TemplateFuncMap).Parse(resourceRepositoryYumGroupTemplateString))
+	resourceRepositoryYumGroupTemplate := template.Must(template.New("YumGroupRepository").Funcs(acceptance.TemplateFuncMap).Parse(acceptance.TemplateStringRepositoryYumGroup))
 	if err := resourceRepositoryYumGroupTemplate.Execute(buf, repo); err != nil {
 		panic(err)
 	}

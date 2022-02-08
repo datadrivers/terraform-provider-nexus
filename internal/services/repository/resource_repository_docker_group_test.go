@@ -15,46 +15,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-const (
-	resourceRepositoryDockerGroupTemplateString = `
-resource "nexus_repository_docker_group" "acceptance" {
-	name   = "{{ .Name }}"
-	online = {{ .Online }}
-
-	docker {
-		force_basic_auth = "{{ .Docker.ForceBasicAuth }}"
-{{- if .Docker.HTTPPort }}
-		http_port = "{{ .Docker.HTTPPort }}"
-{{- end }}
-{{- if .Docker.HTTPSPort }}
-		https_port = "{{ .Docker.HTTPSPort }}"
-{{- end }}
-		v1_enabled = "{{ .Docker.V1Enabled }}"
-	}
-
-	storage {
-		blob_store_name                = "{{ .Storage.BlobStoreName }}"
-		strict_content_type_validation = {{ .Storage.StrictContentTypeValidation }}
-	}
-
-	group {
-		member_names = [
-		{{- range $val := .Group.MemberNames }}
-			"{{ $val }}",
-		{{ end -}}
-		]
-{{- if .Group.WritableMember }}
-		writable_member = "{{ .Group.WritableMember }}"
-{{- end }}
-	}
-
-	depends_on = [
-		nexus_repository_docker_hosted.acceptance
-	]
-}
-`
-)
-
 func testAccResourceRepositoryDockerGroup() repository.DockerGroupRepository {
 	return repository.DockerGroupRepository{
 		Name:   fmt.Sprintf("test-repo-%s", acctest.RandString(10)),
@@ -77,7 +37,7 @@ func testAccResourceRepositoryDockerGroup() repository.DockerGroupRepository {
 
 func testAccResourceRepositoryDockerGroupConfig(repo repository.DockerGroupRepository) string {
 	buf := &bytes.Buffer{}
-	resourceRepositoryDockerGroupTemplate := template.Must(template.New("DockerGroupRepository").Funcs(acceptance.TemplateFuncMap).Parse(resourceRepositoryDockerGroupTemplateString))
+	resourceRepositoryDockerGroupTemplate := template.Must(template.New("DockerGroupRepository").Funcs(acceptance.TemplateFuncMap).Parse(acceptance.TemplateStringRepositoryDockerGroup))
 	if err := resourceRepositoryDockerGroupTemplate.Execute(buf, repo); err != nil {
 		panic(err)
 	}
