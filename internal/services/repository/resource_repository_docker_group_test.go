@@ -45,6 +45,10 @@ func testAccResourceRepositoryDockerGroupConfig(repo repository.DockerGroupRepos
 }
 
 func TestAccResourceRepositoryDockerGroup(t *testing.T) {
+	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "true" {
+		t.Skip("Skipping Nexus Pro tests")
+	}
+
 	repoHosted := testAccResourceRepositoryDockerHosted()
 	repoGroup := testAccResourceRepositoryDockerGroup()
 	repoGroup.Group.MemberNames = append(repoGroup.Group.MemberNames, repoHosted.Name)
