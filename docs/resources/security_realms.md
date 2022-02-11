@@ -29,5 +29,5 @@ resource "nexus_security_realms" "example" {
 Import is supported using the following syntax:
 ```shell
 # import of active security realms
-terraform import nexus_security_ldap.example active
+terraform import nexus_security_realms.example active
 ```
