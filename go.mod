@@ -7,7 +7,7 @@ require (
 	github.com/datadrivers/go-nexus-client v1.3.4
 	github.com/datadrivers/terraform-plugin-docs v0.5.1-6
 	github.com/golangci/golangci-lint v1.44.2
-	github.com/hashicorp/terraform-plugin-sdk/v2 v2.11.0
+	github.com/hashicorp/terraform-plugin-sdk/v2 v2.12.0
 	github.com/stretchr/testify v1.7.1
 )
 
