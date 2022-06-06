@@ -65,10 +65,10 @@ func TestAccResourceRepositoryNpmGroup(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportStateId:           repo.Name,
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      resourceName,
+				ImportStateId:     repo.Name,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})

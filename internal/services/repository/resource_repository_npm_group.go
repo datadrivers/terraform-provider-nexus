@@ -48,7 +48,7 @@ func getNpmGroupRepositoryFromResourceData(resourceData *schema.ResourceData) re
 			BlobStoreName:               storageConfig["blob_store_name"].(string),
 			StrictContentTypeValidation: storageConfig["strict_content_type_validation"].(bool),
 		},
-		Group: repository.GroupDeploy {
+		Group: repository.GroupDeploy{
 			MemberNames: groupMemberNames,
 		},
 	}

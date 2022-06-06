@@ -57,9 +57,9 @@ func testAccResourceRepositoryNpmProxy() repository.NpmProxyRepository {
 			MetadataMaxAge: 770,
 			RemoteURL:      "https://npmjs.org",
 		},
-		Npm: &repository.Npm {
+		Npm: &repository.Npm{
 			RemoveNonCataloged: true,
-			RemoveQuarantined: true,
+			RemoveQuarantined:  true,
 		},
 	}
 }

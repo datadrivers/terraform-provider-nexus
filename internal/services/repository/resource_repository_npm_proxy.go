@@ -77,7 +77,7 @@ func getNpmProxyRepositoryFromResourceData(resourceData *schema.ResourceData) re
 		},
 		Npm: &repository.Npm{
 			RemoveNonCataloged: resourceData.Get("remove_non_cataloged").(bool),
-			RemoveQuarantined: resourceData.Get("remove_quarantined").(bool),
+			RemoveQuarantined:  resourceData.Get("remove_quarantined").(bool),
 		},
 	}
 
