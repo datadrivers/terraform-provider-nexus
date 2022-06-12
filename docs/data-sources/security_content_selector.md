@@ -17,11 +17,10 @@ data "nexus_security_content_selector" "example" {
 
 ### Required
 
-- **name** (String) Content selector name
+- `name` (String) Content selector name
 
 ### Read-Only
 
-- **description** (String) A description of the content selector
-- **expression** (String) The content selector expression
-- **id** (String) Used to identify data source at nexus
-
+- `description` (String) A description of the content selector
+- `expression` (String) The content selector expression
+- `id` (String) Used to identify data source at nexus

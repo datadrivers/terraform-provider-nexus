@@ -28,22 +28,22 @@ resource "nexus_security_saml" "example" {
 
 ### Required
 
-- **idp_metadata** (String) SAML Identity Provider Metadata XML
-- **username_attribute** (String) IdP field mappings for username
+- `idp_metadata` (String) SAML Identity Provider Metadata XML
+- `username_attribute` (String) IdP field mappings for username
 
 ### Optional
 
-- **email_attribute** (String) IdP field mappings for user's email address
-- **entity_id** (String) Entity ID URI
-- **first_name_attribute** (String) IdP field mappings for user's given name
-- **groups_attribute** (String) IdP field mappings for user's groups
-- **last_name_attribute** (String) IdP field mappings for user's family name
-- **validate_assertion_signature** (Boolean) By default, if a signing key is found in the IdP metadata, then NXRM will attempt to validate signatures on the assertions.
-- **validate_response_signature** (Boolean) By default, if a signing key is found in the IdP metadata, then NXRM will attempt to validate signatures on the response.
+- `email_attribute` (String) IdP field mappings for user's email address
+- `entity_id` (String) Entity ID URI
+- `first_name_attribute` (String) IdP field mappings for user's given name
+- `groups_attribute` (String) IdP field mappings for user's groups
+- `last_name_attribute` (String) IdP field mappings for user's family name
+- `validate_assertion_signature` (Boolean) By default, if a signing key is found in the IdP metadata, then NXRM will attempt to validate signatures on the assertions.
+- `validate_response_signature` (Boolean) By default, if a signing key is found in the IdP metadata, then NXRM will attempt to validate signatures on the response.
 
 ### Read-Only
 
-- **id** (String) Used to identify resource at nexus
+- `id` (String) Used to identify resource at nexus
 ## Import
 Import is supported using the following syntax:
 ```shell

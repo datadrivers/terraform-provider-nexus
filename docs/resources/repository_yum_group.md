@@ -42,25 +42,25 @@ resource "nexus_repository_yum_group" "group" {
 
 ### Required
 
-- **group** (Block List, Min: 1, Max: 1) Configuration for repository group (see [below for nested schema](#nestedblock--group))
-- **name** (String) A unique identifier for this repository
-- **storage** (Block List, Min: 1, Max: 1) The storage configuration of the repository (see [below for nested schema](#nestedblock--storage))
+- `group` (Block List, Min: 1, Max: 1) Configuration for repository group (see [below for nested schema](#nestedblock--group))
+- `name` (String) A unique identifier for this repository
+- `storage` (Block List, Min: 1, Max: 1) The storage configuration of the repository (see [below for nested schema](#nestedblock--storage))
 
 ### Optional
 
-- **online** (Boolean) Whether this repository accepts incoming requests
-- **yum_signing** (Block List, Max: 1) Contains signing data of repositores (see [below for nested schema](#nestedblock--yum_signing))
+- `online` (Boolean) Whether this repository accepts incoming requests
+- `yum_signing` (Block List, Max: 1) Contains signing data of repositores (see [below for nested schema](#nestedblock--yum_signing))
 
 ### Read-Only
 
-- **id** (String) Used to identify resource at nexus
+- `id` (String) Used to identify resource at nexus
 
 <a id="nestedblock--group"></a>
 ### Nested Schema for `group`
 
 Required:
 
-- **member_names** (Set of String) Member repositories names
+- `member_names` (Set of String) Member repositories names
 
 
 <a id="nestedblock--storage"></a>
@@ -68,11 +68,11 @@ Required:
 
 Required:
 
-- **blob_store_name** (String) Blob store used to store repository contents
+- `blob_store_name` (String) Blob store used to store repository contents
 
 Optional:
 
-- **strict_content_type_validation** (Boolean) Whether to validate uploaded content's MIME type appropriate for the repository format
+- `strict_content_type_validation` (Boolean) Whether to validate uploaded content's MIME type appropriate for the repository format
 
 
 <a id="nestedblock--yum_signing"></a>
@@ -80,11 +80,11 @@ Optional:
 
 Required:
 
-- **keypair** (String, Sensitive) PGP signing key pair (armored private key e.g. gpg --export-secret-key --armor)
+- `keypair` (String, Sensitive) PGP signing key pair (armored private key e.g. gpg --export-secret-key --armor)
 
 Optional:
 
-- **passphrase** (String, Sensitive) Passphrase to access PGP signing key
+- `passphrase` (String, Sensitive) Passphrase to access PGP signing key
 ## Import
 Import is supported using the following syntax:
 ```shell

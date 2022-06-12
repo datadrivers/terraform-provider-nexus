@@ -17,22 +17,22 @@ data "nexus_repository_yum_group" "yum_group" {
 
 ### Required
 
-- **name** (String) A unique identifier for this repository
+- `name` (String) A unique identifier for this repository
 
 ### Read-Only
 
-- **group** (List of Object) Configuration for repository group (see [below for nested schema](#nestedatt--group))
-- **id** (String) Used to identify data source at nexus
-- **online** (Boolean) Whether this repository accepts incoming requests
-- **storage** (List of Object) The storage configuration of the repository (see [below for nested schema](#nestedatt--storage))
-- **yum_signing** (List of Object) Contains signing data of repositores (see [below for nested schema](#nestedatt--yum_signing))
+- `group` (List of Object) Configuration for repository group (see [below for nested schema](#nestedatt--group))
+- `id` (String) Used to identify data source at nexus
+- `online` (Boolean) Whether this repository accepts incoming requests
+- `storage` (List of Object) The storage configuration of the repository (see [below for nested schema](#nestedatt--storage))
+- `yum_signing` (List of Object) Contains signing data of repositores (see [below for nested schema](#nestedatt--yum_signing))
 
 <a id="nestedatt--group"></a>
 ### Nested Schema for `group`
 
 Read-Only:
 
-- **member_names** (Set of String)
+- `member_names` (Set of String)
 
 
 <a id="nestedatt--storage"></a>
@@ -40,8 +40,8 @@ Read-Only:
 
 Read-Only:
 
-- **blob_store_name** (String)
-- **strict_content_type_validation** (Boolean)
+- `blob_store_name` (String)
+- `strict_content_type_validation` (Boolean)
 
 
 <a id="nestedatt--yum_signing"></a>
@@ -49,5 +49,5 @@ Read-Only:
 
 Read-Only:
 
-- **keypair** (String)
-- **passphrase** (String)
+- `keypair` (String)
+- `passphrase` (String)

@@ -22,13 +22,16 @@ resource "nexus_content_selector" "docker_public" {
 
 ### Required
 
-- **expression** (String) The content selector expression
-- **name** (String) Content selector name
+- `expression` (String) The content selector expression
+- `name` (String) Content selector name
 
 ### Optional
 
-- **description** (String) A description of the content selector
-- **id** (String) The ID of this resource.
+- `description` (String) A description of the content selector
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 ## Import
 Import is supported using the following syntax:
 ```shell

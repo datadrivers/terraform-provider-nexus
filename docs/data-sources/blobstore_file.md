@@ -17,22 +17,21 @@ data "nexus_blobstore_file" "default" {
 
 ### Required
 
-- **name** (String) Blobstore name
+- `name` (String) Blobstore name
 
 ### Read-Only
 
-- **available_space_in_bytes** (Number) Available space in Bytes
-- **blob_count** (Number) Count of blobs
-- **id** (String) Used to identify data source at nexus
-- **path** (String) The path to the blobstore contents
-- **soft_quota** (List of Object) Soft quota of the blobstore (see [below for nested schema](#nestedatt--soft_quota))
-- **total_size_in_bytes** (Number) The total size of the blobstore in Bytes
+- `available_space_in_bytes` (Number) Available space in Bytes
+- `blob_count` (Number) Count of blobs
+- `id` (String) Used to identify data source at nexus
+- `path` (String) The path to the blobstore contents
+- `soft_quota` (List of Object) Soft quota of the blobstore (see [below for nested schema](#nestedatt--soft_quota))
+- `total_size_in_bytes` (Number) The total size of the blobstore in Bytes
 
 <a id="nestedatt--soft_quota"></a>
 ### Nested Schema for `soft_quota`
 
 Read-Only:
 
-- **limit** (Number)
-- **type** (String)
-
+- `limit` (Number)
+- `type` (String)

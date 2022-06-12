@@ -25,28 +25,28 @@ resource "nexus_blobstore_group" "example" {
 
 ### Required
 
-- **fill_policy** (String) The policy how to fill the members. Possible values: `roundRobin` or `writeToFirst`
-- **members** (Set of String) List of the names of blob stores that are members of this group
-- **name** (String) Blobstore name
+- `fill_policy` (String) The policy how to fill the members. Possible values: `roundRobin` or `writeToFirst`
+- `members` (Set of String) List of the names of blob stores that are members of this group
+- `name` (String) Blobstore name
 
 ### Optional
 
-- **soft_quota** (Block List, Max: 1) Soft quota of the blobstore (see [below for nested schema](#nestedblock--soft_quota))
+- `soft_quota` (Block List, Max: 1) Soft quota of the blobstore (see [below for nested schema](#nestedblock--soft_quota))
 
 ### Read-Only
 
-- **available_space_in_bytes** (Number) Available space in Bytes
-- **blob_count** (Number) Count of blobs
-- **id** (String) Used to identify resource at nexus
-- **total_size_in_bytes** (Number) The total size of the blobstore in Bytes
+- `available_space_in_bytes` (Number) Available space in Bytes
+- `blob_count` (Number) Count of blobs
+- `id` (String) Used to identify resource at nexus
+- `total_size_in_bytes` (Number) The total size of the blobstore in Bytes
 
 <a id="nestedblock--soft_quota"></a>
 ### Nested Schema for `soft_quota`
 
 Required:
 
-- **limit** (Number) The limit in Bytes. Minimum value is 1000000
-- **type** (String) The type to use such as spaceRemainingQuota, or spaceUsedQuota
+- `limit` (Number) The limit in Bytes. Minimum value is 1000000
+- `type` (String) The type to use such as spaceRemainingQuota, or spaceUsedQuota
 ## Import
 Import is supported using the following syntax:
 ```shell

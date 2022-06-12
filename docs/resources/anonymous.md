@@ -15,11 +15,10 @@ Use this resource to change the anonymous configuration of the nexus repository 
 
 ### Optional
 
-- **enabled** (Boolean) Activate the anonymous access to the repository manager. Default: false
-- **realm_name** (String) The name of the used realm. Default: "NexusAuthorizingRealm"
-- **user_id** (String) The user id used by anonymous access. Default: "anonymous"
+- `enabled` (Boolean) Activate the anonymous access to the repository manager. Default: false
+- `realm_name` (String) The name of the used realm. Default: "NexusAuthorizingRealm"
+- `user_id` (String) The user id used by anonymous access. Default: "anonymous"
 
 ### Read-Only
 
-- **id** (String) Used to identify resource at nexus
-
+- `id` (String) Used to identify resource at nexus

@@ -17,25 +17,25 @@ data "nexus_repository_docker_group" "group" {
 
 ### Required
 
-- **name** (String) A unique identifier for this repository
+- `name` (String) A unique identifier for this repository
 
 ### Read-Only
 
-- **docker** (List of Object) docker contains the configuration of the docker repository (see [below for nested schema](#nestedatt--docker))
-- **group** (List of Object) Configuration for repository group (see [below for nested schema](#nestedatt--group))
-- **id** (String) Used to identify data source at nexus
-- **online** (Boolean) Whether this repository accepts incoming requests
-- **storage** (List of Object) The storage configuration of the repository (see [below for nested schema](#nestedatt--storage))
+- `docker` (List of Object) docker contains the configuration of the docker repository (see [below for nested schema](#nestedatt--docker))
+- `group` (List of Object) Configuration for repository group (see [below for nested schema](#nestedatt--group))
+- `id` (String) Used to identify data source at nexus
+- `online` (Boolean) Whether this repository accepts incoming requests
+- `storage` (List of Object) The storage configuration of the repository (see [below for nested schema](#nestedatt--storage))
 
 <a id="nestedatt--docker"></a>
 ### Nested Schema for `docker`
 
 Read-Only:
 
-- **force_basic_auth** (Boolean)
-- **http_port** (Number)
-- **https_port** (Number)
-- **v1_enabled** (Boolean)
+- `force_basic_auth` (Boolean)
+- `http_port` (Number)
+- `https_port` (Number)
+- `v1_enabled` (Boolean)
 
 
 <a id="nestedatt--group"></a>
@@ -43,8 +43,8 @@ Read-Only:
 
 Read-Only:
 
-- **member_names** (Set of String)
-- **writable_member** (String)
+- `member_names` (Set of String)
+- `writable_member` (String)
 
 
 <a id="nestedatt--storage"></a>
@@ -52,6 +52,5 @@ Read-Only:
 
 Read-Only:
 
-- **blob_store_name** (String)
-- **strict_content_type_validation** (Boolean)
-
+- `blob_store_name` (String)
+- `strict_content_type_validation` (Boolean)

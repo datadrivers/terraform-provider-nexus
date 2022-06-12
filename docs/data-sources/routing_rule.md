@@ -17,12 +17,11 @@ data "nexus_routing_rule" "stop_leaks" {
 
 ### Required
 
-- **name** (String) The name of the routing rule
+- `name` (String) The name of the routing rule
 
 ### Read-Only
 
-- **description** (String) The description of the routing rule
-- **id** (String) Used to identify data source at nexus
-- **matchers** (Set of String) Matchers is a list of regular expressions used to identify request paths that are allowed or blocked (depending on above mode)
-- **mode** (String) The mode describe how to hande with mathing requests. Possible values: `BLOCK` or `ALLOW`
-
+- `description` (String) The description of the routing rule
+- `id` (String) Used to identify data source at nexus
+- `matchers` (Set of String) Matchers is a list of regular expressions used to identify request paths that are allowed or blocked (depending on above mode)
+- `mode` (String) The mode describe how to hande with mathing requests. Possible values: `BLOCK` or `ALLOW`

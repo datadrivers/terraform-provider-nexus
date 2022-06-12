@@ -44,43 +44,43 @@ resource "nexus_security_ldap" "example" {
 
 ### Required
 
-- **auth_schema** (String) Authentication scheme used for connecting to LDAP server
-- **auth_username** (String) This must be a fully qualified username if simple authentication is used. Required if authScheme other than none.
-- **connection_retry_delay_seconds** (Number) How long to wait before retrying
-- **connection_timeout_seconds** (Number) How long to wait before timeout
-- **group_type** (String) Defines a type of groups used: static (a group contains a list of users) or dynamic (a user contains a list of groups). Required if ldapGroupsAsRoles is true.
-- **host** (String) LDAP server connection hostname
-- **max_incident_count** (Number) How many retry attempts
-- **name** (String) LDAP server name
-- **port** (Number) LDAP server connection port to use
-- **protocol** (String) LDAP server connection Protocol to use
-- **search_base** (String) LDAP location to be added to the connection URL
+- `auth_schema` (String) Authentication scheme used for connecting to LDAP server
+- `auth_username` (String) This must be a fully qualified username if simple authentication is used. Required if authScheme other than none.
+- `connection_retry_delay_seconds` (Number) How long to wait before retrying
+- `connection_timeout_seconds` (Number) How long to wait before timeout
+- `group_type` (String) Defines a type of groups used: static (a group contains a list of users) or dynamic (a user contains a list of groups). Required if ldapGroupsAsRoles is true.
+- `host` (String) LDAP server connection hostname
+- `max_incident_count` (Number) How many retry attempts
+- `name` (String) LDAP server name
+- `port` (Number) LDAP server connection port to use
+- `protocol` (String) LDAP server connection Protocol to use
+- `search_base` (String) LDAP location to be added to the connection URL
 
 ### Optional
 
-- **auth_password** (String, Sensitive) The password to bind with. Required if authScheme other than none.
-- **auth_realm** (String) The SASL realm to bind to. Required if authScheme is CRAM_MD5 or DIGEST_MD5
-- **group_base_dn** (String) The relative DN where group objects are found (e.g. ou=Group). This value will have the Search base DN value appended to form the full Group search base DN.
-- **group_id_attribute** (String) This field specifies the attribute of the Object class that defines the Group ID. Required if groupType is static
-- **group_member_attribute** (String) LDAP attribute containing the usernames for the group. Required if groupType is static
-- **group_member_format** (String) The format of user ID stored in the group member attribute. Required if groupType is static
-- **group_object_class** (String) LDAP class for group objects. Required if groupType is static
-- **group_subtree** (Boolean) Are groups located in structures below the group base DN
-- **ldap_groups_as_roles** (Boolean) Denotes whether LDAP assigned roles are used as Nexus Repository Manager roles
-- **use_trust_store** (Boolean) Whether to use certificates stored in Nexus Repository Manager's truststore
-- **user_base_dn** (String) The relative DN where user objects are found (e.g. ou=people). This value will have the Search base DN value appended to form the full User search base DN.
-- **user_email_address_attribute** (String) This is used to find an email address given the user ID
-- **user_id_attribute** (String) This is used to find a user given its user ID
-- **user_ldap_filter** (String) LDAP search filter to limit user search
-- **user_member_of_attribute** (String) Set this to the attribute used to store the attribute which holds groups DN in the user object. Required if groupType is dynamic
-- **user_object_class** (String) LDAP class for user objects
-- **user_password_attribute** (String) If this field is blank the user will be authenticated against a bind with the LDAP server
-- **user_real_name_attribute** (String) This is used to find a real name given the user ID
-- **user_subtree** (Boolean) Are users located in structures below the user base DN?
+- `auth_password` (String, Sensitive) The password to bind with. Required if authScheme other than none.
+- `auth_realm` (String) The SASL realm to bind to. Required if authScheme is CRAM_MD5 or DIGEST_MD5
+- `group_base_dn` (String) The relative DN where group objects are found (e.g. ou=Group). This value will have the Search base DN value appended to form the full Group search base DN.
+- `group_id_attribute` (String) This field specifies the attribute of the Object class that defines the Group ID. Required if groupType is static
+- `group_member_attribute` (String) LDAP attribute containing the usernames for the group. Required if groupType is static
+- `group_member_format` (String) The format of user ID stored in the group member attribute. Required if groupType is static
+- `group_object_class` (String) LDAP class for group objects. Required if groupType is static
+- `group_subtree` (Boolean) Are groups located in structures below the group base DN
+- `ldap_groups_as_roles` (Boolean) Denotes whether LDAP assigned roles are used as Nexus Repository Manager roles
+- `use_trust_store` (Boolean) Whether to use certificates stored in Nexus Repository Manager's truststore
+- `user_base_dn` (String) The relative DN where user objects are found (e.g. ou=people). This value will have the Search base DN value appended to form the full User search base DN.
+- `user_email_address_attribute` (String) This is used to find an email address given the user ID
+- `user_id_attribute` (String) This is used to find a user given its user ID
+- `user_ldap_filter` (String) LDAP search filter to limit user search
+- `user_member_of_attribute` (String) Set this to the attribute used to store the attribute which holds groups DN in the user object. Required if groupType is dynamic
+- `user_object_class` (String) LDAP class for user objects
+- `user_password_attribute` (String) If this field is blank the user will be authenticated against a bind with the LDAP server
+- `user_real_name_attribute` (String) This is used to find a real name given the user ID
+- `user_subtree` (Boolean) Are users located in structures below the user base DN?
 
 ### Read-Only
 
-- **id** (String) Used to identify resource at nexus
+- `id` (String) Used to identify resource at nexus
 ## Import
 Import is supported using the following syntax:
 ```shell

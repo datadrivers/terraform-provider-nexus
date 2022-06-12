@@ -17,23 +17,23 @@ data "nexus_repository_apt_hosted" "bullseye_stable" {
 
 ### Required
 
-- **name** (String) A unique identifier for this repository
+- `name` (String) A unique identifier for this repository
 
 ### Read-Only
 
-- **cleanup** (List of Object) Cleanup policies (see [below for nested schema](#nestedatt--cleanup))
-- **component** (List of Object) Component configuration for the hosted repository (see [below for nested schema](#nestedatt--component))
-- **distribution** (String) Distribution to fetch
-- **id** (String) Used to identify data source at nexus
-- **online** (Boolean) Whether this repository accepts incoming requests
-- **storage** (List of Object) The storage configuration of the repository (see [below for nested schema](#nestedatt--storage))
+- `cleanup` (List of Object) Cleanup policies (see [below for nested schema](#nestedatt--cleanup))
+- `component` (List of Object) Component configuration for the hosted repository (see [below for nested schema](#nestedatt--component))
+- `distribution` (String) Distribution to fetch
+- `id` (String) Used to identify data source at nexus
+- `online` (Boolean) Whether this repository accepts incoming requests
+- `storage` (List of Object) The storage configuration of the repository (see [below for nested schema](#nestedatt--storage))
 
 <a id="nestedatt--cleanup"></a>
 ### Nested Schema for `cleanup`
 
 Read-Only:
 
-- **policy_names** (Set of String)
+- `policy_names` (Set of String)
 
 
 <a id="nestedatt--component"></a>
@@ -41,7 +41,7 @@ Read-Only:
 
 Read-Only:
 
-- **proprietary_components** (Boolean)
+- `proprietary_components` (Boolean)
 
 
 <a id="nestedatt--storage"></a>
@@ -49,7 +49,6 @@ Read-Only:
 
 Read-Only:
 
-- **blob_store_name** (String)
-- **strict_content_type_validation** (Boolean)
-- **write_policy** (String)
-
+- `blob_store_name` (String)
+- `strict_content_type_validation` (Boolean)
+- `write_policy` (String)

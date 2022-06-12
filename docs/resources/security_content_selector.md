@@ -19,16 +19,16 @@ resource "nexus_security_content_selector" "example" {
 
 ### Required
 
-- **expression** (String) The content selector expression
-- **name** (String) Content selector name
+- `expression` (String) The content selector expression
+- `name` (String) Content selector name
 
 ### Optional
 
-- **description** (String) A description of the content selector
+- `description` (String) A description of the content selector
 
 ### Read-Only
 
-- **id** (String) Used to identify resource at nexus
+- `id` (String) Used to identify resource at nexus
 ## Import
 Import is supported using the following syntax:
 ```shell

@@ -34,38 +34,38 @@ resource "nexus_blobstore_azure" "example" {
 
 ### Required
 
-- **bucket_configuration** (Block List, Min: 1, Max: 1) The Azure specific configuration details for the Azure object that'll contain the blob store (see [below for nested schema](#nestedblock--bucket_configuration))
-- **name** (String) Blobstore name
+- `bucket_configuration` (Block List, Min: 1, Max: 1) The Azure specific configuration details for the Azure object that'll contain the blob store (see [below for nested schema](#nestedblock--bucket_configuration))
+- `name` (String) Blobstore name
 
 ### Optional
 
-- **soft_quota** (Block List, Max: 1) Soft quota of the blobstore (see [below for nested schema](#nestedblock--soft_quota))
+- `soft_quota` (Block List, Max: 1) Soft quota of the blobstore (see [below for nested schema](#nestedblock--soft_quota))
 
 ### Read-Only
 
-- **blob_count** (Number) Count of blobs
-- **id** (String) Used to identify resource at nexus
-- **total_size_in_bytes** (Number) The total size of the blobstore in Bytes
+- `blob_count` (Number) Count of blobs
+- `id` (String) Used to identify resource at nexus
+- `total_size_in_bytes` (Number) The total size of the blobstore in Bytes
 
 <a id="nestedblock--bucket_configuration"></a>
 ### Nested Schema for `bucket_configuration`
 
 Required:
 
-- **account_name** (String) Account name found under Access keys for the storage account
-- **authentication** (Block List, Min: 1, Max: 1) The Azure specific authentication details (see [below for nested schema](#nestedblock--bucket_configuration--authentication))
-- **container_name** (String) The name of an existing container to be used for storage
+- `account_name` (String) Account name found under Access keys for the storage account
+- `authentication` (Block List, Min: 1, Max: 1) The Azure specific authentication details (see [below for nested schema](#nestedblock--bucket_configuration--authentication))
+- `container_name` (String) The name of an existing container to be used for storage
 
 <a id="nestedblock--bucket_configuration--authentication"></a>
 ### Nested Schema for `bucket_configuration.authentication`
 
 Required:
 
-- **authentication_method** (String) The type of Azure authentication to use. Possible values: `ACCOUNTKEY` and `MANAGEDIDENTITY`
+- `authentication_method` (String) The type of Azure authentication to use. Possible values: `ACCOUNTKEY` and `MANAGEDIDENTITY`
 
 Optional:
 
-- **account_key** (String) The account key. Required if `authentication_method` is `ACCOUNTKEY`
+- `account_key` (String) The account key. Required if `authentication_method` is `ACCOUNTKEY`
 
 
 
@@ -74,8 +74,8 @@ Optional:
 
 Required:
 
-- **limit** (Number) The limit in Bytes. Minimum value is 1000000
-- **type** (String) The type to use such as spaceRemainingQuota, or spaceUsedQuota
+- `limit` (Number) The limit in Bytes. Minimum value is 1000000
+- `type` (String) The type to use such as spaceRemainingQuota, or spaceUsedQuota
 ## Import
 Import is supported using the following syntax:
 ```shell

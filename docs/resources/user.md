@@ -15,18 +15,17 @@ Use this resource to manage users.
 
 ### Required
 
-- **email** (String) The email address associated with the user.
-- **firstname** (String) The first name of the user.
-- **lastname** (String) The last name of the user.
-- **password** (String, Sensitive) The password for the user.
-- **userid** (String) The userid which is required for login. This value cannot be changed.
+- `email` (String) The email address associated with the user.
+- `firstname` (String) The first name of the user.
+- `lastname` (String) The last name of the user.
+- `password` (String, Sensitive) The password for the user.
+- `userid` (String) The userid which is required for login. This value cannot be changed.
 
 ### Optional
 
-- **roles** (Set of String) The roles which the user has been assigned within Nexus.
-- **status** (String) The user's status, e.g. active or disabled.
+- `roles` (Set of String) The roles which the user has been assigned within Nexus.
+- `status` (String) The user's status, e.g. active or disabled.
 
 ### Read-Only
 
-- **id** (String) Used to identify resource at nexus
-
+- `id` (String) Used to identify resource at nexus

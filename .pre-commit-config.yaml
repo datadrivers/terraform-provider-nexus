@@ -15,3 +15,8 @@ repos:
       - id: go-vet
       - id: go-imports
       - id: go-mod-tidy
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: master
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
