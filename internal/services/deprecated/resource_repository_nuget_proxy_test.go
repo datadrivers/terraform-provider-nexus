@@ -13,7 +13,7 @@ func testAccResourceRepositoryNugetProxy() repository.LegacyRepository {
 	repo.Proxy.RemoteURL = "https://www.nuget.org/api/v2/"
 	repo.NugetProxy = &repository.NugetProxy{
 		QueryCacheItemMaxAge: 1440,
-		NugetVersion:         repository.NugetVersion3,
+		NugetVersion:         repository.NugetVersion2,
 	}
 	return repo
 }
@@ -40,6 +40,8 @@ func TestAccResourceRepositoryNugetProxy(t *testing.T) {
 						resource.TestCheckResourceAttr(resName, "docker.#", "0"),
 						resource.TestCheckResourceAttr(resName, "docker_proxy.#", "0"),
 						resource.TestCheckResourceAttr(resName, "maven.#", "0"),
+						resource.TestCheckResourceAttr(resName, "nuget_proxy.#", "1"),
+						resource.TestCheckResourceAttr(resName, "nuget_proxy.0.nuget_version", "V2"),
 					),
 				),
 			},
