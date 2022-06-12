@@ -30,9 +30,8 @@ resource "nexus_security_ldap_order" "system" {
 
 ### Required
 
-- **order** (List of String) Ordered list of LDAP server
+- `order` (List of String) Ordered list of LDAP server
 
 ### Read-Only
 
-- **id** (String) Used to identify resource at nexus
-
+- `id` (String) Used to identify resource at nexus

@@ -58,6 +58,7 @@ func Provider() *schema.Provider {
 			"nexus_repository_docker_group":   repository.ResourceRepositoryDockerGroup(),
 			"nexus_repository_docker_hosted":  repository.ResourceRepositoryDockerHosted(),
 			"nexus_repository_docker_proxy":   repository.ResourceRepositoryDockerProxy(),
+			"nexus_repository_maven_hosted":   repository.ResourceRepositoryMavenHosted(),
 			"nexus_repository_yum_group":      repository.ResourceRepositoryYumGroup(),
 			"nexus_repository_yum_hosted":     repository.ResourceRepositoryYumHosted(),
 			"nexus_repository_yum_proxy":      repository.ResourceRepositoryYumProxy(),

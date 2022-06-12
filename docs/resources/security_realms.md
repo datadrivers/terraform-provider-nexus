@@ -20,11 +20,11 @@ resource "nexus_security_realms" "example" {
 
 ### Required
 
-- **active** (List of String) The realm IDs
+- `active` (List of String) The realm IDs
 
 ### Read-Only
 
-- **id** (String) Used to identify resource at nexus
+- `id` (String) Used to identify resource at nexus
 ## Import
 Import is supported using the following syntax:
 ```shell

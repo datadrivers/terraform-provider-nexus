@@ -15,16 +15,15 @@ Use this resource to create a Nexus Role.
 
 ### Required
 
-- **name** (String) The name of the role.
-- **roleid** (String) The id of the role.
+- `name` (String) The name of the role.
+- `roleid` (String) The id of the role.
 
 ### Optional
 
-- **description** (String) The description of this role.
-- **privileges** (Set of String) The privileges of this role.
-- **roles** (Set of String) The roles of this role.
+- `description` (String) The description of this role.
+- `privileges` (Set of String) The privileges of this role.
+- `roles` (Set of String) The roles of this role.
 
 ### Read-Only
 
-- **id** (String) Used to identify resource at nexus
-
+- `id` (String) Used to identify resource at nexus

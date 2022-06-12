@@ -30,31 +30,31 @@ resource "nexus_repository_apt_hosted" "bullseye_stable" {
 
 ### Required
 
-- **distribution** (String) Distribution to fetch
-- **name** (String) A unique identifier for this repository
-- **signing** (Block List, Min: 1, Max: 1) Signing contains signing data of hosted repositores of format Apt (see [below for nested schema](#nestedblock--signing))
-- **storage** (Block List, Min: 1, Max: 1) The storage configuration of the repository (see [below for nested schema](#nestedblock--storage))
+- `distribution` (String) Distribution to fetch
+- `name` (String) A unique identifier for this repository
+- `signing` (Block List, Min: 1, Max: 1) Signing contains signing data of hosted repositores of format Apt (see [below for nested schema](#nestedblock--signing))
+- `storage` (Block List, Min: 1, Max: 1) The storage configuration of the repository (see [below for nested schema](#nestedblock--storage))
 
 ### Optional
 
-- **cleanup** (Block List) Cleanup policies (see [below for nested schema](#nestedblock--cleanup))
-- **component** (Block List, Max: 1) Component configuration for the hosted repository (see [below for nested schema](#nestedblock--component))
-- **online** (Boolean) Whether this repository accepts incoming requests
+- `cleanup` (Block List) Cleanup policies (see [below for nested schema](#nestedblock--cleanup))
+- `component` (Block List, Max: 1) Component configuration for the hosted repository (see [below for nested schema](#nestedblock--component))
+- `online` (Boolean) Whether this repository accepts incoming requests
 
 ### Read-Only
 
-- **id** (String) Used to identify resource at nexus
+- `id` (String) Used to identify resource at nexus
 
 <a id="nestedblock--signing"></a>
 ### Nested Schema for `signing`
 
 Required:
 
-- **keypair** (String, Sensitive) PGP signing key pair (armored private key e.g. gpg --export-secret-key --armor)
+- `keypair` (String, Sensitive) PGP signing key pair (armored private key e.g. gpg --export-secret-key --armor)
 
 Optional:
 
-- **passphrase** (String, Sensitive) Passphrase to access PGP signing key
+- `passphrase` (String, Sensitive) Passphrase to access PGP signing key
 
 
 <a id="nestedblock--storage"></a>
@@ -62,12 +62,12 @@ Optional:
 
 Required:
 
-- **blob_store_name** (String) Blob store used to store repository contents
-- **strict_content_type_validation** (Boolean) Whether to validate uploaded content's MIME type appropriate for the repository format
+- `blob_store_name` (String) Blob store used to store repository contents
+- `strict_content_type_validation` (Boolean) Whether to validate uploaded content's MIME type appropriate for the repository format
 
 Optional:
 
-- **write_policy** (String) Controls if deployments of and updates to assets are allowed
+- `write_policy` (String) Controls if deployments of and updates to assets are allowed
 
 
 <a id="nestedblock--cleanup"></a>
@@ -75,7 +75,7 @@ Optional:
 
 Optional:
 
-- **policy_names** (Set of String) List of policy names
+- `policy_names` (Set of String) List of policy names
 
 
 <a id="nestedblock--component"></a>
@@ -83,7 +83,7 @@ Optional:
 
 Required:
 
-- **proprietary_components** (Boolean) Components in this repository count as proprietary for namespace conflict attacks (requires Sonatype Nexus Firewall)
+- `proprietary_components` (Boolean) Components in this repository count as proprietary for namespace conflict attacks (requires Sonatype Nexus Firewall)
 ## Import
 Import is supported using the following syntax:
 ```shell

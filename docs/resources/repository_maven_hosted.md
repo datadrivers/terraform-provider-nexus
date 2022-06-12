@@ -1,26 +1,27 @@
 ---
-page_title: "Resource nexus_repository_docker_hosted"
+page_title: "Resource nexus_repository_maven_hosted"
 subcategory: "Repository"
 description: |-
-  Use this resource to create a hosted docker repository.
+  Use this resource to create a hosted maven repository.
 ---
-# Resource nexus_repository_docker_hosted
-Use this resource to create a hosted docker repository.
+# Resource nexus_repository_maven_hosted
+Use this resource to create a hosted maven repository.
 ## Example Usage
 ```terraform
-resource "nexus_repository_docker_hosted" "example" {
-  name   = "example"
+resource "nexus_repository_maven_hosted" "releases" {
+  name   = "maven-releases"
   online = true
-
-  docker {
-    force_basic_auth = false
-    v1_enabled       = false
-  }
 
   storage {
     blob_store_name                = "default"
-    strict_content_type_validation = true
+    strict_content_type_validation = false
     write_policy                   = "ALLOW"
+  }
+
+  maven {
+    version_policy      = "RELEASE"
+    layout_policy       = "STRICT"
+    content_disposition = "INLINE"
   }
 }
 ```
@@ -29,7 +30,7 @@ resource "nexus_repository_docker_hosted" "example" {
 
 ### Required
 
-- `docker` (Block List, Min: 1, Max: 1) docker contains the configuration of the docker repository (see [below for nested schema](#nestedblock--docker))
+- `maven` (Block List, Min: 1, Max: 1) Maven contains additional data of maven repository (see [below for nested schema](#nestedblock--maven))
 - `name` (String) A unique identifier for this repository
 - `storage` (Block List, Min: 1, Max: 1) The storage configuration of the repository (see [below for nested schema](#nestedblock--storage))
 
@@ -43,18 +44,14 @@ resource "nexus_repository_docker_hosted" "example" {
 
 - `id` (String) Used to identify resource at nexus
 
-<a id="nestedblock--docker"></a>
-### Nested Schema for `docker`
-
-Required:
-
-- `force_basic_auth` (Boolean) Whether to force authentication (Docker Bearer Token Realm required if false)
-- `v1_enabled` (Boolean) Whether to allow clients to use the V1 API to interact with this repository
+<a id="nestedblock--maven"></a>
+### Nested Schema for `maven`
 
 Optional:
 
-- `http_port` (Number) Create an HTTP connector at specified port
-- `https_port` (Number) Create an HTTPS connector at specified port
+- `content_disposition` (String) Add Content-Disposition header as 'Attachment' to disable some content from being inline in a browse. Possible Value: `INLINE` or `ATTACHMENT`
+- `layout_policy` (String) Validate that all paths are maven artifact or metadata paths. Possible Value: `STRICT` or `PERMISSIVE`
+- `version_policy` (String) What type of artifacts does this repository store? Possible Value: `RELEASE`, `SNAPSHOT` or `MIXED`
 
 
 <a id="nestedblock--storage"></a>
@@ -88,5 +85,5 @@ Required:
 Import is supported using the following syntax:
 ```shell
 # import using the name of repository
-terraform import nexus_repository_docker_hosted.example example
+terraform import nexus_repository_maven_hosted.releases maven-releases
 ```

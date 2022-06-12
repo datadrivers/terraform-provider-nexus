@@ -17,27 +17,27 @@ data "nexus_repository_docker_proxy" "dockerhub" {
 
 ### Required
 
-- **name** (String) A unique identifier for this repository
+- `name` (String) A unique identifier for this repository
 
 ### Read-Only
 
-- **cleanup** (List of Object) Cleanup policies (see [below for nested schema](#nestedatt--cleanup))
-- **docker** (List of Object) docker contains the configuration of the docker repository (see [below for nested schema](#nestedatt--docker))
-- **docker_proxy** (List of Object) docker_proxy contains the configuration of the docker index (see [below for nested schema](#nestedatt--docker_proxy))
-- **http_client** (List of Object) HTTP Client configuration for proxy repositories. Required for docker proxy repositories. (see [below for nested schema](#nestedatt--http_client))
-- **id** (String) Used to identify data source at nexus
-- **negative_cache** (List of Object) Configuration of the negative cache handling (see [below for nested schema](#nestedatt--negative_cache))
-- **online** (Boolean) Whether this repository accepts incoming requests
-- **proxy** (List of Object) Configuration for the proxy repository (see [below for nested schema](#nestedatt--proxy))
-- **routing_rule** (String) The name of the routing rule assigned to this repository
-- **storage** (List of Object) The storage configuration of the repository (see [below for nested schema](#nestedatt--storage))
+- `cleanup` (List of Object) Cleanup policies (see [below for nested schema](#nestedatt--cleanup))
+- `docker` (List of Object) docker contains the configuration of the docker repository (see [below for nested schema](#nestedatt--docker))
+- `docker_proxy` (List of Object) docker_proxy contains the configuration of the docker index (see [below for nested schema](#nestedatt--docker_proxy))
+- `http_client` (List of Object) HTTP Client configuration for proxy repositories. Required for docker proxy repositories. (see [below for nested schema](#nestedatt--http_client))
+- `id` (String) Used to identify data source at nexus
+- `negative_cache` (List of Object) Configuration of the negative cache handling (see [below for nested schema](#nestedatt--negative_cache))
+- `online` (Boolean) Whether this repository accepts incoming requests
+- `proxy` (List of Object) Configuration for the proxy repository (see [below for nested schema](#nestedatt--proxy))
+- `routing_rule` (String) The name of the routing rule assigned to this repository
+- `storage` (List of Object) The storage configuration of the repository (see [below for nested schema](#nestedatt--storage))
 
 <a id="nestedatt--cleanup"></a>
 ### Nested Schema for `cleanup`
 
 Read-Only:
 
-- **policy_names** (Set of String)
+- `policy_names` (Set of String)
 
 
 <a id="nestedatt--docker"></a>
@@ -45,10 +45,10 @@ Read-Only:
 
 Read-Only:
 
-- **force_basic_auth** (Boolean)
-- **http_port** (Number)
-- **https_port** (Number)
-- **v1_enabled** (Boolean)
+- `force_basic_auth` (Boolean)
+- `http_port` (Number)
+- `https_port` (Number)
+- `v1_enabled` (Boolean)
 
 
 <a id="nestedatt--docker_proxy"></a>
@@ -56,8 +56,8 @@ Read-Only:
 
 Read-Only:
 
-- **index_type** (String)
-- **index_url** (String)
+- `index_type` (String)
+- `index_url` (String)
 
 
 <a id="nestedatt--http_client"></a>
@@ -65,21 +65,21 @@ Read-Only:
 
 Read-Only:
 
-- **authentication** (List of Object) (see [below for nested schema](#nestedobjatt--http_client--authentication))
-- **auto_block** (Boolean)
-- **blocked** (Boolean)
-- **connection** (List of Object) (see [below for nested schema](#nestedobjatt--http_client--connection))
+- `authentication` (List of Object) (see [below for nested schema](#nestedobjatt--http_client--authentication))
+- `auto_block` (Boolean)
+- `blocked` (Boolean)
+- `connection` (List of Object) (see [below for nested schema](#nestedobjatt--http_client--connection))
 
 <a id="nestedobjatt--http_client--authentication"></a>
 ### Nested Schema for `http_client.authentication`
 
 Read-Only:
 
-- **ntlm_domain** (String)
-- **ntlm_host** (String)
-- **password** (String)
-- **type** (String)
-- **username** (String)
+- `ntlm_domain` (String)
+- `ntlm_host` (String)
+- `password` (String)
+- `type` (String)
+- `username` (String)
 
 
 <a id="nestedobjatt--http_client--connection"></a>
@@ -87,12 +87,12 @@ Read-Only:
 
 Read-Only:
 
-- **enable_circular_redirects** (Boolean)
-- **enable_cookies** (Boolean)
-- **retries** (Number)
-- **timeout** (Number)
-- **use_trust_store** (Boolean)
-- **user_agent_suffix** (String)
+- `enable_circular_redirects` (Boolean)
+- `enable_cookies` (Boolean)
+- `retries` (Number)
+- `timeout` (Number)
+- `use_trust_store` (Boolean)
+- `user_agent_suffix` (String)
 
 
 
@@ -101,8 +101,8 @@ Read-Only:
 
 Read-Only:
 
-- **enabled** (Boolean)
-- **ttl** (Number)
+- `enabled` (Boolean)
+- `ttl` (Number)
 
 
 <a id="nestedatt--proxy"></a>
@@ -110,9 +110,9 @@ Read-Only:
 
 Read-Only:
 
-- **content_max_age** (Number)
-- **metadata_max_age** (Number)
-- **remote_url** (String)
+- `content_max_age` (Number)
+- `metadata_max_age` (Number)
+- `remote_url` (String)
 
 
 <a id="nestedatt--storage"></a>
@@ -120,6 +120,5 @@ Read-Only:
 
 Read-Only:
 
-- **blob_store_name** (String)
-- **strict_content_type_validation** (Boolean)
-
+- `blob_store_name` (String)
+- `strict_content_type_validation` (Boolean)

@@ -23,17 +23,17 @@ resource "nexus_routing_rule" "stop_leaks" {
 
 ### Required
 
-- **matchers** (Set of String) Matchers is a list of regular expressions used to identify request paths that are allowed or blocked (depending on above mode)
-- **name** (String) The name of the routing rule
+- `matchers` (Set of String) Matchers is a list of regular expressions used to identify request paths that are allowed or blocked (depending on above mode)
+- `name` (String) The name of the routing rule
 
 ### Optional
 
-- **description** (String) The description of the routing rule
-- **mode** (String) The mode describe how to hande with mathing requests. Possible values: `BLOCK` or `ALLOW` Default: `BLOCK`
+- `description` (String) The description of the routing rule
+- `mode` (String) The mode describe how to hande with mathing requests. Possible values: `BLOCK` or `ALLOW` Default: `BLOCK`
 
 ### Read-Only
 
-- **id** (String) Used to identify resource at nexus
+- `id` (String) Used to identify resource at nexus
 ## Import
 Import is supported using the following syntax:
 ```shell

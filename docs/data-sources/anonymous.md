@@ -15,8 +15,7 @@ Use this get the anonymous configuration of the nexus repository manager.
 
 ### Read-Only
 
-- **enabled** (Boolean) Activate the anonymous access to the repository manager
-- **id** (String) Used to identify data source at nexus
-- **realm_name** (String) The name of the used realm
-- **user_id** (String) The user id used by anonymous access
-
+- `enabled` (Boolean) Activate the anonymous access to the repository manager
+- `id` (String) Used to identify data source at nexus
+- `realm_name` (String) The name of the used realm
+- `user_id` (String) The user id used by anonymous access

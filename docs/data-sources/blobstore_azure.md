@@ -20,31 +20,31 @@ data "nexus_blobstore_azure" "example" {
 
 ### Required
 
-- **name** (String) Blobstore name
+- `name` (String) Blobstore name
 
 ### Read-Only
 
-- **blob_count** (Number) Count of blobs
-- **bucket_configuration** (List of Object) The Azure specific configuration details for the Azure object that'll contain the blob store (see [below for nested schema](#nestedatt--bucket_configuration))
-- **id** (String) Used to identify data source at nexus
-- **soft_quota** (List of Object) Soft quota of the blobstore (see [below for nested schema](#nestedatt--soft_quota))
-- **total_size_in_bytes** (Number) The total size of the blobstore in Bytes
+- `blob_count` (Number) Count of blobs
+- `bucket_configuration` (List of Object) The Azure specific configuration details for the Azure object that'll contain the blob store (see [below for nested schema](#nestedatt--bucket_configuration))
+- `id` (String) Used to identify data source at nexus
+- `soft_quota` (List of Object) Soft quota of the blobstore (see [below for nested schema](#nestedatt--soft_quota))
+- `total_size_in_bytes` (Number) The total size of the blobstore in Bytes
 
 <a id="nestedatt--bucket_configuration"></a>
 ### Nested Schema for `bucket_configuration`
 
 Read-Only:
 
-- **account_name** (String)
-- **authentication** (List of Object) (see [below for nested schema](#nestedobjatt--bucket_configuration--authentication))
-- **container_name** (String)
+- `account_name` (String)
+- `authentication` (List of Object) (see [below for nested schema](#nestedobjatt--bucket_configuration--authentication))
+- `container_name` (String)
 
 <a id="nestedobjatt--bucket_configuration--authentication"></a>
 ### Nested Schema for `bucket_configuration.authentication`
 
 Read-Only:
 
-- **authentication_method** (String)
+- `authentication_method` (String)
 
 
 
@@ -53,6 +53,5 @@ Read-Only:
 
 Read-Only:
 
-- **limit** (Number)
-- **type** (String)
-
+- `limit` (Number)
+- `type` (String)

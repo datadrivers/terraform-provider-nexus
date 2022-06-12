@@ -23,7 +23,6 @@ output "nexus_user_token_enabled" {
 
 ### Read-Only
 
-- **enabled** (Boolean) Activate the feature of user tokens.
-- **id** (String) Used to identify data source at nexus
-- **protect_content** (Boolean) Require user tokens for repository authentication. This does not effect UI access.
-
+- `enabled` (Boolean) Activate the feature of user tokens.
+- `id` (String) Used to identify data source at nexus
+- `protect_content` (Boolean) Require user tokens for repository authentication. This does not effect UI access.

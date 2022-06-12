@@ -15,16 +15,15 @@ data "nexus_repository_list" "all" {}
 
 ### Read-Only
 
-- **id** (String) Used to identify data source at nexus
-- **items** (List of Object) A List of all repositories (see [below for nested schema](#nestedatt--items))
+- `id` (String) Used to identify data source at nexus
+- `items` (List of Object) A List of all repositories (see [below for nested schema](#nestedatt--items))
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`
 
 Read-Only:
 
-- **format** (String)
-- **name** (String)
-- **type** (String)
-- **url** (String)
-
+- `format` (String)
+- `name` (String)
+- `type` (String)
+- `url` (String)

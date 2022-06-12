@@ -20,47 +20,47 @@ data "nexus_blobstore" "default" {
 
 ### Required
 
-- **name** (String) Blobstore name
+- `name` (String) Blobstore name
 
 ### Optional
 
-- **bucket_configuration** (Block List, Max: 1) The S3 bucket configuration. Needed for blobstore type 'S3' (see [below for nested schema](#nestedblock--bucket_configuration))
-- **path** (String) The path to the blobstore contents
-- **soft_quota** (Block List, Max: 1) Soft quota of the blobstore (see [below for nested schema](#nestedblock--soft_quota))
-- **type** (String) The type of the blobstore
+- `bucket_configuration` (Block List, Max: 1) The S3 bucket configuration. Needed for blobstore type 'S3' (see [below for nested schema](#nestedblock--bucket_configuration))
+- `path` (String) The path to the blobstore contents
+- `soft_quota` (Block List, Max: 1) Soft quota of the blobstore (see [below for nested schema](#nestedblock--soft_quota))
+- `type` (String) The type of the blobstore
 
 ### Read-Only
 
-- **available_space_in_bytes** (Number) Available space in Bytes
-- **blob_count** (Number) Count of blobs
-- **id** (String) Used to identify data source at nexus
-- **total_size_in_bytes** (Number) The total size of the blobstore in Bytes
+- `available_space_in_bytes` (Number) Available space in Bytes
+- `blob_count` (Number) Count of blobs
+- `id` (String) Used to identify data source at nexus
+- `total_size_in_bytes` (Number) The total size of the blobstore in Bytes
 
 <a id="nestedblock--bucket_configuration"></a>
 ### Nested Schema for `bucket_configuration`
 
 Required:
 
-- **bucket** (Block List, Min: 1, Max: 1) The S3 bucket configuration (see [below for nested schema](#nestedblock--bucket_configuration--bucket))
-- **bucket_security** (Block List, Min: 1, Max: 1) Additional security configurations (see [below for nested schema](#nestedblock--bucket_configuration--bucket_security))
+- `bucket` (Block List, Min: 1, Max: 1) The S3 bucket configuration (see [below for nested schema](#nestedblock--bucket_configuration--bucket))
+- `bucket_security` (Block List, Min: 1, Max: 1) Additional security configurations (see [below for nested schema](#nestedblock--bucket_configuration--bucket_security))
 
 Optional:
 
-- **advanced_bucket_connection** (Block List, Max: 1) Additional connection configurations (see [below for nested schema](#nestedblock--bucket_configuration--advanced_bucket_connection))
-- **encryption** (Block List, Max: 1) Additional bucket encryption configurations (see [below for nested schema](#nestedblock--bucket_configuration--encryption))
+- `advanced_bucket_connection` (Block List, Max: 1) Additional connection configurations (see [below for nested schema](#nestedblock--bucket_configuration--advanced_bucket_connection))
+- `encryption` (Block List, Max: 1) Additional bucket encryption configurations (see [below for nested schema](#nestedblock--bucket_configuration--encryption))
 
 <a id="nestedblock--bucket_configuration--bucket"></a>
 ### Nested Schema for `bucket_configuration.bucket`
 
 Required:
 
-- **name** (String) The name of the S3 bucket
-- **region** (String) The AWS region to create a new S3 bucket in or an existing S3 bucket's region
+- `name` (String) The name of the S3 bucket
+- `region` (String) The AWS region to create a new S3 bucket in or an existing S3 bucket's region
 
 Optional:
 
-- **expiration** (Number) How many days until deleted blobs are finally removed from the S3 bucket (-1 to disable)
-- **prefix** (String) The S3 blob store (i.e S3 object) key prefix
+- `expiration` (Number) How many days until deleted blobs are finally removed from the S3 bucket (-1 to disable)
+- `prefix` (String) The S3 blob store (i.e S3 object) key prefix
 
 
 <a id="nestedblock--bucket_configuration--bucket_security"></a>
@@ -68,13 +68,13 @@ Optional:
 
 Required:
 
-- **access_key_id** (String) An IAM access key ID for granting access to the S3 bucket
-- **secret_access_key** (String, Sensitive) The secret access key associated with the specified IAM access key ID
+- `access_key_id` (String) An IAM access key ID for granting access to the S3 bucket
+- `secret_access_key` (String, Sensitive) The secret access key associated with the specified IAM access key ID
 
 Optional:
 
-- **role** (String) An IAM role to assume in order to access the S3 bucket
-- **session_token** (String, Sensitive) An AWS STS session token associated with temporary security credentials which grant access to the S3 bucket
+- `role` (String) An IAM role to assume in order to access the S3 bucket
+- `session_token` (String, Sensitive) An AWS STS session token associated with temporary security credentials which grant access to the S3 bucket
 
 
 <a id="nestedblock--bucket_configuration--advanced_bucket_connection"></a>
@@ -82,9 +82,9 @@ Optional:
 
 Optional:
 
-- **endpoint** (String) A custom endpoint URL for third party object stores using the S3 API.
-- **force_path_style** (Boolean) Setting this flag will result in path-style access being used for all requests.
-- **signer_type** (String) An API signature version which may be required for third party object stores using the S3 API.
+- `endpoint` (String) A custom endpoint URL for third party object stores using the S3 API.
+- `force_path_style` (Boolean) Setting this flag will result in path-style access being used for all requests.
+- `signer_type` (String) An API signature version which may be required for third party object stores using the S3 API.
 
 
 <a id="nestedblock--bucket_configuration--encryption"></a>
@@ -92,8 +92,8 @@ Optional:
 
 Optional:
 
-- **encryption_key** (String) The encryption key.
-- **encryption_type** (String) The type of S3 server side encryption to use.
+- `encryption_key` (String) The encryption key.
+- `encryption_type` (String) The type of S3 server side encryption to use.
 
 
 
@@ -102,6 +102,5 @@ Optional:
 
 Optional:
 
-- **limit** (Number) The limit in Bytes. Minimum value is 1000000
-- **type** (String) The type to use such as spaceRemainingQuota, or spaceUsedQuota
-
+- `limit` (Number) The limit in Bytes. Minimum value is 1000000
+- `type` (String) The type to use such as spaceRemainingQuota, or spaceUsedQuota

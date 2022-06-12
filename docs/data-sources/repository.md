@@ -17,34 +17,34 @@ data "nexus_repository" "maven-central" {
 
 ### Required
 
-- **name** (String) A unique identifier for this repository
+- `name` (String) A unique identifier for this repository
 
 ### Optional
 
-- **apt** (Block List) Apt specific configuration of the repository (see [below for nested schema](#nestedblock--apt))
-- **apt_signing** (Block List) Apt signing configuration for the repository (see [below for nested schema](#nestedblock--apt_signing))
-- **cleanup** (Block List) Cleanup policies (see [below for nested schema](#nestedblock--cleanup))
-- **docker** (Block List) Docker specific configuration of the repository (see [below for nested schema](#nestedblock--docker))
-- **format** (String) Repository format
-- **group** (Block List, Max: 1) Configuration for repository group (see [below for nested schema](#nestedblock--group))
-- **http_client** (Block List, Max: 1) HTTP Client configuration for proxy repositories (see [below for nested schema](#nestedblock--http_client))
-- **maven** (Block List, Max: 1) Maven specific configuration of the repository (see [below for nested schema](#nestedblock--maven))
-- **negative_cache** (Block List, Max: 1) Configuration of the negative cache handling (see [below for nested schema](#nestedblock--negative_cache))
-- **online** (Boolean) Whether this repository accepts incoming requests
-- **proxy** (Block List, Max: 1) Configuration for the proxy repository (see [below for nested schema](#nestedblock--proxy))
-- **storage** (Block List, Max: 1) The storage configuration of the repository (see [below for nested schema](#nestedblock--storage))
-- **type** (String) Repository type
+- `apt` (Block List) Apt specific configuration of the repository (see [below for nested schema](#nestedblock--apt))
+- `apt_signing` (Block List) Apt signing configuration for the repository (see [below for nested schema](#nestedblock--apt_signing))
+- `cleanup` (Block List) Cleanup policies (see [below for nested schema](#nestedblock--cleanup))
+- `docker` (Block List) Docker specific configuration of the repository (see [below for nested schema](#nestedblock--docker))
+- `format` (String) Repository format
+- `group` (Block List, Max: 1) Configuration for repository group (see [below for nested schema](#nestedblock--group))
+- `http_client` (Block List, Max: 1) HTTP Client configuration for proxy repositories (see [below for nested schema](#nestedblock--http_client))
+- `maven` (Block List, Max: 1) Maven specific configuration of the repository (see [below for nested schema](#nestedblock--maven))
+- `negative_cache` (Block List, Max: 1) Configuration of the negative cache handling (see [below for nested schema](#nestedblock--negative_cache))
+- `online` (Boolean) Whether this repository accepts incoming requests
+- `proxy` (Block List, Max: 1) Configuration for the proxy repository (see [below for nested schema](#nestedblock--proxy))
+- `storage` (Block List, Max: 1) The storage configuration of the repository (see [below for nested schema](#nestedblock--storage))
+- `type` (String) Repository type
 
 ### Read-Only
 
-- **id** (String) Used to identify data source at nexus
+- `id` (String) Used to identify data source at nexus
 
 <a id="nestedblock--apt"></a>
 ### Nested Schema for `apt`
 
 Required:
 
-- **distribution** (String) The linux distribution
+- `distribution` (String) The linux distribution
 
 
 <a id="nestedblock--apt_signing"></a>
@@ -52,8 +52,8 @@ Required:
 
 Required:
 
-- **keypair** (String) PGP signing key pair (armored private key e.g. gpg --export-secret-key --armor )
-- **passphrase** (String) Passphrase for the keypair
+- `keypair` (String) PGP signing key pair (armored private key e.g. gpg --export-secret-key --armor )
+- `passphrase` (String) Passphrase for the keypair
 
 
 <a id="nestedblock--cleanup"></a>
@@ -61,7 +61,7 @@ Required:
 
 Required:
 
-- **policy_names** (Set of String) List of policy names
+- `policy_names` (Set of String) List of policy names
 
 
 <a id="nestedblock--docker"></a>
@@ -69,10 +69,10 @@ Required:
 
 Optional:
 
-- **force_basic_auth** (Boolean) Whether to force authentication (Docker Bearer Token Realm required if false)
-- **http_port** (Number) Create an HTTP connector at specified port
-- **https_port** (Number) Create an HTTPS connector at specified port
-- **v1enabled** (Boolean) Whether to allow clients to use the V1 API to interact with this repository
+- `force_basic_auth` (Boolean) Whether to force authentication (Docker Bearer Token Realm required if false)
+- `http_port` (Number) Create an HTTP connector at specified port
+- `https_port` (Number) Create an HTTPS connector at specified port
+- `v1enabled` (Boolean) Whether to allow clients to use the V1 API to interact with this repository
 
 
 <a id="nestedblock--group"></a>
@@ -80,7 +80,7 @@ Optional:
 
 Required:
 
-- **member_names** (Set of String) Member repositories names
+- `member_names` (Set of String) Member repositories names
 
 
 <a id="nestedblock--http_client"></a>
@@ -88,23 +88,23 @@ Required:
 
 Optional:
 
-- **authentication** (Block List, Max: 1) Authentication configuration of the HTTP client (see [below for nested schema](#nestedblock--http_client--authentication))
-- **auto_block** (Boolean) Whether to auto-block outbound connections if remote peer is detected as unreachable/unresponsive
-- **blocked** (Boolean) Whether to block outbound connections on the repository
-- **connection** (Block List) Connection configuration of the HTTP client (see [below for nested schema](#nestedblock--http_client--connection))
+- `authentication` (Block List, Max: 1) Authentication configuration of the HTTP client (see [below for nested schema](#nestedblock--http_client--authentication))
+- `auto_block` (Boolean) Whether to auto-block outbound connections if remote peer is detected as unreachable/unresponsive
+- `blocked` (Boolean) Whether to block outbound connections on the repository
+- `connection` (Block List) Connection configuration of the HTTP client (see [below for nested schema](#nestedblock--http_client--connection))
 
 <a id="nestedblock--http_client--authentication"></a>
 ### Nested Schema for `http_client.authentication`
 
 Required:
 
-- **type** (String) Authentication type
+- `type` (String) Authentication type
 
 Optional:
 
-- **ntlm_domain** (String) The ntlm domain to connect
-- **ntlm_host** (String) The ntlm host to connect
-- **username** (String) The username used by the proxy repository
+- `ntlm_domain` (String) The ntlm domain to connect
+- `ntlm_host` (String) The ntlm host to connect
+- `username` (String) The username used by the proxy repository
 
 
 <a id="nestedblock--http_client--connection"></a>
@@ -112,8 +112,8 @@ Optional:
 
 Optional:
 
-- **retries** (Number) Total retries if the initial connection attempt suffers a timeout
-- **timeout** (Number) Seconds to wait for activity before stopping and retrying the connection
+- `retries` (Number) Total retries if the initial connection attempt suffers a timeout
+- `timeout` (Number) Seconds to wait for activity before stopping and retrying the connection
 
 
 
@@ -122,8 +122,8 @@ Optional:
 
 Optional:
 
-- **layout_policy** (String) Validate that all paths are maven artifact or metadata paths
-- **version_policy** (String) What type of artifacts does this repository store
+- `layout_policy` (String) Validate that all paths are maven artifact or metadata paths
+- `version_policy` (String) What type of artifacts does this repository store
 
 
 <a id="nestedblock--negative_cache"></a>
@@ -131,8 +131,8 @@ Optional:
 
 Optional:
 
-- **enabled** (Boolean) Whether to cache responses for content not present in the proxied repository
-- **ttl** (Number) How long to cache the fact that a file was not found in the repository (in minutes)
+- `enabled` (Boolean) Whether to cache responses for content not present in the proxied repository
+- `ttl` (Number) How long to cache the fact that a file was not found in the repository (in minutes)
 
 
 <a id="nestedblock--proxy"></a>
@@ -140,12 +140,12 @@ Optional:
 
 Required:
 
-- **remote_url** (String) Location of the remote repository being proxied
+- `remote_url` (String) Location of the remote repository being proxied
 
 Optional:
 
-- **content_max_age** (Number) How long (in minutes) to cache artifacts before rechecking the remote repository
-- **metadata_max_age** (Number) How long (in minutes) to cache metadata before rechecking the remote repository.
+- `content_max_age` (Number) How long (in minutes) to cache artifacts before rechecking the remote repository
+- `metadata_max_age` (Number) How long (in minutes) to cache metadata before rechecking the remote repository.
 
 
 <a id="nestedblock--storage"></a>
@@ -153,7 +153,6 @@ Optional:
 
 Optional:
 
-- **blob_store_name** (String) Blob store used to store repository contents
-- **strict_content_type_validation** (Boolean) Whether to validate uploaded content's MIME type appropriate for the repository format
-- **write_policy** (String) Controls if deployments of and updates to assets are allowed
-
+- `blob_store_name` (String) Blob store used to store repository contents
+- `strict_content_type_validation` (Boolean) Whether to validate uploaded content's MIME type appropriate for the repository format
+- `write_policy` (String) Controls if deployments of and updates to assets are allowed

@@ -28,10 +28,10 @@ provider "nexus" {
 
 ### Optional
 
-- **insecure** (Boolean) Boolean to specify wether insecure SSL connections are allowed or not. Reading environment variable NEXUS_INSECURE_SKIP_VERIFY. Default:`true`
-- **password** (String) Password of user to connect to API. Reading environment variable NEXUS_PASSWORD. Default:`admin123`
-- **url** (String) URL of Nexus to reach API. Reading environment variable NEXUS_URL. Default:`http://127.0.0.1:8080`
-- **username** (String) Username used to connect to API. Reading environment variable NEXUS_USERNAME. Default:`admin`
+- `insecure` (Boolean) Boolean to specify wether insecure SSL connections are allowed or not. Reading environment variable NEXUS_INSECURE_SKIP_VERIFY. Default:`true`
+- `password` (String) Password of user to connect to API. Reading environment variable NEXUS_PASSWORD. Default:`admin123`
+- `url` (String) URL of Nexus to reach API. Reading environment variable NEXUS_URL. Default:`http://127.0.0.1:8080`
+- `username` (String) Username used to connect to API. Reading environment variable NEXUS_USERNAME. Default:`admin`
 
 ## Author
 

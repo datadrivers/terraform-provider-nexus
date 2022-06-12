@@ -87,31 +87,31 @@ resource "nexus_repository_docker_group" "group" {
 
 ### Required
 
-- **docker** (Block List, Min: 1, Max: 1) docker contains the configuration of the docker repository (see [below for nested schema](#nestedblock--docker))
-- **group** (Block List, Min: 1, Max: 1) Configuration for repository group (see [below for nested schema](#nestedblock--group))
-- **name** (String) A unique identifier for this repository
-- **storage** (Block List, Min: 1, Max: 1) The storage configuration of the repository (see [below for nested schema](#nestedblock--storage))
+- `docker` (Block List, Min: 1, Max: 1) docker contains the configuration of the docker repository (see [below for nested schema](#nestedblock--docker))
+- `group` (Block List, Min: 1, Max: 1) Configuration for repository group (see [below for nested schema](#nestedblock--group))
+- `name` (String) A unique identifier for this repository
+- `storage` (Block List, Min: 1, Max: 1) The storage configuration of the repository (see [below for nested schema](#nestedblock--storage))
 
 ### Optional
 
-- **online** (Boolean) Whether this repository accepts incoming requests
+- `online` (Boolean) Whether this repository accepts incoming requests
 
 ### Read-Only
 
-- **id** (String) Used to identify resource at nexus
+- `id` (String) Used to identify resource at nexus
 
 <a id="nestedblock--docker"></a>
 ### Nested Schema for `docker`
 
 Required:
 
-- **force_basic_auth** (Boolean) Whether to force authentication (Docker Bearer Token Realm required if false)
-- **v1_enabled** (Boolean) Whether to allow clients to use the V1 API to interact with this repository
+- `force_basic_auth` (Boolean) Whether to force authentication (Docker Bearer Token Realm required if false)
+- `v1_enabled` (Boolean) Whether to allow clients to use the V1 API to interact with this repository
 
 Optional:
 
-- **http_port** (Number) Create an HTTP connector at specified port
-- **https_port** (Number) Create an HTTPS connector at specified port
+- `http_port` (Number) Create an HTTP connector at specified port
+- `https_port` (Number) Create an HTTPS connector at specified port
 
 
 <a id="nestedblock--group"></a>
@@ -119,11 +119,11 @@ Optional:
 
 Required:
 
-- **member_names** (Set of String) Member repositories names
+- `member_names` (Set of String) Member repositories names
 
 Optional:
 
-- **writable_member** (String) Pro-only: This field is for the Group Deployment feature available in NXRM Pro.
+- `writable_member` (String) Pro-only: This field is for the Group Deployment feature available in NXRM Pro.
 
 
 <a id="nestedblock--storage"></a>
@@ -131,11 +131,11 @@ Optional:
 
 Required:
 
-- **blob_store_name** (String) Blob store used to store repository contents
+- `blob_store_name` (String) Blob store used to store repository contents
 
 Optional:
 
-- **strict_content_type_validation** (Boolean) Whether to validate uploaded content's MIME type appropriate for the repository format
+- `strict_content_type_validation` (Boolean) Whether to validate uploaded content's MIME type appropriate for the repository format
 ## Import
 Import is supported using the following syntax:
 ```shell

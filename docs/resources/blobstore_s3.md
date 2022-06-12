@@ -34,44 +34,44 @@ resource "nexus_blobstore_s3" "aws" {
 
 ### Required
 
-- **bucket_configuration** (Block List, Min: 1, Max: 1) The S3 bucket configuration. (see [below for nested schema](#nestedblock--bucket_configuration))
-- **name** (String) Blobstore name
+- `bucket_configuration` (Block List, Min: 1, Max: 1) The S3 bucket configuration. (see [below for nested schema](#nestedblock--bucket_configuration))
+- `name` (String) Blobstore name
 
 ### Optional
 
-- **soft_quota** (Block List, Max: 1) Soft quota of the blobstore (see [below for nested schema](#nestedblock--soft_quota))
+- `soft_quota` (Block List, Max: 1) Soft quota of the blobstore (see [below for nested schema](#nestedblock--soft_quota))
 
 ### Read-Only
 
-- **blob_count** (Number) Count of blobs
-- **id** (String) Used to identify resource at nexus
-- **total_size_in_bytes** (Number) The total size of the blobstore in Bytes
+- `blob_count` (Number) Count of blobs
+- `id` (String) Used to identify resource at nexus
+- `total_size_in_bytes` (Number) The total size of the blobstore in Bytes
 
 <a id="nestedblock--bucket_configuration"></a>
 ### Nested Schema for `bucket_configuration`
 
 Required:
 
-- **bucket** (Block List, Min: 1, Max: 1) The S3 bucket configuration (see [below for nested schema](#nestedblock--bucket_configuration--bucket))
+- `bucket` (Block List, Min: 1, Max: 1) The S3 bucket configuration (see [below for nested schema](#nestedblock--bucket_configuration--bucket))
 
 Optional:
 
-- **advanced_bucket_connection** (Block List, Max: 1) Additional connection configurations (see [below for nested schema](#nestedblock--bucket_configuration--advanced_bucket_connection))
-- **bucket_security** (Block List, Max: 1) Additional security configurations (see [below for nested schema](#nestedblock--bucket_configuration--bucket_security))
-- **encryption** (Block List, Max: 1) Additional bucket encryption configurations (see [below for nested schema](#nestedblock--bucket_configuration--encryption))
+- `advanced_bucket_connection` (Block List, Max: 1) Additional connection configurations (see [below for nested schema](#nestedblock--bucket_configuration--advanced_bucket_connection))
+- `bucket_security` (Block List, Max: 1) Additional security configurations (see [below for nested schema](#nestedblock--bucket_configuration--bucket_security))
+- `encryption` (Block List, Max: 1) Additional bucket encryption configurations (see [below for nested schema](#nestedblock--bucket_configuration--encryption))
 
 <a id="nestedblock--bucket_configuration--bucket"></a>
 ### Nested Schema for `bucket_configuration.bucket`
 
 Required:
 
-- **expiration** (Number) How many days until deleted blobs are finally removed from the S3 bucket (-1 to disable)
-- **name** (String) The name of the S3 bucket
-- **region** (String) The AWS region to create a new S3 bucket in or an existing S3 bucket's region
+- `expiration` (Number) How many days until deleted blobs are finally removed from the S3 bucket (-1 to disable)
+- `name` (String) The name of the S3 bucket
+- `region` (String) The AWS region to create a new S3 bucket in or an existing S3 bucket's region
 
 Optional:
 
-- **prefix** (String) The S3 blob store (i.e S3 object) key prefix
+- `prefix` (String) The S3 blob store (i.e S3 object) key prefix
 
 
 <a id="nestedblock--bucket_configuration--advanced_bucket_connection"></a>
@@ -79,10 +79,10 @@ Optional:
 
 Optional:
 
-- **endpoint** (String) A custom endpoint URL for third party object stores using the S3 API.
-- **force_path_style** (Boolean) Setting this flag will result in path-style access being used for all requests.
-- **max_connection_pool_size** (Number) Setting this value will override the default connection pool size of Nexus of the s3 client for this blobstore.
-- **signer_type** (String) An API signature version which may be required for third party object stores using the S3 API.
+- `endpoint` (String) A custom endpoint URL for third party object stores using the S3 API.
+- `force_path_style` (Boolean) Setting this flag will result in path-style access being used for all requests.
+- `max_connection_pool_size` (Number) Setting this value will override the default connection pool size of Nexus of the s3 client for this blobstore.
+- `signer_type` (String) An API signature version which may be required for third party object stores using the S3 API.
 
 
 <a id="nestedblock--bucket_configuration--bucket_security"></a>
@@ -90,10 +90,10 @@ Optional:
 
 Optional:
 
-- **access_key_id** (String) An IAM access key ID for granting access to the S3 bucket
-- **role** (String) An IAM role to assume in order to access the S3 bucket
-- **secret_access_key** (String, Sensitive) The secret access key associated with the specified IAM access key ID
-- **session_token** (String, Sensitive) An AWS STS session token associated with temporary security credentials which grant access to the S3 bucket
+- `access_key_id` (String) An IAM access key ID for granting access to the S3 bucket
+- `role` (String) An IAM role to assume in order to access the S3 bucket
+- `secret_access_key` (String, Sensitive) The secret access key associated with the specified IAM access key ID
+- `session_token` (String, Sensitive) An AWS STS session token associated with temporary security credentials which grant access to the S3 bucket
 
 
 <a id="nestedblock--bucket_configuration--encryption"></a>
@@ -101,8 +101,8 @@ Optional:
 
 Optional:
 
-- **encryption_key** (String) The encryption key.
-- **encryption_type** (String) The type of S3 server side encryption to use.
+- `encryption_key` (String) The encryption key.
+- `encryption_type` (String) The type of S3 server side encryption to use.
 
 
 
@@ -111,8 +111,8 @@ Optional:
 
 Required:
 
-- **limit** (Number) The limit in Bytes. Minimum value is 1000000
-- **type** (String) The type to use such as spaceRemainingQuota, or spaceUsedQuota
+- `limit` (Number) The limit in Bytes. Minimum value is 1000000
+- `type` (String) The type to use such as spaceRemainingQuota, or spaceUsedQuota
 ## Import
 Import is supported using the following syntax:
 ```shell

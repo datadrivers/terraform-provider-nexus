@@ -21,15 +21,15 @@ resource "nexus_security_user_token" "nexus" {
 
 ### Required
 
-- **enabled** (Boolean) Activate the feature of user tokens.
+- `enabled` (Boolean) Activate the feature of user tokens.
 
 ### Optional
 
-- **protect_content** (Boolean) Require user tokens for repository authentication. This does not effect UI access.
+- `protect_content` (Boolean) Require user tokens for repository authentication. This does not effect UI access.
 
 ### Read-Only
 
-- **id** (String) Used to identify resource at nexus
+- `id` (String) Used to identify resource at nexus
 ## Import
 Import is supported using the following syntax:
 ```shell

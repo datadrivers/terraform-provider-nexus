@@ -12,21 +12,20 @@ Use this resource to create a Nexus privilege.
 
 ### Required
 
-- **actions** (Set of String) Actions for the privilege (browse, read, edit, add, delete, all and run)
-- **name** (String) The name of the privilege
-- **type** (String) The type of the privilege. Possible values: `application`, `repository-admin`, `repository-content-selector`, `repository-view`, `script`, `wildcard`
+- `actions` (Set of String) Actions for the privilege (browse, read, edit, add, delete, all and run)
+- `name` (String) The name of the privilege
+- `type` (String) The type of the privilege. Possible values: `application`, `repository-admin`, `repository-content-selector`, `repository-view`, `script`, `wildcard`
 
 ### Optional
 
-- **content_selector** (String) The content selector for the privilege
-- **description** (String) A description of the privilege
-- **domain** (String) The domain of the privilege
-- **format** (String) The format of the privilege. Possible values: `apt`, `bower`, `conan`, `docker`, `gitlfs`, `go`, `helm`, `maven2`, `npm`, `nuget`, `p2`, `pypi`, `raw`, `rubygems`, `yum`
-- **pattern** (String) The wildcard privilege pattern
-- **repository** (String) The repository of the privilege
-- **script_name** (String) The script name related to the privilege
+- `content_selector` (String) The content selector for the privilege
+- `description` (String) A description of the privilege
+- `domain` (String) The domain of the privilege
+- `format` (String) The format of the privilege. Possible values: `apt`, `bower`, `conan`, `docker`, `gitlfs`, `go`, `helm`, `maven2`, `npm`, `nuget`, `p2`, `pypi`, `raw`, `rubygems`, `yum`
+- `pattern` (String) The wildcard privilege pattern
+- `repository` (String) The repository of the privilege
+- `script_name` (String) The script name related to the privilege
 
 ### Read-Only
 
-- **id** (String) Used to identify resource at nexus
-
+- `id` (String) Used to identify resource at nexus

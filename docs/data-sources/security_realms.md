@@ -15,17 +15,17 @@ data "nexus_security_ldap" "default" {}
 
 ### Read-Only
 
-- **active** (List of Object) List of active security realms (see [below for nested schema](#nestedatt--active))
-- **available** (List of Object) List of available security realms (see [below for nested schema](#nestedatt--available))
-- **id** (String) Used to identify data source at nexus
+- `active` (List of Object) List of active security realms (see [below for nested schema](#nestedatt--active))
+- `available` (List of Object) List of available security realms (see [below for nested schema](#nestedatt--available))
+- `id` (String) Used to identify data source at nexus
 
 <a id="nestedatt--active"></a>
 ### Nested Schema for `active`
 
 Read-Only:
 
-- **id** (String)
-- **name** (String)
+- `id` (String)
+- `name` (String)
 
 
 <a id="nestedatt--available"></a>
@@ -33,6 +33,5 @@ Read-Only:
 
 Read-Only:
 
-- **id** (String)
-- **name** (String)
-
+- `id` (String)
+- `name` (String)
