@@ -112,6 +112,7 @@ resource "nexus_repository" "{{ .Name }}" {
 
 {{ if .NugetProxy }}
 	nuget_proxy {
+		nuget_version = "{{ .NugetProxy.NugetVersion }}"
 		query_cache_item_max_age = {{ .NugetProxy.QueryCacheItemMaxAge }}
 	}
 {{ end -}}
