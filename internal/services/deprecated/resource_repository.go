@@ -616,11 +616,9 @@ func getRepositoryFromResourceData(d *schema.ResourceData) repository.LegacyRepo
 		mavenList := d.Get("maven").([]interface{})
 		mavenConfig := mavenList[0].(map[string]interface{})
 
-		versionPolicy := repository.MavenVersionPolicy(mavenConfig["version_policy"].(string))
-		layoutPolicy := repository.MavenLayoutPolicy(mavenConfig["layout_policy"].(string))
 		repo.Maven = &repository.Maven{
-			VersionPolicy: &versionPolicy,
-			LayoutPolicy:  &layoutPolicy,
+			VersionPolicy: repository.MavenVersionPolicy(mavenConfig["version_policy"].(string)),
+			LayoutPolicy:  repository.MavenLayoutPolicy(mavenConfig["layout_policy"].(string)),
 		}
 	}
 

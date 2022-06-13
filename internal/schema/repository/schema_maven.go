@@ -14,12 +14,12 @@ var (
 			Schema: map[string]*schema.Schema{
 				"version_policy": {
 					Description: "What type of artifacts does this repository store? Possible Value: `RELEASE`, `SNAPSHOT` or `MIXED`",
-					Optional:    true,
+					Required:    true,
 					Type:        schema.TypeString,
 				},
 				"layout_policy": {
 					Description: "Validate that all paths are maven artifact or metadata paths. Possible Value: `STRICT` or `PERMISSIVE`",
-					Optional:    true,
+					Required:    true,
 					Type:        schema.TypeString,
 				},
 				"content_disposition": {

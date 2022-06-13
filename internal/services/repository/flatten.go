@@ -180,12 +180,9 @@ func flattenHostedStorage(storage *repository.HostedStorage) []map[string]interf
 }
 
 func flattenMaven(maven *repository.Maven) []map[string]interface{} {
-	data := map[string]interface{}{}
-	if maven.VersionPolicy != nil {
-		data["version_policy"] = string(*maven.VersionPolicy)
-	}
-	if maven.LayoutPolicy != nil {
-		data["layout_policy"] = string(*maven.LayoutPolicy)
+	data := map[string]interface{}{
+		"version_policy": maven.VersionPolicy,
+		"layout_policy":  maven.LayoutPolicy,
 	}
 	if maven.ContentDisposition != nil {
 		data["content_disposition"] = string(*maven.ContentDisposition)

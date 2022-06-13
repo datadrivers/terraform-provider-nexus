@@ -15,16 +15,14 @@ import (
 
 func testAccResourceRepositoryMavenHosted() repository.MavenHostedRepository {
 	writePolicy := repository.StorageWritePolicyAllow
-	versionPolicy := repository.MavenVersionPolicyRelease
-	layoutPolicy := repository.MavenLayoutPolicyStrict
 	contentDisposition := repository.MavenContentDispositionAttachment
 
 	return repository.MavenHostedRepository{
 		Name:   fmt.Sprintf("test-repo-%s", acctest.RandString(10)),
 		Online: true,
 		Maven: repository.Maven{
-			VersionPolicy:      &versionPolicy,
-			LayoutPolicy:       &layoutPolicy,
+			VersionPolicy:      repository.MavenVersionPolicyRelease,
+			LayoutPolicy:       repository.MavenLayoutPolicyStrict,
 			ContentDisposition: &contentDisposition,
 		},
 		Storage: repository.HostedStorage{
@@ -78,8 +76,8 @@ func TestAccResourceRepositoryMavenHosted(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "component.0.proprietary_components", strconv.FormatBool(repo.Component.ProprietaryComponents)),
 					),
 					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(resourceName, "maven.0.version_policy", string(*repo.Maven.VersionPolicy)),
-						resource.TestCheckResourceAttr(resourceName, "maven.0.layout_policy", string(*repo.Maven.LayoutPolicy)),
+						resource.TestCheckResourceAttr(resourceName, "maven.0.version_policy", string(repo.Maven.VersionPolicy)),
+						resource.TestCheckResourceAttr(resourceName, "maven.0.layout_policy", string(repo.Maven.LayoutPolicy)),
 						resource.TestCheckResourceAttr(resourceName, "maven.0.content_disposition", string(*repo.Maven.ContentDisposition)),
 					),
 				),
