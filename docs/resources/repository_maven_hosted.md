@@ -47,11 +47,14 @@ resource "nexus_repository_maven_hosted" "releases" {
 <a id="nestedblock--maven"></a>
 ### Nested Schema for `maven`
 
+Required:
+
+- `layout_policy` (String) Validate that all paths are maven artifact or metadata paths. Possible Value: `STRICT` or `PERMISSIVE`
+- `version_policy` (String) What type of artifacts does this repository store? Possible Value: `RELEASE`, `SNAPSHOT` or `MIXED`
+
 Optional:
 
 - `content_disposition` (String) Add Content-Disposition header as 'Attachment' to disable some content from being inline in a browse. Possible Value: `INLINE` or `ATTACHMENT`
-- `layout_policy` (String) Validate that all paths are maven artifact or metadata paths. Possible Value: `STRICT` or `PERMISSIVE`
-- `version_policy` (String) What type of artifacts does this repository store? Possible Value: `RELEASE`, `SNAPSHOT` or `MIXED`
 
 
 <a id="nestedblock--storage"></a>
