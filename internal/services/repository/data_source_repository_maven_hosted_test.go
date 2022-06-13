@@ -26,6 +26,10 @@ func TestAccDataSourceRepositoryMavenHosted(t *testing.T) {
 			BlobStoreName:               "default",
 			StrictContentTypeValidation: false,
 		},
+		Maven: repository.Maven{
+			VersionPolicy: repository.MavenVersionPolicyRelease,
+			LayoutPolicy:  repository.MavenLayoutPolicyStrict,
+		},
 	}
 	dataSourceName := "data.nexus_repository_maven_hosted.acceptance"
 

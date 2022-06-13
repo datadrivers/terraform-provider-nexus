@@ -40,7 +40,7 @@ func ResourceRepositoryMavenHosted() *schema.Resource {
 func getMavenHostedRepositoryFromResourceData(resourceData *schema.ResourceData) repository.MavenHostedRepository {
 	storageConfig := resourceData.Get("storage").([]interface{})[0].(map[string]interface{})
 	writePolicy := repository.StorageWritePolicy(storageConfig["write_policy"].(string))
-
+	mavenConfig := resourceData.Get("maven").([]interface{})[0].(map[string]interface{})
 	repo := repository.MavenHostedRepository{
 		Name:   resourceData.Get("name").(string),
 		Online: resourceData.Get("online").(bool),
@@ -49,24 +49,15 @@ func getMavenHostedRepositoryFromResourceData(resourceData *schema.ResourceData)
 			StrictContentTypeValidation: storageConfig["strict_content_type_validation"].(bool),
 			WritePolicy:                 &writePolicy,
 		},
-		Maven: repository.Maven{},
+		Maven: repository.Maven{
+			VersionPolicy: repository.MavenVersionPolicy(mavenConfig["version_policy"].(string)),
+			LayoutPolicy:  repository.MavenLayoutPolicy(mavenConfig["layout_policy"].(string)),
+		},
 	}
 
-	mavenList := resourceData.Get("maven").([]interface{})
-	if len(mavenList) > 0 && mavenList[0] != nil {
-		mavenConfig := mavenList[0].(map[string]interface{})
-		if mavenConfig["version_policy"] != "" {
-			versionPolicy := repository.MavenVersionPolicy(mavenConfig["version_policy"].(string))
-			repo.Maven.VersionPolicy = &versionPolicy
-		}
-		if mavenConfig["layout_policy"] != "" {
-			layoutPolicy := repository.MavenLayoutPolicy(mavenConfig["layout_policy"].(string))
-			repo.Maven.LayoutPolicy = &layoutPolicy
-		}
-		if mavenConfig["content_disposition"] != "" {
-			contentDisposition := repository.MavenContentDisposition(mavenConfig["content_disposition"].(string))
-			repo.Maven.ContentDisposition = &contentDisposition
-		}
+	if mavenConfig["content_disposition"] != "" {
+		contentDisposition := repository.MavenContentDisposition(mavenConfig["content_disposition"].(string))
+		repo.Maven.ContentDisposition = &contentDisposition
 	}
 
 	cleanupList := resourceData.Get("cleanup").([]interface{})

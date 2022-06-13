@@ -10,11 +10,9 @@ import (
 
 func testAccResourceRepositoryMavenProxy() repository.LegacyRepository {
 	repo := testAccResourceRepositoryProxy(repository.RepositoryFormatMaven2)
-	layoutPolicy := repository.MavenLayoutPolicyStrict
-	versionPolicy := repository.MavenVersionPolicySnapshot
 	repo.Maven = &repository.Maven{
-		LayoutPolicy:  &layoutPolicy,
-		VersionPolicy: &versionPolicy,
+		LayoutPolicy:  repository.MavenLayoutPolicyStrict,
+		VersionPolicy: repository.MavenVersionPolicySnapshot,
 	}
 	repo.Proxy.RemoteURL = "https://www.example.com"
 	return repo
