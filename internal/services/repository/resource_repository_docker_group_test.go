@@ -45,14 +45,16 @@ func testAccResourceRepositoryDockerGroupConfig(repo repository.DockerGroupRepos
 }
 
 func TestAccResourceRepositoryDockerGroup(t *testing.T) {
-	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "true" {
-		t.Skip("Skipping Nexus Pro tests")
-	}
-
 	repoHosted := testAccResourceRepositoryDockerHosted()
 	repoGroup := testAccResourceRepositoryDockerGroup()
 	repoGroup.Group.MemberNames = append(repoGroup.Group.MemberNames, repoHosted.Name)
-	repoGroup.Group.WritableMember = tools.GetStringPointer(repoHosted.Name)
+
+	writableMember := ""
+	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "false" {
+		writableMember = repoHosted.Name
+	}
+
+	repoGroup.Group.WritableMember = &writableMember
 	resourceName := "nexus_repository_docker_group.acceptance"
 
 	resource.Test(t, resource.TestCase{
@@ -74,7 +76,7 @@ func TestAccResourceRepositoryDockerGroup(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "group.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "group.0.member_names.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "group.0.member_names.0", repoGroup.Group.MemberNames[0]),
-						resource.TestCheckResourceAttr(resourceName, "group.0.writable_member", *repoGroup.Group.WritableMember),
+						resource.TestCheckResourceAttr(resourceName, "group.0.writable_member", writableMember),
 					),
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(resourceName, "docker.#", "1"),

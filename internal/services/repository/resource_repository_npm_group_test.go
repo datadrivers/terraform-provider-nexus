@@ -9,6 +9,7 @@ import (
 
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/acceptance"
+	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -40,6 +41,13 @@ func TestAccResourceRepositoryNpmGroup(t *testing.T) {
 	repoHosted := testAccResourceRepositoryNpmHosted()
 	repo := testAccResourceRepositoryNpmGroup()
 	repo.Group.MemberNames = append(repo.Group.MemberNames, repoHosted.Name)
+
+	writableMember := ""
+	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "false" {
+		writableMember = repoHosted.Name
+	}
+
+	repo.Group.WritableMember = tools.GetStringPointer(repoHosted.Name)
 	resourceName := "nexus_repository_npm_group.acceptance"
 
 	resource.Test(t, resource.TestCase{
@@ -61,6 +69,7 @@ func TestAccResourceRepositoryNpmGroup(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "group.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "group.0.member_names.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "group.0.member_names.0", repo.Group.MemberNames[0]),
+						resource.TestCheckResourceAttr(resourceName, "group.0.writable_member", writableMember),
 					),
 				),
 			},

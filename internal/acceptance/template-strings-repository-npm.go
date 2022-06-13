@@ -10,7 +10,7 @@ resource "nexus_repository_npm_group" "acceptance" {
 	depends_on = [
 		nexus_repository_npm_hosted.acceptance
 	]
-` + TemplateStringGroupRepository
+` + TemplateStringGroupDeployRepository
 
 	TemplateStringRepositoryNpmProxy = `
 resource "nexus_repository_npm_proxy" "acceptance" {
