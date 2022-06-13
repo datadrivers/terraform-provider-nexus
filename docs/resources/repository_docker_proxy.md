@@ -57,7 +57,7 @@ resource "nexus_repository_docker_proxy" "dockerhub" {
 ### Optional
 
 - `cleanup` (Block List) Cleanup policies (see [below for nested schema](#nestedblock--cleanup))
-- `http_client` (Block List, Max: 1) HTTP Client configuration for proxy repositories. Required for docker proxy repositories (see [below for nested schema](#nestedblock--http_client))
+- `http_client` (Block List, Max: 1) HTTP Client configuration for proxy repositories (see [below for nested schema](#nestedblock--http_client))
 - `negative_cache` (Block List, Max: 1) Configuration of the negative cache handling (see [below for nested schema](#nestedblock--negative_cache))
 - `online` (Boolean) Whether this repository accepts incoming requests
 - `routing_rule` (String) The name of the routing rule assigned to this repository

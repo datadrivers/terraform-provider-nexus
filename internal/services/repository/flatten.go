@@ -88,6 +88,20 @@ func flattenHTTPClient(httpClient *repository.HTTPClient, d *schema.ResourceData
 	}
 }
 
+func flattenHTTPClientWithPreemptiveAuth(httpClient *repository.HTTPClientWithPreemptiveAuth, d *schema.ResourceData) []map[string]interface{} {
+	if httpClient == nil {
+		return nil
+	}
+	return []map[string]interface{}{
+		{
+			"authentication": flattenHTTPClientAuthenticationWithPreemptive(httpClient.Authentication, d),
+			"auto_block":     httpClient.AutoBlock,
+			"blocked":        httpClient.Blocked,
+			"connection":     flattenHTTPClientConnection(httpClient.Connection),
+		},
+	}
+}
+
 func flattenHTTPClientAuthentication(auth *repository.HTTPClientAuthentication, d *schema.ResourceData) []map[string]interface{} {
 	if auth == nil {
 		return nil
@@ -99,6 +113,22 @@ func flattenHTTPClientAuthentication(auth *repository.HTTPClientAuthentication, 
 			"type":        auth.Type,
 			"username":    auth.Username,
 			"password":    d.Get("http_client.0.authentication.0.password").(string),
+		},
+	}
+}
+
+func flattenHTTPClientAuthenticationWithPreemptive(auth *repository.HTTPClientAuthenticationWithPreemptive, d *schema.ResourceData) []map[string]interface{} {
+	if auth == nil {
+		return nil
+	}
+	return []map[string]interface{}{
+		{
+			"ntlm_domain": auth.NTLMDomain,
+			"ntlm_host":   auth.NTLMHost,
+			"type":        auth.Type,
+			"username":    auth.Username,
+			"password":    d.Get("http_client.0.authentication.0.password").(string),
+			"preemptive":  auth.Preemptive,
 		},
 	}
 }
