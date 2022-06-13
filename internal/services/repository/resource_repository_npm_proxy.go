@@ -38,11 +38,13 @@ func ResourceRepositoryNpmProxy() *schema.Resource {
 			"remove_non_cataloged": {
 				Description: "Remove non-catalogued versions from the npm package metadata.",
 				Optional:    true,
+				Default:     false,
 				Type:        schema.TypeBool,
 			},
 			"remove_quarantined": {
 				Description: "Remove quarantined versions from the npm package metadata.",
 				Optional:    true,
+				Default:     false,
 				Type:        schema.TypeBool,
 			},
 		},
