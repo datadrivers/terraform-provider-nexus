@@ -24,7 +24,7 @@ data "nexus_repository_docker_proxy" "dockerhub" {
 - `cleanup` (List of Object) Cleanup policies (see [below for nested schema](#nestedatt--cleanup))
 - `docker` (List of Object) docker contains the configuration of the docker repository (see [below for nested schema](#nestedatt--docker))
 - `docker_proxy` (List of Object) docker_proxy contains the configuration of the docker index (see [below for nested schema](#nestedatt--docker_proxy))
-- `http_client` (List of Object) HTTP Client configuration for proxy repositories. Required for docker proxy repositories. (see [below for nested schema](#nestedatt--http_client))
+- `http_client` (List of Object) HTTP Client configuration for proxy repositories (see [below for nested schema](#nestedatt--http_client))
 - `id` (String) Used to identify data source at nexus
 - `negative_cache` (List of Object) Configuration of the negative cache handling (see [below for nested schema](#nestedatt--negative_cache))
 - `online` (Boolean) Whether this repository accepts incoming requests

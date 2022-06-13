@@ -41,6 +41,7 @@ func getMavenHostedRepositoryFromResourceData(resourceData *schema.ResourceData)
 	storageConfig := resourceData.Get("storage").([]interface{})[0].(map[string]interface{})
 	writePolicy := repository.StorageWritePolicy(storageConfig["write_policy"].(string))
 	mavenConfig := resourceData.Get("maven").([]interface{})[0].(map[string]interface{})
+
 	repo := repository.MavenHostedRepository{
 		Name:   resourceData.Get("name").(string),
 		Online: resourceData.Get("online").(bool),

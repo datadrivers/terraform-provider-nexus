@@ -1,20 +1,16 @@
 ---
-page_title: "Resource nexus_repository_apt_proxy"
+page_title: "Resource nexus_repository_maven_proxy"
 subcategory: "Repository"
 description: |-
-  Use this resource to create a hosted apt repository.
+  Use this resource to create a maven proxy repository.
 ---
-# Resource nexus_repository_apt_proxy
-Use this resource to create a hosted apt repository.
+# Resource nexus_repository_maven_proxy
+Use this resource to create a maven proxy repository.
 ## Example Usage
 ```terraform
-resource "nexus_repository_apt_proxy" "bionic_proxy" {
-  name   = "bionic-proxy"
+resource "nexus_repository_maven_proxy" "maven_central" {
+  name   = "maven-central-repo1"
   online = true
-
-  routing_rule = "string"
-  distribution = "bionic"
-  flat         = false
 
   storage {
     blob_store_name                = "default"
@@ -22,7 +18,7 @@ resource "nexus_repository_apt_proxy" "bionic_proxy" {
   }
 
   proxy {
-    remote_url       = "https://remote.repository.com"
+    remote_url       = "https://repo1.maven.org/maven2/"
     content_max_age  = 1440
     metadata_max_age = 1440
   }
@@ -35,21 +31,11 @@ resource "nexus_repository_apt_proxy" "bionic_proxy" {
   http_client {
     blocked    = false
     auto_block = true
+  }
 
-    connection {
-      retries                   = 0
-      user_agent_suffix         = "string"
-      timeout                   = 60
-      enable_circular_redirects = false
-      enable_cookies            = false
-      use_trust_store           = false
-    }
-
-    authentication {
-      type     = "username"
-      username = "admin"
-      password = "admin-password"
-    }
+  maven {
+    version_policy = "RELEASE"
+    layout_policy  = "PERMISSIVE"
   }
 }
 ```
@@ -58,8 +44,7 @@ resource "nexus_repository_apt_proxy" "bionic_proxy" {
 
 ### Required
 
-- `distribution` (String) Distribution to fetch
-- `flat` (Boolean) Distribution to fetch
+- `maven` (Block List, Min: 1, Max: 1) Maven contains additional data of maven repository (see [below for nested schema](#nestedblock--maven))
 - `name` (String) A unique identifier for this repository
 - `proxy` (Block List, Min: 1, Max: 1) Configuration for the proxy repository (see [below for nested schema](#nestedblock--proxy))
 - `storage` (Block List, Min: 1, Max: 1) The storage configuration of the repository (see [below for nested schema](#nestedblock--storage))
@@ -75,6 +60,19 @@ resource "nexus_repository_apt_proxy" "bionic_proxy" {
 ### Read-Only
 
 - `id` (String) Used to identify resource at nexus
+
+<a id="nestedblock--maven"></a>
+### Nested Schema for `maven`
+
+Required:
+
+- `layout_policy` (String) Validate that all paths are maven artifact or metadata paths. Possible Value: `STRICT` or `PERMISSIVE`
+- `version_policy` (String) What type of artifacts does this repository store? Possible Value: `RELEASE`, `SNAPSHOT` or `MIXED`
+
+Optional:
+
+- `content_disposition` (String) Add Content-Disposition header as 'Attachment' to disable some content from being inline in a browse. Possible Value: `INLINE` or `ATTACHMENT`
+
 
 <a id="nestedblock--proxy"></a>
 ### Nested Schema for `proxy`
@@ -131,6 +129,7 @@ Optional:
 - `ntlm_domain` (String) The ntlm domain to connect
 - `ntlm_host` (String) The ntlm host to connect
 - `password` (String, Sensitive) The password used by the proxy repository
+- `preemptive` (Boolean) Whether to use pre-emptive authentication. Use with caution. Defaults to false.
 - `username` (String) The username used by the proxy repository
 
 
@@ -159,5 +158,5 @@ Optional:
 Import is supported using the following syntax:
 ```shell
 # import using the name of repository
-terraform import nexus_repository_apt_proxy.bionic_proxy bionic-proxy
+terraform import nexus_repository_maven_proxy.maven_central maven-central
 ```
