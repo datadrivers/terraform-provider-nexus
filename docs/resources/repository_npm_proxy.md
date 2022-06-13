@@ -39,35 +39,35 @@ resource "nexus_repository_npm_proxy" "npmjs" {
 
 ### Required
 
-- **name** (String) A unique identifier for this repository
-- **proxy** (Block List, Min: 1, Max: 1) Configuration for the proxy repository (see [below for nested schema](#nestedblock--proxy))
-- **storage** (Block List, Min: 1, Max: 1) The storage configuration of the repository (see [below for nested schema](#nestedblock--storage))
+- `name` (String) A unique identifier for this repository
+- `proxy` (Block List, Min: 1, Max: 1) Configuration for the proxy repository (see [below for nested schema](#nestedblock--proxy))
+- `storage` (Block List, Min: 1, Max: 1) The storage configuration of the repository (see [below for nested schema](#nestedblock--storage))
 
 ### Optional
 
-- **cleanup** (Block List) Cleanup policies (see [below for nested schema](#nestedblock--cleanup))
-- **http_client** (Block List, Max: 1) HTTP Client configuration for proxy repositories. Required for docker proxy repositories (see [below for nested schema](#nestedblock--http_client))
-- **negative_cache** (Block List, Max: 1) Configuration of the negative cache handling (see [below for nested schema](#nestedblock--negative_cache))
-- **online** (Boolean) Whether this repository accepts incoming requests
-- **remove_non_cataloged** (Boolean) Remove non-catalogued versions from the npm package metadata.
-- **remove_quarantined** (Boolean) Remove quarantined versions from the npm package metadata.
-- **routing_rule** (String) The name of the routing rule assigned to this repository
+- `cleanup` (Block List) Cleanup policies (see [below for nested schema](#nestedblock--cleanup))
+- `http_client` (Block List, Max: 1) HTTP Client configuration for proxy repositories. Required for docker proxy repositories (see [below for nested schema](#nestedblock--http_client))
+- `negative_cache` (Block List, Max: 1) Configuration of the negative cache handling (see [below for nested schema](#nestedblock--negative_cache))
+- `online` (Boolean) Whether this repository accepts incoming requests
+- `remove_non_cataloged` (Boolean) Remove non-catalogued versions from the npm package metadata.
+- `remove_quarantined` (Boolean) Remove quarantined versions from the npm package metadata.
+- `routing_rule` (String) The name of the routing rule assigned to this repository
 
 ### Read-Only
 
-- **id** (String) Used to identify resource at nexus
+- `id` (String) Used to identify resource at nexus
 
 <a id="nestedblock--proxy"></a>
 ### Nested Schema for `proxy`
 
 Required:
 
-- **remote_url** (String) Location of the remote repository being proxied
+- `remote_url` (String) Location of the remote repository being proxied
 
 Optional:
 
-- **content_max_age** (Number) How long (in minutes) to cache artifacts before rechecking the remote repository
-- **metadata_max_age** (Number) How long (in minutes) to cache metadata before rechecking the remote repository.
+- `content_max_age` (Number) How long (in minutes) to cache artifacts before rechecking the remote repository
+- `metadata_max_age` (Number) How long (in minutes) to cache metadata before rechecking the remote repository.
 
 
 <a id="nestedblock--storage"></a>
@@ -75,11 +75,11 @@ Optional:
 
 Required:
 
-- **blob_store_name** (String) Blob store used to store repository contents
+- `blob_store_name` (String) Blob store used to store repository contents
 
 Optional:
 
-- **strict_content_type_validation** (Boolean) Whether to validate uploaded content's MIME type appropriate for the repository format
+- `strict_content_type_validation` (Boolean) Whether to validate uploaded content's MIME type appropriate for the repository format
 
 
 <a id="nestedblock--cleanup"></a>
@@ -87,7 +87,7 @@ Optional:
 
 Optional:
 
-- **policy_names** (Set of String) List of policy names
+- `policy_names` (Set of String) List of policy names
 
 
 <a id="nestedblock--http_client"></a>
@@ -95,24 +95,24 @@ Optional:
 
 Optional:
 
-- **authentication** (Block List, Max: 1) Authentication configuration of the HTTP client (see [below for nested schema](#nestedblock--http_client--authentication))
-- **auto_block** (Boolean) Whether to auto-block outbound connections if remote peer is detected as unreachable/unresponsive
-- **blocked** (Boolean) Whether to block outbound connections on the repository
-- **connection** (Block List, Max: 1) Connection configuration of the HTTP client (see [below for nested schema](#nestedblock--http_client--connection))
+- `authentication` (Block List, Max: 1) Authentication configuration of the HTTP client (see [below for nested schema](#nestedblock--http_client--authentication))
+- `auto_block` (Boolean) Whether to auto-block outbound connections if remote peer is detected as unreachable/unresponsive
+- `blocked` (Boolean) Whether to block outbound connections on the repository
+- `connection` (Block List, Max: 1) Connection configuration of the HTTP client (see [below for nested schema](#nestedblock--http_client--connection))
 
 <a id="nestedblock--http_client--authentication"></a>
 ### Nested Schema for `http_client.authentication`
 
 Required:
 
-- **type** (String) Authentication type. Possible values: `ntlm` or `username`
+- `type` (String) Authentication type. Possible values: `ntlm` or `username`
 
 Optional:
 
-- **ntlm_domain** (String) The ntlm domain to connect
-- **ntlm_host** (String) The ntlm host to connect
-- **password** (String, Sensitive) The password used by the proxy repository
-- **username** (String) The username used by the proxy repository
+- `ntlm_domain` (String) The ntlm domain to connect
+- `ntlm_host` (String) The ntlm host to connect
+- `password` (String, Sensitive) The password used by the proxy repository
+- `username` (String) The username used by the proxy repository
 
 
 <a id="nestedblock--http_client--connection"></a>
@@ -120,12 +120,12 @@ Optional:
 
 Optional:
 
-- **enable_circular_redirects** (Boolean) Whether to enable redirects to the same location (may be required by some servers)
-- **enable_cookies** (Boolean) Whether to allow cookies to be stored and used
-- **retries** (Number) Total retries if the initial connection attempt suffers a timeout
-- **timeout** (Number) Seconds to wait for activity before stopping and retrying the connection
-- **use_trust_store** (Boolean) Use certificates stored in the Nexus Repository Manager truststore to connect to external systems
-- **user_agent_suffix** (String) Custom fragment to append to User-Agent header in HTTP requests
+- `enable_circular_redirects` (Boolean) Whether to enable redirects to the same location (may be required by some servers)
+- `enable_cookies` (Boolean) Whether to allow cookies to be stored and used
+- `retries` (Number) Total retries if the initial connection attempt suffers a timeout
+- `timeout` (Number) Seconds to wait for activity before stopping and retrying the connection
+- `use_trust_store` (Boolean) Use certificates stored in the Nexus Repository Manager truststore to connect to external systems
+- `user_agent_suffix` (String) Custom fragment to append to User-Agent header in HTTP requests
 
 
 
@@ -134,8 +134,8 @@ Optional:
 
 Optional:
 
-- **enabled** (Boolean) Whether to cache responses for content not present in the proxied repository
-- **ttl** (Number) How long to cache the fact that a file was not found in the repository (in minutes)
+- `enabled` (Boolean) Whether to cache responses for content not present in the proxied repository
+- `ttl` (Number) How long to cache the fact that a file was not found in the repository (in minutes)
 ## Import
 Import is supported using the following syntax:
 ```shell

@@ -5,6 +5,7 @@ import (
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	repositorySchema "github.com/datadrivers/terraform-provider-nexus/internal/schema/repository"
+	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -27,7 +28,7 @@ func ResourceRepositoryNpmGroup() *schema.Resource {
 			"name":   repositorySchema.ResourceName,
 			"online": repositorySchema.ResourceOnline,
 			// Group schemas
-			"group":   repositorySchema.ResourceGroup,
+			"group":   repositorySchema.ResourceGroupDeploy,
 			"storage": repositorySchema.ResourceStorage,
 		},
 	}
@@ -51,6 +52,10 @@ func getNpmGroupRepositoryFromResourceData(resourceData *schema.ResourceData) re
 		Group: repository.GroupDeploy{
 			MemberNames: groupMemberNames,
 		},
+	}
+
+	if groupConfig["writable_member"].(string) != "" {
+		repo.Group.WritableMember = tools.GetStringPointer(groupConfig["writable_member"].(string))
 	}
 
 	return repo

@@ -17,7 +17,7 @@ func DataSourceRepositoryNpmGroup() *schema.Resource {
 			"name":   repository.DataSourceName,
 			"online": repository.DataSourceOnline,
 			// Group schemas
-			"group":   repository.DataSourceGroup,
+			"group":   repository.DataSourceGroupDeploy,
 			"storage": repository.DataSourceStorage,
 		},
 	}
