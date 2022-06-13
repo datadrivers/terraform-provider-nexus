@@ -27,12 +27,12 @@ func DataSourceRepositoryNpmProxy() *schema.Resource {
 			// NPM proxy schemas
 			"remove_non_cataloged": {
 				Description: "Remove non-catalogued versions from the npm package metadata.",
-				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeBool,
 			},
 			"remove_quarantined": {
 				Description: "Remove quarantined versions from the npm package metadata.",
-				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeBool,
 			},
 		},
