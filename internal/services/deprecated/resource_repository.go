@@ -13,7 +13,10 @@ import (
 
 func ResourceRepository() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this resource to create a Nexus Repository.",
+		DeprecationMessage: "This resource is deprecated. Please use the resource nexus_repository_* instead.",
+		Description: `!> This resource is deprecated. Please use the resource "nexus_repository_*" instead.
+
+Use this resource to create a Nexus Repository.`,
 
 		Create: resourceRepositoryCreate,
 		Read:   resourceRepositoryRead,

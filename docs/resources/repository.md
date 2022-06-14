@@ -2,9 +2,12 @@
 page_title: "Resource nexus_repository"
 subcategory: "Other"
 description: |-
+  !> This resource is deprecated. Please use the resource "nexusrepository*" instead.
   Use this resource to create a Nexus Repository.
 ---
 # Resource nexus_repository
+!> This resource is deprecated. Please use the resource "nexus_repository_*" instead.
+
 Use this resource to create a Nexus Repository.
 ## Example Usage
 ```terraform
