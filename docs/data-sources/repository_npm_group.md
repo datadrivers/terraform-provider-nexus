@@ -8,7 +8,7 @@ description: |-
 Use this data source to get an existing npm group repository.
 ## Example Usage
 ```terraform
-resource "nexus_repository_npm_group" "group" {
+data "nexus_repository_npm_group" "group" {
   name = "npm-group"
 }
 ```

@@ -1,3 +1,3 @@
-resource "nexus_repository_npm_proxy" "npmjs" {
+data "nexus_repository_npm_proxy" "npmjs" {
   name = "npmjs"
 }

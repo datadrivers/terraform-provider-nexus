@@ -1,3 +1,3 @@
-resource "nexus_repository_nuget_group" "group" {
+data "nexus_repository_nuget_group" "group" {
   name = "nuget-group"
 }

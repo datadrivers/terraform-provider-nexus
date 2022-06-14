@@ -8,7 +8,7 @@ description: |-
 Use this data source to get an existing hosted nuget repository.
 ## Example Usage
 ```terraform
-resource "nexus_repository_nuget_hosted" "nuget" {
+data "nexus_repository_nuget_hosted" "nuget" {
   name = "nuget"
 }
 ```

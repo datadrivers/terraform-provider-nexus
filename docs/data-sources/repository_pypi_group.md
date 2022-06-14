@@ -8,7 +8,7 @@ description: |-
 Use this data source to get an existing pypi group repository.
 ## Example Usage
 ```terraform
-resource "nexus_repository_pypi_group" "group" {
+data "nexus_repository_pypi_group" "group" {
   name = "pypi-group"
 }
 ```

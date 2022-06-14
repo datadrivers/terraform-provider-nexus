@@ -1,3 +1,3 @@
-resource "nexus_repository_npm_hosted" "npm" {
+data "nexus_repository_npm_hosted" "npm" {
   name = "npm"
 }
