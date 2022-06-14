@@ -1,3 +1,3 @@
-resource "nexus_repository_npm_group" "group" {
+data "nexus_repository_npm_group" "group" {
   name = "npm-group"
 }

@@ -8,7 +8,7 @@ description: |-
 Use this data source to get an existing nuget proxy repository.
 ## Example Usage
 ```terraform
-resource "nexus_repository_nuget_proxy" "nuget_org" {
+data "nexus_repository_nuget_proxy" "nuget_org" {
   name = "nuget-org"
 }
 ```

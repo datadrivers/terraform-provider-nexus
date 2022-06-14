@@ -8,7 +8,7 @@ description: |-
 Use this data source to get an existing hosted npm repository.
 ## Example Usage
 ```terraform
-resource "nexus_repository_npm_hosted" "npm" {
+data "nexus_repository_npm_hosted" "npm" {
   name = "npm"
 }
 ```

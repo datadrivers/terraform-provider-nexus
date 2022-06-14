@@ -8,7 +8,7 @@ description: |-
 Use this data source to get an existing npm proxy repository.
 ## Example Usage
 ```terraform
-resource "nexus_repository_npm_proxy" "npmjs" {
+data "nexus_repository_npm_proxy" "npmjs" {
   name = "npmjs"
 }
 ```
