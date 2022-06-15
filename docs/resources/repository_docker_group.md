@@ -32,7 +32,7 @@ resource "nexus_repository_docker_proxy" "dockerhub" {
   }
 
   docker_proxy {
-    index_hub = "HUB"
+    index_type = "HUB"
   }
 
   storage {
@@ -47,8 +47,8 @@ resource "nexus_repository_docker_proxy" "dockerhub" {
   }
 
   negative_cache {
-    enabled      = true
-    time_to_live = 1440
+    enabled = true
+    ttl     = 1440
   }
 
   http_client {
