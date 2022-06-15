@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/client9/misspell v0.3.4
-	github.com/datadrivers/go-nexus-client v1.4.1
+	github.com/datadrivers/go-nexus-client v1.4.2
 	github.com/datadrivers/terraform-plugin-docs v0.9.0-1
 	github.com/golangci/golangci-lint v1.46.2
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.17.0
