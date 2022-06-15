@@ -8,22 +8,20 @@ import (
 var (
 	ResourceHTTPClient = &schema.Schema{
 		Description: "HTTP Client configuration for proxy repositories",
-		Optional:    true,
+		Required:    true,
 		MaxItems:    1,
 		Type:        schema.TypeList,
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"authentication": ResourceHTTPClientAuthentication,
 				"auto_block": {
-					Default:     true,
 					Description: "Whether to auto-block outbound connections if remote peer is detected as unreachable/unresponsive",
-					Optional:    true,
+					Required:    true,
 					Type:        schema.TypeBool,
 				},
 				"blocked": {
-					Default:     false,
 					Description: "Whether to block outbound connections on the repository",
-					Optional:    true,
+					Required:    true,
 					Type:        schema.TypeBool,
 				},
 				"connection": ResourceHTTPClientConnection,
@@ -33,22 +31,20 @@ var (
 
 	ResourceHTTPClientWithPreemptiveAuth = &schema.Schema{
 		Description: "HTTP Client configuration for proxy repositories",
-		Optional:    true,
+		Required:    true,
 		MaxItems:    1,
 		Type:        schema.TypeList,
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"authentication": ResourceHTTPClientAuthenticationWithPreemptive,
 				"auto_block": {
-					Default:     true,
 					Description: "Whether to auto-block outbound connections if remote peer is detected as unreachable/unresponsive",
-					Optional:    true,
+					Required:    true,
 					Type:        schema.TypeBool,
 				},
 				"blocked": {
-					Default:     false,
 					Description: "Whether to block outbound connections on the repository",
-					Optional:    true,
+					Required:    true,
 					Type:        schema.TypeBool,
 				},
 				"connection": ResourceHTTPClientConnection,
