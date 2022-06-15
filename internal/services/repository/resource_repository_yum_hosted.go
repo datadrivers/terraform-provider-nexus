@@ -7,6 +7,7 @@ import (
 	repositorySchema "github.com/datadrivers/terraform-provider-nexus/internal/schema/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func ResourceRepositoryYumHosted() *schema.Resource {
@@ -33,16 +34,18 @@ func ResourceRepositoryYumHosted() *schema.Resource {
 			"storage":   repositorySchema.ResourceHostedStorage,
 			// Yum hosted schemas
 			"deploy_policy": {
-				Default:     "STRICT",
-				Description: "Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`",
-				Optional:    true,
-				Type:        schema.TypeString,
+				Default:      "STRICT",
+				Description:  "Validate that all paths are RPMs or yum metadata. Possible values: `STRICT` or `PERMISSIVE`",
+				Optional:     true,
+				Type:         schema.TypeString,
+				ValidateFunc: validation.StringInSlice([]string{string(repository.YumDeployPolicyStrict), string(repository.YumDeployPolicyPermissive)}, false),
 			},
 			"repodata_depth": {
-				Default:     0,
-				Description: "Specifies the repository depth where repodata folder(s) are created. Possible values: 0-5",
-				Optional:    true,
-				Type:        schema.TypeInt,
+				Default:      0,
+				Description:  "Specifies the repository depth where repodata folder(s) are created. Possible values: 0-5",
+				Optional:     true,
+				Type:         schema.TypeInt,
+				ValidateFunc: validation.IntBetween(0, 5),
 			},
 		},
 	}
