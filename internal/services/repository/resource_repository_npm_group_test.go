@@ -47,7 +47,7 @@ func TestAccResourceRepositoryNpmGroup(t *testing.T) {
 		writableMember = repoHosted.Name
 	}
 
-	repo.Group.WritableMember = tools.GetStringPointer(repoHosted.Name)
+	repo.Group.WritableMember = &writableMember
 	resourceName := "nexus_repository_npm_group.acceptance"
 
 	resource.Test(t, resource.TestCase{
