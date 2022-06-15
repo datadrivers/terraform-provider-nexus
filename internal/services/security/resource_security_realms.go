@@ -9,7 +9,9 @@ import (
 
 func ResourceSecurityRealms() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this resource to activate Nexus Security realms.",
+		Description: `Use this resource to activate and order the Nexus Security realms.
+
+!> This resource can only be used **once** for a nexus`,
 
 		Create: resourceRealmsCreate,
 		Read:   resourceRealmsRead,
@@ -22,7 +24,7 @@ func ResourceSecurityRealms() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"id": common.ResourceID,
 			"active": {
-				Description: "The realm IDs",
+				Description: "Set the active security realms in the order they should be used.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
