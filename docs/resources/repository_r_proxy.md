@@ -39,6 +39,7 @@ resource "nexus_repository_r_proxy" "r_org" {
 
 ### Required
 
+- `http_client` (Block List, Min: 1, Max: 1) HTTP Client configuration for proxy repositories (see [below for nested schema](#nestedblock--http_client))
 - `name` (String) A unique identifier for this repository
 - `proxy` (Block List, Min: 1, Max: 1) Configuration for the proxy repository (see [below for nested schema](#nestedblock--proxy))
 - `storage` (Block List, Min: 1, Max: 1) The storage configuration of the repository (see [below for nested schema](#nestedblock--storage))
@@ -46,7 +47,6 @@ resource "nexus_repository_r_proxy" "r_org" {
 ### Optional
 
 - `cleanup` (Block List) Cleanup policies (see [below for nested schema](#nestedblock--cleanup))
-- `http_client` (Block List, Max: 1) HTTP Client configuration for proxy repositories (see [below for nested schema](#nestedblock--http_client))
 - `negative_cache` (Block List, Max: 1) Configuration of the negative cache handling (see [below for nested schema](#nestedblock--negative_cache))
 - `online` (Boolean) Whether this repository accepts incoming requests
 - `routing_rule` (String) The name of the routing rule assigned to this repository
@@ -54,6 +54,48 @@ resource "nexus_repository_r_proxy" "r_org" {
 ### Read-Only
 
 - `id` (String) Used to identify resource at nexus
+
+<a id="nestedblock--http_client"></a>
+### Nested Schema for `http_client`
+
+Required:
+
+- `auto_block` (Boolean) Whether to auto-block outbound connections if remote peer is detected as unreachable/unresponsive
+- `blocked` (Boolean) Whether to block outbound connections on the repository
+
+Optional:
+
+- `authentication` (Block List, Max: 1) Authentication configuration of the HTTP client (see [below for nested schema](#nestedblock--http_client--authentication))
+- `connection` (Block List, Max: 1) Connection configuration of the HTTP client (see [below for nested schema](#nestedblock--http_client--connection))
+
+<a id="nestedblock--http_client--authentication"></a>
+### Nested Schema for `http_client.authentication`
+
+Required:
+
+- `type` (String) Authentication type. Possible values: `ntlm` or `username`
+
+Optional:
+
+- `ntlm_domain` (String) The ntlm domain to connect
+- `ntlm_host` (String) The ntlm host to connect
+- `password` (String, Sensitive) The password used by the proxy repository
+- `username` (String) The username used by the proxy repository
+
+
+<a id="nestedblock--http_client--connection"></a>
+### Nested Schema for `http_client.connection`
+
+Optional:
+
+- `enable_circular_redirects` (Boolean) Whether to enable redirects to the same location (may be required by some servers)
+- `enable_cookies` (Boolean) Whether to allow cookies to be stored and used
+- `retries` (Number) Total retries if the initial connection attempt suffers a timeout
+- `timeout` (Number) Seconds to wait for activity before stopping and retrying the connection
+- `use_trust_store` (Boolean) Use certificates stored in the Nexus Repository Manager truststore to connect to external systems
+- `user_agent_suffix` (String) Custom fragment to append to User-Agent header in HTTP requests
+
+
 
 <a id="nestedblock--proxy"></a>
 ### Nested Schema for `proxy`
@@ -86,45 +128,6 @@ Optional:
 Optional:
 
 - `policy_names` (Set of String) List of policy names
-
-
-<a id="nestedblock--http_client"></a>
-### Nested Schema for `http_client`
-
-Optional:
-
-- `authentication` (Block List, Max: 1) Authentication configuration of the HTTP client (see [below for nested schema](#nestedblock--http_client--authentication))
-- `auto_block` (Boolean) Whether to auto-block outbound connections if remote peer is detected as unreachable/unresponsive
-- `blocked` (Boolean) Whether to block outbound connections on the repository
-- `connection` (Block List, Max: 1) Connection configuration of the HTTP client (see [below for nested schema](#nestedblock--http_client--connection))
-
-<a id="nestedblock--http_client--authentication"></a>
-### Nested Schema for `http_client.authentication`
-
-Required:
-
-- `type` (String) Authentication type. Possible values: `ntlm` or `username`
-
-Optional:
-
-- `ntlm_domain` (String) The ntlm domain to connect
-- `ntlm_host` (String) The ntlm host to connect
-- `password` (String, Sensitive) The password used by the proxy repository
-- `username` (String) The username used by the proxy repository
-
-
-<a id="nestedblock--http_client--connection"></a>
-### Nested Schema for `http_client.connection`
-
-Optional:
-
-- `enable_circular_redirects` (Boolean) Whether to enable redirects to the same location (may be required by some servers)
-- `enable_cookies` (Boolean) Whether to allow cookies to be stored and used
-- `retries` (Number) Total retries if the initial connection attempt suffers a timeout
-- `timeout` (Number) Seconds to wait for activity before stopping and retrying the connection
-- `use_trust_store` (Boolean) Use certificates stored in the Nexus Repository Manager truststore to connect to external systems
-- `user_agent_suffix` (String) Custom fragment to append to User-Agent header in HTTP requests
-
 
 
 <a id="nestedblock--negative_cache"></a>
