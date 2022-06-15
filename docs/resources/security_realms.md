@@ -2,10 +2,13 @@
 page_title: "Resource nexus_security_realms"
 subcategory: "Security"
 description: |-
-  Use this resource to activate Nexus Security realms.
+  Use this resource to activate and order the Nexus Security realms.
+  !> This resource can only be used once for a nexus
 ---
 # Resource nexus_security_realms
-Use this resource to activate Nexus Security realms.
+Use this resource to activate and order the Nexus Security realms.
+
+!> This resource can only be used **once** for a nexus
 ## Example Usage
 ```terraform
 resource "nexus_security_realms" "example" {
@@ -20,7 +23,7 @@ resource "nexus_security_realms" "example" {
 
 ### Required
 
-- `active` (List of String) The realm IDs
+- `active` (List of String) Set the active security realms in the order they should be used.
 
 ### Read-Only
 
