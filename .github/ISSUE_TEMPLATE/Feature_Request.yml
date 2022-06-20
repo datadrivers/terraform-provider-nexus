@@ -41,14 +41,14 @@ body:
     validations:
       required: true
   - type: checkboxes
-    id: resource
+    id: pro-feature
     attributes:
       label: Pro feature
       description: Needs this feature a Nexus Pro license?
       options:
         - label: "Yes. Pro license Required"
   - type: textarea
-    id: resource
+    id: coomunity-plugin
     attributes:
       label: Community Plugin
       description: Needs this feature a community plugin?

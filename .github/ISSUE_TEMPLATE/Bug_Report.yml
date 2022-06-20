@@ -49,7 +49,7 @@ body:
     validations:
       required: true
   - type: input
-    id: azurerm
+    id: provider-version
     attributes:
       label: Nexus Provider Version
       description: Which Nexus Provider version are you using?
@@ -57,7 +57,7 @@ body:
     validations:
       required: true
   - type: input
-    id: azurerm
+    id: nexus-version
     attributes:
       label: Nexus  Version
       description: Which Nexus version are you using?
