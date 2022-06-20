@@ -57,7 +57,7 @@ body:
     attributes:
       label: Potential Terraform Configuration
       description: Please provide an example of what the new resource or enhancement could look like in a Terraform config.
-      render: hcl
+      render: HCL
   - type: textarea
     id: references
     attributes:
