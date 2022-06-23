@@ -1,18 +1,16 @@
 ---
-page_title: "Resource nexus_repository_bower_proxy"
+page_title: "Resource nexus_repository_cocoapods_proxy"
 subcategory: "Repository"
 description: |-
-  Use this resource to create an bower proxy repository.
+  Use this resource to create an cocoapods proxy repository.
 ---
-# Resource nexus_repository_bower_proxy
-Use this resource to create an bower proxy repository.
+# Resource nexus_repository_cocoapods_proxy
+Use this resource to create an cocoapods proxy repository.
 ## Example Usage
 ```terraform
-resource "nexus_repository_bower_proxy" "bower_io" {
-  name   = "bower-io"
+resource "nexus_repository_bower_proxy" "bower_org" {
+  name   = "bower-org"
   online = true
-
-  rewrite_package_urls = true
 
   storage {
     blob_store_name                = "default"
@@ -20,7 +18,7 @@ resource "nexus_repository_bower_proxy" "bower_io" {
   }
 
   proxy {
-    remote_url       = "https://registry.bower.io"
+    remote_url       = "https://cocoapods.org/"
     content_max_age  = 1440
     metadata_max_age = 1440
   }
@@ -44,7 +42,6 @@ resource "nexus_repository_bower_proxy" "bower_io" {
 - `http_client` (Block List, Min: 1, Max: 1) HTTP Client configuration for proxy repositories (see [below for nested schema](#nestedblock--http_client))
 - `name` (String) A unique identifier for this repository
 - `proxy` (Block List, Min: 1, Max: 1) Configuration for the proxy repository (see [below for nested schema](#nestedblock--proxy))
-- `rewrite_package_urls` (Boolean) Whether to force Bower to retrieve packages through this proxy repository
 - `storage` (Block List, Min: 1, Max: 1) The storage configuration of the repository (see [below for nested schema](#nestedblock--storage))
 
 ### Optional
@@ -144,5 +141,5 @@ Optional:
 Import is supported using the following syntax:
 ```shell
 # import using the name of repository
-terraform import nexus_repository_bower_proxy.bower_io bower-io
+terraform import nexus_repository_cocoapods_proxy.cocoapods_org cocoapods-org
 ```

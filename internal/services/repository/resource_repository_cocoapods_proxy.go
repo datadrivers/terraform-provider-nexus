@@ -9,15 +9,15 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func ResourceRepositoryBowerProxy() *schema.Resource {
+func ResourceRepositoryCocoapodsProxy() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this resource to create an bower proxy repository.",
+		Description: "Use this resource to create an cocoapods proxy repository.",
 
-		Create: resourceBowerProxyRepositoryCreate,
-		Delete: resourceBowerProxyRepositoryDelete,
-		Exists: resourceBowerProxyRepositoryExists,
-		Read:   resourceBowerProxyRepositoryRead,
-		Update: resourceBowerProxyRepositoryUpdate,
+		Create: resourceCocoapodsProxyRepositoryCreate,
+		Delete: resourceCocoapodsProxyRepositoryDelete,
+		Exists: resourceCocoapodsProxyRepositoryExists,
+		Read:   resourceCocoapodsProxyRepositoryRead,
+		Update: resourceCocoapodsProxyRepositoryUpdate,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
@@ -34,23 +34,17 @@ func ResourceRepositoryBowerProxy() *schema.Resource {
 			"proxy":          repositorySchema.ResourceProxy,
 			"routing_rule":   repositorySchema.ResourceRoutingRule,
 			"storage":        repositorySchema.ResourceStorage,
-			// Bower proxy schemas
-			"rewrite_package_urls": {
-				Description: "Whether to force Bower to retrieve packages through this proxy repository",
-				Required:    true,
-				Type:        schema.TypeBool,
-			},
 		},
 	}
 }
 
-func getBowerProxyRepositoryFromResourceData(resourceData *schema.ResourceData) repository.BowerProxyRepository {
+func getCocoapodsProxyRepositoryFromResourceData(resourceData *schema.ResourceData) repository.CocoapodsProxyRepository {
 	httpClientConfig := resourceData.Get("http_client").([]interface{})[0].(map[string]interface{})
 	negativeCacheConfig := resourceData.Get("negative_cache").([]interface{})[0].(map[string]interface{})
 	proxyConfig := resourceData.Get("proxy").([]interface{})[0].(map[string]interface{})
 	storageConfig := resourceData.Get("storage").([]interface{})[0].(map[string]interface{})
 
-	repo := repository.BowerProxyRepository{
+	repo := repository.CocoapodsProxyRepository{
 		Name:   resourceData.Get("name").(string),
 		Online: resourceData.Get("online").(bool),
 		Storage: repository.Storage{
@@ -69,9 +63,6 @@ func getBowerProxyRepositoryFromResourceData(resourceData *schema.ResourceData) 
 			ContentMaxAge:  proxyConfig["content_max_age"].(int),
 			MetadataMaxAge: proxyConfig["metadata_max_age"].(int),
 			RemoteURL:      proxyConfig["remote_url"].(string),
-		},
-		Bower: repository.Bower{
-			RewritePackageUrls: resourceData.Get("rewrite_package_urls").(bool),
 		},
 	}
 
@@ -126,7 +117,7 @@ func getBowerProxyRepositoryFromResourceData(resourceData *schema.ResourceData) 
 	return repo
 }
 
-func setBowerProxyRepositoryToResourceData(repo *repository.BowerProxyRepository, resourceData *schema.ResourceData) error {
+func setCocoapodsProxyRepositoryToResourceData(repo *repository.CocoapodsProxyRepository, resourceData *schema.ResourceData) error {
 	resourceData.SetId(repo.Name)
 	resourceData.Set("name", repo.Name)
 	resourceData.Set("online", repo.Online)
@@ -153,8 +144,6 @@ func setBowerProxyRepositoryToResourceData(repo *repository.BowerProxyRepository
 		return err
 	}
 
-	resourceData.Set("rewrite_package_urls", repo.Bower.RewritePackageUrls)
-
 	if repo.Cleanup != nil {
 		if err := resourceData.Set("cleanup", flattenCleanup(repo.Cleanup)); err != nil {
 			return err
@@ -163,23 +152,23 @@ func setBowerProxyRepositoryToResourceData(repo *repository.BowerProxyRepository
 	return nil
 }
 
-func resourceBowerProxyRepositoryCreate(resourceData *schema.ResourceData, m interface{}) error {
+func resourceCocoapodsProxyRepositoryCreate(resourceData *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
-	repo := getBowerProxyRepositoryFromResourceData(resourceData)
+	repo := getCocoapodsProxyRepositoryFromResourceData(resourceData)
 
-	if err := client.Repository.Bower.Proxy.Create(repo); err != nil {
+	if err := client.Repository.Cocoapods.Proxy.Create(repo); err != nil {
 		return err
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceBowerProxyRepositoryRead(resourceData, m)
+	return resourceCocoapodsProxyRepositoryRead(resourceData, m)
 }
 
-func resourceBowerProxyRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
+func resourceCocoapodsProxyRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
-	repo, err := client.Repository.Bower.Proxy.Get(resourceData.Id())
+	repo, err := client.Repository.Cocoapods.Proxy.Get(resourceData.Id())
 	if err != nil {
 		return err
 	}
@@ -189,30 +178,30 @@ func resourceBowerProxyRepositoryRead(resourceData *schema.ResourceData, m inter
 		return nil
 	}
 
-	return setBowerProxyRepositoryToResourceData(repo, resourceData)
+	return setCocoapodsProxyRepositoryToResourceData(repo, resourceData)
 }
 
-func resourceBowerProxyRepositoryUpdate(resourceData *schema.ResourceData, m interface{}) error {
+func resourceCocoapodsProxyRepositoryUpdate(resourceData *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	repoName := resourceData.Id()
-	repo := getBowerProxyRepositoryFromResourceData(resourceData)
+	repo := getCocoapodsProxyRepositoryFromResourceData(resourceData)
 
-	if err := client.Repository.Bower.Proxy.Update(repoName, repo); err != nil {
+	if err := client.Repository.Cocoapods.Proxy.Update(repoName, repo); err != nil {
 		return err
 	}
 
-	return resourceBowerProxyRepositoryRead(resourceData, m)
+	return resourceCocoapodsProxyRepositoryRead(resourceData, m)
 }
 
-func resourceBowerProxyRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {
+func resourceCocoapodsProxyRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
-	return client.Repository.Bower.Proxy.Delete(resourceData.Id())
+	return client.Repository.Cocoapods.Proxy.Delete(resourceData.Id())
 }
 
-func resourceBowerProxyRepositoryExists(resourceData *schema.ResourceData, m interface{}) (bool, error) {
+func resourceCocoapodsProxyRepositoryExists(resourceData *schema.ResourceData, m interface{}) (bool, error) {
 	client := m.(*nexus.NexusClient)
 
-	repo, err := client.Repository.Bower.Proxy.Get(resourceData.Id())
+	repo, err := client.Repository.Cocoapods.Proxy.Get(resourceData.Id())
 	return repo != nil, err
 }
