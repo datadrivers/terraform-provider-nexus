@@ -1,5 +1,5 @@
-resource "nexus_repository_cocoapods_proxy" "cocoapods_org" {
-  name   = "cocoapods-org"
+resource "nexus_repository_conan_proxy" "conan_center" {
+  name   = "conan-center"
   online = true
 
   storage {
@@ -8,7 +8,7 @@ resource "nexus_repository_cocoapods_proxy" "cocoapods_org" {
   }
 
   proxy {
-    remote_url       = "https://cocoapods.org/"
+    remote_url       = "https://center.conan.io"
     content_max_age  = 1440
     metadata_max_age = 1440
   }

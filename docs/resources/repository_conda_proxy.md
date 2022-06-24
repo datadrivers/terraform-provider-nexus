@@ -1,15 +1,15 @@
 ---
-page_title: "Resource nexus_repository_cocoapods_proxy"
+page_title: "Resource nexus_repository_conda_proxy"
 subcategory: "Repository"
 description: |-
-  Use this resource to create an cocoapods proxy repository.
+  Use this resource to create an conda proxy repository.
 ---
-# Resource nexus_repository_cocoapods_proxy
-Use this resource to create an cocoapods proxy repository.
+# Resource nexus_repository_conda_proxy
+Use this resource to create an conda proxy repository.
 ## Example Usage
 ```terraform
-resource "nexus_repository_cocoapods_proxy" "cocoapods_org" {
-  name   = "cocoapods-org"
+resource "nexus_repository_conda_proxy" "anaconda" {
+  name   = "anaconda"
   online = true
 
   storage {
@@ -18,7 +18,7 @@ resource "nexus_repository_cocoapods_proxy" "cocoapods_org" {
   }
 
   proxy {
-    remote_url       = "https://cocoapods.org/"
+    remote_url       = "https://repo.anaconda.com/pkgs/"
     content_max_age  = 1440
     metadata_max_age = 1440
   }
@@ -141,5 +141,5 @@ Optional:
 Import is supported using the following syntax:
 ```shell
 # import using the name of repository
-terraform import nexus_repository_cocoapods_proxy.cocoapods_org cocoapods-org
+terraform import nexus_repository_conda_proxy.anaconda anaconda
 ```

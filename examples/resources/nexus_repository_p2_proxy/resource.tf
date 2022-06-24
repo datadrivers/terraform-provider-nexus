@@ -1,5 +1,5 @@
-resource "nexus_repository_cocoapods_proxy" "cocoapods_org" {
-  name   = "cocoapods-org"
+resource "nexus_repository_p2_proxy" "eclipse" {
+  name   = "eclipse"
   online = true
 
   storage {
@@ -8,7 +8,7 @@ resource "nexus_repository_cocoapods_proxy" "cocoapods_org" {
   }
 
   proxy {
-    remote_url       = "https://cocoapods.org/"
+    remote_url       = "https://download.eclipse.org/releases/2019-09"
     content_max_age  = 1440
     metadata_max_age = 1440
   }
