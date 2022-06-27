@@ -41,7 +41,7 @@ resource "nexus_repository_go_group" "group" {
 
   group {
     member_names = [
-      nexus_repository_go_hosted.internal.name,
+      nexus_repository_go_proxy.golang_org.name,
     ]
   }
 
