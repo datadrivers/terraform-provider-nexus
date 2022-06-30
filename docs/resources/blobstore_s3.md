@@ -18,7 +18,7 @@ resource "nexus_blobstore_s3" "aws" {
     }
 
     bucket_security {
-      access_key_id = "<your-aws-access-key-id>"
+      access_key_id     = "<your-aws-access-key-id>"
       secret_access_key = "<your-aws-secret-access-key>"
     }
   }

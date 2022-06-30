@@ -4,8 +4,8 @@ resource "nexus_repository_yum_hosted" "yum" {
 
 resource "nexus_repository_yum_hosted" "yum1" {
   deploy_policy  = "STRICT"
-  name = "yummy1"
-  online = true
+  name           = "yummy1"
+  online         = true
   repodata_depth = 4
 
   cleanup {

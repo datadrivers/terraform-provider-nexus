@@ -13,8 +13,8 @@ Use this resource to activate and order the Nexus Security realms.
 ```terraform
 resource "nexus_security_realms" "example" {
   active = [
-	"NexusAuthenticatingRealm",
-	"NexusAuthorizingRealm",
+    "NexusAuthenticatingRealm",
+    "NexusAuthorizingRealm",
   ]
 }
 ```

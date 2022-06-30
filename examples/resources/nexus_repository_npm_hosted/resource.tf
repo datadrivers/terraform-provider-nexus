@@ -3,7 +3,7 @@ resource "nexus_repository_npm_hosted" "npm" {
 }
 
 resource "nexus_repository_npm_hosted" "npm1" {
-  name = "npm1"
+  name   = "npm1"
   online = true
 
   cleanup {
