@@ -8,7 +8,7 @@ require (
 	github.com/datadrivers/terraform-plugin-docs v0.9.0-1
 	github.com/golangci/golangci-lint v1.46.2
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.17.0
-	github.com/stretchr/testify v1.7.5
+	github.com/stretchr/testify v1.8.0
 )
 
 require (
