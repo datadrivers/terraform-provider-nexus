@@ -10,7 +10,7 @@ import (
 )
 
 // Generate docs for website
-//go:generate go run github.com/datadrivers/terraform-plugin-docs/cmd/tfplugindocs
+//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
 
 func main() {
 	var debugMode bool

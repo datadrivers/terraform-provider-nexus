@@ -13,6 +13,7 @@ repos:
     hooks:
       - id: go-fmt
       - id: go-vet
+        exclude: ^(tools/.*)$
       - id: go-imports
       - id: go-mod-tidy
   - repo: https://github.com/commitizen-tools/commitizen
