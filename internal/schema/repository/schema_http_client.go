@@ -83,8 +83,7 @@ var (
 					Description:  "Seconds to wait for activity before stopping and retrying the connection",
 					Optional:     true,
 					Type:         schema.TypeInt,
-					Default:      0,
-					ValidateFunc: validation.IntBetween(0, 3600),
+					ValidateFunc: validation.IntBetween(1, 3600),
 				},
 				"user_agent_suffix": {
 					Description: "Custom fragment to append to User-Agent header in HTTP requests",
