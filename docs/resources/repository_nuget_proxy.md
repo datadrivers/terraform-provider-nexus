@@ -27,8 +27,8 @@ resource "nexus_repository_nuget_proxy" "nuget_org" {
   }
 
   negative_cache {
-    enabled      = true
-    time_to_live = 1440
+    enabled = true
+    ttl     = 1440
   }
 
   http_client {

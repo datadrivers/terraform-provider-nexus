@@ -1,7 +1,7 @@
 /*
 Use this data source to list all security realms.
 
-Example Usage
+# Example Usage
 
 ```hcl
 data "nexus_security_realms" "default" {}
