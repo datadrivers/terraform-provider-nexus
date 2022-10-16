@@ -100,18 +100,7 @@ func getHelmProxyRepositoryFromResourceData(resourceData *schema.ResourceData) r
 	}
 
 	if v, ok := httpClientConfig["connection"]; ok {
-		connectionList := v.([]interface{})
-		if len(connectionList) == 1 && connectionList[0] != nil {
-			connectionConfig := connectionList[0].(map[string]interface{})
-			repo.HTTPClient.Connection = &repository.HTTPClientConnection{
-				EnableCircularRedirects: tools.GetBoolPointer(connectionConfig["enable_circular_redirects"].(bool)),
-				EnableCookies:           tools.GetBoolPointer(connectionConfig["enable_cookies"].(bool)),
-				Retries:                 tools.GetIntPointer(connectionConfig["retries"].(int)),
-				Timeout:                 tools.GetIntPointer(connectionConfig["timeout"].(int)),
-				UserAgentSuffix:         connectionConfig["user_agent_suffix"].(string),
-				UseTrustStore:           tools.GetBoolPointer(connectionConfig["use_trust_store"].(bool)),
-			}
-		}
+		repo.HTTPClient.Connection = getHTTPClientConnection(v.([]interface{}))
 	}
 
 	return repo
