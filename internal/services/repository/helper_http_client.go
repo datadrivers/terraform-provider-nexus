@@ -16,7 +16,7 @@ func getHTTPClientConnection(connectionList []interface{}) *repository.HTTPClien
 			UseTrustStore:           tools.GetBoolPointer(connectionConfig["use_trust_store"].(bool)),
 		}
 		timeout, ok := connectionConfig["timeout"]
-		if ok {
+		if ok && timeout.(int) != 0 {
 			connection.Timeout = tools.GetIntPointer(timeout.(int))
 		}
 		return &connection
