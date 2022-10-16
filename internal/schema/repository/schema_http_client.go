@@ -96,9 +96,10 @@ var (
 							timeout := v.(int)
 							if timeout > maxTimeoutSeconds && timeout < minTimeoutSeconds {
 								diag := diag.Diagnostic{
-									Severity: diag.Error,
-									Summary:  "The timeout value is wrong",
-									Detail:   fmt.Sprintf("%q is not between %q and %q", timeout, minTimeoutSeconds, maxTimeoutSeconds),
+									Severity:      diag.Error,
+									Summary:       "The timeout value is wrong",
+									Detail:        fmt.Sprintf("%q is not between %q and %q", timeout, minTimeoutSeconds, maxTimeoutSeconds),
+									AttributePath: p,
 								}
 								diags = append(diags, diag)
 							}
