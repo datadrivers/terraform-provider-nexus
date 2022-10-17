@@ -23,6 +23,8 @@ jobs:
           make start-services
 
           test -s scripts/license.lic || export SKIP_PRO_TESTS="true"
+          test -n "${AZURE_STORAGE_ACCOUNT_KEY}" || export SKIP_AZURE_TESTS="true"
+
           make test
           make vet
           make testacc
