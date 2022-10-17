@@ -18,7 +18,6 @@ func testAccResourceRepositoryMavenProxy() repository.MavenProxyRepository {
 	enableCircularRedirects := true
 	enableCookies := true
 	retries := 3
-	timeout := 15
 	useTrustStore := true
 	contentDisposition := repository.MavenContentDispositionAttachment
 	preemptive := true
@@ -46,7 +45,6 @@ func testAccResourceRepositoryMavenProxy() repository.MavenProxyRepository {
 				EnableCircularRedirects: &enableCircularRedirects,
 				EnableCookies:           &enableCookies,
 				Retries:                 &retries,
-				Timeout:                 &timeout,
 				UserAgentSuffix:         "acceptance-test",
 				UseTrustStore:           &useTrustStore,
 			},
@@ -114,7 +112,6 @@ func TestAccResourceRepositoryMavenProxy(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "http_client.0.connection.0.enable_circular_redirects", strconv.FormatBool(*repo.HTTPClient.Connection.EnableCircularRedirects)),
 						resource.TestCheckResourceAttr(resourceName, "http_client.0.connection.0.enable_cookies", strconv.FormatBool(*repo.HTTPClient.Connection.EnableCookies)),
 						resource.TestCheckResourceAttr(resourceName, "http_client.0.connection.0.retries", strconv.Itoa(*repo.HTTPClient.Connection.Retries)),
-						resource.TestCheckResourceAttr(resourceName, "http_client.0.connection.0.timeout", strconv.Itoa(*repo.HTTPClient.Connection.Timeout)),
 						resource.TestCheckResourceAttr(resourceName, "http_client.0.connection.0.user_agent_suffix", repo.HTTPClient.Connection.UserAgentSuffix),
 						resource.TestCheckResourceAttr(resourceName, "http_client.0.connection.0.use_trust_store", strconv.FormatBool(*repo.HTTPClient.Connection.UseTrustStore)),
 						resource.TestCheckResourceAttr(resourceName, "negative_cache.#", "1"),

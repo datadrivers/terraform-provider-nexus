@@ -1,6 +1,10 @@
 package repository
 
 import (
+	"fmt"
+
+	"github.com/hashicorp/go-cty/cty"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
@@ -73,18 +77,36 @@ var (
 					Default:     false,
 				},
 				"retries": {
-					Description:  "Total retries if the initial connection attempt suffers a timeout",
-					Optional:     true,
-					Type:         schema.TypeInt,
-					Default:      0,
-					ValidateFunc: validation.IntBetween(0, 10),
+					Description:      "Total retries if the initial connection attempt suffers a timeout",
+					Optional:         true,
+					Type:             schema.TypeInt,
+					Default:          0,
+					ValidateDiagFunc: validation.ToDiagFunc(validation.IntBetween(0, 10)),
 				},
 				"timeout": {
-					Description:  "Seconds to wait for activity before stopping and retrying the connection",
-					Optional:     true,
-					Type:         schema.TypeInt,
-					Default:      0,
-					ValidateFunc: validation.IntBetween(0, 3600),
+					Description: "Seconds to wait for activity before stopping and retrying the connection",
+					Optional:    true,
+					Type:        schema.TypeInt,
+					ValidateDiagFunc: func(v any, p cty.Path) diag.Diagnostics {
+						maxTimeoutSeconds := 3600
+						minTimeoutSeconds := 1
+						var diags diag.Diagnostics
+
+						if v != nil {
+							timeout := v.(int)
+							if timeout > maxTimeoutSeconds && timeout < minTimeoutSeconds {
+								diag := diag.Diagnostic{
+									Severity:      diag.Error,
+									Summary:       "The timeout value is wrong",
+									Detail:        fmt.Sprintf("%q is not between %q and %q", timeout, minTimeoutSeconds, maxTimeoutSeconds),
+									AttributePath: p,
+								}
+								diags = append(diags, diag)
+							}
+						}
+						return diags
+					},
+					// ValidateDiagFunc: validation.ToDiagFunc(validation.IntBetween(1, 3600)),
 				},
 				"user_agent_suffix": {
 					Description: "Custom fragment to append to User-Agent header in HTTP requests",
@@ -110,10 +132,10 @@ var (
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"type": {
-					Description:  "Authentication type. Possible values: `ntlm` or `username`",
-					Required:     true,
-					Type:         schema.TypeString,
-					ValidateFunc: validation.StringInSlice([]string{"ntlm", "username"}, false),
+					Description:      "Authentication type. Possible values: `ntlm` or `username`",
+					Required:         true,
+					Type:             schema.TypeString,
+					ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"ntlm", "username"}, false)),
 				},
 				"username": {
 					Description: "The username used by the proxy repository",
