@@ -46,7 +46,7 @@ darwin-build-install: fmtcheck
 	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 $(GOBUILD) -o ~/.terraform.d/plugins/darwin_amd64/terraform-provider-nexus -v
 
 test: fmt
-	go test -i $(TEST) || exit 1
+	go test $(TEST) || exit 1
 	echo $(TEST) | \
 		xargs -t -n4 go test -cover $(TESTARGS) -timeout=30s -parallel=4
 

@@ -50,4 +50,16 @@ signs:
 release:
   draft: false
 changelog:
-  skip: true
+  use: github
+  groups:
+    - title: Breaking changes
+      regexp: "^!.*$"
+      order: 0
+    - title: Features
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 1
+    - title: 'Bug fixes'
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 2
+    - title: Other changes
+      order: 999
