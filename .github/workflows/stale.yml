@@ -1,0 +1,34 @@
+name: Stale Issues and PRs
+on:
+  schedule:
+  - cron: '0 8 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/stale@v5
+      with:
+        operations-per-run: 100
+        days-before-stale: 90
+        days-before-close: 7
+        stale-issue-label: stale
+        exempt-issue-labels: exempt-from-stale
+        stale-issue-message: >
+          This issue has been automatically marked as `stale`
+          because it has had no activity in the last 90 days. It will be
+          closed in 7 days if no further activity occurs. Leaving a comment
+          **starting with** `/fresh` will mark this issue as not stale.
+        stale-pr-label: stale
+        exempt-pr-labels: exempt-from-stale
+        stale-pr-message:
+          This pull request has been automatically marked as `stale`
+          because it has had no activity in the last 90 days.
+          It will be closed in 7 days if no further activity occurs.
+          closed in 7 days if no further activity occurs. Adding a comment
+          **starting with** `/fresh` will mark this PR as not stale.
