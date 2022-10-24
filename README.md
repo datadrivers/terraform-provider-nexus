@@ -2,6 +2,7 @@
 
 ![codeql workflow](https://github.com/datadrivers/terraform-provider-nexus/actions/workflows/codeql-analysis.yml/badge.svg)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
+[![Go Report Card](https://goreportcard.com/badge/github.com/datadrivers/terraform-provider-nexus)](https://goreportcard.com/report/github.com/datadrivers/terraform-provider-nexus)
 
 - [Terraform provider Nexus](#terraform-provider-nexus)
   - [Introduction](#introduction)
