@@ -16,7 +16,7 @@
 
 ## Introduction
 
-Terraform provider to configure Sonatype Nexus using it's API.
+Terraform provider to configure Sonatype Nexus using its API.
 
 Implemented and tested with Sonatype Nexus `3.40.0-03`.
 
@@ -84,7 +84,7 @@ terraform plan
 terraform apply
 ```
 
-### Testing / Start Nexus Environment
+### Testing
 
 **NOTE**: For testing Nexus Pro features, place the `license.lic` in `scripts/`.
 
@@ -102,10 +102,12 @@ Now start the tests
 make testacc
 ```
 
-or without S3 tests:
+or skipped tests:
 
 ```shell
 SKIP_S3_TESTS=1 make testacc
+SKIP_AZURE_TESTS=1 make testacc
+SKIP_PRO_TESTS=1 make testacc
 ```
 
 #### To debug tests

@@ -9,5 +9,7 @@ terraform.tfstate.*.backup
 
 debug.test
 
+.idea
+
 # nexus pro license file
 scripts/license.lic
