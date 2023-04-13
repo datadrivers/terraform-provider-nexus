@@ -3,9 +3,12 @@ page_title: "Resource nexus_security_user_roles"
 subcategory: "Security"
 description: |-
   Use this resource to manage roles of existing users.
+  Conflicts with nexussecurityuser, it will cause drifts
 ---
 # Resource nexus_security_user_roles
 Use this resource to manage roles of existing users.
+
+Conflicts with nexus_security_user, it will cause drifts
 ## Example Usage
 ```terraform
 resource "nexus_security_user_roles" "anonymous" {

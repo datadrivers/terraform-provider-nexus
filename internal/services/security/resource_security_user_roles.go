@@ -13,7 +13,8 @@ import (
 
 func ResourceSecurityUserRoles() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this resource to manage roles of existing users.",
+		Description: "Use this resource to manage roles of existing users.\n\n" +
+			"Conflicts with nexus_security_user, it will cause drifts",
 
 		Create: resourceSecurityUserRolesCreate,
 		Read:   resourceSecurityUserRolesRead,
