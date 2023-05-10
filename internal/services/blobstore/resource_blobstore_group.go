@@ -95,7 +95,7 @@ func resourceBlobstoreGroupRead(resourceData *schema.ResourceData, m interface{}
 	nexusClient := m.(*nexus.NexusClient)
 
 	bs, err := nexusClient.BlobStore.Group.Get(resourceData.Id())
-	log.Print(bs)
+	log.Printf("[DEBUG] BlobStore:\n%+v\n", bs)
 	if err != nil {
 		return err
 	}
