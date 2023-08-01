@@ -18,13 +18,17 @@ func main() {
 	flag.BoolVar(&debugMode, "debuggable", false, "set to true to run the provider with support for debuggers like delve")
 	flag.Parse()
 
+	// Clean up log output
+	// See https://developer.hashicorp.com/terraform/plugin/log/writing#legacy-logging
+	log.SetFlags(log.Flags() &^ (log.Ldate | log.Ltime))
+
 	if debugMode {
 		err := plugin.Debug(context.Background(), "registry.terraform.io/datadrivers/nexus",
 			&plugin.ServeOpts{
 				ProviderFunc: provider.Provider,
 			})
 		if err != nil {
-			log.Println(err.Error())
+			log.Printf("[ERROR] Error during initialization: %s", err.Error())
 		}
 	} else {
 		plugin.Serve(&plugin.ServeOpts{
