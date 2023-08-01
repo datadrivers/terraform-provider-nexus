@@ -1,16 +1,12 @@
 TEST?=$$(go list ./...  | grep -v 'vendor')
 
 PKG_NAME=nexus
-PKG_OS ?= darwin linux
 PKG_ARCH ?= amd64
 
 GOCMD=go
 GOBUILD=$(GOCMD) build
-GO111MODULE111=on
 GOFLAGS=-mod=vendor
 GOFMT_FILES?=$$(find . -name '*.go' | grep -v vendor)
-
-WEBSITE_REPO=github.com/hashicorp/terraform-website
 
 NEXUS_HOST=$(shell cd ./scripts && ./detect-docker-env-ip.sh)
 MINIO_HOST=$(shell if [ "$(NEXUS_HOST)" = "127.0.0.1" ]; then echo "minio"; else echo "$(NEXUS_HOST)"; fi;)
@@ -38,12 +34,6 @@ build: fmtcheck
 
 linux: fmtcheck
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) -o terraform.d/plugins/linux_amd64/terraform-provider-nexus -v
-
-darwin: fmtcheck
-	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 $(GOBUILD) -o terraform.d/plugins/darwin_amd64/terraform-provider-nexus -v
-
-darwin-build-install: fmtcheck
-	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 $(GOBUILD) -o ~/.terraform.d/plugins/darwin_amd64/terraform-provider-nexus -v
 
 test: fmt
 	go test $(TEST) || exit 1
