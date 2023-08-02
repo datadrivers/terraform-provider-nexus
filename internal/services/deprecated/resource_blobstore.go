@@ -313,7 +313,7 @@ func resourceBlobstoreRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	bs, err := client.BlobStore.Legacy.Get(d.Id())
-	log.Print(bs)
+	log.Printf("[DEBUG] BlobStore:\n%+v\n", bs)
 	if err != nil {
 		return err
 	}
