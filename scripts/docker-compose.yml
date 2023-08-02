@@ -2,6 +2,7 @@ version: '3'
 services:
   nexus-oss:
     image: "${NEXUS_IMAGE}:${NEXUS_VERSION}"
+    user: "${UID}:${GID}"
     ports:
       - "${NEXUS_PORT}:8081"
     volumes:
@@ -10,6 +11,7 @@ services:
       - oss
   nexus-pro:
     image: "${NEXUS_IMAGE}:${NEXUS_VERSION}"
+    user: "${UID}:${GID}"
     ports:
       - "${NEXUS_PORT}:8081"
     volumes:
