@@ -1,7 +1,7 @@
 version: '3'
 services:
   nexus-oss:
-    image: "sonatype/nexus3:${NEXUS_VERSION}"
+    image: "${NEXUS_IMAGE}:${NEXUS_VERSION}"
     ports:
       - "${NEXUS_PORT}:8081"
     volumes:
@@ -9,7 +9,7 @@ services:
     profiles:
       - oss
   nexus-pro:
-    image: "sonatype/nexus3:${NEXUS_VERSION}"
+    image: "${NEXUS_IMAGE}:${NEXUS_VERSION}"
     ports:
       - "${NEXUS_PORT}:8081"
     volumes:
