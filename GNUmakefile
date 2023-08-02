@@ -1,7 +1,6 @@
 TEST?=$$(go list ./...  | grep -v 'vendor')
 
 PKG_NAME=nexus
-PKG_ARCH ?= amd64
 
 GOCMD=go
 GOBUILD=$(GOCMD) build
@@ -31,9 +30,6 @@ endif
 
 build: fmtcheck
 	go build -v .
-
-linux: fmtcheck
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) -o terraform.d/plugins/linux_amd64/terraform-provider-nexus -v
 
 test: fmt
 	go test $(TEST) || exit 1
