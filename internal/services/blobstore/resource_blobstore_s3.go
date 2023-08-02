@@ -249,7 +249,7 @@ func resourceBlobstoreS3Read(resourceData *schema.ResourceData, m interface{}) e
 	nexusClient := m.(*nexus.NexusClient)
 
 	bs, err := nexusClient.BlobStore.S3.Get(resourceData.Id())
-	log.Print(bs)
+	log.Printf("[DEBUG] BlobStore:\n%+v\n", bs)
 	if err != nil {
 		return err
 	}

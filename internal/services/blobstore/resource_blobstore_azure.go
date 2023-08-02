@@ -129,7 +129,7 @@ func resourceBlobstoreAzureRead(resourceData *schema.ResourceData, m interface{}
 	nexusClient := m.(*nexus.NexusClient)
 
 	bs, err := nexusClient.BlobStore.Azure.Get(resourceData.Id())
-	log.Print(bs)
+	log.Printf("[DEBUG] BlobStore:\n%+v\n", bs)
 	if err != nil {
 		return err
 	}
