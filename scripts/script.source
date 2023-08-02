@@ -4,6 +4,11 @@ does_licence_exist() {
   test -f "${_license_file}" && test -s "${_license_file}"
 }
 
+determine_local_architecture() {
+  uname -m
+}
+
+
 if does_licence_exist; then
   echo "detected license file at ${_license_file}"
   NEXUS_TYPE=${NEXUS_TYPE:-pro}
@@ -13,8 +18,24 @@ else
   echo "since no license file detected at ${_license_file}."
 fi
 
+case $(determine_local_architecture) in
+    "arm64" )
+        echo "Determined architecture: arm64"
+        NEXUS_IMAGE=klo2k/nexus3
+        ;;
+    "x86_64" )
+        echo "Determined architecture: x86_64"
+        NEXUS_IMAGE=sonatype/nexus3
+        ;;
+    * )
+        echo "Could not determine architecture" ;;
+esac
+
 # docker-compose options
 COMPOSE_PROFILES=${NEXUS_TYPE}
 export COMPOSE_PROFILES
 COMPOSE_PROJECT_NAME=nexus-${NEXUS_TYPE}
 export COMPOSE_PROJECT_NAME
+
+# arch dependent nexus image selection
+export NEXUS_IMAGE
