@@ -38,6 +38,6 @@ func DataSourceRoutingRule() *schema.Resource {
 }
 
 func dataSourceRoutingRuleRead(d *schema.ResourceData, m interface{}) error {
-	d.SetId(d.Get("name").(string))
+	// d.SetId(d.Get("name").(string))
 	return resourceRoutingRuleRead(d, m)
 }

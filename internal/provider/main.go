@@ -75,6 +75,7 @@ func Provider() *schema.Provider {
 			"nexus_security_user":              security.DataSourceSecurityUser(),
 			"nexus_security_user_token":        security.DataSourceSecurityUserToken(),
 			"nexus_user":                       deprecated.DataSourceUser(),
+			"nexus_mail_config":                other.DataSourceEmailConfig(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"nexus_anonymous":                  deprecated.ResourceAnonymous(),
@@ -140,6 +141,7 @@ func Provider() *schema.Provider {
 			"nexus_security_user":              security.ResourceSecurityUser(),
 			"nexus_security_user_token":        security.ResourceSecurityUserToken(),
 			"nexus_user":                       deprecated.ResourceUser(),
+			"nexus_mail_config":                other.ResourceMailConfig(),
 		},
 		Schema: map[string]*schema.Schema{
 			"insecure": {
