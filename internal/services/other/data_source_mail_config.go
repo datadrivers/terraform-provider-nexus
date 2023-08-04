@@ -5,11 +5,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func DataSourceEmailConfig() *schema.Resource {
+func DataSourceMailConfig() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use this data source to work with the e-mail config",
 
-		Read: DataSourceEmailConfigRead,
+		Read: DataSourceMailConfigRead,
 		Schema: map[string]*schema.Schema{
 			"id": common.DataSourceID,
 			"enabled": {
@@ -26,7 +26,7 @@ func DataSourceEmailConfig() *schema.Resource {
 	}
 }
 
-func DataSourceEmailConfigRead(d *schema.ResourceData, m interface{}) error {
+func DataSourceMailConfigRead(d *schema.ResourceData, m interface{}) error {
 	d.SetId(d.Get("id").(string))
-	return resourceEmailConfigRead(d, m)
+	return resourceMailConfigRead(d, m)
 }

@@ -15,10 +15,10 @@ func ResourceMailConfig() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use this resource to create a Nexus Routing Rule.",
 
-		Create: resourceEmailConfigCreate,
-		Read:   resourceEmailConfigRead,
-		Update: resourceEmailConfigUpdate,
-		Delete: resourceEmailConfigDelete,
+		Create: resourceMailConfigCreate,
+		Read:   resourceMailConfigRead,
+		Update: resourceMailConfigUpdate,
+		Delete: resourceMailConfigDelete,
 
 		Schema: map[string]*schema.Schema{
 			"id": common.ResourceID,
@@ -46,7 +46,7 @@ func ResourceMailConfig() *schema.Resource {
 	}
 }
 
-func resourceEmailConfigRead(d *schema.ResourceData, m interface{}) error {
+func resourceMailConfigRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	mailconfig, err := client.MailConfig.Get()
@@ -68,7 +68,7 @@ func resourceEmailConfigRead(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func getEmailConfigFromResourceData(d *schema.ResourceData) nexusSchema.MailConfig {
+func getMailConfigFromResourceData(d *schema.ResourceData) nexusSchema.MailConfig {
 	return nexusSchema.MailConfig{
 		Host:        d.Get("host").(string),
 		FromAddress: d.Get("from_address").(string),
@@ -76,9 +76,9 @@ func getEmailConfigFromResourceData(d *schema.ResourceData) nexusSchema.MailConf
 	}
 }
 
-func resourceEmailConfigCreate(d *schema.ResourceData, m interface{}) error {
+func resourceMailConfigCreate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
-	mailconfig := getEmailConfigFromResourceData(d)
+	mailconfig := getMailConfigFromResourceData(d)
 
 	if err := client.MailConfig.Create(&mailconfig); err != nil {
 		return err
@@ -86,21 +86,21 @@ func resourceEmailConfigCreate(d *schema.ResourceData, m interface{}) error {
 
 	d.SetId(MailConfigId)
 	// return resourceRoutingRuleRead(d, m)
-	return resourceEmailConfigRead(d, m)
+	return resourceMailConfigRead(d, m)
 }
 
-func resourceEmailConfigUpdate(d *schema.ResourceData, m interface{}) error {
+func resourceMailConfigUpdate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
-	mailconfig := getEmailConfigFromResourceData(d)
+	mailconfig := getMailConfigFromResourceData(d)
 	if err := client.MailConfig.Update(&mailconfig); err != nil {
 		return err
 	}
 
-	return resourceEmailConfigRead(d, m)
+	return resourceMailConfigRead(d, m)
 }
 
-func resourceEmailConfigDelete(d *schema.ResourceData, m interface{}) error {
+func resourceMailConfigDelete(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	if err := client.MailConfig.Delete(); err != nil {
