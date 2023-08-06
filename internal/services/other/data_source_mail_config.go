@@ -7,7 +7,7 @@ import (
 
 func DataSourceMailConfig() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this data source to work with the e-mail config",
+		Description: "Use this data source to query the mail config",
 
 		Read: DataSourceMailConfigRead,
 		Schema: map[string]*schema.Schema{
@@ -27,6 +27,7 @@ func DataSourceMailConfig() *schema.Resource {
 }
 
 func DataSourceMailConfigRead(d *schema.ResourceData, m interface{}) error {
-	d.SetId(d.Get("id").(string))
+	//d.SetId(d.Get("id").(string))
+	// d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
 	return resourceMailConfigRead(d, m)
 }

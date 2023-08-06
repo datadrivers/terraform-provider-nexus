@@ -5,6 +5,7 @@ import (
 	nexusSchema "github.com/datadrivers/go-nexus-client/nexus3/schema"
 
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
+	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -13,20 +14,19 @@ const MailConfigId = "cfg"
 
 func ResourceMailConfig() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this resource to create a Nexus Routing Rule.",
+		Description: "Use this resource to configure Nexus' mailing behaviour",
 
 		Create: resourceMailConfigCreate,
 		Read:   resourceMailConfigRead,
 		Update: resourceMailConfigUpdate,
 		Delete: resourceMailConfigDelete,
+		Exists: resourceMailConfigExists,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"id": common.ResourceID,
-			"enabled": {
-				Description: "Whether the config is enabled or not",
-				Type:        schema.TypeBool,
-				Computed:    true,
-			},
 			"host": {
 				Description: "hostname",
 				Type:        schema.TypeString,
@@ -41,6 +41,52 @@ func ResourceMailConfig() *schema.Resource {
 				Description: "port",
 				Type:        schema.TypeInt,
 				Required:    true,
+			},
+			"enabled": {
+				Description: "Whether the config is enabled or not",
+				Type:        schema.TypeBool,
+				Optional:    true,
+			},
+			"username": {
+				Description: "Username",
+				Type:        schema.TypeString,
+				Optional:    true,
+			},
+			"password": {
+				Description: "Password",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+			},
+			"subject_prefix": {
+				Description: "Subject prefix",
+				Type:        schema.TypeString,
+				Optional:    true,
+			},
+			"start_tls_enabled": {
+				Description: "Star TLS Enabled",
+				Type:        schema.TypeBool,
+				Optional:    true,
+			},
+			"start_tls_required": {
+				Description: "Star TLS required",
+				Type:        schema.TypeBool,
+				Optional:    true,
+			},
+			"ssl_on_connect_enabled": {
+				Description: "SSL on connect enabled",
+				Type:        schema.TypeBool,
+				Optional:    true,
+			},
+			"ssl_server_identity_check_enabled": {
+				Description: "SSL on connect enabled",
+				Type:        schema.TypeBool,
+				Optional:    true,
+			},
+			"nexus_trust_store_enabled": {
+				Description: "SSL on connect enabled",
+				Type:        schema.TypeBool,
+				Optional:    true,
 			},
 		},
 	}
@@ -60,20 +106,37 @@ func resourceMailConfigRead(d *schema.ResourceData, m interface{}) error {
 		return nil
 	}
 
-	d.Set("enabled", mailconfig.Enabled)
 	d.Set("host", mailconfig.Host)
 	d.Set("fromaddress", mailconfig.FromAddress)
 	d.Set("port", mailconfig.Port)
+	d.Set("enabled", mailconfig.Enabled)
+	d.Set("username", mailconfig.Username)
+	d.Set("password", mailconfig.Password)
+	d.Set("subject_prefix", mailconfig.SubjectPrefix)
+	d.Set("start_tls_enabled", mailconfig.StartTlsEnabled)
+	d.Set("start_tls_required", mailconfig.StartTlsRequired)
+	d.Set("ssl_on_connect_enabled", mailconfig.SslOnConnectEnabled)
+	d.Set("ssl_server_identity_check_enabled", mailconfig.SslServerIdentityCheckEnabled)
+	d.Set("nexus_trust_store_enabled", mailconfig.NexusTrustStoreEnabled)
 
 	return nil
 }
 
 func getMailConfigFromResourceData(d *schema.ResourceData) nexusSchema.MailConfig {
-	return nexusSchema.MailConfig{
-		Host:        d.Get("host").(string),
-		FromAddress: d.Get("from_address").(string),
-		Port:        d.Get("port").(int),
+	mailconfig := nexusSchema.MailConfig{
+		Host:                          d.Get("host").(string),
+		FromAddress:                   d.Get("from_address").(string),
+		Port:                          d.Get("port").(int),
+		Enabled:                       tools.GetBoolPointer(d.Get("enabled").(bool)),
+		Username:                      tools.GetStringPointer(d.Get("username").(string)),
+		SubjectPrefix:                 tools.GetStringPointer(d.Get("subject_prefix").(string)),
+		StartTlsEnabled:               tools.GetBoolPointer(d.Get("start_tls_enabled").(bool)),
+		StartTlsRequired:              tools.GetBoolPointer(d.Get("start_tls_required").(bool)),
+		SslOnConnectEnabled:           tools.GetBoolPointer(d.Get("ssl_on_connect_enabled").(bool)),
+		SslServerIdentityCheckEnabled: tools.GetBoolPointer(d.Get("ssl_server_identity_check_enabled").(bool)),
+		NexusTrustStoreEnabled:        tools.GetBoolPointer(d.Get("nexus_trust_store_enabled").(bool)),
 	}
+	return mailconfig
 }
 
 func resourceMailConfigCreate(d *schema.ResourceData, m interface{}) error {
@@ -85,7 +148,6 @@ func resourceMailConfigCreate(d *schema.ResourceData, m interface{}) error {
 	}
 
 	d.SetId(MailConfigId)
-	// return resourceRoutingRuleRead(d, m)
 	return resourceMailConfigRead(d, m)
 }
 
@@ -109,4 +171,11 @@ func resourceMailConfigDelete(d *schema.ResourceData, m interface{}) error {
 
 	d.SetId(MailConfigId)
 	return nil
+}
+
+func resourceMailConfigExists(d *schema.ResourceData, m interface{}) (bool, error) {
+	client := m.(*nexus.NexusClient)
+
+	mailconfig, err := client.MailConfig.Get()
+	return mailconfig != nil, err
 }
