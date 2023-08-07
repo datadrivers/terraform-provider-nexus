@@ -107,11 +107,10 @@ func resourceMailConfigRead(d *schema.ResourceData, m interface{}) error {
 	}
 
 	d.Set("host", mailconfig.Host)
-	d.Set("fromaddress", mailconfig.FromAddress)
+	d.Set("from_address", mailconfig.FromAddress)
 	d.Set("port", mailconfig.Port)
 	d.Set("enabled", mailconfig.Enabled)
 	d.Set("username", mailconfig.Username)
-	d.Set("password", mailconfig.Password)
 	d.Set("subject_prefix", mailconfig.SubjectPrefix)
 	d.Set("start_tls_enabled", mailconfig.StartTlsEnabled)
 	d.Set("start_tls_required", mailconfig.StartTlsRequired)
