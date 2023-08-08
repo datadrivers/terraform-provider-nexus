@@ -11,6 +11,7 @@
   - [Development](#development)
     - [Build](#build)
     - [Testing](#testing)
+      - [To debug tests](#to-debug-tests)
     - [Create documentation](#create-documentation)
   - [Author](#author)
 
@@ -120,7 +121,9 @@ Debug configurations are also available for VS Code.
 
 ### Create documentation
 
-To generate the terraform documentation from go files, you can run
+When creating or updating resources/data resources please make sure to update the examples in the respective folder (`./examples/resources/<name>` for resources, `./examples/data-sources/<name>` for data sources)
+
+Next you can use the following command to generate the terraform documentation from go files
 
 ```shell
 make docs
