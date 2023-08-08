@@ -102,7 +102,7 @@ func resourceMailConfigRead(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if mailconfig == nil {
-		d.SetId("")
+		d.SetId(MailConfigId)
 		return nil
 	}
 
