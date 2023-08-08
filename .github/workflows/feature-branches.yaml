@@ -11,7 +11,7 @@ jobs:
       - name: Checkout source codes
         uses: actions/checkout@v3
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version: ${{ matrix.go-version }}
       - name: Test client with nexus3 instance
@@ -19,7 +19,7 @@ jobs:
           NEXUS3_LICENSE_B64_ENCODED: ${{ secrets.NEXUS3_LICENSE_B64_ENCODED }}
           AZURE_STORAGE_ACCOUNT_KEY: ${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}
         run: |
-          echo "${NEXUS3_LICENSE_B64_ENCODED}" | base64 -d > scripts/license.lic
+          # echo "${NEXUS3_LICENSE_B64_ENCODED}" | base64 -d > scripts/license.lic
           make start-services
 
           test -s scripts/license.lic || export SKIP_PRO_TESTS="true"
