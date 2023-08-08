@@ -12,9 +12,3 @@ resource "nexus_mail_config" "config" {
   ssl_on_connect_enabled    = true
   nexus_trust_store_enabled = true
 }
-
-data "nexus_mail_config" "config" {}
-
-output "host" {
-  value = data.nexus_mail_config.config.host
-}
