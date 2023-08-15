@@ -140,7 +140,7 @@ func resourcePrivilegeCreate(d *schema.ResourceData, m interface{}) error {
 
 	privilege := getPrivilegeFromResourceData(d)
 
-	if err := client.Security.Privilege.Create(privilege); err != nil {
+	if err := client.Deprecated.Privilege.Create(privilege); err != nil {
 		return err
 	}
 
@@ -169,7 +169,7 @@ func resourcePrivilegeUpdate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	privilege := getPrivilegeFromResourceData(d)
-	if err := client.Security.Privilege.Update(d.Id(), privilege); err != nil {
+	if err := client.Deprecated.Privilege.Update(d.Id(), privilege); err != nil {
 		return err
 	}
 
