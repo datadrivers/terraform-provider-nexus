@@ -140,6 +140,7 @@ func Provider() *schema.Provider {
 			"nexus_security_saml":              security.ResourceSecuritySAML(),
 			"nexus_security_user":              security.ResourceSecurityUser(),
 			"nexus_security_user_token":        security.ResourceSecurityUserToken(),
+			"nexus_security_user_roles":        security.ResourceSecurityUserRoles(),
 			"nexus_user":                       deprecated.ResourceUser(),
 			"nexus_mail_config":                other.ResourceMailConfig(),
 		},
