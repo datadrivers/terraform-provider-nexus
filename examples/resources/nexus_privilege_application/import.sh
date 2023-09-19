@@ -1,2 +1,2 @@
 # import using the name of the privilege
-terraform import nexus_privilege_application name
+terraform import nexus_privilege_application.privilege_application name
