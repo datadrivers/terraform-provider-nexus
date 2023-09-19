@@ -128,6 +128,6 @@ func resourceSecurityPrivilegeApplicationDelete(d *schema.ResourceData, m interf
 func resourceSecurityPrivilegeApplicationExists(d *schema.ResourceData, m interface{}) (bool, error) {
 	client := m.(*nexus.NexusClient)
 
-	user, err := client.Security.Privilege.Get(d.Id())
-	return user != nil, err
+	privilege, err := client.Security.Privilege.Get(d.Id())
+	return privilege != nil, err
 }
