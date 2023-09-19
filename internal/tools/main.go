@@ -1,8 +1,10 @@
 package tools
 
 import (
+	"fmt"
 	"os"
 	"sort"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -67,4 +69,12 @@ func ConvertStringSet(set *schema.Set) []string {
 	sort.Strings(s)
 
 	return s
+}
+
+func FormatPrivilegeActionsForConfig[T any](actions []T) string {
+	var stringActions []string
+	for _, action := range actions {
+		stringActions = append(stringActions, fmt.Sprintf("\"%v\"", action))
+	}
+	return strings.Join(stringActions, ", ")
 }

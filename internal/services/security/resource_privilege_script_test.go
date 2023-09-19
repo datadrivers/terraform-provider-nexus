@@ -2,11 +2,11 @@ package security_test
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/datadrivers/terraform-provider-nexus/internal/acceptance"
+	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -38,12 +38,6 @@ func TestAccResourceSecurityPrivilegeScript(t *testing.T) {
 
 func testAccResourceSecurityPrivilegeScriptConfig(priv security.PrivilegeScript) string {
 
-	stringActions := make([]string, 0, len(priv.Actions))
-	for _, action := range priv.Actions {
-		stringActions = append(stringActions, fmt.Sprintf("\"%s\"", action))
-	}
-	actionString := strings.Join(stringActions, ", ")
-
 	return fmt.Sprintf(`
 resource "nexus_script" "acceptance" {
 	name = "%s"
@@ -56,5 +50,5 @@ resource "nexus_privilege_script" "acceptance" {
 	actions = [ %s ]
 	script_name = resource.nexus_script.acceptance.name
 }
-`, priv.ScriptName, priv.Name, priv.Description, actionString)
+`, priv.ScriptName, priv.Name, priv.Description, tools.FormatPrivilegeActionsForConfig(priv.Actions))
 }
