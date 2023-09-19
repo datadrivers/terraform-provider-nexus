@@ -1,6 +1,8 @@
 module github.com/datadrivers/terraform-provider-nexus
 
-go 1.18
+go 1.21
+
+toolchain go1.21.1
 
 require (
 	github.com/client9/misspell v0.3.4
