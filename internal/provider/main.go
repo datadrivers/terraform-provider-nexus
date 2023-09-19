@@ -145,6 +145,7 @@ func Provider() *schema.Provider {
 			"nexus_mail_config":                other.ResourceMailConfig(),
 			"nexus_privilege_application":      security.ResourceSecurityPrivilegeApplication(),
 			"nexus_privilege_script":           security.ResourceSecurityPrivilegeScript(),
+			"nexus_privilege_repository_view":  security.ResourceSecurityPrivilegeRepositoryView(),
 		},
 		Schema: map[string]*schema.Schema{
 			"insecure": {
