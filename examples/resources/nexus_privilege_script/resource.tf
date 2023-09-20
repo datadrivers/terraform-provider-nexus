@@ -1,6 +1,6 @@
-resource "nexus_privilege_script" "example_privilege_script" {
-	name = "new-script-privilege"
+resource "nexus_privilege_script" "example" {
+	name = "example_privilege"
 	description = "description"
 	actions = ["ADD", "READ", "DELETE", "RUN", "BROWSE", "EDIT"]
-	script_name = resource.nexus_script.some_script.name
+	script_name = resource.nexus_script.example.name
 }
