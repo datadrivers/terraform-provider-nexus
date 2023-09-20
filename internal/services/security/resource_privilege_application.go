@@ -37,7 +37,7 @@ func ResourceSecurityPrivilegeApplication() *schema.Resource {
 			"domain": {
 				Description: "A domain",
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 			},
 			"actions": {
 				Description: "A list of allowed actions. For a list of applicable values see https://help.sonatype.com/repomanager3/nexus-repository-administration/access-control/privileges#Privileges-PrivilegeTypes",
