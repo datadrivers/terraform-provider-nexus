@@ -148,6 +148,7 @@ func Provider() *schema.Provider {
 			"nexus_privilege_repository_view":             security.ResourceSecurityPrivilegeRepositoryView(),
 			"nexus_privilege_repository_admin":            security.ResourceSecurityPrivilegeRepositoryAdmin(),
 			"nexus_privilege_repository_content_selector": security.ResourceSecurityPrivilegeRepositoryContentSelector(),
+			"nexus_privilege_wildcard":                    security.ResourceSecurityPrivilegeWildcard(),
 		},
 		Schema: map[string]*schema.Schema{
 			"insecure": {
