@@ -1,7 +1,7 @@
 package security_test
 
 import (
-	"io/ioutil"
+	"os"
 	"strconv"
 	"testing"
 
@@ -13,7 +13,7 @@ import (
 )
 
 func testAccDataSourceSecuritySAML() (*security.SAML, error) {
-	dat, err := ioutil.ReadFile("../../../examples/saml-testconfig.xml")
+	dat, err := os.ReadFile("../../../examples/saml-testconfig.xml")
 	if err != nil {
 		return nil, err
 	}
