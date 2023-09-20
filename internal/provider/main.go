@@ -79,6 +79,7 @@ func Provider() *schema.Provider {
 			"nexus_privilege_application":      security.DataSourceSecurityPrivilegeApplication(),
 			"nexus_privilege_wildcard":         security.DataSourceSecurityPrivilegeWildcard(),
 			"nexus_privilege_repository_view":  security.DataSourceSecurityPrivilegeRepositoryView(),
+			"nexus_privilege_repository_admin": security.DataSourceSecurityPrivilegeRepositoryAdmin(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"nexus_anonymous":                             deprecated.ResourceAnonymous(),
