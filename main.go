@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"log"
 
@@ -22,16 +21,9 @@ func main() {
 	// See https://developer.hashicorp.com/terraform/plugin/log/writing#legacy-logging
 	log.SetFlags(log.Flags() &^ (log.Ldate | log.Ltime))
 
-	if debugMode {
-		err := plugin.Debug(context.Background(), "registry.terraform.io/datadrivers/nexus",
-			&plugin.ServeOpts{
-				ProviderFunc: provider.Provider,
-			})
-		if err != nil {
-			log.Printf("[ERROR] Error during initialization: %s", err.Error())
-		}
-	} else {
-		plugin.Serve(&plugin.ServeOpts{
-			ProviderFunc: provider.Provider})
-	}
+	plugin.Serve(&plugin.ServeOpts{
+		Debug:        debugMode,
+		ProviderAddr: "registry.terraform.io/datadrivers/nexus",
+		ProviderFunc: provider.Provider,
+	})
 }
