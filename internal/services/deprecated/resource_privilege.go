@@ -12,8 +12,10 @@ import (
 
 func ResourcePrivilege() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this resource to create a Nexus privilege.",
+		DeprecationMessage: "This resource is deprecated. Please use the resource nexus_privilege_* instead.",
+		Description: `!> This resource is deprecated. Please use the resource "nexus_privilege_*" instead.
 
+Use this resource to create a Nexus privilege.`,
 		Create: resourcePrivilegeCreate,
 		Read:   resourcePrivilegeRead,
 		Update: resourcePrivilegeUpdate,

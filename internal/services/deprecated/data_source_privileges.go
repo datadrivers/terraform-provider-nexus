@@ -14,8 +14,10 @@ import (
 
 func DataSourcePrivileges() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this data source to work with privileges.",
+		DeprecationMessage: "This data source is deprecated. Please use the data source nexus_privilege_* instead.",
+		Description: `!> This data source is deprecated. Please use the data source "nexus_privilege_*" instead.
 
+Use this data source to work with privileges.`,
 		Read: dataSourcePrivilegesRead,
 		Schema: map[string]*schema.Schema{
 			"id": common.DataSourceID,
