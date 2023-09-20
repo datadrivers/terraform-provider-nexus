@@ -31,7 +31,11 @@ func TestAccDataSourcePrivilegeRepositoryView(t *testing.T) {
 					resource.TestCheckResourceAttr(dataSourceName, "description", privilege.Description),
 					resource.TestCheckResourceAttr(dataSourceName, "repository", privilege.Repository),
 					resource.TestCheckResourceAttr(dataSourceName, "format", privilege.Format),
-					//resource.TestCheckResourceAttr(resName, "actions", string(privilege.Actions[])), TODO verify actions
+					resource.TestCheckResourceAttr(dataSourceName, "actions.0", string(privilege.Actions[0])),
+					resource.TestCheckResourceAttr(dataSourceName, "actions.1", string(privilege.Actions[1])),
+					resource.TestCheckResourceAttr(dataSourceName, "actions.2", string(privilege.Actions[2])),
+					resource.TestCheckResourceAttr(dataSourceName, "actions.3", string(privilege.Actions[3])),
+					resource.TestCheckResourceAttr(dataSourceName, "actions.4", string(privilege.Actions[4])),
 				),
 			},
 		},

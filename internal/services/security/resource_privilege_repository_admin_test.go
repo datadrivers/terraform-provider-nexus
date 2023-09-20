@@ -32,7 +32,11 @@ func TestAccResourceSecurityPrivilegeRepositoryAdmin(t *testing.T) {
 					resource.TestCheckResourceAttr(resName, "description", privilege.Description),
 					resource.TestCheckResourceAttr(resName, "repository", privilege.Repository),
 					resource.TestCheckResourceAttr(resName, "format", privilege.Format),
-					//resource.TestCheckResourceAttr(resName, "actions", string(privilege.Actions[])), TODO verify actions
+					resource.TestCheckResourceAttr(resName, "actions.0", string(privilege.Actions[0])),
+					resource.TestCheckResourceAttr(resName, "actions.1", string(privilege.Actions[1])),
+					resource.TestCheckResourceAttr(resName, "actions.2", string(privilege.Actions[2])),
+					resource.TestCheckResourceAttr(resName, "actions.3", string(privilege.Actions[3])),
+					resource.TestCheckResourceAttr(resName, "actions.4", string(privilege.Actions[4])),
 				),
 			},
 		},
