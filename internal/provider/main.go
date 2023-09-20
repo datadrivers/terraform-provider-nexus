@@ -78,6 +78,7 @@ func Provider() *schema.Provider {
 			"nexus_mail_config":                other.DataSourceMailConfig(),
 			"nexus_privilege_application":      security.DataSourceSecurityPrivilegeApplication(),
 			"nexus_privilege_wildcard":         security.DataSourceSecurityPrivilegeWildcard(),
+			"nexus_privilege_repository_view":  security.DataSourceSecurityPrivilegeRepositoryView(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"nexus_anonymous":                             deprecated.ResourceAnonymous(),
