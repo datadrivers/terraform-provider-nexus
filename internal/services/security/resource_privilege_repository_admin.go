@@ -10,7 +10,7 @@ import (
 
 func ResourceSecurityPrivilegeRepositoryAdmin() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this resource to manage a privilege for a Script",
+		Description: "Use this resource to manage a privilege for a repository admin",
 
 		Create: resourceSecurityPrivilegeRepositoryAdminCreate,
 		Read:   resourceSecurityPrivilegeRepositoryAdminRead,
@@ -35,7 +35,7 @@ func ResourceSecurityPrivilegeRepositoryAdmin() *schema.Resource {
 				Optional:    true,
 			},
 			"repository": {
-				Description: "Name of the repositoy the privilege applies to",
+				Description: "Name of the repository the privilege applies to",
 				Type:        schema.TypeString,
 				Required:    true,
 			},

@@ -8,7 +8,7 @@ import (
 
 func DataSourceSecurityPrivilegeRepositoryView() *schema.Resource {
 	return &schema.Resource{
-		Description: `Use this data source to get a privilege for an application`,
+		Description: `Use this data source to get a privilege for a repository view`,
 
 		Read: dataSourceSecurityPrivilegeRepositoryViewRead,
 		Schema: map[string]*schema.Schema{
@@ -29,7 +29,7 @@ func DataSourceSecurityPrivilegeRepositoryView() *schema.Resource {
 				Type:        schema.TypeBool,
 			},
 			"repository": {
-				Description: "Name of the repositoy the privilege applies to",
+				Description: "Name of the repository the privilege applies to",
 				Type:        schema.TypeString,
 				Computed:    true,
 			},

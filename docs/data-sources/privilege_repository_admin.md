@@ -2,10 +2,10 @@
 page_title: "Data Source nexus_privilege_repository_admin"
 subcategory: "Privilege"
 description: |-
-  Use this data source to get a privilege for an application
+  Use this data source to get a privilege for a repository admin
 ---
 # Data Source nexus_privilege_repository_admin
-Use this data source to get a privilege for an application
+Use this data source to get a privilege for a repository admin
 ## Example Usage
 ```terraform
 data "nexus_privilege_repository_admin" "example" {
@@ -26,4 +26,4 @@ data "nexus_privilege_repository_admin" "example" {
 - `format` (String) The format of the referenced Repository
 - `id` (String) Used to identify data source at nexus
 - `readonly` (Boolean) Whether it is readonly or not
-- `repository` (String) Name of the repositoy the privilege applies to
+- `repository` (String) Name of the repository the privilege applies to

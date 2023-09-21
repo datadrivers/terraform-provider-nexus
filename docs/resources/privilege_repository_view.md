@@ -2,10 +2,10 @@
 page_title: "Resource nexus_privilege_repository_view"
 subcategory: "Privilege"
 description: |-
-  Use this resource to manage a privilege for a Script
+  Use this resource to manage a privilege for a repository view
 ---
 # Resource nexus_privilege_repository_view
-Use this resource to manage a privilege for a Script
+Use this resource to manage a privilege for a repository view
 ## Example Usage
 ```terraform
 resource "nexus_privilege_repository_view" "example" {
@@ -24,7 +24,7 @@ resource "nexus_privilege_repository_view" "example" {
 - `actions` (List of String) A list of allowed actions. For a list of applicable values see https://help.sonatype.com/repomanager3/nexus-repository-administration/access-control/privileges#Privileges-PrivilegeTypes
 - `format` (String) The format of the referenced Repository
 - `name` (String) The name of the privilege. This value cannot be changed.
-- `repository` (String) Name of the repositoy the privilege applies to
+- `repository` (String) Name of the repository the privilege applies to
 
 ### Optional
 

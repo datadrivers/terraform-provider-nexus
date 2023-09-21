@@ -27,4 +27,4 @@ data "nexus_privilege_repository_content_selector" "example" {
 - `format` (String) The format of the referenced Repository
 - `id` (String) Used to identify data source at nexus
 - `readonly` (Boolean) Whether it is readonly or not
-- `repository` (String) Name of the repositoy the privilege applies to
+- `repository` (String) Name of the repository the privilege applies to

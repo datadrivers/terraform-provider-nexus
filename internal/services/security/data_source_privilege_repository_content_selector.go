@@ -29,7 +29,7 @@ func DataSourceSecurityPrivilegeRepositoryContentSelector() *schema.Resource {
 				Type:        schema.TypeBool,
 			},
 			"repository": {
-				Description: "Name of the repositoy the privilege applies to",
+				Description: "Name of the repository the privilege applies to",
 				Type:        schema.TypeString,
 				Computed:    true,
 			},

@@ -2,10 +2,10 @@
 page_title: "Resource nexus_privilege_repository_content_selector"
 subcategory: "Privilege"
 description: |-
-  Use this resource to manage a privilege for a Script
+  Use this resource to manage a privilege for a repository content selector
 ---
 # Resource nexus_privilege_repository_content_selector
-Use this resource to manage a privilege for a Script
+Use this resource to manage a privilege for a repository content selector
 ## Example Usage
 ```terraform
 resource "nexus_privilege_repository_content_selector" "example" {
@@ -26,7 +26,7 @@ resource "nexus_privilege_repository_content_selector" "example" {
 - `content_selector` (String) The content selector
 - `format` (String) The format of the referenced Repository
 - `name` (String) The name of the privilege. This value cannot be changed.
-- `repository` (String) Name of the repositoy the privilege applies to
+- `repository` (String) Name of the repository the privilege applies to
 
 ### Optional
 
