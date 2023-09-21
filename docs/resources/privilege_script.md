@@ -8,6 +8,15 @@ description: |-
 Use this resource to manage a privilege for a Script
 ## Example Usage
 ```terraform
+resource "nexus_script" "example" {
+  name    = "example_script"
+  content = <<EOT
+  "log.info('Hello, World!')"
+  "log.info('Hello, World!')"
+  "log.info('Hello, World!')"
+  EOT
+}
+
 resource "nexus_privilege_script" "example" {
   name        = "example_privilege"
   description = "description"
