@@ -26,6 +26,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: go.mod
+        if: matrix.language == 'go'
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
