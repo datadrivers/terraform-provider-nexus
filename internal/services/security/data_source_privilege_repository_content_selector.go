@@ -3,7 +3,6 @@ package security
 import (
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func DataSourceSecurityPrivilegeRepositoryContentSelector() *schema.Resource {
@@ -48,8 +47,7 @@ func DataSourceSecurityPrivilegeRepositoryContentSelector() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Elem: &schema.Schema{
-					Type:         schema.TypeString,
-					ValidateFunc: validation.StringInSlice([]string{"ADD", "READ", "DELETE", "BROWSE", "EDIT"}, false),
+					Type: schema.TypeString,
 				},
 			},
 		},
