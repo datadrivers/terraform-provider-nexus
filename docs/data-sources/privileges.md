@@ -2,9 +2,12 @@
 page_title: "Data Source nexus_privileges"
 subcategory: "Other"
 description: |-
+  !> This data source is deprecated. Please use the data source "nexusprivilege*" instead.
   Use this data source to work with privileges.
 ---
 # Data Source nexus_privileges
+!> This data source is deprecated. Please use the data source "nexus_privilege_*" instead.
+
 Use this data source to work with privileges.
 ## Example Usage
 ```terraform

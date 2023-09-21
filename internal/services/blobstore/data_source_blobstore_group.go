@@ -2,7 +2,6 @@ package blobstore
 
 import (
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/blobstore"
-	blobstoreSchema "github.com/datadrivers/terraform-provider-nexus/internal/schema/blobstore"
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -17,7 +16,7 @@ Use this data source to get details of an existing Nexus Group blobstore.`,
 		Schema: map[string]*schema.Schema{
 			"id":                       common.DataSourceID,
 			"name":                     blobstore.DataSourceName,
-			"available_space_in_bytes": blobstoreSchema.ResourceAvailableSpaceInBytes,
+			"available_space_in_bytes": blobstore.ResourceAvailableSpaceInBytes,
 			"blob_count":               blobstore.DataSourceBlobCount,
 			"fill_policy": {
 				Description: "The policy how to fill the members. Possible values: `roundRobin` or `writeToFirst`",

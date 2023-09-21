@@ -885,27 +885,27 @@ func flattenRepositoryHTTPClientAuthentication(auth *repository.HTTPClientAuthen
 	return []map[string]interface{}{data}
 }
 
-func flattenRepositoryHTTPClientConnection(conn *repository.HTTPClientConnection) []map[string]interface{} {
-	if conn == nil {
-		return nil
-	}
-	data := map[string]interface{}{
-		"user_agent_suffix": conn.UserAgentSuffix,
-	}
-	if conn.EnableCookies != nil {
-		data["enable_cookies"] = *conn.EnableCookies
-	}
-	if conn.Retries != nil {
-		data["retries"] = *conn.Retries
-	}
-	if conn.Timeout != nil {
-		data["timeout"] = *conn.Timeout
-	}
-	if conn.UseTrustStore != nil {
-		data["use_trust_store"] = *conn.UseTrustStore
-	}
-	return []map[string]interface{}{data}
-}
+// func flattenRepositoryHTTPClientConnection(conn *repository.HTTPClientConnection) []map[string]interface{} {
+// 	if conn == nil {
+// 		return nil
+// 	}
+// 	data := map[string]interface{}{
+// 		"user_agent_suffix": conn.UserAgentSuffix,
+// 	}
+// 	if conn.EnableCookies != nil {
+// 		data["enable_cookies"] = *conn.EnableCookies
+// 	}
+// 	if conn.Retries != nil {
+// 		data["retries"] = *conn.Retries
+// 	}
+// 	if conn.Timeout != nil {
+// 		data["timeout"] = *conn.Timeout
+// 	}
+// 	if conn.UseTrustStore != nil {
+// 		data["use_trust_store"] = *conn.UseTrustStore
+// 	}
+// 	return []map[string]interface{}{data}
+// }
 
 func flattenRepositoryMaven(maven *repository.Maven) []map[string]interface{} {
 	if maven == nil {
