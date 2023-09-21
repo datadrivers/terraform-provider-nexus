@@ -10,11 +10,7 @@ Use this resource to manage a privilege for a Script
 ```terraform
 resource "nexus_script" "example" {
   name    = "example_script"
-  content = <<EOT
-  "log.info('Hello, World!')"
-  "log.info('Hello, World!')"
-  "log.info('Hello, World!')"
-  EOT
+  content = "log.info('Hello, World!')"
 }
 
 resource "nexus_privilege_script" "example" {

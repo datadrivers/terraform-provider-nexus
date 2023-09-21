@@ -4,7 +4,6 @@ import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/pkg/client"
 	"github.com/datadrivers/terraform-provider-nexus/internal/services/blobstore"
-	"github.com/datadrivers/terraform-provider-nexus/internal/services/deprecated"
 	"github.com/datadrivers/terraform-provider-nexus/internal/services/other"
 	"github.com/datadrivers/terraform-provider-nexus/internal/services/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/services/security"
@@ -15,14 +14,10 @@ import (
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		DataSourcesMap: map[string]*schema.Resource{
-			"nexus_anonymous":                             deprecated.DataSourceAnonymous(),
-			"nexus_blobstore":                             deprecated.DataSourceBlobstore(),
 			"nexus_blobstore_azure":                       blobstore.DataSourceBlobstoreAzure(),
 			"nexus_blobstore_file":                        blobstore.DataSourceBlobstoreFile(),
 			"nexus_blobstore_group":                       blobstore.DataSourceBlobstoreGroup(),
 			"nexus_blobstore_s3":                          blobstore.DataSourceBlobstoreS3(),
-			"nexus_privileges":                            deprecated.DataSourcePrivileges(),
-			"nexus_repository":                            deprecated.DataSourceRepository(),
 			"nexus_repository_apt_hosted":                 repository.DataSourceRepositoryAptHosted(),
 			"nexus_repository_apt_proxy":                  repository.DataSourceRepositoryAptProxy(),
 			"nexus_repository_bower_group":                repository.DataSourceRepositoryBowerGroup(),
@@ -74,7 +69,6 @@ func Provider() *schema.Provider {
 			"nexus_security_saml":                         security.DataSourceSecuritySAML(),
 			"nexus_security_user":                         security.DataSourceSecurityUser(),
 			"nexus_security_user_token":                   security.DataSourceSecurityUserToken(),
-			"nexus_user":                                  deprecated.DataSourceUser(),
 			"nexus_mail_config":                           other.DataSourceMailConfig(),
 			"nexus_privilege_script":                      security.DataSourceSecurityPrivilegeScript(),
 			"nexus_privilege_wildcard":                    security.DataSourceSecurityPrivilegeWildcard(),
@@ -84,15 +78,10 @@ func Provider() *schema.Provider {
 			"nexus_privilege_repository_content_selector": security.DataSourceSecurityPrivilegeRepositoryContentSelector(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"nexus_anonymous":                             deprecated.ResourceAnonymous(),
-			"nexus_blobstore":                             deprecated.ResourceBlobstore(),
 			"nexus_blobstore_azure":                       blobstore.ResourceBlobstoreAzure(),
 			"nexus_blobstore_file":                        blobstore.ResourceBlobstoreFile(),
 			"nexus_blobstore_group":                       blobstore.ResourceBlobstoreGroup(),
 			"nexus_blobstore_s3":                          blobstore.ResourceBlobstoreS3(),
-			"nexus_content_selector":                      deprecated.ResourceContentSelector(),
-			"nexus_privilege":                             deprecated.ResourcePrivilege(),
-			"nexus_repository":                            deprecated.ResourceRepository(),
 			"nexus_repository_apt_hosted":                 repository.ResourceRepositoryAptHosted(),
 			"nexus_repository_apt_proxy":                  repository.ResourceRepositoryAptProxy(),
 			"nexus_repository_bower_group":                repository.ResourceRepositoryBowerGroup(),
@@ -134,7 +123,6 @@ func Provider() *schema.Provider {
 			"nexus_repository_yum_group":                  repository.ResourceRepositoryYumGroup(),
 			"nexus_repository_yum_hosted":                 repository.ResourceRepositoryYumHosted(),
 			"nexus_repository_yum_proxy":                  repository.ResourceRepositoryYumProxy(),
-			"nexus_role":                                  deprecated.ResourceRole(),
 			"nexus_routing_rule":                          other.ResourceRoutingRule(),
 			"nexus_script":                                other.ResourceScript(),
 			"nexus_security_anonymous":                    security.ResourceSecurityAnonymous(),
@@ -146,7 +134,6 @@ func Provider() *schema.Provider {
 			"nexus_security_saml":                         security.ResourceSecuritySAML(),
 			"nexus_security_user":                         security.ResourceSecurityUser(),
 			"nexus_security_user_token":                   security.ResourceSecurityUserToken(),
-			"nexus_user":                                  deprecated.ResourceUser(),
 			"nexus_mail_config":                           other.ResourceMailConfig(),
 			"nexus_privilege_application":                 security.ResourceSecurityPrivilegeApplication(),
 			"nexus_privilege_script":                      security.ResourceSecurityPrivilegeScript(),
