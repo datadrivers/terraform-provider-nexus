@@ -14,7 +14,7 @@ Use this resource to activate and order the Nexus Security realms.
 resource "nexus_security_realms" "example" {
   active = [
     "NexusAuthenticatingRealm",
-    "NexusAuthorizingRealm",
+    "DockerToken",
   ]
 }
 ```

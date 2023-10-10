@@ -12,7 +12,7 @@ import (
 
 func TestAccResourceSecurityRealms(t *testing.T) {
 	resName := "nexus_security_realms.acceptance"
-	realms := []string{"NexusAuthenticatingRealm", "NexusAuthorizingRealm"}
+	realms := []string{"NexusAuthenticatingRealm", "DockerToken"}
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { acceptance.AccPreCheck(t) },
