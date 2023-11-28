@@ -32,6 +32,11 @@ var (
 					Required:    true,
 					Type:        schema.TypeBool,
 				},
+				"subdomain": {
+					Description: "Use sub-domain routing for this repository",
+					Required:    true,
+					Type:        schema.TypeBool,
+				},
 			},
 		},
 	}
@@ -59,6 +64,11 @@ var (
 				"v1_enabled": {
 					Description: "Whether to allow clients to use the V1 API to interact with this repository",
 					Computed:    true,
+					Type:        schema.TypeBool,
+				},
+				"subdomain": {
+					Description: "Use sub-domain routing for this repository",
+					Required:    true,
 					Type:        schema.TypeBool,
 				},
 			},

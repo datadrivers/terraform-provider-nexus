@@ -1,7 +1,7 @@
 package other
 
 import (
-	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
+	"github.com/dre2004/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 

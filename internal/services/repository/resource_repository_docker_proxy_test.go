@@ -8,10 +8,10 @@ import (
 	"testing"
 	"text/template"
 
-	"github.com/datadrivers/go-nexus-client/nexus3/schema"
-	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
-	"github.com/datadrivers/terraform-provider-nexus/internal/acceptance"
-	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
+	"github.com/dre2004/go-nexus-client/nexus3/schema"
+	"github.com/dre2004/go-nexus-client/nexus3/schema/repository"
+	"github.com/dre2004/terraform-provider-nexus/internal/acceptance"
+	"github.com/dre2004/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -35,6 +35,7 @@ func testAccResourceRepositoryDockerProxy() repository.DockerProxyRepository {
 			HTTPPort:       tools.GetIntPointer(rand.Intn(999) + 34000),
 			HTTPSPort:      tools.GetIntPointer(rand.Intn(999) + 35000),
 			V1Enabled:      true,
+			SubDomain:      false,
 		},
 		Storage: repository.Storage{
 			BlobStoreName:               "default",
@@ -142,6 +143,7 @@ func TestAccResourceRepositoryDockerProxy(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "docker.0.http_port", strconv.Itoa(*repo.Docker.HTTPPort)),
 						resource.TestCheckResourceAttr(resourceName, "docker.0.https_port", strconv.Itoa(*repo.Docker.HTTPSPort)),
 						resource.TestCheckResourceAttr(resourceName, "docker.0.v1_enabled", strconv.FormatBool(repo.Docker.V1Enabled)),
+						resource.TestCheckResourceAttr(resourceName, "docker.0.subdomain", strconv.FormatBool(repo.Docker.SubDomain)),
 						resource.TestCheckResourceAttr(resourceName, "docker_proxy.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "docker_proxy.0.index_type", string(repo.DockerProxy.IndexType)),
 						resource.TestCheckResourceAttr(resourceName, "docker_proxy.0.index_url", *repo.DockerProxy.IndexURL),

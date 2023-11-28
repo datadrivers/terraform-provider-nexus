@@ -1,11 +1,11 @@
 package other
 
 import (
-	nexus "github.com/datadrivers/go-nexus-client/nexus3"
-	nexusSchema "github.com/datadrivers/go-nexus-client/nexus3/schema"
+	nexus "github.com/dre2004/go-nexus-client/nexus3"
+	nexusSchema "github.com/dre2004/go-nexus-client/nexus3/schema"
 
-	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
-	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
+	"github.com/dre2004/terraform-provider-nexus/internal/schema/common"
+	"github.com/dre2004/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 

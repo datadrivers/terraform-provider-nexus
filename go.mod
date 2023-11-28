@@ -1,4 +1,4 @@
-module github.com/datadrivers/terraform-provider-nexus
+module github.com/dre2004/terraform-provider-nexus
 
 go 1.21
 
@@ -6,7 +6,7 @@ toolchain go1.21.1
 
 require (
 	github.com/client9/misspell v0.3.4
-	github.com/datadrivers/go-nexus-client v1.8.1
+	github.com/dre2004/go-nexus-client v1.8.3
 	github.com/golangci/golangci-lint v1.55.1
 	github.com/hashicorp/go-cty v1.4.1-0.20200414143053-d3edf31b6320
 	github.com/hashicorp/terraform-plugin-docs v0.16.0

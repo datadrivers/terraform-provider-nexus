@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
+	"github.com/dre2004/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )

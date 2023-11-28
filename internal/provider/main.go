@@ -1,12 +1,12 @@
 package provider
 
 import (
-	nexus "github.com/datadrivers/go-nexus-client/nexus3"
-	"github.com/datadrivers/go-nexus-client/nexus3/pkg/client"
-	"github.com/datadrivers/terraform-provider-nexus/internal/services/blobstore"
-	"github.com/datadrivers/terraform-provider-nexus/internal/services/other"
-	"github.com/datadrivers/terraform-provider-nexus/internal/services/repository"
-	"github.com/datadrivers/terraform-provider-nexus/internal/services/security"
+	nexus "github.com/dre2004/go-nexus-client/nexus3"
+	"github.com/dre2004/go-nexus-client/nexus3/pkg/client"
+	"github.com/dre2004/terraform-provider-nexus/internal/services/blobstore"
+	"github.com/dre2004/terraform-provider-nexus/internal/services/other"
+	"github.com/dre2004/terraform-provider-nexus/internal/services/repository"
+	"github.com/dre2004/terraform-provider-nexus/internal/services/security"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 

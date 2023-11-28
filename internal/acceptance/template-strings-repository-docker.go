@@ -12,6 +12,7 @@ resource "nexus_repository_docker_hosted" "acceptance" {
 		https_port = "{{ .Docker.HTTPSPort }}"
 {{- end }}
 		v1_enabled = "{{ .Docker.V1Enabled }}"
+		subdomain = "{{ .Docker.SubDomain }}"
 	}
 ` + TemplateStringHostedRepository
 
@@ -26,6 +27,7 @@ resource "nexus_repository_docker_group" "acceptance" {
 		https_port = "{{ .Docker.HTTPSPort }}"
 {{- end }}
 		v1_enabled = "{{ .Docker.V1Enabled }}"
+		subdomain = "{{ .Docker.SubDomain }}"
 	}
 	depends_on = [
 		nexus_repository_docker_hosted.acceptance
@@ -43,6 +45,7 @@ resource "nexus_repository_docker_proxy" "acceptance" {
 		https_port = "{{ .Docker.HTTPSPort }}"
 {{- end }}
 		v1_enabled = "{{ .Docker.V1Enabled }}"
+		subdomain = "{{ .Docker.SubDomain }}"
 	}
 
 	docker_proxy {

@@ -3,8 +3,8 @@ package other_test
 import (
 	"testing"
 
-	"github.com/datadrivers/go-nexus-client/nexus3/schema"
-	"github.com/datadrivers/terraform-provider-nexus/internal/acceptance"
+	"github.com/dre2004/go-nexus-client/nexus3/schema"
+	"github.com/dre2004/terraform-provider-nexus/internal/acceptance"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 

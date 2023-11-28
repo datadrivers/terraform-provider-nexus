@@ -1,11 +1,11 @@
 package repository
 
 import (
-	nexus "github.com/datadrivers/go-nexus-client/nexus3"
-	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
-	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
-	repositorySchema "github.com/datadrivers/terraform-provider-nexus/internal/schema/repository"
-	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
+	nexus "github.com/dre2004/go-nexus-client/nexus3"
+	"github.com/dre2004/go-nexus-client/nexus3/schema/repository"
+	"github.com/dre2004/terraform-provider-nexus/internal/schema/common"
+	repositorySchema "github.com/dre2004/terraform-provider-nexus/internal/schema/repository"
+	"github.com/dre2004/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 

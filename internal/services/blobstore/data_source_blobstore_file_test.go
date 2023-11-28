@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/datadrivers/terraform-provider-nexus/internal/acceptance"
+	"github.com/dre2004/terraform-provider-nexus/internal/acceptance"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 

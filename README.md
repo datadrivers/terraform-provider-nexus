@@ -1,8 +1,8 @@
 # Terraform provider Nexus
 
-![codeql workflow](https://github.com/datadrivers/terraform-provider-nexus/actions/workflows/codeql-analysis.yml/badge.svg)
+![codeql workflow](https://github.com/dre2004/terraform-provider-nexus/actions/workflows/codeql-analysis.yml/badge.svg)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
-[![Go Report Card](https://goreportcard.com/badge/github.com/datadrivers/terraform-provider-nexus)](https://goreportcard.com/report/github.com/datadrivers/terraform-provider-nexus)
+[![Go Report Card](https://goreportcard.com/badge/github.com/dre2004/terraform-provider-nexus)](https://goreportcard.com/report/github.com/dre2004/terraform-provider-nexus)
 
 - [Terraform provider Nexus](#terraform-provider-nexus)
   - [Introduction](#introduction)

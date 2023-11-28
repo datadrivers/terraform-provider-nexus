@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"log"
 
-	nexus "github.com/datadrivers/go-nexus-client/nexus3"
-	"github.com/datadrivers/go-nexus-client/nexus3/schema/blobstore"
-	blobstoreSchema "github.com/datadrivers/terraform-provider-nexus/internal/schema/blobstore"
-	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
+	nexus "github.com/dre2004/go-nexus-client/nexus3"
+	"github.com/dre2004/go-nexus-client/nexus3/schema/blobstore"
+	blobstoreSchema "github.com/dre2004/terraform-provider-nexus/internal/schema/blobstore"
+	"github.com/dre2004/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 

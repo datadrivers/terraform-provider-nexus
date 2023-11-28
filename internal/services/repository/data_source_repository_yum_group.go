@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
-	"github.com/datadrivers/terraform-provider-nexus/internal/schema/repository"
+	"github.com/dre2004/terraform-provider-nexus/internal/schema/common"
+	"github.com/dre2004/terraform-provider-nexus/internal/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
