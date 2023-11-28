@@ -52,6 +52,7 @@ Read-Only:
 - `force_basic_auth` (Boolean)
 - `http_port` (Number)
 - `https_port` (Number)
+- `subdomain` (Boolean)
 - `v1_enabled` (Boolean)
 
 

@@ -72,6 +72,7 @@ resource "nexus_repository_docker_proxy" "dockerhub" {
 Required:
 
 - `force_basic_auth` (Boolean) Whether to force authentication (Docker Bearer Token Realm required if false)
+- `subdomain` (Boolean) Use sub-domain routing for this repository
 - `v1_enabled` (Boolean) Whether to allow clients to use the V1 API to interact with this repository
 
 Optional:
