@@ -220,3 +220,18 @@ func flattenMaven(maven *repository.Maven) []map[string]interface{} {
 
 	return []map[string]interface{}{data}
 }
+
+func flattenAPTHostedSigningConfig(signingData repository.AptSigning) []interface{} {
+
+	m := make(map[string]interface{})
+
+	if signingData.Keypair != "" {
+		m["keypair"] = signingData.Keypair
+	}
+
+	if signingData.Passphrase != nil {
+		m["passphrase"] = *signingData.Passphrase
+	}
+
+	return []interface{}{m}
+}
