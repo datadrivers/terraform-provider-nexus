@@ -51,10 +51,13 @@ func ResourceRepositoryAptHosted() *schema.Resource {
 							Sensitive:   true,
 						},
 						"passphrase": {
-							Description: "Passphrase to access PGP signing key",
-							Type:        schema.TypeString,
-							Optional:    true,
-							Sensitive:   true,
+							Description: `Passphrase to access PGP signing key.
+							This resource cannot be read from the nexus api.
+							When reading the resource, the value will be read from the previous state,
+							so external changes wont be detected.`,
+							Type:      schema.TypeString,
+							Optional:  true,
+							Sensitive: true,
 						},
 					},
 				},
@@ -119,6 +122,14 @@ func setAptHostedRepositoryToResourceData(repo *repository.AptHostedRepository, 
 	resourceData.Set("name", repo.Name)
 	resourceData.Set("online", repo.Online)
 	resourceData.Set("distribution", repo.Apt.Distribution)
+
+	// The passphrase for the keypair is never returned by the nexus api, so it is copied from the previous state here.
+	oldPassphrase := resourceData.Get("signing.0.passphrase").(string)
+	repo.AptSigning.Passphrase = &oldPassphrase
+
+	if err := resourceData.Set("signing", flattenAPTHostedSigningConfig(repo.AptSigning)); err != nil {
+		return err
+	}
 
 	if err := resourceData.Set("storage", flattenHostedStorage(&repo.Storage)); err != nil {
 		return err
