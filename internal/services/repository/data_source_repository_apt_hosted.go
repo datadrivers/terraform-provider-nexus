@@ -26,6 +26,27 @@ func DataSourceRepositoryAptHosted() *schema.Resource {
 				Computed:    true,
 				Type:        schema.TypeString,
 			},
+			"signing": {
+				Description: "Contains signing data of repositores",
+				Type:        schema.TypeList,
+				Computed:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"keypair": {
+							Description: "PGP signing key pair (armored private key e.g. gpg --export-secret-key --armor)",
+							Type:        schema.TypeString,
+							Computed:    true,
+							Sensitive:   true,
+						},
+						"passphrase": {
+							Description: "Passphrase to access PGP signing key.",
+							Type:        schema.TypeString,
+							Computed:    true,
+							Sensitive:   true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
