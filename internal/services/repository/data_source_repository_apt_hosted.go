@@ -33,16 +33,22 @@ func DataSourceRepositoryAptHosted() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"keypair": {
-							Description: "PGP signing key pair (armored private key e.g. gpg --export-secret-key --armor)",
-							Type:        schema.TypeString,
-							Computed:    true,
-							Sensitive:   true,
+							Description: `PGP signing key pair (armored private key e.g. gpg --export-secret-key --armor)
+							If passphrase is unset, the keypair cannot be read from the nexus api.
+							When reading the resource, the keypair will be read from the previous state,
+							so external changes won't be detected in this case.`,
+							Type:      schema.TypeString,
+							Computed:  true,
+							Sensitive: true,
 						},
 						"passphrase": {
-							Description: "Passphrase to access PGP signing key.",
-							Type:        schema.TypeString,
-							Computed:    true,
-							Sensitive:   true,
+							Description: `Passphrase to access PGP signing key.
+							This value cannot be read from the nexus api.
+							When reading the resource, the value will be read from the previous state,
+							so external changes won't be detected.`,
+							Type:      schema.TypeString,
+							Computed:  true,
+							Sensitive: true,
 						},
 					},
 				},
