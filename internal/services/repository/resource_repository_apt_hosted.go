@@ -45,16 +45,22 @@ func ResourceRepositoryAptHosted() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"keypair": {
-							Description: "PGP signing key pair (armored private key e.g. gpg --export-secret-key --armor)",
-							Type:        schema.TypeString,
-							Required:    true,
-							Sensitive:   true,
+							Description: `PGP signing key pair (armored private key e.g. gpg --export-secret-key --armor)
+							If passphrase is unset, the keypair cannot be read from the nexus api.
+							When reading the resource, the keypair will be read from the previous state,
+							so external changes won't be detected in this case.`,
+							Type:      schema.TypeString,
+							Required:  true,
+							Sensitive: true,
 						},
 						"passphrase": {
-							Description: "Passphrase to access PGP signing key",
-							Type:        schema.TypeString,
-							Optional:    true,
-							Sensitive:   true,
+							Description: `Passphrase to access PGP signing key.
+							This value cannot be read from the nexus api.
+							When reading the resource, the value will be read from the previous state,
+							so external changes won't be detected.`,
+							Type:      schema.TypeString,
+							Optional:  true,
+							Sensitive: true,
 						},
 					},
 				},
@@ -119,6 +125,22 @@ func setAptHostedRepositoryToResourceData(repo *repository.AptHostedRepository, 
 	resourceData.Set("name", repo.Name)
 	resourceData.Set("online", repo.Online)
 	resourceData.Set("distribution", repo.Apt.Distribution)
+
+	//If no passphrase is set, the API wont return the AptSigning block, so the keypair is read from previous state.
+	oldKeyPair := resourceData.Get("signing.0.keypair").(string)
+	// The passphrase for the keypair is never returned by the nexus api, so it is copied from the previous state here.
+	oldPassphrase := resourceData.Get("signing.0.passphrase").(string)
+
+	if repo.AptSigning.Keypair != "" && repo.AptSigning.Passphrase == nil {
+		repo.AptSigning.Passphrase = &oldPassphrase
+	} else if repo.AptSigning.Keypair == "" && repo.AptSigning.Passphrase == nil {
+		repo.AptSigning.Keypair = oldKeyPair
+		repo.AptSigning.Passphrase = &oldPassphrase
+	}
+
+	if err := resourceData.Set("signing", flattenAPTHostedSigningConfig(repo.AptSigning)); err != nil {
+		return err
+	}
 
 	if err := resourceData.Set("storage", flattenHostedStorage(&repo.Storage)); err != nil {
 		return err

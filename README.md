@@ -19,7 +19,7 @@
 
 Terraform provider to configure Sonatype Nexus using its API.
 
-Implemented and tested with Sonatype Nexus `3.40.0-03`.
+Implemented and tested with Sonatype Nexus `3.61.0-02`.
 
 ## Usage
 

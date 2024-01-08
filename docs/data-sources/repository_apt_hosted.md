@@ -26,6 +26,7 @@ data "nexus_repository_apt_hosted" "bullseye_stable" {
 - `distribution` (String) Distribution to fetch
 - `id` (String) Used to identify data source at nexus
 - `online` (Boolean) Whether this repository accepts incoming requests
+- `signing` (List of Object) Contains signing data of repositores (see [below for nested schema](#nestedatt--signing))
 - `storage` (List of Object) The storage configuration of the repository (see [below for nested schema](#nestedatt--storage))
 
 <a id="nestedatt--cleanup"></a>
@@ -42,6 +43,15 @@ Read-Only:
 Read-Only:
 
 - `proprietary_components` (Boolean)
+
+
+<a id="nestedatt--signing"></a>
+### Nested Schema for `signing`
+
+Read-Only:
+
+- `keypair` (String)
+- `passphrase` (String)
 
 
 <a id="nestedatt--storage"></a>

@@ -89,8 +89,8 @@ func TestAccResourceRepositoryAptHosted(t *testing.T) {
 				ImportStateId:     repo.Name,
 				ImportState:       true,
 				ImportStateVerify: true,
-				// Signing block is not returned
-				ImportStateVerifyIgnore: []string{"signing"},
+				// The signing key passphrase will never be returned by the nexus api
+				ImportStateVerifyIgnore: []string{"signing.0.passphrase"},
 			},
 		},
 	})
