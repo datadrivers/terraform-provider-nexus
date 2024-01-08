@@ -7,6 +7,7 @@ import (
 
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/acceptance"
+	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -19,6 +20,7 @@ data "nexus_repository_apt_hosted" "acceptance" {
 }
 
 func TestAccDataSourceRepositoryAptHosted(t *testing.T) {
+
 	repo := repository.AptHostedRepository{
 		Name:   fmt.Sprintf("acceptance-%s", acctest.RandString(10)),
 		Online: true,
@@ -30,7 +32,8 @@ func TestAccDataSourceRepositoryAptHosted(t *testing.T) {
 			Distribution: "bullseye",
 		},
 		AptSigning: repository.AptSigning{
-			Keypair: "test-data-keypair",
+			Keypair:    "test-data-keypair",
+			Passphrase: tools.GetStringPointer("test-data-passphrase"),
 		},
 	}
 	dataSourceName := "data.nexus_repository_apt_hosted.acceptance"
@@ -49,6 +52,7 @@ func TestAccDataSourceRepositoryAptHosted(t *testing.T) {
 						resource.TestCheckResourceAttr(dataSourceName, "distribution", repo.Apt.Distribution),
 						resource.TestCheckResourceAttr(dataSourceName, "storage.0.blob_store_name", repo.Storage.BlobStoreName),
 						resource.TestCheckResourceAttr(dataSourceName, "storage.0.strict_content_type_validation", strconv.FormatBool(repo.Storage.StrictContentTypeValidation)),
+						resource.TestCheckResourceAttr(dataSourceName, "signing.0.keypair", repo.AptSigning.Keypair),
 					),
 				),
 			},
