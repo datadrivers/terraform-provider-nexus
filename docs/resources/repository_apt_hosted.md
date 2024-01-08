@@ -13,7 +13,16 @@ resource "nexus_repository_apt_hosted" "bullseye_stable" {
   online = true
 
   distribution = "bullseye"
+
   signing {
+    # The passphrase set here will never be returned from the nexus API.
+    # When reading the resource, the passphrase will be read from the previous state,
+    # so external changes won't be detected.`,
+
+    # If the passphrase is unset or empty, the nexus API will also not return the keypair.
+    # When reading the resource, the keypair will be read from the previous state in this case,
+    # so external changes won't be detected.`,
+
     keypair    = "keypair"
     passphrase = "passphrase"
   }
@@ -51,10 +60,16 @@ resource "nexus_repository_apt_hosted" "bullseye_stable" {
 Required:
 
 - `keypair` (String, Sensitive) PGP signing key pair (armored private key e.g. gpg --export-secret-key --armor)
+							If passphrase is unset, the keypair cannot be read from the nexus api.
+							When reading the resource, the keypair will be read from the previous state,
+							so external changes won't be detected in this case.
 
 Optional:
 
-- `passphrase` (String, Sensitive) Passphrase to access PGP signing key
+- `passphrase` (String, Sensitive) Passphrase to access PGP signing key.
+							This value cannot be read from the nexus api.
+							When reading the resource, the value will be read from the previous state,
+							so external changes won't be detected.
 
 
 <a id="nestedblock--storage"></a>
