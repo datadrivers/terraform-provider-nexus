@@ -106,9 +106,9 @@ make testacc
 or skipped tests:
 
 ```shell
-SKIP_S3_TESTS=1 make testacc
-SKIP_AZURE_TESTS=1 make testacc
-SKIP_PRO_TESTS=1 make testacc
+SKIP_S3_TESTS=true make testacc
+SKIP_AZURE_TESTS=true make testacc
+SKIP_PRO_TESTS=true make testacc
 ```
 
 #### To debug tests
