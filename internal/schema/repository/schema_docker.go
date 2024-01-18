@@ -32,6 +32,11 @@ var (
 					Required:    true,
 					Type:        schema.TypeBool,
 				},
+				"subdomain": {
+					Description: "Whether to allow clients to use subdomain routing connector",
+					Optional:    true,
+					Type:        schema.TypeString,
+				},
 			},
 		},
 	}
@@ -60,6 +65,11 @@ var (
 					Description: "Whether to allow clients to use the V1 API to interact with this repository",
 					Computed:    true,
 					Type:        schema.TypeBool,
+				},
+				"subdomain": {
+					Description: "Whether to allow clients to use subdomain routing connector",
+					Computed:    true,
+					Type:        schema.TypeString,
 				},
 			},
 		},

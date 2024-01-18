@@ -115,6 +115,12 @@ func getDockerProxyRepositoryFromResourceData(resourceData *schema.ResourceData)
 		}
 	}
 
+	if subdomain, ok := dockerConfig["subdomain"]; ok {
+		if subdomain.(string) != "" {
+			repo.Docker.Subdomain = tools.GetStringPointer(subdomain.(string))
+		}
+	}
+
 	if dockerProxyConfig["index_url"].(string) != "" {
 		repo.DockerProxy.IndexURL = tools.GetStringPointer(strings.TrimSpace(dockerProxyConfig["index_url"].(string)))
 	}

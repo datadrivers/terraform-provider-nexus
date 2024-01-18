@@ -18,6 +18,8 @@ import (
 func testAccResourceRepositoryDockerHosted() repository.DockerHostedRepository {
 	writePolicy := repository.StorageWritePolicyAllow
 
+	subdomain := fmt.Sprintf("test-repo-%s", acctest.RandString(10))
+
 	return repository.DockerHostedRepository{
 		Name:   fmt.Sprintf("test-repo-%s", acctest.RandString(10)),
 		Online: true,
@@ -26,6 +28,7 @@ func testAccResourceRepositoryDockerHosted() repository.DockerHostedRepository {
 			HTTPPort:       tools.GetIntPointer(rand.Intn(999) + 32000),
 			HTTPSPort:      tools.GetIntPointer(rand.Intn(999) + 33000),
 			V1Enabled:      false,
+			Subdomain:      tools.GetStringPointer(subdomain),
 		},
 		Storage: repository.HostedStorage{
 			BlobStoreName:               "default",
@@ -83,6 +86,7 @@ func TestAccResourceRepositoryDockerHosted(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "docker.0.http_port", strconv.Itoa(*repo.Docker.HTTPPort)),
 						resource.TestCheckResourceAttr(resourceName, "docker.0.https_port", strconv.Itoa(*repo.Docker.HTTPSPort)),
 						resource.TestCheckResourceAttr(resourceName, "docker.0.v1_enabled", strconv.FormatBool(repo.Docker.V1Enabled)),
+						resource.TestCheckResourceAttr(resourceName, "docker.0.subdomain", string(*repo.Docker.Subdomain)),
 					),
 				),
 			},

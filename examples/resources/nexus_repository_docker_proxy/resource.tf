@@ -5,6 +5,7 @@ resource "nexus_repository_docker_proxy" "dockerhub" {
   docker {
     force_basic_auth = false
     v1_enabled       = false
+    subdomain        = "docker"
   }
 
   docker_proxy {

@@ -35,6 +35,7 @@ func testAccResourceRepositoryDockerProxy() repository.DockerProxyRepository {
 			HTTPPort:       tools.GetIntPointer(rand.Intn(999) + 34000),
 			HTTPSPort:      tools.GetIntPointer(rand.Intn(999) + 35000),
 			V1Enabled:      true,
+			Subdomain:      tools.GetStringPointer("docker"),
 		},
 		Storage: repository.Storage{
 			BlobStoreName:               "default",
@@ -142,6 +143,7 @@ func TestAccResourceRepositoryDockerProxy(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "docker.0.http_port", strconv.Itoa(*repo.Docker.HTTPPort)),
 						resource.TestCheckResourceAttr(resourceName, "docker.0.https_port", strconv.Itoa(*repo.Docker.HTTPSPort)),
 						resource.TestCheckResourceAttr(resourceName, "docker.0.v1_enabled", strconv.FormatBool(repo.Docker.V1Enabled)),
+						resource.TestCheckResourceAttr(resourceName, "docker.0.subdomain", string(*repo.Docker.Subdomain)),
 						resource.TestCheckResourceAttr(resourceName, "docker_proxy.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "docker_proxy.0.index_type", string(repo.DockerProxy.IndexType)),
 						resource.TestCheckResourceAttr(resourceName, "docker_proxy.0.index_url", *repo.DockerProxy.IndexURL),

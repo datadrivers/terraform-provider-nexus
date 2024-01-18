@@ -49,6 +49,7 @@ Read-Only:
 - `http_port` (Number)
 - `https_port` (Number)
 - `v1_enabled` (Boolean)
+- `subdomain ` (Boolean)
 
 
 <a id="nestedatt--docker_proxy"></a>

@@ -7,6 +7,7 @@ import (
 
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/acceptance"
+	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -19,12 +20,14 @@ data "nexus_repository_docker_proxy" "acceptance" {
 }
 
 func TestAccDataSourceRepositoryDockerProxy(t *testing.T) {
+	name := fmt.Sprintf("acceptance-%s", acctest.RandString(10))
 	repoUsingDefaults := repository.DockerProxyRepository{
-		Name:   fmt.Sprintf("acceptance-%s", acctest.RandString(10)),
+		Name:   name,
 		Online: true,
 		Docker: repository.Docker{
 			ForceBasicAuth: true,
 			V1Enabled:      true,
+			Subdomain:      tools.GetStringPointer(name),
 		},
 		DockerProxy: repository.DockerProxy{
 			IndexType: repository.DockerProxyIndexTypeHub,
@@ -56,6 +59,7 @@ func TestAccDataSourceRepositoryDockerProxy(t *testing.T) {
 						resource.TestCheckResourceAttr(dataSourceName, "docker.#", "1"),
 						resource.TestCheckResourceAttr(dataSourceName, "docker.0.force_basic_auth", strconv.FormatBool(repoUsingDefaults.Docker.ForceBasicAuth)),
 						resource.TestCheckResourceAttr(dataSourceName, "docker.0.v1_enabled", strconv.FormatBool(repoUsingDefaults.Docker.V1Enabled)),
+						resource.TestCheckResourceAttr(dataSourceName, "docker.0.subdomain", string(*repoUsingDefaults.Docker.Subdomain)),
 						resource.TestCheckResourceAttr(dataSourceName, "docker_proxy.#", "1"),
 						resource.TestCheckResourceAttr(dataSourceName, "docker_proxy.0.index_type", string(repoUsingDefaults.DockerProxy.IndexType)),
 					),
