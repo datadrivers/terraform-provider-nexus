@@ -53,6 +53,7 @@ Read-Only:
 - `http_port` (Number)
 - `https_port` (Number)
 - `v1_enabled` (Boolean)
+- `subdomain ` (String)
 
 
 <a id="nestedatt--storage"></a>

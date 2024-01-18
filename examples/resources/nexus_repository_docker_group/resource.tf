@@ -4,6 +4,7 @@ resource "nexus_repository_docker_hosted" "internal" {
   docker {
     force_basic_auth = false
     v1_enabled       = false
+    subdomain        = "docker"
   }
 
   storage {
@@ -19,6 +20,7 @@ resource "nexus_repository_docker_proxy" "dockerhub" {
   docker {
     force_basic_auth = false
     v1_enabled       = false
+    subdomain        = "docker"
   }
 
   docker_proxy {
@@ -56,6 +58,7 @@ resource "nexus_repository_docker_group" "group" {
     http_port        = 8080
     https_port       = 8433
     v1_enabled       = false
+    subdomain        = "docker"
   }
 
   group {

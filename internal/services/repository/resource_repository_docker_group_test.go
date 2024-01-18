@@ -16,6 +16,7 @@ import (
 )
 
 func testAccResourceRepositoryDockerGroup() repository.DockerGroupRepository {
+	subdomain := fmt.Sprintf("test-repo-%s", acctest.RandString(10))
 	return repository.DockerGroupRepository{
 		Name:   fmt.Sprintf("test-repo-%s", acctest.RandString(10)),
 		Online: true,
@@ -24,6 +25,7 @@ func testAccResourceRepositoryDockerGroup() repository.DockerGroupRepository {
 			HTTPPort:       tools.GetIntPointer(rand.Intn(999) + 32000),
 			HTTPSPort:      tools.GetIntPointer(rand.Intn(999) + 33000),
 			V1Enabled:      false,
+			Subdomain:      tools.GetStringPointer(subdomain),
 		},
 		Storage: repository.Storage{
 			BlobStoreName:               "default",
@@ -50,8 +52,10 @@ func TestAccResourceRepositoryDockerGroup(t *testing.T) {
 	repoGroup.Group.MemberNames = append(repoGroup.Group.MemberNames, repoHosted.Name)
 
 	writableMember := ""
+	subdomain := ""
 	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "false" {
 		writableMember = repoHosted.Name
+		subdomain = string(*repoGroup.Docker.Subdomain)
 	}
 
 	repoGroup.Group.WritableMember = &writableMember
@@ -84,6 +88,7 @@ func TestAccResourceRepositoryDockerGroup(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "docker.0.http_port", strconv.Itoa(*repoGroup.Docker.HTTPPort)),
 						resource.TestCheckResourceAttr(resourceName, "docker.0.https_port", strconv.Itoa(*repoGroup.Docker.HTTPSPort)),
 						resource.TestCheckResourceAttr(resourceName, "docker.0.v1_enabled", strconv.FormatBool(repoGroup.Docker.V1Enabled)),
+						resource.TestCheckResourceAttr(resourceName, "docker.0.subdomain", subdomain),
 					),
 				),
 			},

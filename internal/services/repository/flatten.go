@@ -29,6 +29,9 @@ func flattenDocker(docker *repository.Docker) []map[string]interface{} {
 	if docker.HTTPSPort != nil {
 		data["https_port"] = *docker.HTTPSPort
 	}
+	if docker.Subdomain != nil {
+		data["subdomain"] = *docker.Subdomain
+	}
 
 	return []map[string]interface{}{data}
 }

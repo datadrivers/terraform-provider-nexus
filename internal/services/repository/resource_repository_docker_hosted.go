@@ -68,6 +68,12 @@ func getDockerHostedRepositoryFromResourceData(resourceData *schema.ResourceData
 		}
 	}
 
+	if subdomain, ok := dockerConfig["subdomain"]; ok {
+		if subdomain.(string) != "" {
+			repo.Docker.Subdomain = tools.GetStringPointer(subdomain.(string))
+		}
+	}
+
 	cleanupList := resourceData.Get("cleanup").([]interface{})
 	if len(cleanupList) > 0 && cleanupList[0] != nil {
 		cleanupConfig := cleanupList[0].(map[string]interface{})

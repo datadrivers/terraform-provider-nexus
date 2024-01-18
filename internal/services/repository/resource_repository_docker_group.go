@@ -77,6 +77,12 @@ func getDockerGroupRepositoryFromResourceData(resourceData *schema.ResourceData)
 		}
 	}
 
+	if subdomain, ok := dockerConfig["subdomain"]; ok {
+		if subdomain.(string) != "" {
+			repo.Docker.Subdomain = tools.GetStringPointer(subdomain.(string))
+		}
+	}
+
 	return repo
 }
 
