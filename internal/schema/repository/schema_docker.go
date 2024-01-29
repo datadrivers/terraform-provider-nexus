@@ -33,7 +33,7 @@ var (
 					Type:        schema.TypeBool,
 				},
 				"subdomain": {
-					Description: "Whether to allow clients to use subdomain routing connector",
+					Description: "Pro-only: Whether to allow clients to use subdomain routing connector",
 					Optional:    true,
 					Type:        schema.TypeString,
 				},
@@ -67,7 +67,7 @@ var (
 					Type:        schema.TypeBool,
 				},
 				"subdomain": {
-					Description: "Whether to allow clients to use subdomain routing connector",
+					Description: "Pro-only: Whether to allow clients to use subdomain routing connector",
 					Computed:    true,
 					Type:        schema.TypeString,
 				},
