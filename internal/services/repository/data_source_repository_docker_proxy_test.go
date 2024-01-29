@@ -88,6 +88,7 @@ func TestAccProDataSourceRepositoryDockerProxy(t *testing.T) {
 		Docker: repository.Docker{
 			ForceBasicAuth: true,
 			V1Enabled:      true,
+			Subdomain:      tools.GetStringPointer(name),
 		},
 		DockerProxy: repository.DockerProxy{
 			IndexType: repository.DockerProxyIndexTypeHub,
@@ -119,6 +120,7 @@ func TestAccProDataSourceRepositoryDockerProxy(t *testing.T) {
 						resource.TestCheckResourceAttr(dataSourceName, "docker.#", "1"),
 						resource.TestCheckResourceAttr(dataSourceName, "docker.0.force_basic_auth", strconv.FormatBool(repoUsingDefaults.Docker.ForceBasicAuth)),
 						resource.TestCheckResourceAttr(dataSourceName, "docker.0.v1_enabled", strconv.FormatBool(repoUsingDefaults.Docker.V1Enabled)),
+						resource.TestCheckResourceAttr(dataSourceName, "docker.0.subdomain", string(*repo.Docker.Subdomain)),
 						resource.TestCheckResourceAttr(dataSourceName, "docker_proxy.#", "1"),
 						resource.TestCheckResourceAttr(dataSourceName, "docker_proxy.0.index_type", string(repoUsingDefaults.DockerProxy.IndexType)),
 					),
