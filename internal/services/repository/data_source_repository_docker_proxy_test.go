@@ -20,9 +20,8 @@ data "nexus_repository_docker_proxy" "acceptance" {
 }
 
 func TestAccDataSourceRepositoryDockerProxy(t *testing.T) {
-	name := fmt.Sprintf("acceptance-%s", acctest.RandString(10))
 	repoUsingDefaults := repository.DockerProxyRepository{
-		Name:   name,
+		Name:   fmt.Sprintf("acceptance-%s", acctest.RandString(10)),
 		Online: true,
 		Docker: repository.Docker{
 			ForceBasicAuth: true,
