@@ -20,9 +20,8 @@ data "nexus_repository_docker_hosted" "acceptance" {
 }
 
 func TestAccDataSourceRepositoryDockerHosted(t *testing.T) {
-	name := fmt.Sprintf("acceptance-%s", acctest.RandString(10))
 	repo := repository.DockerHostedRepository{
-		Name:   name,
+		Name:   fmt.Sprintf("acceptance-%s", acctest.RandString(10)),
 		Online: true,
 		Storage: repository.HostedStorage{
 			BlobStoreName:               "default",
