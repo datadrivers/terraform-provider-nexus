@@ -29,7 +29,7 @@ resource "nexus_repository_docker_group" "acceptance" {
 		https_port = "{{ .Docker.HTTPSPort }}"
 {{- end }}
 {{- if .Docker.Subdomain }}
-		https_port = "{{ .Docker.Subdomain }}"
+		subdomain = "{{ .Docker.Subdomain }}"
 {{- end }}
 		v1_enabled = "{{ .Docker.V1Enabled }}"
 	}
