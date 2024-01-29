@@ -80,9 +80,6 @@ func testAccResourceRepositoryDockerHostedConfig(repo repository.DockerHostedRep
 }
 
 func TestAccResourceRepositoryDockerHosted(t *testing.T) {
-	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "true" {
-		t.Skip("Skipping Nexus Pro tests")
-	}
 	repo := testAccResourceRepositoryDockerHosted()
 	resourceName := "nexus_repository_docker_hosted.acceptance"
 
@@ -131,6 +128,9 @@ func TestAccResourceRepositoryDockerHosted(t *testing.T) {
 }
 
 func TestAccProResourceRepositoryDockerHosted(t *testing.T) {
+	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "true" {
+		t.Skip("Skipping Nexus Pro tests")
+	}
 	repo := testAccProResourceRepositoryDockerHosted()
 	resourceName := "nexus_repository_docker_hosted.acceptance"
 
