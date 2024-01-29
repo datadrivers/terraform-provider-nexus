@@ -55,7 +55,7 @@ Optional:
 
 - `http_port` (Number) Create an HTTP connector at specified port
 - `https_port` (Number) Create an HTTPS connector at specified port
-- `subdomain` (String) Whether to allow clients to use the subdomain connector
+- `subdomain` (String) Pro-only: Whether to allow clients to use the subdomain connector
 
 
 <a id="nestedblock--storage"></a>
