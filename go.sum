@@ -161,8 +161,8 @@ github.com/cyphar/filepath-securejoin v0.2.4 h1:Ugdm7cg7i6ZK6x3xDF1oEu1nfkyfH53E
 github.com/cyphar/filepath-securejoin v0.2.4/go.mod h1:aPGpWjXOXUn2NCNjFvBE6aRxGGx79pTxQpKOJNYHHl4=
 github.com/daixiang0/gci v0.11.2 h1:Oji+oPsp3bQ6bNNgX30NBAVT18P4uBH4sRZnlOlTj7Y=
 github.com/daixiang0/gci v0.11.2/go.mod h1:xtHP9N7AHdNvtRNfcx9gwTDfw7FRJx4bZUsiEfiNNAI=
-github.com/datadrivers/go-nexus-client v1.8.1 h1:dPFK8hN+bLXqXGpVHGYoMXj8bznPcdRAZUravp0EVAo=
-github.com/datadrivers/go-nexus-client v1.8.1/go.mod h1:S1w7cNmGOlsJ1Kx39uUXnNks5Bv9cGXTWN++7nlHDrI=
+github.com/datadrivers/go-nexus-client v1.9.0 h1:IvnED9jmjsEqr+9vWMI04OzNlutnPDWOqb7oIkGNpdw=
+github.com/datadrivers/go-nexus-client v1.9.0/go.mod h1:nYUmYplEgXusK5Hvz+stvslPbSgSO0MyidDy6Da4LO0=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
