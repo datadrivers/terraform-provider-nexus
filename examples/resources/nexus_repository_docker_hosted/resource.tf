@@ -5,7 +5,7 @@ resource "nexus_repository_docker_hosted" "example" {
   docker {
     force_basic_auth = false
     v1_enabled       = false
-    subdomain        = "docker"
+    subdomain        = "docker" # Pro-only
   }
 
   storage {

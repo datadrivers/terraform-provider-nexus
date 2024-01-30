@@ -15,6 +15,7 @@ resource "nexus_repository_docker_hosted" "example" {
   docker {
     force_basic_auth = false
     v1_enabled       = false
+    subdomain        = "docker" # Pro-only
   }
 
   storage {
@@ -55,7 +56,7 @@ Optional:
 
 - `http_port` (Number) Create an HTTP connector at specified port
 - `https_port` (Number) Create an HTTPS connector at specified port
-- `subdomain` (String) Pro-only: Whether to allow clients to use the subdomain connector
+- `subdomain` (String) Pro-only: Whether to allow clients to use subdomain routing connector
 
 
 <a id="nestedblock--storage"></a>
