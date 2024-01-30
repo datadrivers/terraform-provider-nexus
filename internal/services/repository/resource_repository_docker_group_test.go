@@ -15,37 +15,15 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func testAccResourceRepositoryDockerGroup() repository.DockerGroupRepository {
+func testAccResourceRepositoryDockerGroup(name string) repository.DockerGroupRepository {
 	return repository.DockerGroupRepository{
-		Name:   fmt.Sprintf("test-repo-%s", acctest.RandString(10)),
+		Name:   name,
 		Online: true,
 		Docker: repository.Docker{
 			ForceBasicAuth: true,
 			HTTPPort:       tools.GetIntPointer(rand.Intn(999) + 32000),
 			HTTPSPort:      tools.GetIntPointer(rand.Intn(999) + 33000),
 			V1Enabled:      false,
-		},
-		Storage: repository.Storage{
-			BlobStoreName:               "default",
-			StrictContentTypeValidation: true,
-		},
-		Group: repository.GroupDeploy{
-			MemberNames: []string{},
-		},
-	}
-}
-
-func testAccProResourceRepositoryDockerGroup() repository.DockerGroupRepository {
-	subdomain := fmt.Sprintf("test-repo-%s", acctest.RandString(10))
-	return repository.DockerGroupRepository{
-		Name:   fmt.Sprintf("test-repo-%s", acctest.RandString(10)),
-		Online: true,
-		Docker: repository.Docker{
-			ForceBasicAuth: true,
-			HTTPPort:       tools.GetIntPointer(rand.Intn(999) + 32000),
-			HTTPSPort:      tools.GetIntPointer(rand.Intn(999) + 33000),
-			V1Enabled:      false,
-			Subdomain:      tools.GetStringPointer(subdomain),
 		},
 		Storage: repository.Storage{
 			BlobStoreName:               "default",
@@ -67,8 +45,15 @@ func testAccResourceRepositoryDockerGroupConfig(repo repository.DockerGroupRepos
 }
 
 func TestAccResourceRepositoryDockerGroup(t *testing.T) {
-	repoHosted := testAccResourceRepositoryDockerHosted()
-	repoGroup := testAccResourceRepositoryDockerGroup()
+	nameHosted := fmt.Sprintf("acceptance-%s", acctest.RandString(10))
+	nameGroup := fmt.Sprintf("acceptance-%s", acctest.RandString(10))
+
+	repoHosted := testAccResourceRepositoryDockerHosted(nameHosted)
+	repoGroup := testAccResourceRepositoryDockerGroup(nameGroup)
+
+	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "false" {
+		repoGroup.Docker.Subdomain = &nameGroup
+	}
 	repoGroup.Group.MemberNames = append(repoGroup.Group.MemberNames, repoHosted.Name)
 
 	resourceName := "nexus_repository_docker_group.acceptance"
@@ -114,16 +99,17 @@ func TestAccResourceRepositoryDockerGroup(t *testing.T) {
 }
 
 func TestAccProResourceRepositoryDockerGroup(t *testing.T) {
-	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "true" {
-		t.Skip("Skipping Nexus Pro Tests")
-	}
-	repoHosted := testAccProResourceRepositoryDockerHosted()
-	repoGroup := testAccProResourceRepositoryDockerGroup()
+	nameHosted := fmt.Sprintf("acceptance-%s", acctest.RandString(10))
+	nameGroup := fmt.Sprintf("acceptance-%s", acctest.RandString(10))
+
+	repoHosted := testAccResourceRepositoryDockerHosted(nameHosted)
+	repoGroup := testAccResourceRepositoryDockerGroup(nameGroup)
 	repoGroup.Group.MemberNames = append(repoGroup.Group.MemberNames, repoHosted.Name)
 
+	if tools.GetEnv("SKIP_PRO_TESTS", "false") != "true" {
+		repoGroup.Docker.Subdomain = &nameGroup
+	}
 	writableMember := repoHosted.Name
-	subdomain := string(*repoGroup.Docker.Subdomain)
-
 	repoGroup.Group.WritableMember = &writableMember
 	resourceName := "nexus_repository_docker_group.acceptance"
 
@@ -154,7 +140,7 @@ func TestAccProResourceRepositoryDockerGroup(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "docker.0.http_port", strconv.Itoa(*repoGroup.Docker.HTTPPort)),
 						resource.TestCheckResourceAttr(resourceName, "docker.0.https_port", strconv.Itoa(*repoGroup.Docker.HTTPSPort)),
 						resource.TestCheckResourceAttr(resourceName, "docker.0.v1_enabled", strconv.FormatBool(repoGroup.Docker.V1Enabled)),
-						resource.TestCheckResourceAttr(resourceName, "docker.0.subdomain", subdomain),
+						resource.TestCheckResourceAttr(resourceName, "docker.0.subdomain", string(*repoGroup.Docker.Subdomain)),
 					),
 				),
 			},

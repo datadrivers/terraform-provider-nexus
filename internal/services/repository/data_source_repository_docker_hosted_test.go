@@ -19,48 +19,7 @@ data "nexus_repository_docker_hosted" "acceptance" {
 }`
 }
 
-func TestAccDataSourceRepositoryDockerHosted(t *testing.T) {
-	repo := repository.DockerHostedRepository{
-		Name:   fmt.Sprintf("acceptance-%s", acctest.RandString(10)),
-		Online: true,
-		Storage: repository.HostedStorage{
-			BlobStoreName:               "default",
-			StrictContentTypeValidation: false,
-		},
-		Docker: repository.Docker{
-			ForceBasicAuth: true,
-			V1Enabled:      true,
-		},
-	}
-	dataSourceName := "data.nexus_repository_docker_hosted.acceptance"
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { acceptance.AccPreCheck(t) },
-		Providers: acceptance.TestAccProviders,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccResourceRepositoryDockerHostedConfig(repo) + testAccDataSourceRepositoryDockerHostedConfig(),
-				Check: resource.ComposeTestCheckFunc(
-					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(dataSourceName, "id", repo.Name),
-						resource.TestCheckResourceAttr(dataSourceName, "name", repo.Name),
-						resource.TestCheckResourceAttr(dataSourceName, "online", strconv.FormatBool(repo.Online)),
-						resource.TestCheckResourceAttr(dataSourceName, "docker.#", "1"),
-						resource.TestCheckResourceAttr(dataSourceName, "docker.0.force_basic_auth", strconv.FormatBool(repo.Docker.ForceBasicAuth)),
-						resource.TestCheckResourceAttr(dataSourceName, "docker.0.v1_enabled", strconv.FormatBool(repo.Docker.V1Enabled)),
-						resource.TestCheckResourceAttr(dataSourceName, "storage.0.blob_store_name", repo.Storage.BlobStoreName),
-						resource.TestCheckResourceAttr(dataSourceName, "storage.0.strict_content_type_validation", strconv.FormatBool(repo.Storage.StrictContentTypeValidation)),
-					),
-				),
-			},
-		},
-	})
-}
-
 func TestAccProDataSourceRepositoryDockerHosted(t *testing.T) {
-	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "true" {
-		t.Skip("Skipping Nexus Pro Tests")
-	}
 	name := fmt.Sprintf("acceptance-%s", acctest.RandString(10))
 	repo := repository.DockerHostedRepository{
 		Name:   name,
@@ -74,6 +33,9 @@ func TestAccProDataSourceRepositoryDockerHosted(t *testing.T) {
 			V1Enabled:      true,
 			Subdomain:      tools.GetStringPointer(name),
 		},
+	}
+	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "false" {
+		repo.Docker.Subdomain = &name
 	}
 	dataSourceName := "data.nexus_repository_docker_hosted.acceptance"
 
