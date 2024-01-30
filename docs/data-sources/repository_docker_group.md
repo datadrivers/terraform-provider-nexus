@@ -35,8 +35,8 @@ Read-Only:
 - `force_basic_auth` (Boolean)
 - `http_port` (Number)
 - `https_port` (Number)
-- `v1_enabled` (Boolean)
 - `subdomain` (String)
+- `v1_enabled` (Boolean)
 
 
 <a id="nestedatt--group"></a>
