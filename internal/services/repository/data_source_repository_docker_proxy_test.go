@@ -19,70 +19,9 @@ data "nexus_repository_docker_proxy" "acceptance" {
 }`
 }
 
-func TestAccDataSourceRepositoryDockerProxy(t *testing.T) {
-	repoUsingDefaults := repository.DockerProxyRepository{
-		Name:   fmt.Sprintf("acceptance-%s", acctest.RandString(10)),
-		Online: true,
-		Docker: repository.Docker{
-			ForceBasicAuth: true,
-			V1Enabled:      true,
-		},
-		DockerProxy: repository.DockerProxy{
-			IndexType: repository.DockerProxyIndexTypeHub,
-		},
-		Proxy: repository.Proxy{
-			RemoteURL: "https://registry-1.docker.io",
-		},
-		Storage: repository.Storage{
-			BlobStoreName:               "default",
-			StrictContentTypeValidation: true,
-		},
-	}
-
-	dataSourceName := "data.nexus_repository_docker_proxy.acceptance"
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { acceptance.AccPreCheck(t) },
-		Providers: acceptance.TestAccProviders,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccResourceRepositoryDockerProxyConfig(repoUsingDefaults) + testAccDataSourceRepositoryDockerProxyConfig(),
-				Check: resource.ComposeTestCheckFunc(
-					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(dataSourceName, "id", repoUsingDefaults.Name),
-						resource.TestCheckResourceAttr(dataSourceName, "name", repoUsingDefaults.Name),
-						resource.TestCheckResourceAttr(dataSourceName, "online", strconv.FormatBool(repoUsingDefaults.Online)),
-					),
-					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(dataSourceName, "docker.#", "1"),
-						resource.TestCheckResourceAttr(dataSourceName, "docker.0.force_basic_auth", strconv.FormatBool(repoUsingDefaults.Docker.ForceBasicAuth)),
-						resource.TestCheckResourceAttr(dataSourceName, "docker.0.v1_enabled", strconv.FormatBool(repoUsingDefaults.Docker.V1Enabled)),
-						resource.TestCheckResourceAttr(dataSourceName, "docker_proxy.#", "1"),
-						resource.TestCheckResourceAttr(dataSourceName, "docker_proxy.0.index_type", string(repoUsingDefaults.DockerProxy.IndexType)),
-					),
-					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(dataSourceName, "http_client.#", "1"),
-						resource.TestCheckResourceAttr(dataSourceName, "http_client.0.authentication.#", "0"),
-						resource.TestCheckResourceAttr(dataSourceName, "http_client.0.connection.#", "1"),
-						resource.TestCheckResourceAttr(dataSourceName, "negative_cache.#", "1"),
-						resource.TestCheckResourceAttr(dataSourceName, "proxy.#", "1"),
-						resource.TestCheckResourceAttr(dataSourceName, "proxy.0.remote_url", repoUsingDefaults.Proxy.RemoteURL),
-						resource.TestCheckResourceAttr(dataSourceName, "storage.#", "1"),
-						resource.TestCheckResourceAttr(dataSourceName, "storage.0.blob_store_name", repoUsingDefaults.Storage.BlobStoreName),
-						resource.TestCheckResourceAttr(dataSourceName, "storage.0.strict_content_type_validation", strconv.FormatBool(repoUsingDefaults.Storage.StrictContentTypeValidation)),
-					),
-				),
-			},
-		},
-	})
-}
-
 func TestAccProDataSourceRepositoryDockerProxy(t *testing.T) {
-	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "true" {
-		t.Skip("Skipping Nexus Pro Tests")
-	}
 	name := fmt.Sprintf("acceptance-%s", acctest.RandString(10))
-	repoUsingDefaults := repository.DockerProxyRepository{
+	repo := repository.DockerProxyRepository{
 		Name:   name,
 		Online: true,
 		Docker: repository.Docker{
@@ -101,7 +40,9 @@ func TestAccProDataSourceRepositoryDockerProxy(t *testing.T) {
 			StrictContentTypeValidation: true,
 		},
 	}
-
+	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "false" {
+		repo.Docker.Subdomain = &name
+	}
 	dataSourceName := "data.nexus_repository_docker_proxy.acceptance"
 
 	resource.Test(t, resource.TestCase{
@@ -109,20 +50,20 @@ func TestAccProDataSourceRepositoryDockerProxy(t *testing.T) {
 		Providers: acceptance.TestAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceRepositoryDockerProxyConfig(repoUsingDefaults) + testAccDataSourceRepositoryDockerProxyConfig(),
+				Config: testAccResourceRepositoryDockerProxyConfig(repo) + testAccDataSourceRepositoryDockerProxyConfig(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(dataSourceName, "id", repoUsingDefaults.Name),
-						resource.TestCheckResourceAttr(dataSourceName, "name", repoUsingDefaults.Name),
-						resource.TestCheckResourceAttr(dataSourceName, "online", strconv.FormatBool(repoUsingDefaults.Online)),
+						resource.TestCheckResourceAttr(dataSourceName, "id", repo.Name),
+						resource.TestCheckResourceAttr(dataSourceName, "name", repo.Name),
+						resource.TestCheckResourceAttr(dataSourceName, "online", strconv.FormatBool(repo.Online)),
 					),
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(dataSourceName, "docker.#", "1"),
-						resource.TestCheckResourceAttr(dataSourceName, "docker.0.force_basic_auth", strconv.FormatBool(repoUsingDefaults.Docker.ForceBasicAuth)),
-						resource.TestCheckResourceAttr(dataSourceName, "docker.0.v1_enabled", strconv.FormatBool(repoUsingDefaults.Docker.V1Enabled)),
-						resource.TestCheckResourceAttr(dataSourceName, "docker.0.subdomain", string(*repoUsingDefaults.Docker.Subdomain)),
+						resource.TestCheckResourceAttr(dataSourceName, "docker.0.force_basic_auth", strconv.FormatBool(repo.Docker.ForceBasicAuth)),
+						resource.TestCheckResourceAttr(dataSourceName, "docker.0.v1_enabled", strconv.FormatBool(repo.Docker.V1Enabled)),
+						resource.TestCheckResourceAttr(dataSourceName, "docker.0.subdomain", string(*repo.Docker.Subdomain)),
 						resource.TestCheckResourceAttr(dataSourceName, "docker_proxy.#", "1"),
-						resource.TestCheckResourceAttr(dataSourceName, "docker_proxy.0.index_type", string(repoUsingDefaults.DockerProxy.IndexType)),
+						resource.TestCheckResourceAttr(dataSourceName, "docker_proxy.0.index_type", string(repo.DockerProxy.IndexType)),
 					),
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(dataSourceName, "http_client.#", "1"),
@@ -130,10 +71,10 @@ func TestAccProDataSourceRepositoryDockerProxy(t *testing.T) {
 						resource.TestCheckResourceAttr(dataSourceName, "http_client.0.connection.#", "1"),
 						resource.TestCheckResourceAttr(dataSourceName, "negative_cache.#", "1"),
 						resource.TestCheckResourceAttr(dataSourceName, "proxy.#", "1"),
-						resource.TestCheckResourceAttr(dataSourceName, "proxy.0.remote_url", repoUsingDefaults.Proxy.RemoteURL),
+						resource.TestCheckResourceAttr(dataSourceName, "proxy.0.remote_url", repo.Proxy.RemoteURL),
 						resource.TestCheckResourceAttr(dataSourceName, "storage.#", "1"),
-						resource.TestCheckResourceAttr(dataSourceName, "storage.0.blob_store_name", repoUsingDefaults.Storage.BlobStoreName),
-						resource.TestCheckResourceAttr(dataSourceName, "storage.0.strict_content_type_validation", strconv.FormatBool(repoUsingDefaults.Storage.StrictContentTypeValidation)),
+						resource.TestCheckResourceAttr(dataSourceName, "storage.0.blob_store_name", repo.Storage.BlobStoreName),
+						resource.TestCheckResourceAttr(dataSourceName, "storage.0.strict_content_type_validation", strconv.FormatBool(repo.Storage.StrictContentTypeValidation)),
 					),
 				),
 			},
