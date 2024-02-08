@@ -50,13 +50,15 @@ func testAccResourceRepositoryDockerHostedConfig(repo repository.DockerHostedRep
 	return buf.String()
 }
 
-func TestAccProResourceRepositoryDockerHosted(t *testing.T) {
-	name := fmt.Sprintf("test-repo-%s", acctest.RandString(10))
+func TestAccResourceRepositoryDockerHosted(t *testing.T) {
+	repoName := fmt.Sprintf("test-repo-%s", acctest.RandString(10))
 
-	repo := testAccResourceRepositoryDockerHosted(name)
+	repo := testAccResourceRepositoryDockerHosted(repoName)
+	subdomain := ""
 	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "false" {
-		repo.Docker.Subdomain = &name
+		subdomain = repoName
 	}
+	repo.Docker.Subdomain = &subdomain
 	resourceName := "nexus_repository_docker_hosted.acceptance"
 
 	resource.Test(t, resource.TestCase{
@@ -88,7 +90,7 @@ func TestAccProResourceRepositoryDockerHosted(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "docker.0.http_port", strconv.Itoa(*repo.Docker.HTTPPort)),
 						resource.TestCheckResourceAttr(resourceName, "docker.0.https_port", strconv.Itoa(*repo.Docker.HTTPSPort)),
 						resource.TestCheckResourceAttr(resourceName, "docker.0.v1_enabled", strconv.FormatBool(repo.Docker.V1Enabled)),
-						resource.TestCheckResourceAttr(resourceName, "docker.0.subdomain", string(*repo.Docker.Subdomain)),
+						resource.TestCheckResourceAttr(resourceName, "docker.0.subdomain", subdomain),
 					),
 				),
 			},

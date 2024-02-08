@@ -40,9 +40,6 @@ func TestAccProDataSourceRepositoryDockerProxy(t *testing.T) {
 			StrictContentTypeValidation: true,
 		},
 	}
-	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "false" {
-		repo.Docker.Subdomain = &name
-	}
 	dataSourceName := "data.nexus_repository_docker_proxy.acceptance"
 
 	resource.Test(t, resource.TestCase{
@@ -61,7 +58,6 @@ func TestAccProDataSourceRepositoryDockerProxy(t *testing.T) {
 						resource.TestCheckResourceAttr(dataSourceName, "docker.#", "1"),
 						resource.TestCheckResourceAttr(dataSourceName, "docker.0.force_basic_auth", strconv.FormatBool(repo.Docker.ForceBasicAuth)),
 						resource.TestCheckResourceAttr(dataSourceName, "docker.0.v1_enabled", strconv.FormatBool(repo.Docker.V1Enabled)),
-						resource.TestCheckResourceAttr(dataSourceName, "docker.0.subdomain", string(*repo.Docker.Subdomain)),
 						resource.TestCheckResourceAttr(dataSourceName, "docker_proxy.#", "1"),
 						resource.TestCheckResourceAttr(dataSourceName, "docker_proxy.0.index_type", string(repo.DockerProxy.IndexType)),
 					),

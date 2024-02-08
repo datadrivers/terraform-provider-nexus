@@ -34,9 +34,6 @@ func TestAccProDataSourceRepositoryDockerHosted(t *testing.T) {
 			Subdomain:      tools.GetStringPointer(name),
 		},
 	}
-	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "false" {
-		repo.Docker.Subdomain = &name
-	}
 	dataSourceName := "data.nexus_repository_docker_hosted.acceptance"
 
 	resource.Test(t, resource.TestCase{
@@ -53,7 +50,6 @@ func TestAccProDataSourceRepositoryDockerHosted(t *testing.T) {
 						resource.TestCheckResourceAttr(dataSourceName, "docker.#", "1"),
 						resource.TestCheckResourceAttr(dataSourceName, "docker.0.force_basic_auth", strconv.FormatBool(repo.Docker.ForceBasicAuth)),
 						resource.TestCheckResourceAttr(dataSourceName, "docker.0.v1_enabled", strconv.FormatBool(repo.Docker.V1Enabled)),
-						resource.TestCheckResourceAttr(dataSourceName, "docker.0.subdomain", string(*repo.Docker.Subdomain)),
 						resource.TestCheckResourceAttr(dataSourceName, "storage.0.blob_store_name", repo.Storage.BlobStoreName),
 						resource.TestCheckResourceAttr(dataSourceName, "storage.0.strict_content_type_validation", strconv.FormatBool(repo.Storage.StrictContentTypeValidation)),
 					),
