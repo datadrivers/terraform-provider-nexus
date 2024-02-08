@@ -12,7 +12,7 @@ import (
 
 func ResourceSecuritySSLTruststore() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this resource to import a SSL certificate.",
+		Description: "Use this resource to add an SSL certificate to the nexus Truststore",
 
 		Create: resourceSecuritySSLTruststoreCertCreate,
 		Read:   resourceSecuritySSLTruststoreCertRead,

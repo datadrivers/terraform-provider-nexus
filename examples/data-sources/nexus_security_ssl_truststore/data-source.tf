@@ -1,10 +1,4 @@
-# Retrieve Cert via Nexus
-data "nexus_security_ssl_truststore" "ldap_cert" {
-  host = "google.de"
-  port = 443
+# Import Cert into Nexus
+data "nexus_security_ssl_truststore" "nexus_truststore" {
 }
 
-# Import Cert into Nexus
-resource "nexus_security_ssl_truststore" "ldap_cert" {
-  pem = data.nexus_security_ssl_truststore.ldap_cert
-}
