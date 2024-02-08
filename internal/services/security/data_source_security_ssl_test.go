@@ -13,8 +13,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccDatasourcesecuritySSL(t *testing.T) {
-	resName := "data.nexus_security_ssl.acceptance"
+func TestAccDatasourceSecuritySSL(t *testing.T) {
+	dataSourceName := "data.nexus_security_ssl.acceptance"
 
 	certX509, _ := tools.TestRetrieveCert("https://google.com")
 	certFingerPrint, _ := tools.TestGetCertificateFingerprint(certX509)
@@ -45,24 +45,20 @@ func TestAccDatasourcesecuritySSL(t *testing.T) {
 		Providers: acceptance.TestAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceSecuritySSLTruststoreConfig(cert),
-				Check:  nil,
-			},
-			{
-				Config: testAccResourceSecuritySSLTruststoreConfig(cert) + testAccDatasourceSecuritySSLConfig(certReq),
+				Config: testAccDatasourceSecuritySSLConfig(certReq),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resName, "id", cert.Id),
-					resource.TestCheckResourceAttr(resName, "fingerprint", cert.Fingerprint),
-					resource.TestCheckResourceAttr(resName, "serial_number", cert.SerialNumber),
-					resource.TestCheckResourceAttr(resName, "issuer_common_name", cert.IssuerCommonName),
-					resource.TestCheckResourceAttr(resName, "issuer_organization", cert.IssuerOrganization),
-					resource.TestCheckResourceAttr(resName, "issuer_organization_unit", cert.IssuerOrganizationUnit),
-					resource.TestCheckResourceAttr(resName, "subject_common_name", cert.SubjectCommonName),
-					resource.TestCheckResourceAttr(resName, "subject_organization", cert.SubjectOrganization),
-					resource.TestCheckResourceAttr(resName, "subject_organization_unit", cert.SubjectOrganizationUnit),
-					resource.TestCheckResourceAttr(resName, "pem", cert.Pem),
-					resource.TestCheckResourceAttr(resName, "issued_on", strconv.FormatInt(cert.IssuedOn, 10)),
-					resource.TestCheckResourceAttr(resName, "expires_on", strconv.FormatInt(cert.ExpiresOn, 10)),
+					resource.TestCheckResourceAttr(dataSourceName, "id", cert.Id),
+					resource.TestCheckResourceAttr(dataSourceName, "fingerprint", cert.Fingerprint),
+					resource.TestCheckResourceAttr(dataSourceName, "serial_number", cert.SerialNumber),
+					resource.TestCheckResourceAttr(dataSourceName, "issuer_common_name", cert.IssuerCommonName),
+					resource.TestCheckResourceAttr(dataSourceName, "issuer_organization", cert.IssuerOrganization),
+					resource.TestCheckResourceAttr(dataSourceName, "issuer_organization_unit", cert.IssuerOrganizationUnit),
+					resource.TestCheckResourceAttr(dataSourceName, "subject_common_name", cert.SubjectCommonName),
+					resource.TestCheckResourceAttr(dataSourceName, "subject_organization", cert.SubjectOrganization),
+					resource.TestCheckResourceAttr(dataSourceName, "subject_organization_unit", cert.SubjectOrganizationUnit),
+					resource.TestCheckResourceAttr(dataSourceName, "pem", cert.Pem),
+					resource.TestCheckResourceAttr(dataSourceName, "issued_on", strconv.FormatInt(cert.IssuedOn, 10)),
+					resource.TestCheckResourceAttr(dataSourceName, "expires_on", strconv.FormatInt(cert.ExpiresOn, 10)),
 				),
 			},
 		},

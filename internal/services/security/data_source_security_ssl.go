@@ -97,8 +97,6 @@ func dataSourceSecuritySslRead(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	//log.Printf("[DEBUG] Found cert:\n%+v\n", cert)
-
 	d.SetId(cert.Id)
 	d.Set("fingerprint", cert.Fingerprint)
 	d.Set("serial_number", cert.SerialNumber)
