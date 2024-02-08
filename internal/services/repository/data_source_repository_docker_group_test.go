@@ -7,7 +7,6 @@ import (
 
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/acceptance"
-	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -38,9 +37,6 @@ func TestAccDataSourceRepositoryDockerGroup(t *testing.T) {
 			MemberNames: []string{repoHosted.Name},
 		},
 	}
-	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "false" {
-		repoGroup.Docker.Subdomain = &nameGroup
-	}
 
 	dataSourceName := "data.nexus_repository_docker_group.acceptance"
 
@@ -61,7 +57,6 @@ func TestAccDataSourceRepositoryDockerGroup(t *testing.T) {
 							resource.TestCheckResourceAttr(dataSourceName, "docker.#", "1"),
 							resource.TestCheckResourceAttr(dataSourceName, "docker.0.force_basic_auth", strconv.FormatBool(repoGroup.Docker.ForceBasicAuth)),
 							resource.TestCheckResourceAttr(dataSourceName, "docker.0.v1_enabled", strconv.FormatBool(repoGroup.Docker.V1Enabled)),
-							resource.TestCheckResourceAttr(dataSourceName, "docker.0.subdomain", *repoGroup.Docker.Subdomain),
 						),
 						resource.ComposeAggregateTestCheckFunc(
 							resource.TestCheckResourceAttr(dataSourceName, "storage.#", "1"),

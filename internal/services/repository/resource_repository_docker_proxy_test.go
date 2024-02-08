@@ -94,9 +94,11 @@ func TestAccResourceRepositoryDockerProxy(t *testing.T) {
 	repo := testAccResourceRepositoryDockerProxy(repoName)
 	repo.RoutingRule = &routingRule.Name
 	resourceName := "nexus_repository_docker_proxy.acceptance"
+	subdomain := ""
 	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "false" {
-		repo.Docker.Subdomain = &repoName
+		subdomain = repoName
 	}
+	repo.Docker.Subdomain = &subdomain
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { acceptance.AccPreCheck(t) },
@@ -146,7 +148,7 @@ func TestAccResourceRepositoryDockerProxy(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "docker.0.http_port", strconv.Itoa(*repo.Docker.HTTPPort)),
 						resource.TestCheckResourceAttr(resourceName, "docker.0.https_port", strconv.Itoa(*repo.Docker.HTTPSPort)),
 						resource.TestCheckResourceAttr(resourceName, "docker.0.v1_enabled", strconv.FormatBool(repo.Docker.V1Enabled)),
-						resource.TestCheckResourceAttr(resourceName, "docker.0.subdomain", string(*repo.Docker.Subdomain)),
+						resource.TestCheckResourceAttr(resourceName, "docker.0.subdomain", subdomain),
 						resource.TestCheckResourceAttr(resourceName, "docker_proxy.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "docker_proxy.0.index_type", string(repo.DockerProxy.IndexType)),
 						resource.TestCheckResourceAttr(resourceName, "docker_proxy.0.index_url", *repo.DockerProxy.IndexURL),
