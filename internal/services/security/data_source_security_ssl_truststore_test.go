@@ -11,7 +11,7 @@ import (
 )
 
 func TestAccDatasourcesecuritySSLTrustStore(t *testing.T) {
-	resName := "data.nexus_security_ssl_truststore.acceptance"
+	dataSourceName := "data.nexus_security_ssl_truststore.acceptance"
 
 	certPEM, _, certFingerprint, _, _ := tools.TestGenerateRandomCertificate()
 	cert := security.SSLCertificate{
@@ -32,9 +32,9 @@ func TestAccDatasourcesecuritySSLTrustStore(t *testing.T) {
 				Config: testAccDataSourceSecuritySSLTruststoreConfig(cert),
 				Check: resource.ComposeTestCheckFunc(
 					// Assuming the first certificate in the list is the one we're testing
-					resource.TestCheckResourceAttr(resName, "certificates.0.id", cert.Id),
-					resource.TestCheckResourceAttr(resName, "certificates.0.fingerprint", cert.Fingerprint),
-					resource.TestCheckResourceAttr(resName, "certificates.0.pem", cert.Pem),
+					resource.TestCheckResourceAttr(dataSourceName, "certificates.0.id", cert.Id),
+					resource.TestCheckResourceAttr(dataSourceName, "certificates.0.fingerprint", cert.Fingerprint),
+					resource.TestCheckResourceAttr(dataSourceName, "certificates.0.pem", cert.Pem),
 				),
 			},
 		},

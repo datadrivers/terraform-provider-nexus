@@ -25,7 +25,6 @@ func TestAccResourcesecuritySSLTruststore(t *testing.T) {
 		PreCheck:  func() { acceptance.AccPreCheck(t) },
 		Providers: acceptance.TestAccProviders,
 		Steps: []resource.TestStep{
-			// Creates a basic role
 			{
 				Config: testAccResourceSecuritySSLTruststoreConfig(cert),
 				Check: resource.ComposeTestCheckFunc(
