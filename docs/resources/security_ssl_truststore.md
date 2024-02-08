@@ -2,10 +2,10 @@
 page_title: "Resource nexus_security_ssl_truststore"
 subcategory: "Security"
 description: |-
-  Use this resource to import a SSL certificate.
+  Use this resource to add an SSL certificate to the nexus Truststore
 ---
 # Resource nexus_security_ssl_truststore
-Use this resource to import a SSL certificate.
+Use this resource to add an SSL certificate to the nexus Truststore
 ## Example Usage
 ```terraform
 resource "nexus_security_ssl_truststore" "ldap_cert" {

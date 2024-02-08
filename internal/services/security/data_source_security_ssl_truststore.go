@@ -2,114 +2,119 @@ package security
 
 import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
-	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func DataSourceSecuritySSLTruststore() *schema.Resource {
+func DataSourceSecuritySSLTrustStore() *schema.Resource {
 	return &schema.Resource{
-		Description: `Use this data source to retrieve a SSL certificate via Nexus.`,
+		Description: `Use this data source to retrieve ALL certificates in the Nexus truststore.`,
 
 		Read: dataSourceSecuritySslTrustStoreRead,
 		Schema: map[string]*schema.Schema{
 			"id": common.DataSourceID,
-			"host": {
-				Description: "Hostname for looking up certificate",
-				Type:        schema.TypeString,
-				Required:    true,
-			},
-			"port": {
-				Description: "Port for looking up certificate",
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Default:     "443",
-			},
-			"fingerprint": {
-				Description: "fingerprint field of the retrieved cert",
-				Computed:    true,
-				Type:        schema.TypeString,
-			},
-			"serial_number": {
-				Description: "serialNumber field of the retrieved cert",
-				Computed:    true,
-				Type:        schema.TypeString,
-			},
-			"issuer_common_name": {
-				Description: "issuerCommonName field of the retrieved cert",
-				Computed:    true,
-				Type:        schema.TypeString,
-			},
-			"issuer_organization": {
-				Description: "issuerOrganization field of the retrieved cert",
-				Computed:    true,
-				Type:        schema.TypeString,
-			},
-			"issuer_organization_unit": {
-				Description: "issuerOrganizationUnit field of the retrieved cert",
-				Computed:    true,
-				Type:        schema.TypeString,
-			},
-			"subject_common_name": {
-				Description: "subjectCommonName field of the retrieved cert",
-				Computed:    true,
-				Type:        schema.TypeString,
-			},
-			"subject_organization": {
-				Description: "subjectOrganization field of the retrieved cert",
-				Computed:    true,
-				Type:        schema.TypeString,
-			},
-			"subject_organization_unit": {
-				Description: "subjectOrganizationUnit field of the retrieved cert",
-				Computed:    true,
-				Type:        schema.TypeString,
-			},
-			"pem": {
-				Description: "pem field of the retrieved cert",
-				Computed:    true,
-				Type:        schema.TypeString,
-			},
-			"issued_on": {
-				Description: "issuedOn field of the retrieved cert",
-				Computed:    true,
-				Type:        schema.TypeInt,
-			},
-			"expires_on": {
-				Description: "expiresOn field of the retrieved cert",
-				Computed:    true,
-				Type:        schema.TypeInt,
+			"certificates": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"id": {
+							Description: "Unique identifier of the certificate",
+							Type:        schema.TypeString,
+							Computed:    true,
+						},
+						"fingerprint": {
+							Description: "Fingerprint of the retrieved certificate",
+							Type:        schema.TypeString,
+							Computed:    true,
+						},
+						"serial_number": {
+							Description: "Serial number of the retrieved certificate",
+							Type:        schema.TypeString,
+							Computed:    true,
+						},
+						"issuer_common_name": {
+							Description: "Common name of the issuer of the retrieved certificate",
+							Type:        schema.TypeString,
+							Computed:    true,
+						},
+						"issuer_organization": {
+							Description: "Organization of the issuer of the retrieved certificate",
+							Type:        schema.TypeString,
+							Computed:    true,
+						},
+						"issuer_organization_unit": {
+							Description: "Organization unit of the issuer of the retrieved certificate",
+							Type:        schema.TypeString,
+							Computed:    true,
+						},
+						"subject_common_name": {
+							Description: "Common name of the subject of the retrieved certificate",
+							Type:        schema.TypeString,
+							Computed:    true,
+						},
+						"subject_organization": {
+							Description: "Organization of the subject of the retrieved certificate",
+							Type:        schema.TypeString,
+							Computed:    true,
+						},
+						"subject_organization_unit": {
+							Description: "Organization unit of the subject of the retrieved certificate",
+							Type:        schema.TypeString,
+							Computed:    true,
+						},
+						"pem": {
+							Description: "PEM encoded certificate",
+							Type:        schema.TypeString,
+							Computed:    true,
+						},
+						"issued_on": {
+							Description: "Timestamp for when the certificate was issued",
+							Type:        schema.TypeInt,
+							Computed:    true,
+						},
+						"expires_on": {
+							Description: "Timestamp for when the certificate expires",
+							Type:        schema.TypeInt,
+							Computed:    true,
+						},
+					},
+				},
 			},
 		},
 	}
 }
 
 func dataSourceSecuritySslTrustStoreRead(d *schema.ResourceData, m interface{}) error {
-	certReq := security.CertificateRequest{
-		Host: d.Get("host").(string),
-		Port: d.Get("port").(int),
-	}
-
+	d.SetId("global")
 	client := m.(*nexus.NexusClient)
-	cert, err := client.Security.SSL.GetCertificate(&certReq)
+	certificates, err := client.Security.SSL.ListCertificates()
 	if err != nil {
 		return err
 	}
+	var certList []interface{}
 
-	//log.Printf("[DEBUG] Found cert:\n%+v\n", cert)
+	for _, cert := range *certificates {
+		certMap := make(map[string]interface{})
+		certMap["id"] = cert.Id
+		certMap["fingerprint"] = cert.Fingerprint
+		certMap["serial_number"] = cert.SerialNumber
+		certMap["issuer_common_name"] = cert.IssuerCommonName
+		certMap["issuer_organization"] = cert.IssuerOrganization
+		certMap["issuer_organization_unit"] = cert.IssuerOrganizationUnit
+		certMap["subject_common_name"] = cert.SubjectCommonName
+		certMap["subject_organization"] = cert.SubjectOrganization
+		certMap["subject_organization_unit"] = cert.SubjectOrganizationUnit
+		certMap["pem"] = cert.Pem
+		certMap["issued_on"] = cert.IssuedOn
+		certMap["expires_on"] = cert.ExpiresOn
 
-	d.SetId(cert.Id)
-	d.Set("fingerprint", cert.Fingerprint)
-	d.Set("serial_number", cert.SerialNumber)
-	d.Set("issuer_common_name", cert.IssuerCommonName)
-	d.Set("issuer_organization", cert.IssuerOrganization)
-	d.Set("issuer_organization_unit", cert.IssuerOrganizationUnit)
-	d.Set("subject_common_name", cert.SubjectCommonName)
-	d.Set("subject_organization", cert.SubjectOrganization)
-	d.Set("subject_organization_unit", cert.SubjectOrganizationUnit)
-	d.Set("pem", cert.Pem)
-	d.Set("issued_on", cert.IssuedOn)
-	d.Set("expires_on", cert.ExpiresOn)
+		certList = append(certList, certMap)
+	}
+
+	if err := d.Set("certificates", certList); err != nil {
+		return err
+	}
 
 	return nil
 }
