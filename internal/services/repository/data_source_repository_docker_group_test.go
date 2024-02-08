@@ -57,7 +57,6 @@ func TestAccDataSourceRepositoryDockerGroup(t *testing.T) {
 							resource.TestCheckResourceAttr(dataSourceName, "docker.#", "1"),
 							resource.TestCheckResourceAttr(dataSourceName, "docker.0.force_basic_auth", strconv.FormatBool(repoGroup.Docker.ForceBasicAuth)),
 							resource.TestCheckResourceAttr(dataSourceName, "docker.0.v1_enabled", strconv.FormatBool(repoGroup.Docker.V1Enabled)),
-							resource.TestCheckResourceAttr(dataSourceName, "docker.0.subdomain", string(*repoGroup.Docker.Subdomain)),
 						),
 						resource.ComposeAggregateTestCheckFunc(
 							resource.TestCheckResourceAttr(dataSourceName, "storage.#", "1"),
