@@ -156,20 +156,26 @@ func Provider() *schema.Provider {
 			"password": {
 				Description: "Password of user to connect to API. Reading environment variable NEXUS_PASSWORD. Default:`admin123`",
 				DefaultFunc: schema.EnvDefaultFunc("NEXUS_PASSWORD", "admin123"),
-				Required:    true,
+				Optional:    true,
 				Type:        schema.TypeString,
 			},
 			"url": {
 				Description: "URL of Nexus to reach API. Reading environment variable NEXUS_URL. Default:`http://127.0.0.1:8080`",
 				DefaultFunc: schema.EnvDefaultFunc("NEXUS_URL", "http://127.0.0.1:8080"),
-				Required:    true,
+				Optional:    true,
 				Type:        schema.TypeString,
 			},
 			"username": {
 				Description: "Username used to connect to API. Reading environment variable NEXUS_USERNAME. Default:`admin`",
 				DefaultFunc: schema.EnvDefaultFunc("NEXUS_USERNAME", "admin"),
-				Required:    true,
+				Optional:    true,
 				Type:        schema.TypeString,
+			},
+			"timeout": {
+				Description: "Timeout in seconds to connect to API. Reading environment variable NEXUS_TIMEOUT. Default:`30`",
+				DefaultFunc: schema.EnvDefaultFunc("NEXUS_TIMEOUT", 30),
+				Optional:    true,
+				Type:        schema.TypeInt,
 			},
 		},
 		ConfigureFunc: providerConfigure,
@@ -177,11 +183,13 @@ func Provider() *schema.Provider {
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
+	timeout := d.Get("timeout").(int)
 	config := client.Config{
 		Insecure: d.Get("insecure").(bool),
 		Password: d.Get("password").(string),
 		URL:      d.Get("url").(string),
 		Username: d.Get("username").(string),
+		Timeout:  &timeout,
 	}
 
 	return nexus.NewClient(config), nil
