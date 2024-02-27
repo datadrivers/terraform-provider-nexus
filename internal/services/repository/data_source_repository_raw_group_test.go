@@ -19,7 +19,8 @@ data "nexus_repository_raw_group" "acceptance" {
 }
 
 func TestAccDataSourceRepositoryRawGroup(t *testing.T) {
-	repoHosted := testAccResourceRepositoryRawHosted()
+	repoHostedFirst := testAccResourceRepositoryRawHosted()
+	repoHostedSecond := testAccResourceRepositoryRawHosted()
 	repoGroup := repository.RawGroupRepository{
 		Name:   fmt.Sprintf("acceptance-%s", acctest.RandString(10)),
 		Online: true,
@@ -28,7 +29,10 @@ func TestAccDataSourceRepositoryRawGroup(t *testing.T) {
 			StrictContentTypeValidation: false,
 		},
 		Group: repository.Group{
-			MemberNames: []string{repoHosted.Name},
+			MemberNames: []string{
+				repoHostedFirst.Name,
+				repoHostedSecond.Name,
+			},
 		},
 	}
 	dataSourceName := "data.nexus_repository_raw_group.acceptance"
@@ -38,7 +42,7 @@ func TestAccDataSourceRepositoryRawGroup(t *testing.T) {
 		Providers: acceptance.TestAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceRepositoryRawHostedConfig(repoHosted) + testAccResourceRepositoryRawGroupConfig(repoGroup) + testAccDataSourceRepositoryRawGroupConfig(),
+				Config: testAccResourceRepositoryRawHostedConfig(repoHostedFirst) + testAccResourceRepositoryRawHostedConfig(repoHostedSecond) + testAccResourceRepositoryRawGroupConfig(repoGroup) + testAccDataSourceRepositoryRawGroupConfig(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.ComposeAggregateTestCheckFunc(
 						resource.ComposeAggregateTestCheckFunc(
