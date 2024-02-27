@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -18,10 +16,7 @@ var (
 					},
 					MinItems: 1,
 					Required: true,
-					Set: func(v interface{}) int {
-						return schema.HashString(strings.ToLower(v.(string)))
-					},
-					Type: schema.TypeSet,
+					Type:     schema.TypeList,
 				},
 			},
 		},
@@ -40,10 +35,7 @@ var (
 					},
 					MinItems: 1,
 					Required: true,
-					Set: func(v interface{}) int {
-						return schema.HashString(strings.ToLower(v.(string)))
-					},
-					Type: schema.TypeSet,
+					Type:     schema.TypeList,
 				},
 				"writable_member": {
 					Description: "Pro-only: This field is for the Group Deployment feature available in NXRM Pro.",
@@ -66,7 +58,7 @@ var (
 						Type: schema.TypeString,
 					},
 					Computed: true,
-					Type:     schema.TypeSet,
+					Type:     schema.TypeList,
 				},
 			},
 		},
@@ -83,7 +75,7 @@ var (
 						Type: schema.TypeString,
 					},
 					Computed: true,
-					Type:     schema.TypeSet,
+					Type:     schema.TypeList,
 				},
 				"writable_member": {
 					Description: "Pro-only: This field is for the Group Deployment feature available in NXRM Pro.",

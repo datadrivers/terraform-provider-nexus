@@ -2,6 +2,7 @@ package repository_test
 
 import (
 	"fmt"
+	"slices"
 	"strconv"
 	"testing"
 
@@ -21,6 +22,14 @@ data "nexus_repository_raw_group" "acceptance" {
 func TestAccDataSourceRepositoryRawGroup(t *testing.T) {
 	repoHostedFirst := testAccResourceRepositoryRawHosted()
 	repoHostedSecond := testAccResourceRepositoryRawHosted()
+	memberNames := []string{
+		repoHostedFirst.Name,
+		repoHostedSecond.Name,
+	}
+	// Reverse sort the membernames because nexus sorts by default.
+	slices.Sort(memberNames)
+	slices.Reverse(memberNames)
+
 	repoGroup := repository.RawGroupRepository{
 		Name:   fmt.Sprintf("acceptance-%s", acctest.RandString(10)),
 		Online: true,
@@ -29,10 +38,7 @@ func TestAccDataSourceRepositoryRawGroup(t *testing.T) {
 			StrictContentTypeValidation: false,
 		},
 		Group: repository.Group{
-			MemberNames: []string{
-				repoHostedFirst.Name,
-				repoHostedSecond.Name,
-			},
+			MemberNames: memberNames,
 		},
 	}
 	dataSourceName := "data.nexus_repository_raw_group.acceptance"
@@ -55,8 +61,9 @@ func TestAccDataSourceRepositoryRawGroup(t *testing.T) {
 							resource.TestCheckResourceAttr(dataSourceName, "storage.0.blob_store_name", repoGroup.Storage.BlobStoreName),
 							resource.TestCheckResourceAttr(dataSourceName, "storage.0.strict_content_type_validation", strconv.FormatBool(repoGroup.Storage.StrictContentTypeValidation)),
 							resource.TestCheckResourceAttr(dataSourceName, "group.#", "1"),
-							resource.TestCheckResourceAttr(dataSourceName, "group.0.member_names.#", "1"),
-							resource.TestCheckResourceAttr(dataSourceName, "group.0.member_names.0", repoGroup.Group.MemberNames[0]),
+							resource.TestCheckResourceAttr(dataSourceName, "group.0.member_names.#", "2"),
+							resource.TestCheckResourceAttr(dataSourceName, "group.0.member_names.0", memberNames[0]),
+							resource.TestCheckResourceAttr(dataSourceName, "group.0.member_names.1", memberNames[1]),
 						),
 					),
 				),
