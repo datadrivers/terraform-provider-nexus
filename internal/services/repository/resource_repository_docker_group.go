@@ -41,7 +41,7 @@ func getDockerGroupRepositoryFromResourceData(resourceData *schema.ResourceData)
 	dockerConfig := resourceData.Get("docker").([]interface{})[0].(map[string]interface{})
 	groupConfig := resourceData.Get("group").([]interface{})[0].(map[string]interface{})
 	groupMemberNames := []string{}
-	for _, name := range groupConfig["member_names"].(*schema.Set).List() {
+	for _, name := range groupConfig["member_names"].([]interface{}) {
 		groupMemberNames = append(groupMemberNames, name.(string))
 	}
 

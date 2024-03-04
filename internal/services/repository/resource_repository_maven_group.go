@@ -37,10 +37,9 @@ func getMavenGroupRepositoryFromResourceData(resourceData *schema.ResourceData) 
 	storageConfig := resourceData.Get("storage").([]interface{})[0].(map[string]interface{})
 	groupConfig := resourceData.Get("group").([]interface{})[0].(map[string]interface{})
 	groupMemberNames := []string{}
-	for _, name := range groupConfig["member_names"].(*schema.Set).List() {
+	for _, name := range groupConfig["member_names"].([]interface{}) {
 		groupMemberNames = append(groupMemberNames, name.(string))
 	}
-
 	repo := repository.MavenGroupRepository{
 		Name:   resourceData.Get("name").(string),
 		Online: resourceData.Get("online").(bool),
