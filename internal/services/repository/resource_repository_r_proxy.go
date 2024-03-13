@@ -156,7 +156,6 @@ func resourceRProxyRepositoryCreate(resourceData *schema.ResourceData, m interfa
 
 func resourceRProxyRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
-
 	repo, err := client.Repository.R.Proxy.Get(resourceData.Id())
 	if err != nil {
 		return err
@@ -165,6 +164,13 @@ func resourceRProxyRepositoryRead(resourceData *schema.ResourceData, m interface
 	if repo == nil {
 		resourceData.SetId("")
 		return nil
+	}
+
+	expectedRoutingRule := resourceData.Get("routing_rule").(string)
+	if repo.RoutingRule != nil && *repo.RoutingRule != expectedRoutingRule {
+		resourceData.Set("routing_rule", *repo.RoutingRule)
+	} else if repo.RoutingRule == nil {
+		resourceData.Set("routing_rule", nil)
 	}
 
 	return setRProxyRepositoryToResourceData(repo, resourceData)
