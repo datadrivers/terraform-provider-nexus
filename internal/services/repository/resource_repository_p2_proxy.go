@@ -180,6 +180,13 @@ func resourceP2ProxyRepositoryUpdate(resourceData *schema.ResourceData, m interf
 		return err
 	}
 
+	expectedRoutingRule := resourceData.Get("routing_rule").(string)
+	if repo.RoutingRule != nil && *repo.RoutingRule != expectedRoutingRule {
+		resourceData.Set("routing_rule", *repo.RoutingRule)
+	} else if repo.RoutingRule == nil {
+		resourceData.Set("routing_rule", nil)
+	}
+
 	return resourceP2ProxyRepositoryRead(resourceData, m)
 }
 
