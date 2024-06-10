@@ -8,5 +8,3 @@ data "nexus_security_ssl" "ldap_cert" {
 resource "nexus_security_ssl_truststore" "ldap_cert" {
   pem = data.nexus_security_ssl.ldap_cert.pem
 }
-
-
