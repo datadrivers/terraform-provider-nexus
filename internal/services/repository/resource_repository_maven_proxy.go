@@ -132,6 +132,8 @@ func setMavenProxyRepositoryToResourceData(repo *repository.MavenProxyRepository
 		resourceData.Set("routing_rule", repo.RoutingRuleName)
 	} else if repo.RoutingRule != nil {
 		resourceData.Set("routing_rule", repo.RoutingRule)
+	} else if repo.RoutingRuleName == nil && repo.RoutingRule == nil {
+		resourceData.Set("routing_rule", nil)
 	}
 
 	if err := resourceData.Set("maven", flattenMaven(&repo.Maven)); err != nil {
