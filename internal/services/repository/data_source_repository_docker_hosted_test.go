@@ -19,8 +19,12 @@ data "nexus_repository_docker_hosted" "acceptance" {
 }`
 }
 
-func TestAccProDataSourceRepositoryDockerHosted(t *testing.T) {
+func TestAccDataSourceRepositoryDockerHosted(t *testing.T) {
 	name := fmt.Sprintf("acceptance-%s", acctest.RandString(10))
+	subdomain := ""
+	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "false" {
+		subdomain = name
+	}
 	repo := repository.DockerHostedRepository{
 		Name:   name,
 		Online: true,
@@ -31,9 +35,9 @@ func TestAccProDataSourceRepositoryDockerHosted(t *testing.T) {
 		Docker: repository.Docker{
 			ForceBasicAuth: true,
 			V1Enabled:      true,
-			Subdomain:      tools.GetStringPointer(name),
 		},
 	}
+	repo.Docker.Subdomain = &subdomain
 	dataSourceName := "data.nexus_repository_docker_hosted.acceptance"
 
 	resource.Test(t, resource.TestCase{
