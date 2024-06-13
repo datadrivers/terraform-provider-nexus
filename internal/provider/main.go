@@ -18,6 +18,7 @@ func Provider() *schema.Provider {
 			"nexus_blobstore_file":                        blobstore.DataSourceBlobstoreFile(),
 			"nexus_blobstore_group":                       blobstore.DataSourceBlobstoreGroup(),
 			"nexus_blobstore_s3":                          blobstore.DataSourceBlobstoreS3(),
+			"nexus_blobstore_list":                        blobstore.DataSourceBlobstoreList(),
 			"nexus_repository_apt_hosted":                 repository.DataSourceRepositoryAptHosted(),
 			"nexus_repository_apt_proxy":                  repository.DataSourceRepositoryAptProxy(),
 			"nexus_repository_bower_group":                repository.DataSourceRepositoryBowerGroup(),
