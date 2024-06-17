@@ -17,7 +17,7 @@ func TestAccResourceSecurityPrivilegeRepositoryContentSelector(t *testing.T) {
 	privilege := security.PrivilegeRepositoryContentSelector{
 		Name:            acctest.RandString(20),
 		Description:     acctest.RandString(20),
-		Actions:         []security.SecurityPrivilegeRepositoryContentSelectorActions{"ADD", "READ", "DELETE", "BROWSE", "EDIT"},
+		Actions:         []security.SecurityPrivilegeRepositoryContentSelectorActions{"ADD", "READ", "DELETE", "BROWSE", "EDIT", "ALL"},
 		Repository:      acctest.RandString(20),
 		Format:          "helm",
 		ContentSelector: acctest.RandString(20),
@@ -39,6 +39,7 @@ func TestAccResourceSecurityPrivilegeRepositoryContentSelector(t *testing.T) {
 					resource.TestCheckResourceAttr(resName, "actions.2", string(privilege.Actions[2])),
 					resource.TestCheckResourceAttr(resName, "actions.3", string(privilege.Actions[3])),
 					resource.TestCheckResourceAttr(resName, "actions.4", string(privilege.Actions[4])),
+					resource.TestCheckResourceAttr(resName, "actions.3", string(privilege.Actions[5])),
 				),
 			},
 		},
