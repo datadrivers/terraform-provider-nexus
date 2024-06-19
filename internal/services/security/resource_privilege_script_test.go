@@ -36,7 +36,7 @@ func TestAccResourceSecurityPrivilegeScript(t *testing.T) {
 					resource.TestCheckResourceAttr(resName, "actions.3", string(privilege.Actions[3])),
 					resource.TestCheckResourceAttr(resName, "actions.4", string(privilege.Actions[4])),
 					resource.TestCheckResourceAttr(resName, "actions.5", string(privilege.Actions[5])),
-					resource.TestCheckResourceAttr(resName, "actions.4", string(privilege.Actions[6])),
+					resource.TestCheckResourceAttr(resName, "actions.6", string(privilege.Actions[6])),
 				),
 			},
 		},
