@@ -34,14 +34,28 @@ Use this resource to manage the global configuration for the user-tokens.`,
 				Optional:    true,
 				Default:     false,
 			},
+			"expiration_enabled": {
+				Description: "Set user tokens expiration.",
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+			},
+			"expiration_days": {
+				Description: "Number of days for which you want user tokens to remain valid.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     30,
+			},
 		},
 	}
 }
 
 func getSecurityUserTokenFromResourceData(d *schema.ResourceData) security.UserTokenConfiguration {
 	return security.UserTokenConfiguration{
-		Enabled:        d.Get("enabled").(bool),
-		ProtectContent: d.Get("protect_content").(bool),
+		Enabled:           d.Get("enabled").(bool),
+		ProtectContent:    d.Get("protect_content").(bool),
+		ExpirationEnabled: d.Get("expiration_enabled").(bool),
+		ExpirationDays:    d.Get("expiration_days").(int),
 	}
 }
 
@@ -49,6 +63,8 @@ func setSecurityUserTokenToResourceData(token *security.UserTokenConfiguration, 
 	d.SetId("golbalUserTokenConfiguration")
 	d.Set("enabled", token.Enabled)
 	d.Set("protect_content", token.ProtectContent)
+	d.Set("expiration_enabled", token.ExpirationEnabled)
+	d.Set("expiration_days", token.ExpirationDays)
 }
 
 func resourceSecurityUserTokenRead(d *schema.ResourceData, m interface{}) error {
