@@ -2,13 +2,15 @@ package acceptance
 
 const (
 	TemplateStringRepositoryRawHosted = `
-resource "nexus_repository_raw_hosted" "acceptance" {
+resource "nexus_repository_raw_hosted" "{{ .Name }}" {
 ` + TemplateStringHostedRepository
 
 	TemplateStringRepositoryRawGroup = `
 resource "nexus_repository_raw_group" "acceptance" {
 	depends_on = [
-		nexus_repository_raw_hosted.acceptance
+	{{- range $val := .Group.MemberNames }}
+		nexus_repository_raw_hosted.{{ $val }},
+	{{ end -}}
 	]
 ` + TemplateStringGroupRepository
 

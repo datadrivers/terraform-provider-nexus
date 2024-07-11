@@ -182,6 +182,8 @@ func setDockerProxyRepositoryToResourceData(repo *repository.DockerProxyReposito
 		resourceData.Set("routing_rule", repo.RoutingRuleName)
 	} else if repo.RoutingRule != nil {
 		resourceData.Set("routing_rule", repo.RoutingRule)
+	} else if repo.RoutingRuleName == nil && repo.RoutingRule == nil {
+		resourceData.Set("routing_rule", nil)
 	}
 
 	if err := resourceData.Set("storage", flattenStorage(&repo.Storage)); err != nil {

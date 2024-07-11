@@ -11,10 +11,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func testAccDataSourceRepositoryRawHostedConfig() string {
+func testAccDataSourceRepositoryRawHostedConfig(name string) string {
 	return `
 data "nexus_repository_raw_hosted" "acceptance" {
-	name   = nexus_repository_raw_hosted.acceptance.id
+	name   = nexus_repository_raw_hosted.` + name + `.id
 }`
 }
 
@@ -34,7 +34,7 @@ func TestAccDataSourceRepositoryRawHosted(t *testing.T) {
 		Providers: acceptance.TestAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceRepositoryRawHostedConfig(repoUsingDefaults) + testAccDataSourceRepositoryRawHostedConfig(),
+				Config: testAccResourceRepositoryRawHostedConfig(repoUsingDefaults) + testAccDataSourceRepositoryRawHostedConfig(repoUsingDefaults.Name),
 				Check: resource.ComposeTestCheckFunc(
 					resource.ComposeAggregateTestCheckFunc(
 						resource.TestCheckResourceAttr(dataSourceName, "id", repoUsingDefaults.Name),
