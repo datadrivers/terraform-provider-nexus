@@ -27,12 +27,33 @@ Implemented and tested with Sonatype Nexus `3.70.1-02`.
 
 ```hcl
 provider "nexus" {
-  insecure = true
-  password = "admin123"
-  url      = "https://127.0.0.1:8080"
-  username = "admin"
+  insecure         = true
+  password         = "admin123"
+  url              = "https://127.0.0.1:8080"
+  username         = "admin"
 }
 ```
+
+Optionally with mTLS if Nexus is deployed behind a reverse proxy:
+
+```hcl
+provider "nexus" {
+  insecure         = true
+  password         = "admin123"
+  url              = "https://127.0.0.1:8080"
+  username         = "admin"
+  client_cert_path = "/path/to/client.crt"
+  client_key_path  = "/path/to/client.key"
+  root_ca_path     = "/path/to/root_ca.crt"
+}
+```
+
+Note that the `root_ca_path` should contain ALL certificates required for 
+communication. It overrides the system CA store, rather than adding to it.
+
+You can point the `root_ca_path` to the system trust store if required, e.g.:
+
+`root_ca_path = "/etc/ssl/certs/ca-certificates.crt"`
 
 ## Development
 
