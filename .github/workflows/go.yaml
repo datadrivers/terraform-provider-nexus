@@ -31,7 +31,7 @@ jobs:
           #     version: v1.59.1
 
       - name: Build
-        run: go build -v ./...
+        run: make build
 
       - name: Test
-        run: go test -v ./...
+        run: make test
