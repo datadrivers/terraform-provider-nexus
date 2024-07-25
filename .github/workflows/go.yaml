@@ -11,6 +11,9 @@ on:
 
 env:
   TF_ACC: 1
+  SKIP_S3_TESTS: true
+  SKIP_AZURE_TESTS: true
+  SKIP_PRO_TESTS: true
 
 jobs:
 
@@ -41,4 +44,5 @@ jobs:
 
       - name: stop docker
         run: make stop-services
+        if: always()
 
