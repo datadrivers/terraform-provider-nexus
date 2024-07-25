@@ -14,6 +14,8 @@ require (
 	github.com/stretchr/testify v1.9.0
 )
 
+replace github.com/datadrivers/go-nexus-client => github.com/octoenergy/go-nexus-client v1.12.0
+
 require (
 	4d63.com/gocheckcompilerdirectives v1.2.1 // indirect
 	4d63.com/gochecknoglobals v0.2.1 // indirect
