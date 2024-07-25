@@ -55,6 +55,21 @@ release:
     - glob: 'terraform-registry-manifest.json'
       name_template: '{{ .ProjectName }}_{{ .Version }}_manifest.json'
   # If you want to manually examine the release before its live, uncomment this line:
-  # draft: true
+  draft: true
 changelog:
-  skip: true
+  use: github
+  groups:
+    - title: Breaking changes
+      regexp: "^!.*$"
+      order: 0
+    - title: Features
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 1
+    - title: 'Bug fixes'
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 2
+    - title: Other changes
+      order: 999
+  filters:
+    exclude:
+      - '^Merge'
