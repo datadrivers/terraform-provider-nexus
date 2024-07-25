@@ -1,0 +1,13 @@
+
+
+{
+  "data": {
+    "type": "registry-provider-versions",
+    "attributes": {
+      "version": "2.4.0",
+      "key-id": "AB1F45DCE1DDA2FE",
+      "protocols": ["5.0"]
+    }
+  }
+}
+

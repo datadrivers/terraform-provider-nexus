@@ -1,0 +1,12 @@
+{
+  "data": {
+    "type": "registry-provider-version-platforms",
+    "attributes": {
+      "os": "linux",
+      "arch": "amd64",
+      "shasum": "<update me>",
+      "filename": "terraform-provider-nexus_2.4.0_linux_amd64.zip"
+    }
+  }
+}
+

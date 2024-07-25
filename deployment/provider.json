@@ -1,0 +1,11 @@
+{
+  "data": {
+    "type": "registry-providers",
+    "attributes": {
+      "name": "nexus",
+      "namespace": "octopus",
+      "registry-name": "private"
+    }
+  }
+}
+
