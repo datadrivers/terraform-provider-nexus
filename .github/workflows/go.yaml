@@ -33,5 +33,12 @@ jobs:
       - name: Build
         run: make build
 
+      - name: start docker
+        run: make start-services
+
       - name: Test
-        run: make test
+        run: make testacc
+
+      - name: stop docker
+        run: make stop-services
+
