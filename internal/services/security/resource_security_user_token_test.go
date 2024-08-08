@@ -35,7 +35,7 @@ func TestAccResourceSecurityUserToken(t *testing.T) {
 					resource.TestCheckResourceAttr(resName, "enabled", strconv.FormatBool(token.Enabled)),
 					resource.TestCheckResourceAttr(resName, "protect_content", strconv.FormatBool(token.ProtectContent)),
 					resource.TestCheckResourceAttr(resName, "expiration_enabled", strconv.FormatBool(token.ExpirationEnabled)),
-					resource.TestCheckResourceAttr(resName, "expiration_days", strconv.FormatInt(token.ExpirationDays)),
+					resource.TestCheckResourceAttr(resName, "expiration_days", strconv.Itoa(token.ExpirationDays)),
 				),
 			},
 		},
@@ -48,7 +48,7 @@ resource "nexus_security_user_token" "acceptance" {
 	enabled            = %t
 	protect_content    = %t
 	expiration_enabled = %t
-	expiration_days    = %t
+	expiration_days    = %d
 }
 `, token.Enabled, token.ProtectContent, token.ExpirationEnabled, token.ExpirationDays)
 }
