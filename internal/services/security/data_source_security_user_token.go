@@ -16,13 +16,23 @@ Use this data source to get the global user-token configuration.`,
 			"id": common.DataSourceID,
 			"enabled": {
 				Computed:    true,
-				Description: "Activate the feature of user tokens.",
+				Description: "Activation of the user tokens feature.",
 				Type:        schema.TypeBool,
 			},
 			"protect_content": {
 				Computed:    true,
 				Description: "Require user tokens for repository authentication. This does not effect UI access.",
 				Type:        schema.TypeBool,
+			},
+			"expiration_enabled": {
+				Description: "Activation of the user tokens expiration feature.",
+				Type:        schema.TypeBool,
+				Computed:    true,
+			},
+			"expiration_days": {
+				Description: "Number of days user tokens remain valid.",
+				Type:        schema.TypeInt,
+				Computed:    true,
 			},
 		},
 	}

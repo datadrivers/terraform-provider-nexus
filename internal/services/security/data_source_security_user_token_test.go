@@ -38,7 +38,7 @@ func TestAccDataSourceSecurityUserToken(t *testing.T) {
 					resource.TestCheckResourceAttr(dataSourceName, "enabled", strconv.FormatBool(token.Enabled)),
 					resource.TestCheckResourceAttr(dataSourceName, "protect_content", strconv.FormatBool(token.ProtectContent)),
 					resource.TestCheckResourceAttr(dataSourceName, "expiration_enabled", strconv.FormatBool(token.ExpirationEnabled)),
-					resource.TestCheckResourceAttr(dataSourceName, "expiration_days", strconv.FormatInt(token.ExpirationDays)),
+					resource.TestCheckResourceAttr(dataSourceName, "expiration_days", strconv.Itoa(token.ExpirationDays)),
 				),
 			},
 		},
