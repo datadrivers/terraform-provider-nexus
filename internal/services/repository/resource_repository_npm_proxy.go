@@ -40,6 +40,7 @@ func ResourceRepositoryNpmProxy() *schema.Resource {
 				Optional:    true,
 				Default:     false,
 				Type:        schema.TypeBool,
+				Deprecated:  "This field is removed in nexus version 3.66.0 and will be removed in the next major release of this provider",
 			},
 			"remove_quarantined": {
 				Description: "Remove quarantined versions from the npm package metadata.",

@@ -58,7 +58,7 @@ func testAccResourceRepositoryNpmProxy() repository.NpmProxyRepository {
 			RemoteURL:      "https://npmjs.org",
 		},
 		Npm: &repository.Npm{
-			RemoveNonCataloged: true,
+			RemoveNonCataloged: false,
 			RemoveQuarantined:  true,
 		},
 	}
@@ -129,7 +129,6 @@ func TestAccResourceRepositoryNpmProxy(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "routing_rule", *repo.RoutingRule),
 					),
 					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(resourceName, "remove_non_cataloged", strconv.FormatBool(repo.Npm.RemoveNonCataloged)),
 						resource.TestCheckResourceAttr(resourceName, "remove_quarantined", strconv.FormatBool(repo.Npm.RemoveQuarantined)),
 					),
 				),
