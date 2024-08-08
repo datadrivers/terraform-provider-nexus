@@ -7,8 +7,8 @@ import (
 var (
 	ResourceNegativeCache = &schema.Schema{
 		Description: "Configuration of the negative cache handling",
-		Optional:    true,
 		Type:        schema.TypeList,
+		Required:    true,
 		MaxItems:    1,
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
