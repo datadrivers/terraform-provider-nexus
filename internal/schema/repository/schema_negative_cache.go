@@ -13,15 +13,13 @@ var (
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"enabled": {
-					Default:     false,
 					Description: "Whether to cache responses for content not present in the proxied repository",
-					Optional:    true,
+					Required:    true,
 					Type:        schema.TypeBool,
 				},
 				"ttl": {
-					Default:     1440,
 					Description: "How long to cache the fact that a file was not found in the repository (in minutes)",
-					Optional:    true,
+					Required:    true,
 					Type:        schema.TypeInt,
 				},
 			},
