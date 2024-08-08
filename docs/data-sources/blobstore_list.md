@@ -2,10 +2,10 @@
 page_title: "Data Source nexus_blobstore_list"
 subcategory: "Blobstore"
 description: |-
-  Use this data source to get a list with all blob stores.
+  Use this data source to get a list with all Blob Stores.
 ---
 # Data Source nexus_blobstore_list
-Use this data source to get a list with all blob stores.
+Use this data source to get a list with all Blob Stores.
 ## Example Usage
 ```terraform
 data "nexus_blobstore_list" "all" {}
@@ -16,7 +16,7 @@ data "nexus_blobstore_list" "all" {}
 ### Read-Only
 
 - `id` (String) Used to identify data source at nexus
-- `items` (List of Object) A List of all blob stores (see [below for nested schema](#nestedatt--items))
+- `items` (List of Object) A List of all Blob Stores (see [below for nested schema](#nestedatt--items))
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`
