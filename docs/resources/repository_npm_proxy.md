@@ -49,7 +49,7 @@ resource "nexus_repository_npm_proxy" "npmjs" {
 - `cleanup` (Block List) Cleanup policies (see [below for nested schema](#nestedblock--cleanup))
 - `negative_cache` (Block List, Max: 1) Configuration of the negative cache handling (see [below for nested schema](#nestedblock--negative_cache))
 - `online` (Boolean) Whether this repository accepts incoming requests
-- `remove_non_cataloged` (Boolean) Remove non-catalogued versions from the npm package metadata.
+- `remove_non_cataloged` (Boolean, Deprecated) Remove non-catalogued versions from the npm package metadata.
 - `remove_quarantined` (Boolean) Remove quarantined versions from the npm package metadata.
 - `routing_rule` (String) The name of the routing rule assigned to this repository
 
