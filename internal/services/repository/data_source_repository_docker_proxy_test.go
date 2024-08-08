@@ -42,6 +42,10 @@ func TestAccDataSourceRepositoryDockerProxy(t *testing.T) {
 			BlobStoreName:               "default",
 			StrictContentTypeValidation: true,
 		},
+		NegativeCache: repository.NegativeCache{
+			Enabled: true,
+			TTL:     5,
+		},
 	}
 	repo.Docker.Subdomain = &subdomain
 	dataSourceName := "data.nexus_repository_docker_proxy.acceptance"

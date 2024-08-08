@@ -29,6 +29,10 @@ func TestAccDataSourceRepositoryBowerProxy(t *testing.T) {
 			BlobStoreName:               "default",
 			StrictContentTypeValidation: true,
 		},
+		NegativeCache: repository.NegativeCache{
+			Enabled: true,
+			TTL:     5,
+		},
 		Bower: repository.Bower{
 			RewritePackageUrls: false,
 		},
