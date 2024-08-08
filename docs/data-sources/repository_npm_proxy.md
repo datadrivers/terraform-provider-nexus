@@ -27,7 +27,7 @@ data "nexus_repository_npm_proxy" "npmjs" {
 - `negative_cache` (List of Object) Configuration of the negative cache handling (see [below for nested schema](#nestedatt--negative_cache))
 - `online` (Boolean) Whether this repository accepts incoming requests
 - `proxy` (List of Object) Configuration for the proxy repository (see [below for nested schema](#nestedatt--proxy))
-- `remove_non_cataloged` (Boolean) Remove non-catalogued versions from the npm package metadata.
+- `remove_non_cataloged` (Boolean, Deprecated) Remove non-catalogued versions from the npm package metadata.
 - `remove_quarantined` (Boolean) Remove quarantined versions from the npm package metadata.
 - `routing_rule` (String) The name of the routing rule assigned to this repository
 - `storage` (List of Object) The storage configuration of the repository (see [below for nested schema](#nestedatt--storage))
