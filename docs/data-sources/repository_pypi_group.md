@@ -31,7 +31,7 @@ data "nexus_repository_pypi_group" "group" {
 
 Read-Only:
 
-- `member_names` (Set of String)
+- `member_names` (List of String)
 - `writable_member` (String)
 
 
