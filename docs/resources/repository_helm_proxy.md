@@ -101,7 +101,7 @@ Optional:
 <a id="nestedblock--negative_cache"></a>
 ### Nested Schema for `negative_cache`
 
-Optional:
+Required:
 
 - `enabled` (Boolean) Whether to cache responses for content not present in the proxied repository
 - `ttl` (Number) How long to cache the fact that a file was not found in the repository (in minutes)

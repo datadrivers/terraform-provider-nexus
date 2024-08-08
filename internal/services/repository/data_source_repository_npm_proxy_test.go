@@ -29,6 +29,10 @@ func TestAccDataSourceRepositoryNpmProxy(t *testing.T) {
 			BlobStoreName:               "default",
 			StrictContentTypeValidation: true,
 		},
+		NegativeCache: repository.NegativeCache{
+			Enabled: true,
+			TTL:     5,
+		},
 		Npm: &repository.Npm{
 			RemoveNonCataloged: false,
 			RemoveQuarantined:  true,
