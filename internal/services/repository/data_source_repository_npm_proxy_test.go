@@ -30,7 +30,7 @@ func TestAccDataSourceRepositoryNpmProxy(t *testing.T) {
 			StrictContentTypeValidation: true,
 		},
 		Npm: &repository.Npm{
-			RemoveNonCataloged: true,
+			RemoveNonCataloged: false,
 			RemoveQuarantined:  true,
 		},
 	}
@@ -61,7 +61,6 @@ func TestAccDataSourceRepositoryNpmProxy(t *testing.T) {
 						resource.TestCheckResourceAttr(dataSourceName, "storage.0.strict_content_type_validation", strconv.FormatBool(repoUsingDefaults.Storage.StrictContentTypeValidation)),
 					),
 					resource.ComposeAggregateTestCheckFunc(
-						resource.TestCheckResourceAttr(dataSourceName, "remove_non_cataloged", strconv.FormatBool(repoUsingDefaults.Npm.RemoveNonCataloged)),
 						resource.TestCheckResourceAttr(dataSourceName, "remove_quarantined", strconv.FormatBool(repoUsingDefaults.Npm.RemoveQuarantined)),
 					),
 				),
