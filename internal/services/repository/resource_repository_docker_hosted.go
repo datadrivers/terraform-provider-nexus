@@ -30,7 +30,7 @@ func ResourceRepositoryDockerHosted() *schema.Resource {
 			// Hosted schemas
 			"cleanup":   repositorySchema.ResourceCleanup,
 			"component": repositorySchema.ResourceComponent,
-			"storage":   repositorySchema.ResourceHostedStorage,
+			"storage":   repositorySchema.ResourceDockerHostedStorage,
 			// Docker hosted schemas
 			"docker": repositorySchema.ResourceDocker,
 		},
@@ -39,21 +39,24 @@ func ResourceRepositoryDockerHosted() *schema.Resource {
 
 func getDockerHostedRepositoryFromResourceData(resourceData *schema.ResourceData) repository.DockerHostedRepository {
 	storageConfig := resourceData.Get("storage").([]interface{})[0].(map[string]interface{})
-	writePolicy := repository.StorageWritePolicy(storageConfig["write_policy"].(string))
 	dockerConfig := resourceData.Get("docker").([]interface{})[0].(map[string]interface{})
 
 	repo := repository.DockerHostedRepository{
 		Name:   resourceData.Get("name").(string),
 		Online: resourceData.Get("online").(bool),
-		Storage: repository.HostedStorage{
+		Storage: repository.DockerHostedStorage{
 			BlobStoreName:               storageConfig["blob_store_name"].(string),
 			StrictContentTypeValidation: storageConfig["strict_content_type_validation"].(bool),
-			WritePolicy:                 &writePolicy,
+			WritePolicy:                 repository.StorageWritePolicy(storageConfig["write_policy"].(string)),
 		},
 		Docker: repository.Docker{
 			ForceBasicAuth: dockerConfig["force_basic_auth"].(bool),
 			V1Enabled:      dockerConfig["v1_enabled"].(bool),
 		},
+	}
+
+	if latestPolicy, ok := storageConfig["latest_policy"]; ok {
+		repo.Storage.LatestPolicy = tools.GetBoolPointer(latestPolicy.(bool))
 	}
 
 	if httpPort, ok := dockerConfig["http_port"]; ok {
@@ -109,7 +112,7 @@ func setDockerHostedRepositoryToResourceData(repo *repository.DockerHostedReposi
 		return err
 	}
 
-	if err := resourceData.Set("storage", flattenHostedStorage(&repo.Storage)); err != nil {
+	if err := resourceData.Set("storage", flattenDockerHostedStorage(&repo.Storage)); err != nil {
 		return err
 	}
 
