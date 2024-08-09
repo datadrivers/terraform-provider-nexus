@@ -28,9 +28,10 @@ func TestAccDataSourceRepositoryDockerHosted(t *testing.T) {
 	repo := repository.DockerHostedRepository{
 		Name:   name,
 		Online: true,
-		Storage: repository.HostedStorage{
+		Storage: repository.DockerHostedStorage{
 			BlobStoreName:               "default",
 			StrictContentTypeValidation: false,
+			WritePolicy:                 "ALLOW",
 		},
 		Docker: repository.Docker{
 			ForceBasicAuth: true,
@@ -56,6 +57,7 @@ func TestAccDataSourceRepositoryDockerHosted(t *testing.T) {
 						resource.TestCheckResourceAttr(dataSourceName, "docker.0.v1_enabled", strconv.FormatBool(repo.Docker.V1Enabled)),
 						resource.TestCheckResourceAttr(dataSourceName, "storage.0.blob_store_name", repo.Storage.BlobStoreName),
 						resource.TestCheckResourceAttr(dataSourceName, "storage.0.strict_content_type_validation", strconv.FormatBool(repo.Storage.StrictContentTypeValidation)),
+						resource.TestCheckResourceAttr(dataSourceName, "storage.0.write_policy", string(repo.Storage.WritePolicy)),
 					),
 				),
 			},

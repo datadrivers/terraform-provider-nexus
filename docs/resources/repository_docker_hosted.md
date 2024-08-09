@@ -32,7 +32,7 @@ resource "nexus_repository_docker_hosted" "example" {
 
 - `docker` (Block List, Min: 1, Max: 1) docker contains the configuration of the docker repository (see [below for nested schema](#nestedblock--docker))
 - `name` (String) A unique identifier for this repository
-- `storage` (Block List, Min: 1, Max: 1) The storage configuration of the repository (see [below for nested schema](#nestedblock--storage))
+- `storage` (Block List, Min: 1, Max: 1) The storage configuration of the repository docker hosted (see [below for nested schema](#nestedblock--storage))
 
 ### Optional
 
@@ -69,6 +69,7 @@ Required:
 
 Optional:
 
+- `latest_policy` (Boolean) Whether to allow redeploying the 'latest' tag but defer to the Deployment Policy for all other tags. Only usable with write_policy "ALLOW_ONCE"
 - `write_policy` (String) Controls if deployments of and updates to assets are allowed
 
 

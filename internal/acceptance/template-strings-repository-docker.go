@@ -16,7 +16,11 @@ resource "nexus_repository_docker_hosted" "acceptance" {
 {{- end }}
 		v1_enabled = "{{ .Docker.V1Enabled }}"
 	}
-` + TemplateStringHostedRepository
+` + TemplateStringNameOnline +
+		TemplateStringCleanup +
+		TemplateStringComponent +
+		TemplateStringDockerStorageHosted +
+		TemplateStringEnd
 
 	TemplateStringRepositoryDockerGroup = `
 resource "nexus_repository_docker_group" "acceptance" {
@@ -61,4 +65,17 @@ resource "nexus_repository_docker_proxy" "acceptance" {
 {{- end }}
 	}
 ` + TemplateStringProxyRepository
+
+	TemplateStringDockerStorageHosted = `
+storage {
+	blob_store_name                = "{{ .Storage.BlobStoreName }}"
+	strict_content_type_validation = {{ .Storage.StrictContentTypeValidation }}
+	{{- if .Storage.WritePolicy }}
+	write_policy                   = "{{ .Storage.WritePolicy }}"
+	{{- end }}
+	{{- if .Storage.LatestPolicy }}
+	latest_policy                   = "{{ .Storage.LatestPolicy }}"
+	{{- end }}
+}
+`
 )

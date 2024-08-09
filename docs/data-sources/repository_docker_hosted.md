@@ -26,7 +26,7 @@ data "nexus_repository_docker_hosted" "example" {
 - `docker` (List of Object) docker contains the configuration of the docker repository (see [below for nested schema](#nestedatt--docker))
 - `id` (String) Used to identify data source at nexus
 - `online` (Boolean) Whether this repository accepts incoming requests
-- `storage` (List of Object) The storage configuration of the repository (see [below for nested schema](#nestedatt--storage))
+- `storage` (List of Object) The storage configuration of the repository docker hosted (see [below for nested schema](#nestedatt--storage))
 
 <a id="nestedatt--cleanup"></a>
 ### Nested Schema for `cleanup`
@@ -62,5 +62,6 @@ Read-Only:
 Read-Only:
 
 - `blob_store_name` (String)
+- `latest_policy` (Boolean)
 - `strict_content_type_validation` (Boolean)
 - `write_policy` (String)

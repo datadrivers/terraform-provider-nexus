@@ -19,7 +19,7 @@ func DataSourceRepositoryDockerHosted() *schema.Resource {
 			// Hosted schemas
 			"cleanup":   repository.DataSourceCleanup,
 			"component": repository.DataSourceComponent,
-			"storage":   repository.DataSourceHostedStorage,
+			"storage":   repository.DataSourceDockerHostedStorage,
 			// Docker hosted schemas
 			"docker": repository.DataSourceDocker,
 		},

@@ -16,7 +16,7 @@ import (
 )
 
 func testAccResourceRepositoryDockerHosted(name string) repository.DockerHostedRepository {
-	writePolicy := repository.StorageWritePolicyAllow
+	latestPolicy := true
 
 	return repository.DockerHostedRepository{
 		Name:   name,
@@ -27,10 +27,11 @@ func testAccResourceRepositoryDockerHosted(name string) repository.DockerHostedR
 			HTTPSPort:      tools.GetIntPointer(rand.Intn(999) + 33000),
 			V1Enabled:      false,
 		},
-		Storage: repository.HostedStorage{
+		Storage: repository.DockerHostedStorage{
 			BlobStoreName:               "default",
 			StrictContentTypeValidation: true,
-			WritePolicy:                 &writePolicy,
+			WritePolicy:                 repository.StorageWritePolicyAllowOnce,
+			LatestPolicy:                &latestPolicy,
 		},
 		Cleanup: &repository.Cleanup{
 			PolicyNames: []string{"cleanup-weekly"},
@@ -77,7 +78,8 @@ func TestAccResourceRepositoryDockerHosted(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "storage.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "storage.0.blob_store_name", repo.Storage.BlobStoreName),
 						resource.TestCheckResourceAttr(resourceName, "storage.0.strict_content_type_validation", strconv.FormatBool(repo.Storage.StrictContentTypeValidation)),
-						resource.TestCheckResourceAttr(resourceName, "storage.0.write_policy", string(*repo.Storage.WritePolicy)),
+						resource.TestCheckResourceAttr(resourceName, "storage.0.write_policy", string(repo.Storage.WritePolicy)),
+						resource.TestCheckResourceAttr(resourceName, "storage.0.latest_policy", strconv.FormatBool(*repo.Storage.LatestPolicy)),
 						resource.TestCheckResourceAttr(resourceName, "cleanup.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "cleanup.0.policy_names.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "cleanup.0.policy_names.0", repo.Cleanup.PolicyNames[0]),
