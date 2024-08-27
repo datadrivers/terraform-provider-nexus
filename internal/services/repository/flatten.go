@@ -212,6 +212,21 @@ func flattenHostedStorage(storage *repository.HostedStorage) []map[string]interf
 	return []map[string]interface{}{data}
 }
 
+func flattenDockerHostedStorage(dockerStorage *repository.DockerHostedStorage) []map[string]interface{} {
+	if dockerStorage == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"blob_store_name":                dockerStorage.BlobStoreName,
+		"strict_content_type_validation": dockerStorage.StrictContentTypeValidation,
+		"write_policy":                   dockerStorage.WritePolicy,
+	}
+	if dockerStorage.LatestPolicy != nil {
+		data["latest_policy"] = dockerStorage.LatestPolicy
+	}
+	return []map[string]interface{}{data}
+}
+
 func flattenMaven(maven *repository.Maven) []map[string]interface{} {
 	data := map[string]interface{}{
 		"version_policy": maven.VersionPolicy,
