@@ -22,13 +22,16 @@ func testAccResourceRepositoryDockerProxy(name string) repository.DockerProxyRep
 	retries := 3
 	timeout := 15
 	useTrustStore := true
+	cacheForeignLayers := true
 
 	return repository.DockerProxyRepository{
 		Name:   name,
 		Online: true,
 		DockerProxy: repository.DockerProxy{
-			IndexType: repository.DockerProxyIndexTypeRegistry,
-			IndexURL:  tools.GetStringPointer("https://docker.elastic.co/index.json"),
+			IndexType:                repository.DockerProxyIndexTypeRegistry,
+			IndexURL:                 tools.GetStringPointer("https://docker.elastic.co/index.json"),
+			CacheForeignLayers:       &cacheForeignLayers,
+			ForeignLayerUrlWhitelist: []string{"test-regexp.*"},
 		},
 		Docker: repository.Docker{
 			ForceBasicAuth: false,

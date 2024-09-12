@@ -91,6 +91,8 @@ Required:
 
 Optional:
 
+- `cache_foreign_layers` (Boolean) Allow Nexus Repository Manager to download and cache foreign layers
+- `foreign_layer_url_whitelist` (Set of String) A set of regular expressions used to identify URLs that are allowed for foreign layer requests
 - `index_url` (String) Url of Docker Index to use
 
 

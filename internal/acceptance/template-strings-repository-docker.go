@@ -63,6 +63,16 @@ resource "nexus_repository_docker_proxy" "acceptance" {
 {{- if .DockerProxy.IndexURL }}
 		index_url = "{{ .DockerProxy.IndexURL }}"
 {{- end }}
+{{- if .DockerProxy.CacheForeignLayers }}
+		cache_foreign_layers = "{{ .DockerProxy.CacheForeignLayers }}"
+{{- end }}
+{{- if .DockerProxy.ForeignLayerUrlWhitelist }}
+		foreign_layer_url_whitelist = [
+		{{- range $val := .DockerProxy.ForeignLayerUrlWhitelist }}
+			"{{ $val }}",
+		{{ end -}}
+		]
+{{- end }}
 	}
 ` + TemplateStringProxyRepository
 
