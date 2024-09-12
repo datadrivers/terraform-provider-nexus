@@ -8,10 +8,12 @@ import (
 
 func DataSourceRepositoryBowerProxy() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this data source to get an existing bower proxy repository.",
+		Description: `!> This data source is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.
+
+Use this data source to get an existing bower proxy repository.`,
+		DeprecationMessage: "This data source is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.",
 
 		Read: dataSourceRepositoryBowerProxyRead,
-
 		Schema: map[string]*schema.Schema{
 			// Common schemas
 			"id":     common.DataSourceID,

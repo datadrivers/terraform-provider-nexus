@@ -11,7 +11,10 @@ import (
 
 func ResourceRepositoryBowerHosted() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this resource to create a hosted Bower repository.",
+		Description: `!> This resource is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.
+
+Use this resource to create a hosted Bower repository.`,
+		DeprecationMessage: "This resource is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.",
 
 		Create: resourceBowerHostedRepositoryCreate,
 		Delete: resourceBowerHostedRepositoryDelete,

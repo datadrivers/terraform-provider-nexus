@@ -8,7 +8,10 @@ import (
 
 func DataSourceRepositoryBowerGroup() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this data source to get an existing bower group repository.",
+		Description: `!> This data source is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.
+
+Use this data source to get an existing bower group repository.`,
+		DeprecationMessage: "This data source is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.",
 
 		Read: dataSourceRepositoryBowerGroupRead,
 		Schema: map[string]*schema.Schema{
