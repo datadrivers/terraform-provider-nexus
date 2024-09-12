@@ -42,6 +42,19 @@ func DataSourceRepositoryDockerProxy() *schema.Resource {
 							Computed:    true,
 							Type:        schema.TypeString,
 						},
+						"cache_foreign_layers": {
+							Description: "Allow Nexus Repository Manager to download and cache foreign layers",
+							Computed:    true,
+							Type:        schema.TypeBool,
+						},
+						"foreign_layer_url_whitelist": {
+							Description: "A set of regular expressions used to identify URLs that are allowed for foreign layer requests",
+							Computed:    true,
+							Type:        schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
 					},
 				},
 			},

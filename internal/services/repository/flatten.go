@@ -45,6 +45,14 @@ func flattenDockerProxy(dockerProxy *repository.DockerProxy) []map[string]interf
 		data["index_url"] = *dockerProxy.IndexURL
 	}
 
+	if dockerProxy.CacheForeignLayers != nil {
+		data["cache_foreign_layers"] = *dockerProxy.CacheForeignLayers
+	}
+
+	if len(dockerProxy.ForeignLayerUrlWhitelist) != 0 {
+		data["foreign_layer_url_whitelist"] = tools.StringSliceToInterfaceSlice(dockerProxy.ForeignLayerUrlWhitelist)
+	}
+
 	return []map[string]interface{}{data}
 }
 

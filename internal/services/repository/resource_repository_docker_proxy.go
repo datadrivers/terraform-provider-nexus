@@ -59,6 +59,19 @@ func ResourceRepositoryDockerProxy() *schema.Resource {
 							Type:         schema.TypeString,
 							ValidateFunc: validation.StringMatch(regexp.MustCompile("http[s]?://.*"), "index_url should be in the format 'http://www.example.com'"),
 						},
+						"cache_foreign_layers": {
+							Description: "Allow Nexus Repository Manager to download and cache foreign layers",
+							Optional:    true,
+							Type:        schema.TypeBool,
+						},
+						"foreign_layer_url_whitelist": {
+							Description: "A set of regular expressions used to identify URLs that are allowed for foreign layer requests",
+							Optional:    true,
+							Type:        schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
 					},
 				},
 			},
@@ -123,6 +136,16 @@ func getDockerProxyRepositoryFromResourceData(resourceData *schema.ResourceData)
 
 	if dockerProxyConfig["index_url"].(string) != "" {
 		repo.DockerProxy.IndexURL = tools.GetStringPointer(strings.TrimSpace(dockerProxyConfig["index_url"].(string)))
+	}
+
+	cacheForeignLayers, ok := dockerProxyConfig["cache_foreign_layers"]
+	if ok {
+		repo.DockerProxy.CacheForeignLayers = tools.GetBoolPointer(cacheForeignLayers.(bool))
+	}
+
+	foreignLayerUrlWhitelist, ok := dockerProxyConfig["foreign_layer_url_whitelist"]
+	if ok {
+		repo.DockerProxy.ForeignLayerUrlWhitelist = tools.InterfaceSliceToStringSlice(foreignLayerUrlWhitelist.(*schema.Set).List())
 	}
 
 	if routingRule, ok := resourceData.GetOk("routing_rule"); ok {
