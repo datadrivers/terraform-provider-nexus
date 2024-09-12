@@ -1,7 +1,7 @@
 version: '3'
 services:
   nexus-oss:
-    image: "${NEXUS_IMAGE}:${NEXUS_VERSION}"
+    image: "${NEXUS_IMAGE}:${NEXUS_VERSION}-${NEXUS_JAVA_VERSION}"
     user: "${UID}:${GID}"
     ports:
       - "${NEXUS_PORT}:8081"
@@ -10,7 +10,7 @@ services:
     profiles:
       - oss
   nexus-pro:
-    image: "${NEXUS_IMAGE}:${NEXUS_VERSION}"
+    image: "${NEXUS_IMAGE}:${NEXUS_VERSION}-${NEXUS_JAVA_VERSION}"
     user: "${UID}:${GID}"
     ports:
       - "${NEXUS_PORT}:8081"
