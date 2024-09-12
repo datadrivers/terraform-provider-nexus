@@ -19,7 +19,7 @@
 
 Terraform provider to configure Sonatype Nexus using its API.
 
-Implemented and tested with Sonatype Nexus `3.70.1-02`.
+Implemented and tested with Sonatype Nexus `3.72.0` with `java17` and DB `H2`.
 
 ## Usage
 
@@ -48,7 +48,7 @@ provider "nexus" {
 }
 ```
 
-Note that the `root_ca_path` should contain ALL certificates required for 
+Note that the `root_ca_path` should contain ALL certificates required for
 communication. It overrides the system CA store, rather than adding to it.
 
 You can point the `root_ca_path` to the system trust store if required, e.g.:

@@ -2,9 +2,12 @@
 page_title: "Data Source nexus_repository_bower_hosted"
 subcategory: "Repository"
 description: |-
+  !> This data source is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.
   Use this data source to get an existing hosted bower repository.
 ---
 # Data Source nexus_repository_bower_hosted
+!> This data source is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.
+
 Use this data source to get an existing hosted bower repository.
 ## Example Usage
 ```terraform

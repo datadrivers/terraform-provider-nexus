@@ -2,9 +2,12 @@
 page_title: "Resource nexus_repository_bower_proxy"
 subcategory: "Repository"
 description: |-
+  !> This resource is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.
   Use this resource to create an bower proxy repository.
 ---
 # Resource nexus_repository_bower_proxy
+!> This resource is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.
+
 Use this resource to create an bower proxy repository.
 ## Example Usage
 ```terraform
