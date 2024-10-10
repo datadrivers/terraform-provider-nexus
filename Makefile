@@ -72,4 +72,8 @@ tools:
 docs:
 	go generate ./...
 
-.PHONY: build start-services stop-services test testacc fmt fmtcheck lint tools docs
+setup:
+	pre-commit install
+	pre-commit install --hook-type commit-msg --hook-type pre-push
+
+.PHONY: build start-services stop-services test testacc fmt fmtcheck lint tools docs setup
