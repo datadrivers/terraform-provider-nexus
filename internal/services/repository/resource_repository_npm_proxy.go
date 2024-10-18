@@ -40,6 +40,7 @@ func ResourceRepositoryNpmProxy() *schema.Resource {
 				Optional:    true,
 				Default:     false,
 				Type:        schema.TypeBool,
+				Deprecated:  "This field is removed in nexus version 3.66.0 and will be removed in the next major release of this provider",
 			},
 			"remove_quarantined": {
 				Description: "Remove quarantined versions from the npm package metadata.",
@@ -132,6 +133,8 @@ func setNpmProxyRepositoryToResourceData(repo *repository.NpmProxyRepository, re
 		resourceData.Set("routing_rule", repo.RoutingRuleName)
 	} else if repo.RoutingRule != nil {
 		resourceData.Set("routing_rule", repo.RoutingRule)
+	} else if repo.RoutingRuleName == nil && repo.RoutingRule == nil {
+		resourceData.Set("routing_rule", nil)
 	}
 
 	if err := resourceData.Set("storage", flattenStorage(&repo.Storage)); err != nil {

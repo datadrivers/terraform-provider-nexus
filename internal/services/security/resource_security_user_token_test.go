@@ -19,8 +19,10 @@ func TestAccResourceSecurityUserToken(t *testing.T) {
 	resName := "nexus_security_user_token.acceptance"
 
 	token := security.UserTokenConfiguration{
-		Enabled:        true,
-		ProtectContent: false,
+		Enabled:           true,
+		ProtectContent:    false,
+		ExpirationEnabled: true,
+		ExpirationDays:    int(30),
 	}
 
 	resource.Test(t, resource.TestCase{
@@ -32,6 +34,8 @@ func TestAccResourceSecurityUserToken(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resName, "enabled", strconv.FormatBool(token.Enabled)),
 					resource.TestCheckResourceAttr(resName, "protect_content", strconv.FormatBool(token.ProtectContent)),
+					resource.TestCheckResourceAttr(resName, "expiration_enabled", strconv.FormatBool(token.ExpirationEnabled)),
+					resource.TestCheckResourceAttr(resName, "expiration_days", strconv.Itoa(token.ExpirationDays)),
 				),
 			},
 		},
@@ -41,8 +45,10 @@ func TestAccResourceSecurityUserToken(t *testing.T) {
 func testAccResourceSecurityUserTokenConfig(token security.UserTokenConfiguration) string {
 	return fmt.Sprintf(`
 resource "nexus_security_user_token" "acceptance" {
-	enabled         = %t
-	protect_content = %t
+	enabled            = %t
+	protect_content    = %t
+	expiration_enabled = %t
+	expiration_days    = %d
 }
-`, token.Enabled, token.ProtectContent)
+`, token.Enabled, token.ProtectContent, token.ExpirationEnabled, token.ExpirationDays)
 }

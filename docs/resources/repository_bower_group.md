@@ -2,9 +2,12 @@
 page_title: "Resource nexus_repository_bower_group"
 subcategory: "Repository"
 description: |-
+  !> This resource is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.
   Use this resource to create a group bower repository.
 ---
 # Resource nexus_repository_bower_group
+!> This resource is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.
+
 Use this resource to create a group bower repository.
 ## Example Usage
 ```terraform
@@ -86,7 +89,7 @@ resource "nexus_repository_bower_group" "group" {
 
 Required:
 
-- `member_names` (Set of String) Member repositories names
+- `member_names` (List of String) Member repositories names
 
 
 <a id="nestedblock--storage"></a>

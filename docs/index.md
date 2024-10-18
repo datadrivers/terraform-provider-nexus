@@ -8,7 +8,7 @@ description: |-
 
 The Nexus provider allows Terraform to read from, write to, and configure [Sonatype Nexus Repository Manager](https://www.sonatype.com/product-nexus-repository).
 
--> **Note** This provider hat been implemented and tested with Sonatype Nexus Repository Manager OSS `3.64.0-03`.
+-> **Note** This provider hat been implemented and tested with Sonatype Nexus Repository Manager OSS `3.70.1-02`.
 
 ## Usage
 
@@ -28,8 +28,11 @@ provider "nexus" {
 
 ### Optional
 
+- `client_cert_path` (String) Path to a client PEM certificate to load for mTLS. Reading environment variable NEXUS_CLIENT_CERT_PATH. Default:``
+- `client_key_path` (String) Path to a client PEM key to load for mTLS. Reading environment variable NEXUS_CLIENT_KEY_PATH. Default:``
 - `insecure` (Boolean) Boolean to specify wether insecure SSL connections are allowed or not. Reading environment variable NEXUS_INSECURE_SKIP_VERIFY. Default:`true`
 - `password` (String) Password of user to connect to API. Reading environment variable NEXUS_PASSWORD. Default:`admin123`
+- `root_ca_path` (String) Path to a root CA certificate to load for mTLS. Reading environment variable NEXUS_ROOT_CA_PATH. Default:``
 - `timeout` (Number) Timeout in seconds to connect to API. Reading environment variable NEXUS_TIMEOUT. Default:`30`
 - `url` (String) URL of Nexus to reach API. Reading environment variable NEXUS_URL. Default:`http://127.0.0.1:8080`
 - `username` (String) Username used to connect to API. Reading environment variable NEXUS_USERNAME. Default:`admin`

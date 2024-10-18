@@ -18,6 +18,7 @@ func Provider() *schema.Provider {
 			"nexus_blobstore_file":                        blobstore.DataSourceBlobstoreFile(),
 			"nexus_blobstore_group":                       blobstore.DataSourceBlobstoreGroup(),
 			"nexus_blobstore_s3":                          blobstore.DataSourceBlobstoreS3(),
+			"nexus_blobstore_list":                        blobstore.DataSourceBlobstoreList(),
 			"nexus_repository_apt_hosted":                 repository.DataSourceRepositoryAptHosted(),
 			"nexus_repository_apt_proxy":                  repository.DataSourceRepositoryAptProxy(),
 			"nexus_repository_bower_group":                repository.DataSourceRepositoryBowerGroup(),
@@ -177,6 +178,24 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				Type:        schema.TypeInt,
 			},
+			"client_cert_path": {
+				Description: "Path to a client PEM certificate to load for mTLS. Reading environment variable NEXUS_CLIENT_CERT_PATH. Default:``",
+				DefaultFunc: schema.EnvDefaultFunc("NEXUS_CLIENT_CERT_PATH", ""),
+				Optional:    true,
+				Type:        schema.TypeString,
+			},
+			"client_key_path": {
+				Description: "Path to a client PEM key to load for mTLS. Reading environment variable NEXUS_CLIENT_KEY_PATH. Default:``",
+				DefaultFunc: schema.EnvDefaultFunc("NEXUS_CLIENT_KEY_PATH", ""),
+				Optional:    true,
+				Type:        schema.TypeString,
+			},
+			"root_ca_path": {
+				Description: "Path to a root CA certificate to load for mTLS. Reading environment variable NEXUS_ROOT_CA_PATH. Default:``",
+				DefaultFunc: schema.EnvDefaultFunc("NEXUS_ROOT_CA_PATH", ""),
+				Optional:    true,
+				Type:        schema.TypeString,
+			},
 		},
 		ConfigureFunc: providerConfigure,
 	}
@@ -184,12 +203,18 @@ func Provider() *schema.Provider {
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	timeout := d.Get("timeout").(int)
+	clientCertPath := d.Get("client_cert_path").(string)
+	clientKeyPath := d.Get("client_key_path").(string)
+	rootCaPath := d.Get("root_ca_path").(string)
 	config := client.Config{
-		Insecure: d.Get("insecure").(bool),
-		Password: d.Get("password").(string),
-		URL:      d.Get("url").(string),
-		Username: d.Get("username").(string),
-		Timeout:  &timeout,
+		Insecure:              d.Get("insecure").(bool),
+		Password:              d.Get("password").(string),
+		URL:                   d.Get("url").(string),
+		Username:              d.Get("username").(string),
+		Timeout:               &timeout,
+		ClientCertificatePath: &clientCertPath,
+		ClientKeyPath:         &clientKeyPath,
+		RootCAPath:            &rootCaPath,
 	}
 
 	return nexus.NewClient(config), nil

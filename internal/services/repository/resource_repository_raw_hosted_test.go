@@ -44,7 +44,7 @@ func testAccResourceRepositoryRawHostedConfig(repo repository.RawHostedRepositor
 
 func TestAccResourceRepositoryRawHosted(t *testing.T) {
 	repo := testAccResourceRepositoryRawHosted()
-	resourceName := "nexus_repository_raw_hosted.acceptance"
+	resourceName := "nexus_repository_raw_hosted." + repo.Name
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { acceptance.AccPreCheck(t) },

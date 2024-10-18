@@ -87,7 +87,7 @@ resource "nexus_repository_nuget_group" "group" {
 
 Required:
 
-- `member_names` (Set of String) Member repositories names
+- `member_names` (List of String) Member repositories names
 
 
 <a id="nestedblock--storage"></a>

@@ -2,9 +2,12 @@
 page_title: "Resource nexus_repository_bower_hosted"
 subcategory: "Repository"
 description: |-
+  !> This resource is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.
   Use this resource to create a hosted Bower repository.
 ---
 # Resource nexus_repository_bower_hosted
+!> This resource is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.
+
 Use this resource to create a hosted Bower repository.
 ## Example Usage
 ```terraform
