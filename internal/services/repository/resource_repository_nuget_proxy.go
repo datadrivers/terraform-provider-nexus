@@ -187,13 +187,6 @@ func resourceNugetProxyRepositoryRead(resourceData *schema.ResourceData, m inter
 		return nil
 	}
 
-	expectedRoutingRule := resourceData.Get("routing_rule").(string)
-	if repo.RoutingRule != nil && *repo.RoutingRule != expectedRoutingRule {
-		resourceData.Set("routing_rule", *repo.RoutingRule)
-	} else if repo.RoutingRule == nil {
-		resourceData.Set("routing_rule", nil)
-	}
-
 	return setNugetProxyRepositoryToResourceData(repo, resourceData)
 }
 
