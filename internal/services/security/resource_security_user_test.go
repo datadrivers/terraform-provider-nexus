@@ -21,6 +21,7 @@ func testAccResourceSecurityUser() security.User {
 		Status:       "active",
 		Password:     acctest.RandString(16),
 		Roles:        []string{"nx-admin"},
+		Source:       fmt.Sprintf("default"),
 	}
 }
 
@@ -45,6 +46,7 @@ func TestAccResourceSecurityUser(t *testing.T) {
 					resource.TestCheckResourceAttr(resName, "email", user.EmailAddress),
 					resource.TestCheckResourceAttr(resName, "status", user.Status),
 					resource.TestCheckResourceAttr(resName, "roles.#", strconv.Itoa(len(user.Roles))),
+					resource.TestCheckResourceAttr(resName, "source", user.Source),
 					// FIXME: (BUG) Incorrect roles state representation.
 					// For some reasons, 1st element in array is not stored as roles.0, but instead it's stored
 					// as roles.3360874991 where 3360874991 is a "random" number.
@@ -75,6 +77,7 @@ resource "nexus_security_user" "acceptance" {
 	password  = "%s"
 	status    = "%s"
 	roles     = ["%s"]
+	source    = "%s"
 }
-`, user.UserID, user.FirstName, user.LastName, user.EmailAddress, user.Password, user.Status, strings.Join(user.Roles, "\", \""))
+`, user.UserID, user.FirstName, user.LastName, user.EmailAddress, user.Password, user.Status, strings.Join(user.Roles, "\", \""), user.Source)
 }
