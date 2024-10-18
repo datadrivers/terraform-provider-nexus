@@ -11,7 +11,10 @@ import (
 
 func ResourceRepositoryBowerProxy() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this resource to create an bower proxy repository.",
+		Description: `!> This resource is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.
+
+Use this resource to create an bower proxy repository.`,
+		DeprecationMessage: "This resource is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.",
 
 		Create: resourceBowerProxyRepositoryCreate,
 		Delete: resourceBowerProxyRepositoryDelete,
@@ -124,6 +127,8 @@ func setBowerProxyRepositoryToResourceData(repo *repository.BowerProxyRepository
 		resourceData.Set("routing_rule", repo.RoutingRuleName)
 	} else if repo.RoutingRule != nil {
 		resourceData.Set("routing_rule", repo.RoutingRule)
+	} else if repo.RoutingRuleName == nil && repo.RoutingRule == nil {
+		resourceData.Set("routing_rule", nil)
 	}
 
 	if err := resourceData.Set("storage", flattenStorage(&repo.Storage)); err != nil {

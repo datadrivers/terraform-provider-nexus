@@ -44,6 +44,7 @@ resource "nexus_repository_nuget_proxy" "nuget_org" {
 
 - `http_client` (Block List, Min: 1, Max: 1) HTTP Client configuration for proxy repositories (see [below for nested schema](#nestedblock--http_client))
 - `name` (String) A unique identifier for this repository
+- `negative_cache` (Block List, Min: 1, Max: 1) Configuration of the negative cache handling (see [below for nested schema](#nestedblock--negative_cache))
 - `nuget_version` (String) Nuget protocol version
 - `proxy` (Block List, Min: 1, Max: 1) Configuration for the proxy repository (see [below for nested schema](#nestedblock--proxy))
 - `query_cache_item_max_age` (Number) How long to cache query results from the proxied repository (in seconds)
@@ -52,7 +53,6 @@ resource "nexus_repository_nuget_proxy" "nuget_org" {
 ### Optional
 
 - `cleanup` (Block List) Cleanup policies (see [below for nested schema](#nestedblock--cleanup))
-- `negative_cache` (Block List, Max: 1) Configuration of the negative cache handling (see [below for nested schema](#nestedblock--negative_cache))
 - `online` (Boolean) Whether this repository accepts incoming requests
 - `routing_rule` (String) The name of the routing rule assigned to this repository
 
@@ -102,6 +102,15 @@ Optional:
 
 
 
+<a id="nestedblock--negative_cache"></a>
+### Nested Schema for `negative_cache`
+
+Required:
+
+- `enabled` (Boolean) Whether to cache responses for content not present in the proxied repository
+- `ttl` (Number) How long to cache the fact that a file was not found in the repository (in minutes)
+
+
 <a id="nestedblock--proxy"></a>
 ### Nested Schema for `proxy`
 
@@ -133,15 +142,6 @@ Optional:
 Optional:
 
 - `policy_names` (Set of String) List of policy names
-
-
-<a id="nestedblock--negative_cache"></a>
-### Nested Schema for `negative_cache`
-
-Optional:
-
-- `enabled` (Boolean) Whether to cache responses for content not present in the proxied repository
-- `ttl` (Number) How long to cache the fact that a file was not found in the repository (in minutes)
 ## Import
 Import is supported using the following syntax:
 ```shell

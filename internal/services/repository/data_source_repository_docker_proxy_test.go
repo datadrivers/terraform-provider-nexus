@@ -19,15 +19,18 @@ data "nexus_repository_docker_proxy" "acceptance" {
 }`
 }
 
-func TestAccProDataSourceRepositoryDockerProxy(t *testing.T) {
+func TestAccDataSourceRepositoryDockerProxy(t *testing.T) {
 	name := fmt.Sprintf("acceptance-%s", acctest.RandString(10))
+	subdomain := ""
+	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "false" {
+		subdomain = name
+	}
 	repo := repository.DockerProxyRepository{
 		Name:   name,
 		Online: true,
 		Docker: repository.Docker{
 			ForceBasicAuth: true,
 			V1Enabled:      true,
-			Subdomain:      tools.GetStringPointer(name),
 		},
 		DockerProxy: repository.DockerProxy{
 			IndexType: repository.DockerProxyIndexTypeHub,
@@ -39,7 +42,12 @@ func TestAccProDataSourceRepositoryDockerProxy(t *testing.T) {
 			BlobStoreName:               "default",
 			StrictContentTypeValidation: true,
 		},
+		NegativeCache: repository.NegativeCache{
+			Enabled: true,
+			TTL:     5,
+		},
 	}
+	repo.Docker.Subdomain = &subdomain
 	dataSourceName := "data.nexus_repository_docker_proxy.acceptance"
 
 	resource.Test(t, resource.TestCase{

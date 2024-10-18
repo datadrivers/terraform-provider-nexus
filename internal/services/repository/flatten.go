@@ -45,6 +45,14 @@ func flattenDockerProxy(dockerProxy *repository.DockerProxy) []map[string]interf
 		data["index_url"] = *dockerProxy.IndexURL
 	}
 
+	if dockerProxy.CacheForeignLayers != nil {
+		data["cache_foreign_layers"] = *dockerProxy.CacheForeignLayers
+	}
+
+	if len(dockerProxy.ForeignLayerUrlWhitelist) != 0 {
+		data["foreign_layer_url_whitelist"] = tools.StringSliceToInterfaceSlice(dockerProxy.ForeignLayerUrlWhitelist)
+	}
+
 	return []map[string]interface{}{data}
 }
 
@@ -208,6 +216,21 @@ func flattenHostedStorage(storage *repository.HostedStorage) []map[string]interf
 	}
 	if storage.WritePolicy != nil {
 		data["write_policy"] = storage.WritePolicy
+	}
+	return []map[string]interface{}{data}
+}
+
+func flattenDockerHostedStorage(dockerStorage *repository.DockerHostedStorage) []map[string]interface{} {
+	if dockerStorage == nil {
+		return nil
+	}
+	data := map[string]interface{}{
+		"blob_store_name":                dockerStorage.BlobStoreName,
+		"strict_content_type_validation": dockerStorage.StrictContentTypeValidation,
+		"write_policy":                   dockerStorage.WritePolicy,
+	}
+	if dockerStorage.LatestPolicy != nil {
+		data["latest_policy"] = dockerStorage.LatestPolicy
 	}
 	return []map[string]interface{}{data}
 }

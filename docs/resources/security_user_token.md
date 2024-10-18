@@ -25,6 +25,8 @@ resource "nexus_security_user_token" "nexus" {
 
 ### Optional
 
+- `expiration_days` (Number) Number of days for which you want user tokens to remain valid.
+- `expiration_enabled` (Boolean) Set user tokens expiration.
 - `protect_content` (Boolean) Require user tokens for repository authentication. This does not effect UI access.
 
 ### Read-Only

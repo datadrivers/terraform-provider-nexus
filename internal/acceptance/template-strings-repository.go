@@ -118,16 +118,10 @@ group {
 `
 
 	TemplateStringNegativeCache = `
-{{ if .NegativeCache }}
 	negative_cache {
-		{{ if .NegativeCache.Enabled }}
 		enabled = {{ .NegativeCache.Enabled }}
-		{{ end -}}
-		{{ if .NegativeCache.TTL }}
 		ttl = {{ .NegativeCache.TTL }}
-		{{ end }}
 	}
-{{ end -}}
 `
 
 	TemplateStringProxy = `

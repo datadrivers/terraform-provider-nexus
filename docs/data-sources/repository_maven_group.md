@@ -31,7 +31,7 @@ data "nexus_repository_maven_group" "maven_public" {
 
 Read-Only:
 
-- `member_names` (Set of String)
+- `member_names` (List of String)
 
 
 <a id="nestedatt--storage"></a>

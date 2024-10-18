@@ -2,9 +2,12 @@
 page_title: "Data Source nexus_repository_bower_group"
 subcategory: "Repository"
 description: |-
+  !> This data source is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.
   Use this data source to get an existing bower group repository.
 ---
 # Data Source nexus_repository_bower_group
+!> This data source is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.
+
 Use this data source to get an existing bower group repository.
 ## Example Usage
 ```terraform
@@ -31,7 +34,7 @@ data "nexus_repository_bower_group" "group" {
 
 Read-Only:
 
-- `member_names` (Set of String)
+- `member_names` (List of String)
 
 
 <a id="nestedatt--storage"></a>

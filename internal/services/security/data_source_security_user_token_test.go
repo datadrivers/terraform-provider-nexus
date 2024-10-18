@@ -18,8 +18,10 @@ func TestAccDataSourceSecurityUserToken(t *testing.T) {
 	dataSourceName := "data.nexus_security_user_token.acceptance"
 
 	token := security.UserTokenConfiguration{
-		Enabled:        true,
-		ProtectContent: false,
+		Enabled:           true,
+		ProtectContent:    false,
+		ExpirationEnabled: true,
+		ExpirationDays:    int(30),
 	}
 
 	resource.Test(t, resource.TestCase{
@@ -35,6 +37,8 @@ func TestAccDataSourceSecurityUserToken(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(dataSourceName, "enabled", strconv.FormatBool(token.Enabled)),
 					resource.TestCheckResourceAttr(dataSourceName, "protect_content", strconv.FormatBool(token.ProtectContent)),
+					resource.TestCheckResourceAttr(dataSourceName, "expiration_enabled", strconv.FormatBool(token.ExpirationEnabled)),
+					resource.TestCheckResourceAttr(dataSourceName, "expiration_days", strconv.Itoa(token.ExpirationDays)),
 				),
 			},
 		},
