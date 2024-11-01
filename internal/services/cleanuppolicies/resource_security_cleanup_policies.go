@@ -1,8 +1,8 @@
-package security
+package cleanuppolicies
 
 import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
-	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/cleanuppolicies"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -10,11 +10,11 @@ func ResourceSecurityCleanupPolicies() *schema.Resource {
 	return &schema.Resource{
 		Description: "Manages a cleanup policy in Nexus Repository.",
 
-		Create: resourceSecurityCleanupPoliciesCreate,
-		Read:   resourceSecurityCleanupPoliciesRead,
-		Update: resourceSecurityCleanupPoliciesUpdate,
-		Delete: resourceSecurityCleanupPoliciesDelete,
-		Exists: resourceSecurityCleanupPoliciesExists,
+		Create: resourceCleanupPoliciesCreate,
+		Read:   resourceCleanupPoliciesRead,
+		Update: resourceCleanupPoliciesUpdate,
+		Delete: resourceCleanupPoliciesDelete,
+		Exists: resourceCleanupPoliciesExists,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
@@ -71,7 +71,7 @@ func ResourceSecurityCleanupPolicies() *schema.Resource {
 	}
 }
 
-func getCleanupPolicyFromResourceData(d *schema.ResourceData) security.CleanupPolicy {
+func getCleanupPolicyFromResourceData(d *schema.ResourceData) cleanuppolicies.CleanupPolicy {
 
 	notes, _ := d.Get("notes").(string)
 	criteriaLastBlobUpdated, _ := d.Get("criteria_last_blob_updated").(int)
@@ -82,7 +82,7 @@ func getCleanupPolicyFromResourceData(d *schema.ResourceData) security.CleanupPo
 	name, _ := d.Get("name").(string)
 	format, _ := d.Get("format").(string)
 
-	policy := security.CleanupPolicy{
+	policy := cleanuppolicies.CleanupPolicy{
 		Notes:                   &notes,
 		CriteriaLastBlobUpdated: &criteriaLastBlobUpdated,
 		CriteriaLastDownloaded:  &criteriaLastDownloaded,
@@ -96,7 +96,7 @@ func getCleanupPolicyFromResourceData(d *schema.ResourceData) security.CleanupPo
 	return policy
 }
 
-func setCleanupPolicyToResourceData(cleanupPolicy *security.CleanupPolicy, d *schema.ResourceData) error {
+func setCleanupPolicyToResourceData(cleanupPolicy *cleanuppolicies.CleanupPolicy, d *schema.ResourceData) error {
 	d.SetId(cleanupPolicy.Name)
 	d.Set("notes", cleanupPolicy.Notes)
 	d.Set("criteria_last_blob_updated", cleanupPolicy.CriteriaLastBlobUpdated)
@@ -109,24 +109,24 @@ func setCleanupPolicyToResourceData(cleanupPolicy *security.CleanupPolicy, d *sc
 	return nil
 }
 
-func resourceSecurityCleanupPoliciesCreate(d *schema.ResourceData, m interface{}) error {
+func resourceCleanupPoliciesCreate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	cleanupPolicy := getCleanupPolicyFromResourceData(d)
 
-	if err := client.Security.CleanupPolicy.Create(&cleanupPolicy); err != nil {
+	if err := client.CleanupPolicy.Create(&cleanupPolicy); err != nil {
 		return err
 	}
 
 	d.SetId(cleanupPolicy.Name)
 
-	return resourceSecurityContentSelectorRead(d, m)
+	return resourceCleanupPoliciesRead(d, m)
 }
 
-func resourceSecurityCleanupPoliciesRead(d *schema.ResourceData, m interface{}) error {
+func resourceCleanupPoliciesRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
-	cleanupPolicy, err := client.Security.CleanupPolicy.Get(d.Id())
+	cleanupPolicy, err := client.CleanupPolicy.Get(d.Id())
 	if err != nil {
 		return err
 	}
@@ -139,21 +139,21 @@ func resourceSecurityCleanupPoliciesRead(d *schema.ResourceData, m interface{}) 
 	return setCleanupPolicyToResourceData(cleanupPolicy, d)
 }
 
-func resourceSecurityCleanupPoliciesUpdate(d *schema.ResourceData, m interface{}) error {
+func resourceCleanupPoliciesUpdate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	cleanupPolicy := getCleanupPolicyFromResourceData(d)
-	if err := client.Security.CleanupPolicy.Update(&cleanupPolicy); err != nil {
+	if err := client.CleanupPolicy.Update(&cleanupPolicy); err != nil {
 		return err
 	}
 
-	return resourceSecurityCleanupPoliciesRead(d, m)
+	return resourceCleanupPoliciesRead(d, m)
 }
 
-func resourceSecurityCleanupPoliciesDelete(d *schema.ResourceData, m interface{}) error {
+func resourceCleanupPoliciesDelete(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
-	if err := client.Security.CleanupPolicy.Delete(d.Id()); err != nil {
+	if err := client.CleanupPolicy.Delete(d.Id()); err != nil {
 		return err
 	}
 
@@ -161,9 +161,9 @@ func resourceSecurityCleanupPoliciesDelete(d *schema.ResourceData, m interface{}
 	return nil
 }
 
-func resourceSecurityCleanupPoliciesExists(d *schema.ResourceData, m interface{}) (bool, error) {
+func resourceCleanupPoliciesExists(d *schema.ResourceData, m interface{}) (bool, error) {
 	client := m.(*nexus.NexusClient)
 
-	cleanupPolicy, err := client.Security.CleanupPolicy.Get(d.Id())
+	cleanupPolicy, err := client.CleanupPolicy.Get(d.Id())
 	return cleanupPolicy != nil, err
 }

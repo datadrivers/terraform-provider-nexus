@@ -1,4 +1,4 @@
-package security
+package cleanuppolicies
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -64,5 +64,5 @@ func DataSourceRepositoryCleanupPolicies() *schema.Resource {
 }
 
 func dataSourceRepositoryCleanupPoliciesRead(d *schema.ResourceData, m interface{}) error {
-	return resourceSecurityCleanupPoliciesRead(d, m)
+	return resourceCleanupPoliciesRead(d, m)
 }

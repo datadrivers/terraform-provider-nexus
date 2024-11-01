@@ -1,7 +1,7 @@
-package security_test
+package cleanuppolicies_test
 
 import (
-	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/cleanuppolicies"
 	"strconv"
 	"testing"
 
@@ -11,10 +11,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccDataSourceCleanupCleanupPolicy(t *testing.T) {
-	dataSourceName := "data.nexus_security_cleanup_policy.acceptance"
+func TestAccDataSourceCleanupPolicy(t *testing.T) {
+	dataSourceName := "data.nexus_cleanup_policy.acceptance"
 
-	cp := security.CleanupPolicy{
+	cp := cleanuppolicies.CleanupPolicy{
 		Notes:                   tools.GetStringPointer(acctest.RandString(25)),
 		CriteriaLastBlobUpdated: tools.GetIntPointer(acctest.RandInt()),
 		CriteriaLastDownloaded:  tools.GetIntPointer(acctest.RandInt()),
@@ -30,7 +30,7 @@ func TestAccDataSourceCleanupCleanupPolicy(t *testing.T) {
 		Providers: acceptance.TestAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceSecurityCleanupPolicyConfig(cp) + testAccDataSourceCleanupCleanupPolicyConfig(),
+				Config: testAccResourceCleanupPolicyConfig(cp) + testAccDataSourceCleanupPolicyConfig(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPtr(dataSourceName, "notes", cp.Notes),
 					resource.TestCheckResourceAttr(dataSourceName, "criteria_last_blob_updated", strconv.Itoa(*cp.CriteriaLastBlobUpdated)),
@@ -46,10 +46,10 @@ func TestAccDataSourceCleanupCleanupPolicy(t *testing.T) {
 	})
 }
 
-func testAccDataSourceCleanupCleanupPolicyConfig() string {
+func testAccDataSourceCleanupPolicyConfig() string {
 	return `
-data "nexus_cleanup_cleanup_policy" "acceptance" {
-	name = nexus_cleanup_cleanup_policy.acceptance.name
+data "nexus_cleanup_policy" "acceptance" {
+	name = nexus_cleanup_policy.acceptance.name
 }
 `
 }

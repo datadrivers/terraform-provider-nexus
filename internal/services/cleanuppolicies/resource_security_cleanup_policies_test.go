@@ -1,4 +1,4 @@
-package security_test
+package cleanuppolicies_test
 
 import (
 	"fmt"
@@ -7,18 +7,18 @@ import (
 
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/pkg/tools"
-	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/cleanuppolicies"
 	"github.com/datadrivers/terraform-provider-nexus/internal/acceptance"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccResourceSecurityCleanupPolicy(t *testing.T) {
-	var cleanupPolicy security.CleanupPolicy
+func TestAccResourceCleanupPolicy(t *testing.T) {
+	var cleanupPolicy cleanuppolicies.CleanupPolicy
 
 	resName := "nexus_security_cleanup_policy.acceptance"
-	cp := security.CleanupPolicy{
+	cp := cleanuppolicies.CleanupPolicy{
 		Notes:                   tools.GetStringPointer(acctest.RandString(25)),
 		CriteriaLastBlobUpdated: tools.GetIntPointer(acctest.RandInt()),
 		CriteriaLastDownloaded:  tools.GetIntPointer(acctest.RandInt()),
@@ -34,7 +34,7 @@ func TestAccResourceSecurityCleanupPolicy(t *testing.T) {
 		Providers: acceptance.TestAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceSecurityCleanupPolicyConfig(cp) + testAccDataSourceCleanupCleanupPolicyConfig(),
+				Config: testAccResourceCleanupPolicyConfig(cp) + testAccDataSourceCleanupPolicyConfig(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resName, "notes", *cp.Notes),
 					resource.TestCheckResourceAttr(resName, "criteria_last_blob_updated", strconv.Itoa(*cp.CriteriaLastBlobUpdated)),
@@ -56,7 +56,7 @@ func TestAccResourceSecurityCleanupPolicy(t *testing.T) {
 	})
 }
 
-func testAccResourceSecurityCleanupPolicyConfig(cp security.CleanupPolicy) string {
+func testAccResourceCleanupPolicyConfig(cp cleanuppolicies.CleanupPolicy) string {
 	return fmt.Sprintf(`
 resource "nexus_security_cleanup_policy" "acceptance" {
 	notes = "%s"
@@ -72,7 +72,7 @@ resource "nexus_security_cleanup_policy" "acceptance" {
 		*cp.CriteriaReleaseType, *cp.CriteriaAssetRegex, strconv.Itoa(cp.Retain), cp.Name, cp.Format)
 }
 
-func testAccCheckCleanupPolicyResourceExists(name string, cleanupPolicy *security.CleanupPolicy) resource.TestCheckFunc {
+func testAccCheckCleanupPolicyResourceExists(name string, cleanupPolicy *cleanuppolicies.CleanupPolicy) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[name]
 		if !ok {
@@ -80,7 +80,7 @@ func testAccCheckCleanupPolicyResourceExists(name string, cleanupPolicy *securit
 		}
 
 		client := acceptance.TestAccProvider.Meta().(*nexus.NexusClient)
-		result, err := client.Security.CleanupPolicy.Get(rs.Primary.ID)
+		result, err := client.CleanupPolicy.Get(rs.Primary.ID)
 		if err != nil {
 			return err
 		}
