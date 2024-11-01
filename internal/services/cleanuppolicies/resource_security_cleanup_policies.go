@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func ResourceSecurityCleanupPolicies() *schema.Resource {
+func ResourceCleanupPolicies() *schema.Resource {
 	return &schema.Resource{
 		Description: "Manages a cleanup policy in Nexus Repository.",
 
