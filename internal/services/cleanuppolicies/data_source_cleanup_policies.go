@@ -12,52 +12,44 @@ func DataSourceRepositoryCleanupPolicies() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"notes": {
-				Description: "any details on the specific cleanup policy",
+				Description: "Any details on the specific cleanup policy",
 				Type:        schema.TypeString,
-				Default:     "string",
-				Optional:    true,
+				Computed:    true,
 			},
-			"criterialLastBlobUpdated": {
-				Description: "the age of the component in days",
+			"criteria_last_blob_updated": {
+				Description: "The age of the component in days",
 				Type:        schema.TypeInt,
-				Default:     0,
-				Optional:    false,
+				Computed:    true,
 			},
-			"criteriaLastDownloaded": {
+			"criteria_last_downloaded": {
 				Description: "the last time the component had been downloaded in days",
 				Type:        schema.TypeInt,
-				Default:     0,
-				Optional:    false,
+				Computed:    true,
 			},
-			"criteriaReleaseType": {
+			"criteria_release_type": {
 				Description: "When needed, this is either PRELEASE or RELEASE",
 				Type:        schema.TypeString,
-				Default:     "RELEASES",
-				Optional:    false,
+				Computed:    true,
 			},
-			"criteriaAssetRegex": {
-				Description: "a regex string to filter for specific asset paths",
+			"criteria_asset_regex": {
+				Description: "A regex string to filter for specific asset paths",
 				Type:        schema.TypeString,
-				Default:     "string",
-				Optional:    false,
+				Computed:    true,
 			},
 			"retain": {
-				Description: "number of versions to keep. Only available for Docker and Maven release repositories on PostgreSQL deployments",
+				Description: "Number of versions to keep. Only available for Docker and Maven release repositories on PostgreSQL deployments",
 				Type:        schema.TypeInt,
-				Default:     nil,
-				Optional:    false,
+				Required:    true,
 			},
 			"name": {
-				Description: "the name of the policy needs to be unique and cannot be edited once set. Only letters, digits, underscores(_), hyphens(-), and dots(.) are allowed and may not start with underscore or dot",
+				Description: "The name of the policy needs to be unique and cannot be edited once set. Only letters, digits, underscores(_), hyphens(-), and dots(.) are allowed and may not start with underscore or dot",
 				Type:        schema.TypeString,
-				Default:     "policy-name",
-				Optional:    true,
+				Required:    true,
 			},
 			"format": {
-				Description: "the target format for the cleanup policy. Some formats have various capabilities and requirements. Note that you cannot currently specify all formats",
+				Description: "The target format for the cleanup policy. Some formats have various capabilities and requirements. Note that you cannot currently specify all formats",
 				Type:        schema.TypeString,
-				Default:     "string",
-				Optional:    true,
+				Required:    true,
 			},
 		},
 	}

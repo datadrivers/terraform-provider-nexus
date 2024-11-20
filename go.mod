@@ -245,5 +245,3 @@ require (
 )
 
 replace github.com/datadrivers/go-nexus-client => ../go-nexus-client
-//replace github.com/datadrivers/go-nexus-client => C:\Develop\IdeaProjects\go-nexus-client
-//replace github.com/datadrivers/go-nexus-client => /home/uitdeveloper/Develop/IdeaProjects/go-nexus-client

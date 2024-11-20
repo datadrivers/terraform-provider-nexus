@@ -5,13 +5,11 @@ import (
 	"strconv"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/pkg/tools"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/cleanuppolicies"
 	"github.com/datadrivers/terraform-provider-nexus/internal/acceptance"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func TestAccResourceCleanupPolicy(t *testing.T) {
@@ -70,23 +68,4 @@ resource "nexus_security_cleanup_policy" "acceptance" {
 }
 `, *cp.Notes, strconv.Itoa(*cp.CriteriaLastBlobUpdated), strconv.Itoa(*cp.CriteriaLastDownloaded),
 		*cp.CriteriaReleaseType, *cp.CriteriaAssetRegex, strconv.Itoa(cp.Retain), cp.Name, cp.Format)
-}
-
-func testAccCheckCleanupPolicyResourceExists(name string, cleanupPolicy *cleanuppolicies.CleanupPolicy) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
-		if !ok {
-			return fmt.Errorf("Not found: %s", name)
-		}
-
-		client := acceptance.TestAccProvider.Meta().(*nexus.NexusClient)
-		result, err := client.CleanupPolicy.Get(rs.Primary.ID)
-		if err != nil {
-			return err
-		}
-
-		*cleanupPolicy = *result
-
-		return nil
-	}
 }
