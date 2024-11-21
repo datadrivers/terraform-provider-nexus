@@ -28,26 +28,31 @@ func ResourceCleanupPolicies() *schema.Resource {
 				Description: "The age of the component in days",
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Default:     nil,
 			},
 			"criteria_last_downloaded": {
 				Description: "the last time the component had been downloaded in days",
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Default:     nil,
 			},
 			"criteria_release_type": {
 				Description: "When needed, this is either PRELEASE or RELEASE",
 				Type:        schema.TypeString,
 				Optional:    true,
+				Default:     nil,
 			},
 			"criteria_asset_regex": {
 				Description: "A regex string to filter for specific asset paths",
 				Type:        schema.TypeString,
 				Optional:    true,
+				Default:     nil,
 			},
 			"retain": {
 				Description: "Number of versions to keep. Only available for Docker and Maven release repositories on PostgreSQL deployments",
 				Type:        schema.TypeInt,
-				Required:    true,
+				Optional:    true,
+				Default:     1,
 			},
 			"name": {
 				Description: "The name of the policy needs to be unique and cannot be edited once set. Only letters, digits, underscores(_), hyphens(-), and dots(.) are allowed and may not start with underscore or dot",
@@ -79,11 +84,19 @@ func getCleanupPolicyFromResourceData(d *schema.ResourceData) cleanuppolicies.Cl
 		Notes:                   &notes,
 		CriteriaLastBlobUpdated: &criteriaLastBlobUpdated,
 		CriteriaLastDownloaded:  &criteriaLastDownloaded,
-		CriteriaReleaseType:     &criteriaReleaseType,
 		CriteriaAssetRegex:      &criteriaAssetRegex,
-		Retain:                  retain,
 		Name:                    name,
 		Format:                  format,
+	}
+
+	// Only set CriteriaReleaseType for applicable formats
+	if format == "maven2" || format == "npm" || format == "yum" {
+		policy.CriteriaReleaseType = &criteriaReleaseType
+	}
+
+	// Only set CriteriaReleaseType for applicable formats
+	if format == "maven2" || format == "docker" {
+		policy.Retain = retain
 	}
 
 	return policy
