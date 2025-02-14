@@ -21,7 +21,7 @@ func testAccResourceSecurityUser() security.User {
 		Status:       "active",
 		Password:     acctest.RandString(16),
 		Roles:        []string{"nx-admin"},
-		Source:       fmt.Sprintf("default"),
+		Source:       "default",
 	}
 }
 
