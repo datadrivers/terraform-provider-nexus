@@ -4,6 +4,7 @@ import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/pkg/client"
 	"github.com/datadrivers/terraform-provider-nexus/internal/services/blobstore"
+	"github.com/datadrivers/terraform-provider-nexus/internal/services/cleanuppolicies"
 	"github.com/datadrivers/terraform-provider-nexus/internal/services/other"
 	"github.com/datadrivers/terraform-provider-nexus/internal/services/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/services/security"
@@ -79,6 +80,7 @@ func Provider() *schema.Provider {
 			"nexus_privilege_repository_view":             security.DataSourceSecurityPrivilegeRepositoryView(),
 			"nexus_privilege_repository_admin":            security.DataSourceSecurityPrivilegeRepositoryAdmin(),
 			"nexus_privilege_repository_content_selector": security.DataSourceSecurityPrivilegeRepositoryContentSelector(),
+			"nexus_cleanup_policy":                        cleanuppolicies.DataSourceRepositoryCleanupPolicies(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"nexus_blobstore_azure":                       blobstore.ResourceBlobstoreAzure(),
@@ -145,6 +147,7 @@ func Provider() *schema.Provider {
 			"nexus_privilege_repository_admin":            security.ResourceSecurityPrivilegeRepositoryAdmin(),
 			"nexus_privilege_repository_content_selector": security.ResourceSecurityPrivilegeRepositoryContentSelector(),
 			"nexus_privilege_wildcard":                    security.ResourceSecurityPrivilegeWildcard(),
+			"nexus_cleanup_policy":                        cleanuppolicies.ResourceCleanupPolicies(),
 		},
 		Schema: map[string]*schema.Schema{
 			"insecure": {
