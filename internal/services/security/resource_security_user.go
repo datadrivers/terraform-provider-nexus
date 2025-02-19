@@ -69,12 +69,11 @@ func ResourceSecurityUser() *schema.Resource {
 			},
 			"source": {
 				Default:     "default",
-				Description: "The user's source, e.g. default (local) or LDAP.",
+				Description: "The user's source, e.g. default (local)",
 				Type:        schema.TypeString,
 				Optional:    true,
 				ValidateFunc: validation.StringInSlice([]string{
 					"default",
-					"LDAP",
 				}, false),
 			},
 		},

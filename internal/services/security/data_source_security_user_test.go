@@ -21,7 +21,7 @@ func TestAccDataSourceSecurityUser(t *testing.T) {
 		Status:       "active",
 		Password:     acctest.RandString(16),
 		Roles:        []string{"nx-admin"},
-		Source:       fmt.Sprintf("default"),
+		Source:       "default",
 	}
 
 	resource.Test(t, resource.TestCase{
