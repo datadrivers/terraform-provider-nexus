@@ -1,6 +1,7 @@
 module github.com/datadrivers/terraform-provider-nexus
 
-go 1.22.1
+go 1.23.0
+
 toolchain go1.23.6
 
 require (
@@ -251,3 +252,6 @@ require (
 	mvdan.cc/gofumpt v0.7.0 // indirect
 	mvdan.cc/unparam v0.0.0-20240528143540-8a5130ca722f // indirect
 )
+
+replace github.com/datadrivers/go-nexus-client v1.14.0 => ../go-nexus-client
+replace github.com/datadrivers/go-nexus-client/nexus3/schema v1.14.0 => ../go-nexus-client/nexus3/schema
