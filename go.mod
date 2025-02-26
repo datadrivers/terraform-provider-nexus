@@ -254,4 +254,5 @@ require (
 )
 
 replace github.com/datadrivers/go-nexus-client v1.14.0 => ../go-nexus-client
+
 replace github.com/datadrivers/go-nexus-client/nexus3/schema v1.14.0 => ../go-nexus-client/nexus3/schema
