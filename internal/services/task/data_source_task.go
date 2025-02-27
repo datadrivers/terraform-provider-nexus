@@ -20,8 +20,16 @@ func DataSourceTask() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"enabled": {
-				Type:     schema.TypeBool,
+			"current_state": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"last_run": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"next_run": {
+				Type:     schema.TypeString,
 				Computed: true,
 			},
 		},
@@ -30,5 +38,10 @@ func DataSourceTask() *schema.Resource {
 
 func dataSourceTaskRead(d *schema.ResourceData, m interface{}) error {
 	d.SetId(d.Get("id").(string))
+	d.SetId(d.Get("name").(string))
+	d.SetId(d.Get("type").(string))
+	d.SetId(d.Get("current_state").(string))
+	d.SetId(d.Get("last_run_result").(string))
+	d.SetId(d.Get("next_run").(string))
 	return resourceTaskRead(d, m)
 }
