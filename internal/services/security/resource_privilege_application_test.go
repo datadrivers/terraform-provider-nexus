@@ -17,7 +17,7 @@ func TestAccResourceSecurityPrivilegeApplication(t *testing.T) {
 	privilege := security.PrivilegeApplication{
 		Name:        acctest.RandString(20),
 		Description: acctest.RandString(20),
-		Actions:     []security.SecurityPrivilegeApplicationActions{"ADD", "READ", "EDIT", "DELETE"},
+		Actions:     []security.SecurityPrivilegeApplicationActions{"ADD", "READ", "EDIT", "DELETE", "STOP", "DISASSOCIATE", "ASSOCIATE", "START", "ALL"},
 		Domain:      acctest.RandString(20),
 	}
 
@@ -35,6 +35,11 @@ func TestAccResourceSecurityPrivilegeApplication(t *testing.T) {
 					resource.TestCheckResourceAttr(resName, "actions.1", string(privilege.Actions[1])),
 					resource.TestCheckResourceAttr(resName, "actions.2", string(privilege.Actions[2])),
 					resource.TestCheckResourceAttr(resName, "actions.3", string(privilege.Actions[3])),
+					resource.TestCheckResourceAttr(resName, "actions.4", string(privilege.Actions[4])),
+					resource.TestCheckResourceAttr(resName, "actions.5", string(privilege.Actions[5])),
+					resource.TestCheckResourceAttr(resName, "actions.6", string(privilege.Actions[6])),
+					resource.TestCheckResourceAttr(resName, "actions.7", string(privilege.Actions[7])),
+					resource.TestCheckResourceAttr(resName, "actions.8", string(privilege.Actions[8])),
 				),
 			},
 		},
