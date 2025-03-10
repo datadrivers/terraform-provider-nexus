@@ -4,6 +4,7 @@ import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/pkg/client"
 	"github.com/datadrivers/terraform-provider-nexus/internal/services/blobstore"
+	cleanup_policy "github.com/datadrivers/terraform-provider-nexus/internal/services/cleanup-policy"
 	"github.com/datadrivers/terraform-provider-nexus/internal/services/other"
 	"github.com/datadrivers/terraform-provider-nexus/internal/services/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/services/security"
@@ -20,6 +21,7 @@ func Provider() *schema.Provider {
 			"nexus_blobstore_group":                       blobstore.DataSourceBlobstoreGroup(),
 			"nexus_blobstore_s3":                          blobstore.DataSourceBlobstoreS3(),
 			"nexus_blobstore_list":                        blobstore.DataSourceBlobstoreList(),
+			"nexus_cleanup_policy":                        cleanup_policy.DataSourceCleanupPolicy(),
 			"nexus_repository_apt_hosted":                 repository.DataSourceRepositoryAptHosted(),
 			"nexus_repository_apt_proxy":                  repository.DataSourceRepositoryAptProxy(),
 			"nexus_repository_bower_group":                repository.DataSourceRepositoryBowerGroup(),
@@ -87,6 +89,7 @@ func Provider() *schema.Provider {
 			"nexus_blobstore_file":                        blobstore.ResourceBlobstoreFile(),
 			"nexus_blobstore_group":                       blobstore.ResourceBlobstoreGroup(),
 			"nexus_blobstore_s3":                          blobstore.ResourceBlobstoreS3(),
+			"nexus_cleanup_policy":                        cleanup_policy.ResourceCleanupPolicy(),
 			"nexus_repository_apt_hosted":                 repository.ResourceRepositoryAptHosted(),
 			"nexus_repository_apt_proxy":                  repository.ResourceRepositoryAptProxy(),
 			"nexus_repository_bower_group":                repository.ResourceRepositoryBowerGroup(),
