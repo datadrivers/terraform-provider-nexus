@@ -15,6 +15,5 @@ resource "nexus_repository_npm_group" "acceptance" {
 	TemplateStringRepositoryNpmProxy = `
 resource "nexus_repository_npm_proxy" "acceptance" {
 	remove_quarantined = {{ .Npm.RemoveQuarantined }}
-	remove_non_cataloged = {{ .Npm.RemoveNonCataloged }}
 ` + TemplateStringProxyRepository
 )

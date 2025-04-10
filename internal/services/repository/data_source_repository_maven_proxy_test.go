@@ -29,6 +29,10 @@ func TestAccDataSourceRepositoryMavenProxy(t *testing.T) {
 			BlobStoreName:               "default",
 			StrictContentTypeValidation: true,
 		},
+		NegativeCache: repository.NegativeCache{
+			Enabled: true,
+			TTL:     5,
+		},
 		Maven: repository.Maven{
 			VersionPolicy: repository.MavenVersionPolicyRelease,
 			LayoutPolicy:  repository.MavenLayoutPolicyStrict,

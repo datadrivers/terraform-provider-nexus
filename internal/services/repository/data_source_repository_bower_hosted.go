@@ -8,7 +8,10 @@ import (
 
 func DataSourceRepositoryBowerHosted() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this data source to get an existing hosted bower repository.",
+		Description: `!> This data source is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.
+
+Use this data source to get an existing hosted bower repository.`,
+		DeprecationMessage: "This data source is deprecated and will be removed in the next major release of this provider. Bower repositories were removed in Nexus 3.71.0.",
 
 		Read: dataSourceRepositoryBowerHostedRead,
 		Schema: map[string]*schema.Schema{

@@ -29,6 +29,10 @@ func TestAccDataSourceRepositoryNugetProxy(t *testing.T) {
 			BlobStoreName:               "default",
 			StrictContentTypeValidation: true,
 		},
+		NegativeCache: repository.NegativeCache{
+			Enabled: true,
+			TTL:     5,
+		},
 		NugetProxy: repository.NugetProxy{
 			NugetVersion:         repository.NugetVersion2,
 			QueryCacheItemMaxAge: 300,

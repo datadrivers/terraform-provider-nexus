@@ -29,6 +29,10 @@ func TestAccDataSourceRepositoryRawProxy(t *testing.T) {
 			BlobStoreName:               "default",
 			StrictContentTypeValidation: true,
 		},
+		NegativeCache: repository.NegativeCache{
+			Enabled: true,
+			TTL:     5,
+		},
 	}
 
 	dataSourceName := "data.nexus_repository_raw_proxy.acceptance"

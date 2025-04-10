@@ -57,6 +57,8 @@ Read-Only:
 
 Read-Only:
 
+- `cache_foreign_layers` (Boolean)
+- `foreign_layer_url_whitelist` (Set of String)
 - `index_type` (String)
 - `index_url` (String)
 
