@@ -19,7 +19,7 @@
 
 Terraform provider to configure Sonatype Nexus using its API.
 
-Implemented and tested with Sonatype Nexus `3.72.0` with `java17` and DB `H2`.
+Implemented and tested with Sonatype Nexus `3.80.0` with `java17` and DB `H2`.
 
 ## Usage
 
