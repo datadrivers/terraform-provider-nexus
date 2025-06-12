@@ -132,10 +132,10 @@ var (
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"type": {
-					Description:      "Authentication type. Possible values: `ntlm` or `username`",
+					Description:      "Authentication type. Possible values: `ntlm`, `username`, or `bearerToken`",
 					Required:         true,
 					Type:             schema.TypeString,
-					ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"ntlm", "username"}, false)),
+					ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"ntlm", "username", "bearerToken"}, false)),
 				},
 				"username": {
 					Description: "The username used by the proxy repository",
@@ -144,6 +144,12 @@ var (
 				},
 				"password": {
 					Description: "The password used by the proxy repository",
+					Optional:    true,
+					Sensitive:   true,
+					Type:        schema.TypeString,
+				},
+				"bearer_token": {
+					Description: "The bearer token used by the proxy repository",
 					Optional:    true,
 					Sensitive:   true,
 					Type:        schema.TypeString,
@@ -182,6 +188,12 @@ var (
 				},
 				"password": {
 					Description: "The password used by the proxy repository",
+					Optional:    true,
+					Sensitive:   true,
+					Type:        schema.TypeString,
+				},
+				"bearer_token": {
+					Description: "The bearer token used by the proxy repository",
 					Optional:    true,
 					Sensitive:   true,
 					Type:        schema.TypeString,

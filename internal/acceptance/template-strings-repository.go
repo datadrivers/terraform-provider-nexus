@@ -65,6 +65,9 @@ const (
 			{{ if .HTTPClient.Authentication.Username -}}
 			username    = "{{ .HTTPClient.Authentication.Username }}"
 			{{ end -}}
+			{{ if .HTTPClient.Authentication.BearerToken -}}
+			bearer_token = "{{ .HTTPClient.Authentication.BearerToken }}"
+			{{ end -}}
 		}
 		{{ end -}}
 

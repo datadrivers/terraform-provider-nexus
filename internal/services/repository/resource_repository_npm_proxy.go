@@ -108,11 +108,12 @@ func getNpmProxyRepositoryFromResourceData(resourceData *schema.ResourceData) re
 			authConfig := authList[0].(map[string]interface{})
 
 			repo.HTTPClient.Authentication = &repository.HTTPClientAuthentication{
-				NTLMDomain: authConfig["ntlm_domain"].(string),
-				NTLMHost:   authConfig["ntlm_host"].(string),
-				Type:       repository.HTTPClientAuthenticationType(authConfig["type"].(string)),
-				Username:   authConfig["username"].(string),
-				Password:   authConfig["password"].(string),
+				NTLMDomain:  authConfig["ntlm_domain"].(string),
+				NTLMHost:    authConfig["ntlm_host"].(string),
+				BearerToken: authConfig["bearer_token"].(string),
+				Type:        repository.HTTPClientAuthenticationType(authConfig["type"].(string)),
+				Username:    authConfig["username"].(string),
+				Password:    authConfig["password"].(string),
 			}
 		}
 	}

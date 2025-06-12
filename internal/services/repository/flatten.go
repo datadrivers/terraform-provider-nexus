@@ -117,6 +117,7 @@ func flattenHTTPClientAuthentication(auth *repository.HTTPClientAuthentication, 
 	if auth == nil {
 		return nil
 	}
+
 	return []map[string]interface{}{
 		{
 			"ntlm_domain": auth.NTLMDomain,
@@ -124,6 +125,8 @@ func flattenHTTPClientAuthentication(auth *repository.HTTPClientAuthentication, 
 			"type":        auth.Type,
 			"username":    auth.Username,
 			"password":    d.Get("http_client.0.authentication.0.password").(string),
+			//FIXME: THis does not work
+			"bearer_token": d.Get("http_client.0.authentication.0.bearerToken").(string),
 		},
 	}
 }
@@ -134,12 +137,13 @@ func flattenHTTPClientAuthenticationWithPreemptive(auth *repository.HTTPClientAu
 	}
 	return []map[string]interface{}{
 		{
-			"ntlm_domain": auth.NTLMDomain,
-			"ntlm_host":   auth.NTLMHost,
-			"type":        auth.Type,
-			"username":    auth.Username,
-			"password":    d.Get("http_client.0.authentication.0.password").(string),
-			"preemptive":  auth.Preemptive,
+			"ntlm_domain":  auth.NTLMDomain,
+			"ntlm_host":    auth.NTLMHost,
+			"type":         auth.Type,
+			"bearer_token": auth.BearerToken,
+			"username":     auth.Username,
+			"password":     d.Get("http_client.0.authentication.0.password").(string),
+			"preemptive":   auth.Preemptive,
 		},
 	}
 }

@@ -35,9 +35,8 @@ func testAccResourceRepositoryNpmProxy() repository.NpmProxyRepository {
 			AutoBlock: true,
 			Blocked:   false,
 			Authentication: &repository.HTTPClientAuthentication{
-				Password: "acceptance-password",
-				Type:     repository.HTTPClientAuthenticationTypeUsername,
-				Username: "acceptance-user",
+				BearerToken: "acceptance-token",
+				Type:        repository.HTTPClientAuthenticationTypeBearerToken,
 			},
 			Connection: &repository.HTTPClientConnection{
 				EnableCircularRedirects: &enableCircularRedirects,
