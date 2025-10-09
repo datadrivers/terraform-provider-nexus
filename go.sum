@@ -114,8 +114,8 @@ github.com/bkielbasa/cyclop v1.2.3 h1:faIVMIGDIANuGPWH031CZJTi2ymOQBULs9H21HSMa5
 github.com/bkielbasa/cyclop v1.2.3/go.mod h1:kHTwA9Q0uZqOADdupvcFJQtp/ksSnytRMe8ztxG8Fuo=
 github.com/blizzy78/varnamelen v0.8.0 h1:oqSblyuQvFsW1hbBHh1zfwrKe3kcSj0rnXkKzsQ089M=
 github.com/blizzy78/varnamelen v0.8.0/go.mod h1:V9TzQZ4fLJ1DSrjVDfl89H7aMnTvKkApdHeyESmyR7k=
-github.com/bmatcuk/doublestar/v4 v4.8.1 h1:54Bopc5c2cAvhLRAzqOGCYHYyhcDHsFF4wWIR5wKP38=
-github.com/bmatcuk/doublestar/v4 v4.8.1/go.mod h1:xBQ8jztBU6kakFMg+8WGxn0c6z1fTSPVIjEY1Wr7jzc=
+github.com/bmatcuk/doublestar/v4 v4.9.1 h1:X8jg9rRZmJd4yRy7ZeNDRnM+T3ZfHv15JiBJ/avrEXE=
+github.com/bmatcuk/doublestar/v4 v4.9.1/go.mod h1:xBQ8jztBU6kakFMg+8WGxn0c6z1fTSPVIjEY1Wr7jzc=
 github.com/bombsimon/wsl/v4 v4.5.0 h1:iZRsEvDdyhd2La0FVi5k6tYehpOR/R7qIUjmKk7N74A=
 github.com/bombsimon/wsl/v4 v4.5.0/go.mod h1:NOQ3aLF4nD7N5YPXMruR6ZXDOAqLoM0GEpLwTdvmOSc=
 github.com/breml/bidichk v0.3.2 h1:xV4flJ9V5xWTqxL+/PMFF6dtJPvZLPsyixAoPe8BGJs=
@@ -391,8 +391,8 @@ github.com/hashicorp/terraform-exec v0.23.1 h1:diK5NSSDXDKqHEOIQefBMu9ny+FhzwlwV
 github.com/hashicorp/terraform-exec v0.23.1/go.mod h1:e4ZEg9BJDRaSalGm2z8vvrPONt0XWG0/tXpmzYTf+dM=
 github.com/hashicorp/terraform-json v0.27.1 h1:zWhEracxJW6lcjt/JvximOYyc12pS/gaKSy/wzzE7nY=
 github.com/hashicorp/terraform-json v0.27.1/go.mod h1:GzPLJ1PLdUG5xL6xn1OXWIjteQRT2CNT9o/6A9mi9hE=
-github.com/hashicorp/terraform-plugin-docs v0.21.0 h1:yoyA/Y719z9WdFJAhpUkI1jRbKP/nteVNBaI3hW7iQ8=
-github.com/hashicorp/terraform-plugin-docs v0.21.0/go.mod h1:J4Wott1J2XBKZPp/NkQv7LMShJYOcrqhQ2myXBcu64s=
+github.com/hashicorp/terraform-plugin-docs v0.23.0 h1:sipnfD4/9EJBg9zekym+s1H6qmLAKJHhGWBwvN9v/hE=
+github.com/hashicorp/terraform-plugin-docs v0.23.0/go.mod h1:J4b5AtMRgJlDrwCQz+G4hKABgHY5m56PnsRmdAzBwW8=
 github.com/hashicorp/terraform-plugin-go v0.29.0 h1:1nXKl/nSpaYIUBU1IG/EsDOX0vv+9JxAltQyDMpq5mU=
 github.com/hashicorp/terraform-plugin-go v0.29.0/go.mod h1:vYZbIyvxyy0FWSmDHChCqKvI40cFTDGSb3D8D70i9GM=
 github.com/hashicorp/terraform-plugin-log v0.9.0 h1:i7hOA+vdAItN1/7UrfBqBwvYPQ9TFvymaRGZED3FCV0=
