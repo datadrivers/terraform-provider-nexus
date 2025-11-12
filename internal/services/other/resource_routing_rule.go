@@ -3,10 +3,10 @@ package other
 import (
 	"strings"
 
-	nexus "github.com/datadrivers/go-nexus-client/nexus3"
-	nexusSchema "github.com/datadrivers/go-nexus-client/nexus3/schema"
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
+	nexus "github.com/gcroucher/go-nexus-client/nexus3"
+	nexusSchema "github.com/gcroucher/go-nexus-client/nexus3/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )

@@ -19,7 +19,9 @@
 
 Terraform provider to configure Sonatype Nexus using its API.
 
-Implemented and tested with Sonatype Nexus `3.80.0` with `java17` and DB `H2`.
+Implemented and tested with Sonatype Nexus `3.86.0` (latest) with `java17` and DB `H2`.
+
+**Note**: The `nexus_capability` resource requires Nexus Repository **3.81.0 or later**. The Capabilities REST API was introduced after version 3.80.0.
 
 ## Usage
 

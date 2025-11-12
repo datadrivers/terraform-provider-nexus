@@ -1,9 +1,9 @@
 package other
 
 import (
-	nexus "github.com/datadrivers/go-nexus-client/nexus3"
-	nexusSchema "github.com/datadrivers/go-nexus-client/nexus3/schema"
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
+	nexus "github.com/gcroucher/go-nexus-client/nexus3"
+	nexusSchema "github.com/gcroucher/go-nexus-client/nexus3/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 

@@ -4,7 +4,7 @@ go 1.24.1
 
 require (
 	github.com/client9/misspell v0.3.4
-	github.com/datadrivers/go-nexus-client v1.18.0
+	github.com/gcroucher/go-nexus-client v0.0.0
 	github.com/golangci/golangci-lint v1.64.8
 	github.com/hashicorp/go-cty v1.5.0
 	github.com/hashicorp/terraform-plugin-docs v0.23.0
@@ -252,3 +252,5 @@ require (
 	mvdan.cc/gofumpt v0.7.0 // indirect
 	mvdan.cc/unparam v0.0.0-20240528143540-8a5130ca722f // indirect
 )
+
+replace github.com/gcroucher/go-nexus-client => ../go-nexus-client

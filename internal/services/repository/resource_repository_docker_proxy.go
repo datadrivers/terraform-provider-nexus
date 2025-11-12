@@ -4,11 +4,11 @@ import (
 	"regexp"
 	"strings"
 
-	nexus "github.com/datadrivers/go-nexus-client/nexus3"
-	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	repositorySchema "github.com/datadrivers/terraform-provider-nexus/internal/schema/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
+	nexus "github.com/gcroucher/go-nexus-client/nexus3"
+	"github.com/gcroucher/go-nexus-client/nexus3/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )

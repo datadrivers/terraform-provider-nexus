@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	nexus "github.com/datadrivers/go-nexus-client/nexus3"
-	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/datadrivers/terraform-provider-nexus/internal/acceptance"
+	nexus "github.com/gcroucher/go-nexus-client/nexus3"
+	"github.com/gcroucher/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"

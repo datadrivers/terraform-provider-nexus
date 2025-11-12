@@ -1,12 +1,12 @@
 package provider
 
 import (
-	nexus "github.com/datadrivers/go-nexus-client/nexus3"
-	"github.com/datadrivers/go-nexus-client/nexus3/pkg/client"
 	"github.com/datadrivers/terraform-provider-nexus/internal/services/blobstore"
 	"github.com/datadrivers/terraform-provider-nexus/internal/services/other"
 	"github.com/datadrivers/terraform-provider-nexus/internal/services/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/services/security"
+	nexus "github.com/gcroucher/go-nexus-client/nexus3"
+	"github.com/gcroucher/go-nexus-client/nexus3/pkg/client"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -88,6 +88,7 @@ func Provider() *schema.Provider {
 			"nexus_blobstore_file":                        blobstore.ResourceBlobstoreFile(),
 			"nexus_blobstore_group":                       blobstore.ResourceBlobstoreGroup(),
 			"nexus_blobstore_s3":                          blobstore.ResourceBlobstoreS3(),
+			"nexus_capability":                            other.ResourceCapability(),
 			"nexus_repository_apt_hosted":                 repository.ResourceRepositoryAptHosted(),
 			"nexus_repository_apt_proxy":                  repository.ResourceRepositoryAptProxy(),
 			"nexus_repository_bower_group":                repository.ResourceRepositoryBowerGroup(),
