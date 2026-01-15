@@ -26,11 +26,15 @@ resource "nexus_security_user" "admin" {
 - `email` (String) The email address associated with the user.
 - `firstname` (String) The first name of the user.
 - `lastname` (String) The last name of the user.
-- `password` (String, Sensitive) The password for the user.
 - `userid` (String) The userid which is required for login. This value cannot be changed.
 
 ### Optional
 
+> **NOTE**: [Write-only arguments](https://developer.hashicorp.com/terraform/language/resources/ephemeral#write-only-arguments) are supported in Terraform 1.11 and later.
+
+- `password` (String, Sensitive) The password for the user.
+- `password_wo` (String, Sensitive, [Write-only](https://developer.hashicorp.com/terraform/language/resources/ephemeral#write-only-arguments)) The password for the user (write-only, not stored in state). Use with password_wo_version to control updates.
+- `password_wo_version` (Number) Version tracker for password_wo changes. Increment this value to force a password update when using password_wo.
 - `roles` (Set of String) The roles which the user has been assigned within Nexus.
 - `status` (String) The user's status, e.g. active or disabled.
 
