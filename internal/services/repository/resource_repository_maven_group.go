@@ -29,6 +29,8 @@ func ResourceRepositoryMavenGroup() *schema.Resource {
 			// Group schemas
 			"group":   repositorySchema.ResourceGroup,
 			"storage": repositorySchema.ResourceStorage,
+			// Maven hosted schemas
+			"maven": repositorySchema.ResourceMaven,
 		},
 	}
 }
@@ -36,6 +38,8 @@ func ResourceRepositoryMavenGroup() *schema.Resource {
 func getMavenGroupRepositoryFromResourceData(resourceData *schema.ResourceData) repository.MavenGroupRepository {
 	storageConfig := resourceData.Get("storage").([]interface{})[0].(map[string]interface{})
 	groupConfig := resourceData.Get("group").([]interface{})[0].(map[string]interface{})
+	mavenConfig := resourceData.Get("maven").([]interface{})[0].(map[string]interface{})
+
 	groupMemberNames := []string{}
 	for _, name := range groupConfig["member_names"].([]interface{}) {
 		groupMemberNames = append(groupMemberNames, name.(string))
@@ -49,6 +53,10 @@ func getMavenGroupRepositoryFromResourceData(resourceData *schema.ResourceData) 
 		},
 		Group: repository.Group{
 			MemberNames: groupMemberNames,
+		},
+		Maven: &repository.Maven{
+			VersionPolicy: repository.MavenVersionPolicy(mavenConfig["version_policy"].(string)),
+			LayoutPolicy:  repository.MavenLayoutPolicy(mavenConfig["layout_policy"].(string)),
 		},
 	}
 
