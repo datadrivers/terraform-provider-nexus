@@ -19,6 +19,7 @@ func DataSourceRepositoryMavenGroup() *schema.Resource {
 			// Group schemas
 			"group":   repository.DataSourceGroup,
 			"storage": repository.DataSourceStorage,
+			"maven":   repository.DataSourceMaven,
 		},
 	}
 }
