@@ -108,7 +108,7 @@ func resourceSecurityUserCreate(d *schema.ResourceData, m interface{}) error {
 func resourceSecurityUserRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
-	user, err := client.Security.User.Get(d.Id())
+	user, err := client.Security.User.Get(d.Id(), nil)
 	if err != nil {
 		return err
 	}
@@ -162,6 +162,6 @@ func resourceSecurityUserDelete(d *schema.ResourceData, m interface{}) error {
 func resourceSecurityUserExists(d *schema.ResourceData, m interface{}) (bool, error) {
 	client := m.(*nexus.NexusClient)
 
-	user, err := client.Security.User.Get(d.Id())
+	user, err := client.Security.User.Get(d.Id(), nil)
 	return user != nil, err
 }
