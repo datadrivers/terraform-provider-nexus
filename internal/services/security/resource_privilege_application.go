@@ -45,7 +45,7 @@ func ResourceSecurityPrivilegeApplication() *schema.Resource {
 				Required:    true,
 				Elem: &schema.Schema{
 					Type:         schema.TypeString,
-					ValidateFunc: validation.StringInSlice([]string{"ADD", "READ", "EDIT", "DELETE"}, false),
+					ValidateFunc: validation.StringInSlice([]string{"ADD", "READ", "EDIT", "DELETE", "STOP", "DISASSOCIATE", "ASSOCIATE", "START", "ALL"}, false),
 				},
 			},
 		},

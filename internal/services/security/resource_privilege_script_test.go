@@ -17,7 +17,7 @@ func TestAccResourceSecurityPrivilegeScript(t *testing.T) {
 	privilege := security.PrivilegeScript{
 		Name:        acctest.RandString(20),
 		Description: acctest.RandString(20),
-		Actions:     []security.SecurityPrivilegeScriptActions{"ADD", "READ", "DELETE", "RUN", "BROWSE", "EDIT"},
+		Actions:     []security.SecurityPrivilegeScriptActions{"ADD", "READ", "DELETE", "RUN", "BROWSE", "EDIT", "ALL"},
 		ScriptName:  acctest.RandString(20),
 	}
 	resource.Test(t, resource.TestCase{
@@ -36,6 +36,7 @@ func TestAccResourceSecurityPrivilegeScript(t *testing.T) {
 					resource.TestCheckResourceAttr(resName, "actions.3", string(privilege.Actions[3])),
 					resource.TestCheckResourceAttr(resName, "actions.4", string(privilege.Actions[4])),
 					resource.TestCheckResourceAttr(resName, "actions.5", string(privilege.Actions[5])),
+					resource.TestCheckResourceAttr(resName, "actions.6", string(privilege.Actions[6])),
 				),
 			},
 		},
