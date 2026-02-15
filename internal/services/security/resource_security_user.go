@@ -88,6 +88,15 @@ func ResourceSecurityUser() *schema.Resource {
 					"disabled",
 				}, false),
 			},
+			"source": {
+				Default:     "default",
+				Description: "The user's source, e.g. default (local)",
+				Type:        schema.TypeString,
+				Optional:    true,
+				ValidateFunc: validation.StringInSlice([]string{
+					"default",
+				}, false),
+			},
 		},
 	}
 }
@@ -101,6 +110,7 @@ func getSecurityUserFromResourceData(d *schema.ResourceData) security.User {
 		Password:     getPasswordFromResourceData(d),
 		Status:       d.Get("status").(string),
 		Roles:        tools.InterfaceSliceToStringSlice(d.Get("roles").(*schema.Set).List()),
+		Source:       d.Get("source").(string),
 	}
 }
 
@@ -160,6 +170,7 @@ func resourceSecurityUserRead(d *schema.ResourceData, m interface{}) error {
 	d.Set("roles", tools.StringSliceToInterfaceSlice(user.Roles))
 	d.Set("status", user.Status)
 	d.Set("userid", user.UserID)
+	d.Set("source", user.Source)
 
 	if v, ok := d.GetOk("password_wo_version"); ok && v != nil {
 		d.Set("password_wo_version", v.(int))
