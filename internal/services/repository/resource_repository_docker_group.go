@@ -83,6 +83,10 @@ func getDockerGroupRepositoryFromResourceData(resourceData *schema.ResourceData)
 		}
 	}
 
+	if pathEnabled, ok := dockerConfig["path_based_routing"]; ok {
+		repo.Docker.PathEnabled = tools.GetBoolPointer(pathEnabled.(bool))
+	}
+
 	return repo
 }
 
