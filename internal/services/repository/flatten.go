@@ -32,6 +32,9 @@ func flattenDocker(docker *repository.Docker) []map[string]interface{} {
 	if docker.Subdomain != nil {
 		data["subdomain"] = *docker.Subdomain
 	}
+	if docker.PathEnabled != nil {
+		data["path_based_routing"] = *docker.PathEnabled
+	}
 
 	return []map[string]interface{}{data}
 }
