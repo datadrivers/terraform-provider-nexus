@@ -40,6 +40,11 @@ var (
 					Optional:    true,
 					Type:        schema.TypeString,
 				},
+				"path_based_routing": {
+					Description: "Enables path based routing",
+					Optional:    true,
+					Type:        schema.TypeBool,
+				},
 			},
 		},
 	}
@@ -73,6 +78,11 @@ var (
 					Description: "Pro-only: Whether to allow clients to use subdomain routing connector",
 					Computed:    true,
 					Type:        schema.TypeString,
+				},
+				"path_based_routing": {
+					Description: "Enables path based routing",
+					Computed:    true,
+					Type:        schema.TypeBool,
 				},
 			},
 		},

@@ -77,6 +77,10 @@ func getDockerHostedRepositoryFromResourceData(resourceData *schema.ResourceData
 		}
 	}
 
+	if pathEnabled, ok := dockerConfig["path_based_routing"]; ok {
+		repo.Docker.PathEnabled = tools.GetBoolPointer(pathEnabled.(bool))
+	}
+
 	cleanupList := resourceData.Get("cleanup").([]interface{})
 	if len(cleanupList) > 0 && cleanupList[0] != nil {
 		cleanupConfig := cleanupList[0].(map[string]interface{})
