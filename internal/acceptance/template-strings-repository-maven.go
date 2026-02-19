@@ -14,6 +14,11 @@ resource "nexus_repository_maven_hosted" "acceptance" {
 
 	TemplateStringRepositoryMavenGroup = `
 resource "nexus_repository_maven_group" "acceptance" {
+	maven {
+		version_policy = "{{ .Maven.VersionPolicy }}"
+		layout_policy = "{{ .Maven.LayoutPolicy }}"
+	}
+
 	depends_on = [
 		nexus_repository_maven_hosted.acceptance
 	]
