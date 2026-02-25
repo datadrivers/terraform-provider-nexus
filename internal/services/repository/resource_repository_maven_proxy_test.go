@@ -29,9 +29,6 @@ func testAccResourceRepositoryMavenProxy() repository.MavenProxyRepository {
 			BlobStoreName:               "default",
 			StrictContentTypeValidation: true,
 		},
-		Cleanup: &repository.Cleanup{
-			PolicyNames: []string{"cleanup-weekly"},
-		},
 		HTTPClient: repository.HTTPClientWithPreemptiveAuth{
 			AutoBlock: true,
 			Blocked:   false,
@@ -124,9 +121,6 @@ func TestAccResourceRepositoryMavenProxy(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "storage.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "storage.0.blob_store_name", repo.Storage.BlobStoreName),
 						resource.TestCheckResourceAttr(resourceName, "storage.0.strict_content_type_validation", strconv.FormatBool(repo.Storage.StrictContentTypeValidation)),
-						resource.TestCheckResourceAttr(resourceName, "cleanup.#", "1"),
-						resource.TestCheckResourceAttr(resourceName, "cleanup.0.policy_names.#", "1"),
-						resource.TestCheckResourceAttr(resourceName, "cleanup.0.policy_names.0", repo.Cleanup.PolicyNames[0]),
 						resource.TestCheckResourceAttr(resourceName, "routing_rule", *repo.RoutingRule),
 					),
 					resource.ComposeAggregateTestCheckFunc(

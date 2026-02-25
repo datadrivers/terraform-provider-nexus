@@ -32,9 +32,6 @@ func testAccResourceRepositoryAptHosted() repository.AptHostedRepository {
 			StrictContentTypeValidation: true,
 			WritePolicy:                 &writePolicy,
 		},
-		Cleanup: &repository.Cleanup{
-			PolicyNames: []string{"cleanup-weekly"},
-		},
 		Component: &repository.Component{
 			ProprietaryComponents: true,
 		},
@@ -71,9 +68,6 @@ func TestAccResourceRepositoryAptHosted(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "storage.0.blob_store_name", repo.Storage.BlobStoreName),
 						resource.TestCheckResourceAttr(resourceName, "storage.0.strict_content_type_validation", strconv.FormatBool(repo.Storage.StrictContentTypeValidation)),
 						resource.TestCheckResourceAttr(resourceName, "storage.0.write_policy", string(*repo.Storage.WritePolicy)),
-						resource.TestCheckResourceAttr(resourceName, "cleanup.#", "1"),
-						resource.TestCheckResourceAttr(resourceName, "cleanup.0.policy_names.#", "1"),
-						resource.TestCheckResourceAttr(resourceName, "cleanup.0.policy_names.0", repo.Cleanup.PolicyNames[0]),
 						resource.TestCheckResourceAttr(resourceName, "component.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "component.0.proprietary_components", strconv.FormatBool(repo.Component.ProprietaryComponents)),
 					),

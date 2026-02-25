@@ -4,6 +4,7 @@ import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
+	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -136,16 +137,17 @@ func setSecuritySAMLToResourceData(saml *security.SAML, d *schema.ResourceData) 
 
 func getSecuritySAMLFromResourceData(d *schema.ResourceData) security.SAML {
 	saml := security.SAML{
-		IdpMetadata:                d.Get("idp_metadata").(string),
-		EntityId:                   d.Get("entity_id").(string),
-		ValidateResponseSignature:  d.Get("validate_response_signature").(bool),
-		ValidateAssertionSignature: d.Get("validate_assertion_signature").(bool),
-		UsernameAttribute:          d.Get("username_attribute").(string),
-		FirstNameAttribute:         d.Get("first_name_attribute").(string),
-		LastNameAttribute:          d.Get("last_name_attribute").(string),
-		EmailAttribute:             d.Get("email_attribute").(string),
-		GroupsAttribute:            d.Get("groups_attribute").(string),
+		IdpMetadata:        d.Get("idp_metadata").(string),
+		EntityId:           d.Get("entity_id").(string),
+		UsernameAttribute:  d.Get("username_attribute").(string),
+		FirstNameAttribute: tools.GetStringPointer(d.Get("first_name_attribute").(string)),
+		LastNameAttribute:  tools.GetStringPointer(d.Get("last_name_attribute").(string)),
+		EmailAttribute:     tools.GetStringPointer(d.Get("email_attribute").(string)),
+		GroupsAttribute:    tools.GetStringPointer(d.Get("groups_attribute").(string)),
 	}
+
+	saml.ValidateResponseSignature = tools.GetBoolPointer(d.Get("validate_response_signature").(bool))
+	saml.ValidateAssertionSignature = tools.GetBoolPointer(d.Get("validate_assertion_signature").(bool))
 
 	return saml
 }

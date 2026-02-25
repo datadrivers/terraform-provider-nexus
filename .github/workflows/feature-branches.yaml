@@ -9,9 +9,9 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout source codes
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
       - name: Test client with nexus3 instance

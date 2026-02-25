@@ -112,7 +112,6 @@ var (
 					Description: "Custom fragment to append to User-Agent header in HTTP requests",
 					Optional:    true,
 					Type:        schema.TypeString,
-					Default:     false,
 				},
 				"use_trust_store": {
 					Description: "Use certificates stored in the Nexus Repository Manager truststore to connect to external systems",

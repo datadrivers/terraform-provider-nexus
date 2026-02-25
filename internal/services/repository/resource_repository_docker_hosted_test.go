@@ -33,9 +33,6 @@ func testAccResourceRepositoryDockerHosted(name string) repository.DockerHostedR
 			WritePolicy:                 repository.StorageWritePolicyAllowOnce,
 			LatestPolicy:                &latestPolicy,
 		},
-		Cleanup: &repository.Cleanup{
-			PolicyNames: []string{"cleanup-weekly"},
-		},
 		Component: &repository.Component{
 			ProprietaryComponents: true,
 		},
@@ -80,9 +77,6 @@ func TestAccResourceRepositoryDockerHosted(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "storage.0.strict_content_type_validation", strconv.FormatBool(repo.Storage.StrictContentTypeValidation)),
 						resource.TestCheckResourceAttr(resourceName, "storage.0.write_policy", string(repo.Storage.WritePolicy)),
 						resource.TestCheckResourceAttr(resourceName, "storage.0.latest_policy", strconv.FormatBool(*repo.Storage.LatestPolicy)),
-						resource.TestCheckResourceAttr(resourceName, "cleanup.#", "1"),
-						resource.TestCheckResourceAttr(resourceName, "cleanup.0.policy_names.#", "1"),
-						resource.TestCheckResourceAttr(resourceName, "cleanup.0.policy_names.0", repo.Cleanup.PolicyNames[0]),
 						resource.TestCheckResourceAttr(resourceName, "component.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "component.0.proprietary_components", strconv.FormatBool(repo.Component.ProprietaryComponents)),
 					),
