@@ -90,7 +90,7 @@ func resourceTaskCreate(d *schema.ResourceData, m interface{}) error {
 		Enabled:               d.Get("enabled").(bool),
 		AlertEmail:            d.Get("alert_email").(string),
 		NotificationCondition: d.Get("notification_condition").(string),
-		Frequency: nexusSchema.FrequencyXO{
+		Frequency: &nexusSchema.FrequencyXO{
 			Schedule:       frequencyMap["schedule"].(string),
 			StartDate:      frequencyMap["start_date"].(int),
 			TimeZoneOffset: frequencyMap["time_zone_offset"].(string),
@@ -148,7 +148,7 @@ func getTaskFromResourceData(d *schema.ResourceData) nexusSchema.TaskCreateStruc
 		Enabled:               d.Get("enabled").(bool),
 		AlertEmail:            d.Get("alert_email").(string),
 		NotificationCondition: d.Get("notification_condition").(string),
-		Frequency: nexusSchema.FrequencyXO{
+		Frequency: &nexusSchema.FrequencyXO{
 			Schedule:       frequencyMap["schedule"].(string),
 			StartDate:      frequencyMap["start_date"].(int),
 			TimeZoneOffset: frequencyMap["time_zone_offset"].(string),

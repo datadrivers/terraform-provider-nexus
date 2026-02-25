@@ -21,7 +21,7 @@ func TestAccResourceTask_basic(t *testing.T) {
 		Enabled:               true,
 		AlertEmail:            acctest.RandString(20) + "@example.com",
 		NotificationCondition: "FAILURE",
-		Frequency: task.FrequencyXO{
+		Frequency: &task.FrequencyXO{
 			StartDate:      1740122615,
 			Schedule:       "daily",
 			TimeZoneOffset: "+1",
