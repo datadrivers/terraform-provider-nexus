@@ -53,7 +53,7 @@ func dataSourceCleanupPolicyRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 	id := d.Get("id").(string)
 
-	policy, err := client.Cleanup.Get(id)
+	policy, err := client.CleanupPolicy.Get(id)
 	if err != nil {
 		return err
 	}

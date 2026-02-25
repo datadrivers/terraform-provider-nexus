@@ -66,27 +66,27 @@ func resourceCleanupPolicyCreate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 	policy := nexusSchema.CleanupPolicy{
 		Name:                    d.Get("name").(string),
-		Notes:                   d.Get("notes").(string),
+		Notes:                   getStringPointer(d, "notes"),
 		CriteriaLastBlobUpdated: getIntPointer(d, "criteria_last_blob_updated"),
 		CriteriaLastDownloaded:  getIntPointer(d, "criteria_last_downloaded"),
-		CriteriaReleaseType:     nexusSchema.CriteriaReleaseType(d.Get("criteria_release_type").(string)),
-		CriteriaAssetRegex:      d.Get("criteria_asset_regex").(string),
-		Retain:                  getIntPointer(d, "retain"),
+		CriteriaReleaseType:     getCriteriaReleaseTypePointer(d, "criteria_release_type"),
+		CriteriaAssetRegex:      getStringPointer(d, "criteria_asset_regex"),
+		Retain:                  getInt(d, "retain"),
 		Format:                  nexusSchema.RepositoryFormat(d.Get("format").(string)),
 	}
 
-	cleanupPolicy, err := client.Cleanup.Create(&policy)
+	err := client.CleanupPolicy.Create(&policy)
 	if err != nil {
 		return err
 	}
-	d.SetId(cleanupPolicy.Name)
+	d.SetId(policy.Name)
 	return resourceCleanupPolicyRead(d, m)
 }
 
 func resourceCleanupPolicyRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
-	policy, err := client.Cleanup.Get(d.Id())
+	policy, err := client.CleanupPolicy.Get(d.Id())
 	if err != nil {
 		return err
 	}
@@ -111,16 +111,16 @@ func resourceCleanupPolicyUpdate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 	policy := nexusSchema.CleanupPolicy{
 		Name:                    d.Get("name").(string),
-		Notes:                   d.Get("notes").(string),
+		Notes:                   getStringPointer(d, "notes"),
 		CriteriaLastBlobUpdated: getIntPointer(d, "criteria_last_blob_updated"),
 		CriteriaLastDownloaded:  getIntPointer(d, "criteria_last_downloaded"),
-		CriteriaReleaseType:     nexusSchema.CriteriaReleaseType(d.Get("criteria_release_type").(string)),
-		CriteriaAssetRegex:      d.Get("criteria_asset_regex").(string),
-		Retain:                  getIntPointer(d, "retain"),
+		CriteriaReleaseType:     getCriteriaReleaseTypePointer(d, "criteria_release_type"),
+		CriteriaAssetRegex:      getStringPointer(d, "criteria_asset_regex"),
+		Retain:                  getInt(d, "retain"),
 		Format:                  nexusSchema.RepositoryFormat(d.Get("format").(string)),
 	}
 
-	err := client.Cleanup.Update(&policy)
+	err := client.CleanupPolicy.Update(&policy)
 	if err != nil {
 		return err
 	}
@@ -130,7 +130,7 @@ func resourceCleanupPolicyUpdate(d *schema.ResourceData, m interface{}) error {
 func resourceCleanupPolicyDelete(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
-	if err := client.Cleanup.Delete(d.Id()); err != nil {
+	if err := client.CleanupPolicy.Delete(d.Id()); err != nil {
 		return err
 	}
 
@@ -141,6 +141,29 @@ func resourceCleanupPolicyDelete(d *schema.ResourceData, m interface{}) error {
 func getIntPointer(d *schema.ResourceData, key string) *int {
 	if v, ok := d.GetOk(key); ok {
 		value := v.(int)
+		return &value
+	}
+	return nil
+}
+
+func getStringPointer(d *schema.ResourceData, key string) *string {
+	if v, ok := d.GetOk(key); ok {
+		value := v.(string)
+		return &value
+	}
+	return nil
+}
+
+func getInt(d *schema.ResourceData, key string) int {
+	if v, ok := d.GetOk(key); ok {
+		return v.(int)
+	}
+	return 0
+}
+
+func getCriteriaReleaseTypePointer(d *schema.ResourceData, key string) *nexusSchema.CriteriaReleaseType {
+	if v, ok := d.GetOk(key); ok {
+		value := nexusSchema.CriteriaReleaseType(v.(string))
 		return &value
 	}
 	return nil
