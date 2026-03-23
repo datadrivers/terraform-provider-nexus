@@ -22,6 +22,7 @@ data "nexus_repository_docker_proxy" "acceptance" {
 func TestAccDataSourceRepositoryDockerProxy(t *testing.T) {
 	name := fmt.Sprintf("acceptance-%s", acctest.RandString(10))
 	subdomain := ""
+	PathEnabled := false
 	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "false" {
 		subdomain = name
 	}
@@ -31,6 +32,7 @@ func TestAccDataSourceRepositoryDockerProxy(t *testing.T) {
 		Docker: repository.Docker{
 			ForceBasicAuth: true,
 			V1Enabled:      true,
+			PathEnabled:    &PathEnabled,
 		},
 		DockerProxy: repository.DockerProxy{
 			IndexType: repository.DockerProxyIndexTypeHub,
@@ -66,6 +68,7 @@ func TestAccDataSourceRepositoryDockerProxy(t *testing.T) {
 						resource.TestCheckResourceAttr(dataSourceName, "docker.#", "1"),
 						resource.TestCheckResourceAttr(dataSourceName, "docker.0.force_basic_auth", strconv.FormatBool(repo.Docker.ForceBasicAuth)),
 						resource.TestCheckResourceAttr(dataSourceName, "docker.0.v1_enabled", strconv.FormatBool(repo.Docker.V1Enabled)),
+						resource.TestCheckResourceAttr(dataSourceName, "docker.0.path_based_routing", strconv.FormatBool(PathEnabled)),
 						resource.TestCheckResourceAttr(dataSourceName, "docker_proxy.#", "1"),
 						resource.TestCheckResourceAttr(dataSourceName, "docker_proxy.0.index_type", string(repo.DockerProxy.IndexType)),
 					),
