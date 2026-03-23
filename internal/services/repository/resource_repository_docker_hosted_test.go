@@ -26,6 +26,7 @@ func testAccResourceRepositoryDockerHosted(name string) repository.DockerHostedR
 			HTTPPort:       tools.GetIntPointer(rand.Intn(999) + 32000),
 			HTTPSPort:      tools.GetIntPointer(rand.Intn(999) + 33000),
 			V1Enabled:      false,
+			PathEnabled:    tools.GetBoolPointer(false),
 		},
 		Storage: repository.DockerHostedStorage{
 			BlobStoreName:               "default",
@@ -53,6 +54,7 @@ func TestAccResourceRepositoryDockerHosted(t *testing.T) {
 
 	repo := testAccResourceRepositoryDockerHosted(repoName)
 	subdomain := ""
+	PathEnabled := false
 	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "false" {
 		subdomain = repoName
 	}
@@ -87,6 +89,7 @@ func TestAccResourceRepositoryDockerHosted(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "docker.0.https_port", strconv.Itoa(*repo.Docker.HTTPSPort)),
 						resource.TestCheckResourceAttr(resourceName, "docker.0.v1_enabled", strconv.FormatBool(repo.Docker.V1Enabled)),
 						resource.TestCheckResourceAttr(resourceName, "docker.0.subdomain", subdomain),
+						resource.TestCheckResourceAttr(resourceName, "docker.0.path_based_routing", strconv.FormatBool(PathEnabled)),
 					),
 				),
 			},

@@ -22,6 +22,7 @@ func TestAccDataSourceRepositoryDockerGroup(t *testing.T) {
 	nameHosted := fmt.Sprintf("acceptance-%s", acctest.RandString(10))
 	nameGroup := fmt.Sprintf("acceptance-%s", acctest.RandString(10))
 	repoHosted := testAccResourceRepositoryDockerHosted(nameHosted)
+	PathEnabled := false
 	repoGroup := repository.DockerGroupRepository{
 		Name:   nameGroup,
 		Online: true,
@@ -32,6 +33,7 @@ func TestAccDataSourceRepositoryDockerGroup(t *testing.T) {
 		Docker: repository.Docker{
 			ForceBasicAuth: true,
 			V1Enabled:      true,
+			PathEnabled:    &PathEnabled,
 		},
 		Group: repository.GroupDeploy{
 			MemberNames: []string{repoHosted.Name},
@@ -57,6 +59,7 @@ func TestAccDataSourceRepositoryDockerGroup(t *testing.T) {
 							resource.TestCheckResourceAttr(dataSourceName, "docker.#", "1"),
 							resource.TestCheckResourceAttr(dataSourceName, "docker.0.force_basic_auth", strconv.FormatBool(repoGroup.Docker.ForceBasicAuth)),
 							resource.TestCheckResourceAttr(dataSourceName, "docker.0.v1_enabled", strconv.FormatBool(repoGroup.Docker.V1Enabled)),
+							resource.TestCheckResourceAttr(dataSourceName, "docker.0.path_based_routing", strconv.FormatBool(PathEnabled)),
 						),
 						resource.ComposeAggregateTestCheckFunc(
 							resource.TestCheckResourceAttr(dataSourceName, "storage.#", "1"),

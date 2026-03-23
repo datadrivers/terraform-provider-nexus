@@ -38,6 +38,7 @@ func testAccResourceRepositoryDockerProxy(name string) repository.DockerProxyRep
 			HTTPPort:       tools.GetIntPointer(rand.Intn(999) + 34000),
 			HTTPSPort:      tools.GetIntPointer(rand.Intn(999) + 35000),
 			V1Enabled:      true,
+			PathEnabled:    tools.GetBoolPointer(false),
 		},
 		Storage: repository.Storage{
 			BlobStoreName:               "default",
@@ -95,6 +96,7 @@ func TestAccResourceRepositoryDockerProxy(t *testing.T) {
 	repo.RoutingRule = &routingRule.Name
 	resourceName := "nexus_repository_docker_proxy.acceptance"
 	subdomain := ""
+	PathEnabled := false
 	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "false" {
 		subdomain = repoName
 	}
@@ -149,6 +151,7 @@ func TestAccResourceRepositoryDockerProxy(t *testing.T) {
 						resource.TestCheckResourceAttr(resourceName, "docker_proxy.#", "1"),
 						resource.TestCheckResourceAttr(resourceName, "docker_proxy.0.index_type", string(repo.DockerProxy.IndexType)),
 						resource.TestCheckResourceAttr(resourceName, "docker_proxy.0.index_url", *repo.DockerProxy.IndexURL),
+						resource.TestCheckResourceAttr(resourceName, "docker.0.path_based_routing", strconv.FormatBool(PathEnabled)),
 					),
 				),
 			},
