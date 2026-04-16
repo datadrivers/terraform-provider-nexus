@@ -1,9 +1,22 @@
 package blobstore
 
 import (
+	"math"
+
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/blobstore"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
+
+// sanitizeBlobstoreInt returns 0 when v equals math.MaxInt, which Nexus uses as a
+// sentinel for "unlimited" or "not yet calculated". Storing MaxInt64 in Terraform
+// state causes a ParseInt overflow panic because JSON serialises it as float64,
+// and the nearest float64 (9223372036854776000) exceeds MaxInt64.
+func sanitizeBlobstoreInt(v int) int {
+	if v == math.MaxInt {
+		return 0
+	}
+	return v
+}
 
 func flattenSoftQuota(softQuota *blobstore.SoftQuota) []map[string]interface{} {
 	if softQuota == nil {
