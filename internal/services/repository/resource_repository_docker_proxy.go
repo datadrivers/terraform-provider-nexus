@@ -134,6 +134,10 @@ func getDockerProxyRepositoryFromResourceData(resourceData *schema.ResourceData)
 		}
 	}
 
+	if pathEnabled, ok := dockerConfig["path_based_routing"]; ok {
+		repo.Docker.PathEnabled = tools.GetBoolPointer(pathEnabled.(bool))
+	}
+
 	if dockerProxyConfig["index_url"].(string) != "" {
 		repo.DockerProxy.IndexURL = tools.GetStringPointer(strings.TrimSpace(dockerProxyConfig["index_url"].(string)))
 	}
