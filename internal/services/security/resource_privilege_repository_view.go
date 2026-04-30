@@ -50,7 +50,7 @@ func ResourceSecurityPrivilegeRepositoryView() *schema.Resource {
 				Required:    true,
 				Elem: &schema.Schema{
 					Type:         schema.TypeString,
-					ValidateFunc: validation.StringInSlice([]string{"ADD", "READ", "DELETE", "BROWSE", "EDIT"}, false),
+					ValidateFunc: validation.StringInSlice([]string{"ADD", "READ", "DELETE", "BROWSE", "EDIT", "ALL"}, false),
 				},
 			},
 		},
