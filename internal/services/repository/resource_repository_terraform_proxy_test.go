@@ -1,0 +1,90 @@
+package repository_test
+
+import (
+	"bytes"
+	"fmt"
+	"strconv"
+	"testing"
+	"text/template"
+
+	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
+	"github.com/datadrivers/terraform-provider-nexus/internal/acceptance"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+)
+
+func testAccResourceRepositoryTerraformProxy() repository.RawProxyRepository {
+	return repository.RawProxyRepository{
+		Name:   fmt.Sprintf("test-repo-%s", acctest.RandString(10)),
+		Online: true,
+		Storage: repository.Storage{
+			BlobStoreName:               "default",
+			StrictContentTypeValidation: true,
+		},
+		HTTPClient: repository.HTTPClient{
+			AutoBlock: true,
+			Blocked:   false,
+		},
+		NegativeCache: repository.NegativeCache{
+			Enabled: true,
+			TTL:     1440,
+		},
+		Proxy: repository.Proxy{
+			ContentMaxAge:  1440,
+			MetadataMaxAge: 1440,
+			RemoteURL:      "https://registry.terraform.io",
+		},
+	}
+}
+
+func testAccResourceRepositoryTerraformProxyConfig(repo repository.RawProxyRepository) string {
+	buf := &bytes.Buffer{}
+	tmpl := template.Must(template.New("TerraformProxyRepository").Funcs(acceptance.TemplateFuncMap).Parse(acceptance.TemplateStringRepositoryTerraformProxy))
+	if err := tmpl.Execute(buf, repo); err != nil {
+		panic(err)
+	}
+	return buf.String()
+}
+
+func TestAccResourceRepositoryTerraformProxy(t *testing.T) {
+	repo := testAccResourceRepositoryTerraformProxy()
+	resourceName := "nexus_repository_terraform_proxy.acceptance"
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { acceptance.AccPreCheck(t) },
+		Providers: acceptance.TestAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccResourceRepositoryTerraformProxyConfig(repo),
+				Check: resource.ComposeTestCheckFunc(
+					resource.ComposeAggregateTestCheckFunc(
+						resource.TestCheckResourceAttr(resourceName, "id", repo.Name),
+						resource.TestCheckResourceAttr(resourceName, "name", repo.Name),
+						resource.TestCheckResourceAttr(resourceName, "online", strconv.FormatBool(repo.Online)),
+					),
+					resource.ComposeAggregateTestCheckFunc(
+						resource.TestCheckResourceAttr(resourceName, "http_client.#", "1"),
+						resource.TestCheckResourceAttr(resourceName, "http_client.0.auto_block", strconv.FormatBool(repo.HTTPClient.AutoBlock)),
+						resource.TestCheckResourceAttr(resourceName, "http_client.0.blocked", strconv.FormatBool(repo.HTTPClient.Blocked)),
+						resource.TestCheckResourceAttr(resourceName, "negative_cache.#", "1"),
+						resource.TestCheckResourceAttr(resourceName, "negative_cache.0.enabled", strconv.FormatBool(repo.NegativeCache.Enabled)),
+						resource.TestCheckResourceAttr(resourceName, "negative_cache.0.ttl", strconv.Itoa(repo.NegativeCache.TTL)),
+						resource.TestCheckResourceAttr(resourceName, "proxy.#", "1"),
+						resource.TestCheckResourceAttr(resourceName, "proxy.0.content_max_age", strconv.Itoa(repo.Proxy.ContentMaxAge)),
+						resource.TestCheckResourceAttr(resourceName, "proxy.0.metadata_max_age", strconv.Itoa(repo.Proxy.MetadataMaxAge)),
+						resource.TestCheckResourceAttr(resourceName, "proxy.0.remote_url", repo.Proxy.RemoteURL),
+						resource.TestCheckResourceAttr(resourceName, "storage.#", "1"),
+						resource.TestCheckResourceAttr(resourceName, "storage.0.blob_store_name", repo.Storage.BlobStoreName),
+						resource.TestCheckResourceAttr(resourceName, "storage.0.strict_content_type_validation", strconv.FormatBool(repo.Storage.StrictContentTypeValidation)),
+					),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportStateId:     repo.Name,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
