@@ -115,6 +115,7 @@ Optional:
 
 - `http_port` (Number) Create an HTTP connector at specified port
 - `https_port` (Number) Create an HTTPS connector at specified port
+- `path_based_routing` (Boolean) Enables path based routing
 - `subdomain` (String) Pro-only: Whether to allow clients to use subdomain routing connector
 
 
