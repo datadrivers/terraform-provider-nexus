@@ -13,6 +13,9 @@ import (
 )
 
 func TestAccResourceTask_basic(t *testing.T) {
+	if tools.GetEnv("SKIP_PRO_TESTS", "false") == "true" {
+		t.Skip("Skipping Nexus Pro tests")
+	}
 	resourceName := "nexus_task.test"
 
 	task := task.TaskCreateStruct{
