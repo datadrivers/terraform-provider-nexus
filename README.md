@@ -19,9 +19,12 @@
 
 Terraform provider to configure Sonatype Nexus using its API.
 
-Implemented and tested with Sonatype Nexus `3.85.0` with `java17` and DB `H2`.
+Implemented and tested with Sonatype Nexus `3.93.0` (`ubi` image) and DB `H2`.
 
-**Note**: The `nexus_capability` resource requires Nexus Repository **3.85.0 or later**. The Capabilities REST API was properly introduced in version 3.84.0.
+**Version notes**:
+
+- `nexus_capability` requires Nexus Repository **3.85.0 or later** (Capabilities REST API introduced in 3.84.0).
+- `nexus_security_oidc` and `data.nexus_security_oidc` require Nexus Repository Pro **3.93.0 or later** (OAuth2/OIDC REST API `/service/rest/v1/security/oauth2`, see [NEXUS-50731](https://help.sonatype.com/en/sonatype-nexus-repository-3-93-0-release-notes.html)). The instance must be started with `nexus.security.oauth2.enabled=true` and `nexus.jwt.enabled=true` in `nexus.properties`, and the `OAuth2Realm` must be active (manage via `nexus_security_realms`).
 
 ## Usage
 
