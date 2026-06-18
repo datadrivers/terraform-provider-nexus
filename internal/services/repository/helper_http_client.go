@@ -2,7 +2,7 @@ package repository
 
 import (
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
-	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
+	"github.com/williamt1996/terraform-provider-nexus/internal/tools"
 )
 
 func getHTTPClientConnection(connectionList []interface{}) *repository.HTTPClientConnection {

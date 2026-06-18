@@ -1,4 +1,4 @@
-module github.com/datadrivers/terraform-provider-nexus
+module github.com/williamt1996/terraform-provider-nexus
 
 go 1.24.1
 

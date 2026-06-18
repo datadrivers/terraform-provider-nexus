@@ -3,9 +3,9 @@ package security
 import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
-	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
-	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/williamt1996/terraform-provider-nexus/internal/schema/common"
+	"github.com/williamt1996/terraform-provider-nexus/internal/tools"
 )
 
 func ResourceSecuritySAML() *schema.Resource {

@@ -1,13 +1,15 @@
 package repository
 
 import (
+	"time"
+
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
-	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
-	repositorySchema "github.com/datadrivers/terraform-provider-nexus/internal/schema/repository"
-	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/williamt1996/terraform-provider-nexus/internal/schema/common"
+	repositorySchema "github.com/williamt1996/terraform-provider-nexus/internal/schema/repository"
+	"github.com/williamt1996/terraform-provider-nexus/internal/tools"
 )
 
 func ResourceRepositoryYumHosted() *schema.Resource {
@@ -132,6 +134,8 @@ func resourceYumHostedRepositoryCreate(resourceData *schema.ResourceData, m inte
 	}
 	resourceData.SetId(repo.Name)
 
+	time.Sleep(1 * time.Minute)
+
 	return resourceYumHostedRepositoryRead(resourceData, m)
 }
 
@@ -160,6 +164,8 @@ func resourceYumHostedRepositoryUpdate(resourceData *schema.ResourceData, m inte
 	if err := client.Repository.Yum.Hosted.Update(repoName, repo); err != nil {
 		return err
 	}
+
+	time.Sleep(1 * time.Minute)
 
 	return resourceYumHostedRepositoryRead(resourceData, m)
 }

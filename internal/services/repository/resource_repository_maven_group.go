@@ -1,11 +1,13 @@
 package repository
 
 import (
+	"time"
+
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
-	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
-	repositorySchema "github.com/datadrivers/terraform-provider-nexus/internal/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/williamt1996/terraform-provider-nexus/internal/schema/common"
+	repositorySchema "github.com/williamt1996/terraform-provider-nexus/internal/schema/repository"
 )
 
 func ResourceRepositoryMavenGroup() *schema.Resource {
@@ -81,6 +83,8 @@ func resourceMavenGroupRepositoryCreate(resourceData *schema.ResourceData, m int
 	}
 	resourceData.SetId(repo.Name)
 
+	time.Sleep(1 * time.Minute)
+
 	return resourceMavenGroupRepositoryRead(resourceData, m)
 }
 
@@ -109,6 +113,8 @@ func resourceMavenGroupRepositoryUpdate(resourceData *schema.ResourceData, m int
 	if err := client.Repository.Maven.Group.Update(repoName, repo); err != nil {
 		return err
 	}
+
+	time.Sleep(1 * time.Minute)
 
 	return resourceMavenGroupRepositoryRead(resourceData, m)
 }

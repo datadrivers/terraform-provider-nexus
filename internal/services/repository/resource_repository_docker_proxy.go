@@ -3,14 +3,15 @@ package repository
 import (
 	"regexp"
 	"strings"
+	"time"
 
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
-	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
-	repositorySchema "github.com/datadrivers/terraform-provider-nexus/internal/schema/repository"
-	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/williamt1996/terraform-provider-nexus/internal/schema/common"
+	repositorySchema "github.com/williamt1996/terraform-provider-nexus/internal/schema/repository"
+	"github.com/williamt1996/terraform-provider-nexus/internal/tools"
 )
 
 func ResourceRepositoryDockerProxy() *schema.Resource {
@@ -247,6 +248,8 @@ func resourceDockerProxyRepositoryCreate(resourceData *schema.ResourceData, m in
 	}
 	resourceData.SetId(repo.Name)
 
+	time.Sleep(1 * time.Minute)
+
 	return resourceDockerProxyRepositoryRead(resourceData, m)
 }
 
@@ -275,6 +278,8 @@ func resourceDockerProxyRepositoryUpdate(resourceData *schema.ResourceData, m in
 	if err := client.Repository.Docker.Proxy.Update(repoName, repo); err != nil {
 		return err
 	}
+
+	time.Sleep(1 * time.Minute)
 
 	return resourceDockerProxyRepositoryRead(resourceData, m)
 }

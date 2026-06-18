@@ -1,11 +1,13 @@
 package repository
 
 import (
+	"time"
+
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
-	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
-	repositorySchema "github.com/datadrivers/terraform-provider-nexus/internal/schema/repository"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/williamt1996/terraform-provider-nexus/internal/schema/common"
+	repositorySchema "github.com/williamt1996/terraform-provider-nexus/internal/schema/repository"
 )
 
 func ResourceRepositoryCargoGroup() *schema.Resource {
@@ -86,6 +88,8 @@ func resourceCargoGroupRepositoryCreate(resourceData *schema.ResourceData, m int
 	}
 	resourceData.SetId(repo.Name)
 
+	time.Sleep(1 * time.Minute)
+
 	return resourceCargoGroupRepositoryRead(resourceData, m)
 }
 
@@ -114,6 +118,8 @@ func resourceCargoGroupRepositoryUpdate(resourceData *schema.ResourceData, m int
 	if err := client.Repository.Cargo.Group.Update(repoName, repo); err != nil {
 		return err
 	}
+
+	time.Sleep(1 * time.Minute)
 
 	return resourceCargoGroupRepositoryRead(resourceData, m)
 }
