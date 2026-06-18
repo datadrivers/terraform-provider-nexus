@@ -1,12 +1,14 @@
 package repository
 
 import (
+	"time"
+
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/repository"
-	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
-	repositorySchema "github.com/datadrivers/terraform-provider-nexus/internal/schema/repository"
-	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/williamt1996/terraform-provider-nexus/internal/schema/common"
+	repositorySchema "github.com/williamt1996/terraform-provider-nexus/internal/schema/repository"
+	"github.com/williamt1996/terraform-provider-nexus/internal/tools"
 )
 
 func ResourceRepositoryBowerProxy() *schema.Resource {
@@ -165,7 +167,10 @@ func resourceBowerProxyRepositoryCreate(resourceData *schema.ResourceData, m int
 	if err := client.Repository.Bower.Proxy.Create(repo); err != nil {
 		return err
 	}
+
 	resourceData.SetId(repo.Name)
+
+	time.Sleep(1 * time.Minute)
 
 	return resourceBowerProxyRepositoryRead(resourceData, m)
 }
@@ -195,6 +200,8 @@ func resourceBowerProxyRepositoryUpdate(resourceData *schema.ResourceData, m int
 	if err := client.Repository.Bower.Proxy.Update(repoName, repo); err != nil {
 		return err
 	}
+
+	time.Sleep(1 * time.Minute)
 
 	return resourceBowerProxyRepositoryRead(resourceData, m)
 }

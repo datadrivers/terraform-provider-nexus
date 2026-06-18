@@ -4,8 +4,8 @@ import (
 	"flag"
 	"log"
 
-	"github.com/datadrivers/terraform-provider-nexus/internal/provider"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
+	"github.com/williamt1996/terraform-provider-nexus/internal/provider"
 )
 
 // Generate docs for website

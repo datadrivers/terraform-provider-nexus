@@ -5,10 +5,10 @@ import (
 	"testing"
 
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/blobstore"
-	"github.com/datadrivers/terraform-provider-nexus/internal/acceptance"
-	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/williamt1996/terraform-provider-nexus/internal/acceptance"
+	"github.com/williamt1996/terraform-provider-nexus/internal/tools"
 )
 
 func TestAccResourceBlobstoreAzure(t *testing.T) {

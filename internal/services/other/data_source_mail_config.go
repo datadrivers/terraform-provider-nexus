@@ -1,8 +1,8 @@
 package other
 
 import (
-	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/williamt1996/terraform-provider-nexus/internal/schema/common"
 )
 
 func DataSourceMailConfig() *schema.Resource {

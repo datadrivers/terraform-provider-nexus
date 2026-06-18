@@ -6,11 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
+	"github.com/williamt1996/terraform-provider-nexus/internal/tools"
 
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
-	"github.com/datadrivers/terraform-provider-nexus/internal/acceptance"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/williamt1996/terraform-provider-nexus/internal/acceptance"
 )
 
 func TestAccDatasourceSecuritySSL(t *testing.T) {
