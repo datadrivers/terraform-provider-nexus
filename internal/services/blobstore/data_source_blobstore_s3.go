@@ -2,8 +2,8 @@ package blobstore
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/williamt1996/terraform-provider-nexus/internal/schema/blobstore"
-	"github.com/williamt1996/terraform-provider-nexus/internal/schema/common"
+	"github.com/williamt1997/terraform-provider-nexus/internal/schema/blobstore"
+	"github.com/williamt1997/terraform-provider-nexus/internal/schema/common"
 )
 
 func DataSourceBlobstoreS3() *schema.Resource {

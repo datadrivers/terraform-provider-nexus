@@ -7,8 +7,8 @@ import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/blobstore"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	blobstoreSchema "github.com/williamt1996/terraform-provider-nexus/internal/schema/blobstore"
-	"github.com/williamt1996/terraform-provider-nexus/internal/schema/common"
+	blobstoreSchema "github.com/williamt1997/terraform-provider-nexus/internal/schema/blobstore"
+	"github.com/williamt1997/terraform-provider-nexus/internal/schema/common"
 )
 
 func ResourceBlobstoreFile() *schema.Resource {

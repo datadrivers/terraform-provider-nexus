@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
-	"github.com/williamt1996/terraform-provider-nexus/internal/provider"
+	"github.com/williamt1997/terraform-provider-nexus/internal/provider"
 )
 
 // Generate docs for website
@@ -23,7 +23,7 @@ func main() {
 
 	plugin.Serve(&plugin.ServeOpts{
 		Debug:        debugMode,
-		ProviderAddr: "registry.terraform.io/datadrivers/nexus",
+		ProviderAddr: "registry.terraform.io/williamt1997/nexus",
 		ProviderFunc: provider.Provider,
 	})
 }

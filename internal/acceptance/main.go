@@ -7,7 +7,7 @@ import (
 	"text/template"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/williamt1996/terraform-provider-nexus/internal/provider"
+	"github.com/williamt1997/terraform-provider-nexus/internal/provider"
 )
 
 var (

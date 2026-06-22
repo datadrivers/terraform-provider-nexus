@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/williamt1996/terraform-provider-nexus/internal/tools"
+	"github.com/williamt1997/terraform-provider-nexus/internal/tools"
 
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/security"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/williamt1996/terraform-provider-nexus/internal/acceptance"
+	"github.com/williamt1997/terraform-provider-nexus/internal/acceptance"
 )
 
 func TestAccResourcesecuritySSLTruststore(t *testing.T) {

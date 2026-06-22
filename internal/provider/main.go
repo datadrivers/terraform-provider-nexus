@@ -4,10 +4,10 @@ import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/pkg/client"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/williamt1996/terraform-provider-nexus/internal/services/blobstore"
-	"github.com/williamt1996/terraform-provider-nexus/internal/services/other"
-	"github.com/williamt1996/terraform-provider-nexus/internal/services/repository"
-	"github.com/williamt1996/terraform-provider-nexus/internal/services/security"
+	"github.com/williamt1997/terraform-provider-nexus/internal/services/blobstore"
+	"github.com/williamt1997/terraform-provider-nexus/internal/services/other"
+	"github.com/williamt1997/terraform-provider-nexus/internal/services/repository"
+	"github.com/williamt1997/terraform-provider-nexus/internal/services/security"
 )
 
 // Provider returns a terraform.Provider

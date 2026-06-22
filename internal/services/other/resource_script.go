@@ -4,7 +4,7 @@ import (
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	nexusSchema "github.com/datadrivers/go-nexus-client/nexus3/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/williamt1996/terraform-provider-nexus/internal/schema/common"
+	"github.com/williamt1997/terraform-provider-nexus/internal/schema/common"
 )
 
 func ResourceScript() *schema.Resource {

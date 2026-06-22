@@ -8,9 +8,9 @@ import (
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/blobstore"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	blobstoreSchema "github.com/williamt1996/terraform-provider-nexus/internal/schema/blobstore"
-	"github.com/williamt1996/terraform-provider-nexus/internal/schema/common"
-	"github.com/williamt1996/terraform-provider-nexus/internal/tools"
+	blobstoreSchema "github.com/williamt1997/terraform-provider-nexus/internal/schema/blobstore"
+	"github.com/williamt1997/terraform-provider-nexus/internal/schema/common"
+	"github.com/williamt1997/terraform-provider-nexus/internal/tools"
 )
 
 func ResourceBlobstoreGroup() *schema.Resource {
