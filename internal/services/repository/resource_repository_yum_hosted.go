@@ -132,7 +132,7 @@ func resourceYumHostedRepositoryCreate(resourceData *schema.ResourceData, m inte
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceYumHostedRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceYumHostedRepositoryRead, resourceData, m)
 }
 
 func resourceYumHostedRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -161,7 +161,7 @@ func resourceYumHostedRepositoryUpdate(resourceData *schema.ResourceData, m inte
 		return err
 	}
 
-	return resourceYumHostedRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceYumHostedRepositoryRead, resourceData, m)
 }
 
 func resourceYumHostedRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

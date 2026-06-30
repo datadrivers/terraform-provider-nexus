@@ -82,7 +82,7 @@ func resourceRubygemsGroupRepositoryCreate(resourceData *schema.ResourceData, m 
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceRubygemsGroupRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceRubygemsGroupRepositoryRead, resourceData, m)
 }
 
 func resourceRubygemsGroupRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -111,7 +111,7 @@ func resourceRubygemsGroupRepositoryUpdate(resourceData *schema.ResourceData, m 
 		return err
 	}
 
-	return resourceRubygemsGroupRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceRubygemsGroupRepositoryRead, resourceData, m)
 }
 
 func resourceRubygemsGroupRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

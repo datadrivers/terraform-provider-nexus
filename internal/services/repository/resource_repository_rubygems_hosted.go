@@ -109,7 +109,7 @@ func resourceRubygemsHostedRepositoryCreate(resourceData *schema.ResourceData, m
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceRubygemsHostedRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceRubygemsHostedRepositoryRead, resourceData, m)
 }
 
 func resourceRubygemsHostedRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -138,7 +138,7 @@ func resourceRubygemsHostedRepositoryUpdate(resourceData *schema.ResourceData, m
 		return err
 	}
 
-	return resourceRubygemsHostedRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceRubygemsHostedRepositoryRead, resourceData, m)
 }
 
 func resourceRubygemsHostedRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

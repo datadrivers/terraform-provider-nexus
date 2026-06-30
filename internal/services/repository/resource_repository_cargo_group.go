@@ -86,7 +86,7 @@ func resourceCargoGroupRepositoryCreate(resourceData *schema.ResourceData, m int
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceCargoGroupRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceCargoGroupRepositoryRead, resourceData, m)
 }
 
 func resourceCargoGroupRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -115,7 +115,7 @@ func resourceCargoGroupRepositoryUpdate(resourceData *schema.ResourceData, m int
 		return err
 	}
 
-	return resourceCargoGroupRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceCargoGroupRepositoryRead, resourceData, m)
 }
 
 func resourceCargoGroupRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

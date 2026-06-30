@@ -174,7 +174,7 @@ func resourceMavenProxyRepositoryCreate(resourceData *schema.ResourceData, m int
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceMavenProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceMavenProxyRepositoryRead, resourceData, m)
 }
 
 func resourceMavenProxyRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -203,7 +203,7 @@ func resourceMavenProxyRepositoryUpdate(resourceData *schema.ResourceData, m int
 		return err
 	}
 
-	return resourceMavenProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceMavenProxyRepositoryRead, resourceData, m)
 }
 
 func resourceMavenProxyRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

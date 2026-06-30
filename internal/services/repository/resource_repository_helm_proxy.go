@@ -153,7 +153,7 @@ func resourceHelmProxyRepositoryCreate(resourceData *schema.ResourceData, m inte
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceHelmProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceHelmProxyRepositoryRead, resourceData, m)
 }
 
 func resourceHelmProxyRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -182,7 +182,7 @@ func resourceHelmProxyRepositoryUpdate(resourceData *schema.ResourceData, m inte
 		return err
 	}
 
-	return resourceHelmProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceHelmProxyRepositoryRead, resourceData, m)
 }
 
 func resourceHelmProxyRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

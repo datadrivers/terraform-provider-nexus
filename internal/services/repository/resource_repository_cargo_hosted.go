@@ -113,7 +113,7 @@ func resourceCargoHostedRepositoryCreate(resourceData *schema.ResourceData, m in
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceCargoHostedRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceCargoHostedRepositoryRead, resourceData, m)
 }
 
 func resourceCargoHostedRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -142,7 +142,7 @@ func resourceCargoHostedRepositoryUpdate(resourceData *schema.ResourceData, m in
 		return err
 	}
 
-	return resourceCargoHostedRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceCargoHostedRepositoryRead, resourceData, m)
 }
 
 func resourceCargoHostedRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

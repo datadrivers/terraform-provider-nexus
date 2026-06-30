@@ -97,7 +97,7 @@ func resourceYumGroupRepositoryCreate(resourceData *schema.ResourceData, m inter
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceYumGroupRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceYumGroupRepositoryRead, resourceData, m)
 }
 
 func resourceYumGroupRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -126,7 +126,7 @@ func resourceYumGroupRepositoryUpdate(resourceData *schema.ResourceData, m inter
 		return err
 	}
 
-	return resourceYumGroupRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceYumGroupRepositoryRead, resourceData, m)
 }
 
 func resourceYumGroupRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {
