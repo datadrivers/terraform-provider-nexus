@@ -125,7 +125,7 @@ func resourceMavenHostedRepositoryCreate(resourceData *schema.ResourceData, m in
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceMavenHostedRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceMavenHostedRepositoryRead, resourceData, m)
 }
 
 func resourceMavenHostedRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -154,7 +154,7 @@ func resourceMavenHostedRepositoryUpdate(resourceData *schema.ResourceData, m in
 		return err
 	}
 
-	return resourceMavenHostedRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceMavenHostedRepositoryRead, resourceData, m)
 }
 
 func resourceMavenHostedRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

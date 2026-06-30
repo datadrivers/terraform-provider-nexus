@@ -109,7 +109,7 @@ func resourceNugetHostedRepositoryCreate(resourceData *schema.ResourceData, m in
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceNugetHostedRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceNugetHostedRepositoryRead, resourceData, m)
 }
 
 func resourceNugetHostedRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -138,7 +138,7 @@ func resourceNugetHostedRepositoryUpdate(resourceData *schema.ResourceData, m in
 		return err
 	}
 
-	return resourceNugetHostedRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceNugetHostedRepositoryRead, resourceData, m)
 }
 
 func resourceNugetHostedRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

@@ -81,7 +81,7 @@ func resourceMavenGroupRepositoryCreate(resourceData *schema.ResourceData, m int
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceMavenGroupRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceMavenGroupRepositoryRead, resourceData, m)
 }
 
 func resourceMavenGroupRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -110,7 +110,7 @@ func resourceMavenGroupRepositoryUpdate(resourceData *schema.ResourceData, m int
 		return err
 	}
 
-	return resourceMavenGroupRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceMavenGroupRepositoryRead, resourceData, m)
 }
 
 func resourceMavenGroupRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

@@ -153,7 +153,7 @@ func resourceCondaProxyRepositoryCreate(resourceData *schema.ResourceData, m int
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceCondaProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceCondaProxyRepositoryRead, resourceData, m)
 }
 
 func resourceCondaProxyRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -182,7 +182,7 @@ func resourceCondaProxyRepositoryUpdate(resourceData *schema.ResourceData, m int
 		return err
 	}
 
-	return resourceCondaProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceCondaProxyRepositoryRead, resourceData, m)
 }
 
 func resourceCondaProxyRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

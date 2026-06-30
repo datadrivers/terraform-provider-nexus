@@ -171,7 +171,7 @@ func resourceAptHostedRepositoryCreate(resourceData *schema.ResourceData, m inte
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceAptHostedRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceAptHostedRepositoryRead, resourceData, m)
 }
 
 func resourceAptHostedRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -200,7 +200,7 @@ func resourceAptHostedRepositoryUpdate(resourceData *schema.ResourceData, m inte
 		return err
 	}
 
-	return resourceAptHostedRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceAptHostedRepositoryRead, resourceData, m)
 }
 
 func resourceAptHostedRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

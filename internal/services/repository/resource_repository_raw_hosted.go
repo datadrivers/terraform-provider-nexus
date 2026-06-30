@@ -109,7 +109,7 @@ func resourceRawHostedRepositoryCreate(resourceData *schema.ResourceData, m inte
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceRawHostedRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceRawHostedRepositoryRead, resourceData, m)
 }
 
 func resourceRawHostedRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -138,7 +138,7 @@ func resourceRawHostedRepositoryUpdate(resourceData *schema.ResourceData, m inte
 		return err
 	}
 
-	return resourceRawHostedRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceRawHostedRepositoryRead, resourceData, m)
 }
 
 func resourceRawHostedRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {
