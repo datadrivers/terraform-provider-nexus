@@ -52,7 +52,7 @@ func testAccResourceRepositoryPypiProxy() repository.PypiProxyRepository {
 		Proxy: repository.Proxy{
 			ContentMaxAge:  770,
 			MetadataMaxAge: 770,
-			RemoteURL:      "https://pypijs.org",
+			RemoteURL:      "https://pypi.org",
 		},
 	}
 }

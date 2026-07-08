@@ -23,7 +23,7 @@ func TestAccDataSourceRepositoryCargoProxy(t *testing.T) {
 		Name:   fmt.Sprintf("acceptance-%s", acctest.RandString(10)),
 		Online: true,
 		Proxy: repository.Proxy{
-			RemoteURL: "https://cargojs.org/",
+			RemoteURL: "https://index.crates.io",
 		},
 		Storage: repository.Storage{
 			BlobStoreName:               "default",

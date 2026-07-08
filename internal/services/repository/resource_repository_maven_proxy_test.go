@@ -58,7 +58,7 @@ func testAccResourceRepositoryMavenProxy() repository.MavenProxyRepository {
 		Proxy: repository.Proxy{
 			ContentMaxAge:  770,
 			MetadataMaxAge: 770,
-			RemoteURL:      "https://maven.elastic.co",
+			RemoteURL:      "https://repo1.maven.org/maven2",
 		},
 	}
 }

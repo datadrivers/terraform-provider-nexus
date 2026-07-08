@@ -52,7 +52,7 @@ func testAccResourceRepositoryCargoProxy() repository.CargoProxyRepository {
 		Proxy: repository.Proxy{
 			ContentMaxAge:  770,
 			MetadataMaxAge: 770,
-			RemoteURL:      "https://api.cargo.org/v3/index.json",
+			RemoteURL:      "https://index.crates.io",
 		},
 	}
 }

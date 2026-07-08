@@ -57,7 +57,9 @@ func testAccResourceRepositoryYumProxy() repository.YumProxyRepository {
 		Proxy: repository.Proxy{
 			ContentMaxAge:  770,
 			MetadataMaxAge: 770,
-			RemoteURL:      "https://yum.elastic.co",
+			// Must be HTTPS: the test enables use_trust_store and Nexus
+			// rejects a trust store on plain HTTP remotes.
+			RemoteURL: "https://dl.fedoraproject.org/pub/epel",
 		},
 	}
 }
