@@ -48,6 +48,9 @@ func TestAccResourceCapability(t *testing.T) {
 				ResourceName:      resName,
 				ImportState:       true,
 				ImportStateVerify: true,
+				// Nexus only returns a secret store reference for secret
+				// properties, the plaintext cannot be recovered on import.
+				ImportStateVerifyIgnore: []string{"properties.secret"},
 			},
 		},
 	})

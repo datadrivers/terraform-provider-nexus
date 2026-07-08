@@ -1,6 +1,8 @@
 package other
 
 import (
+	"regexp"
+
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/schema/capability"
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
@@ -84,12 +86,29 @@ func getCapabilityUpdateFromResourceData(d *schema.ResourceData) capability.Capa
 	}
 }
 
+// secretStoreRefRegexp matches secret store references like "_20" that Nexus
+// (since 3.93.0) returns instead of the plaintext value of secret properties.
+var secretStoreRefRegexp = regexp.MustCompile(`^_\d+$`)
+
 func setCapabilityToResourceData(cap *capability.Capability, d *schema.ResourceData) error {
+	properties := cap.Properties
+
+	// Nexus never returns the plaintext of secret properties, only a secret
+	// store reference. Keep the known value from state so such properties do
+	// not show a permanent diff.
+	if prior, ok := d.GetOk("properties"); ok {
+		for key, value := range prior.(map[string]interface{}) {
+			if current, exists := properties[key]; exists && secretStoreRefRegexp.MatchString(current) {
+				properties[key] = value.(string)
+			}
+		}
+	}
+
 	d.SetId(cap.ID)
 	d.Set("type", cap.Type)
 	d.Set("notes", cap.Notes)
 	d.Set("enabled", cap.Enabled)
-	d.Set("properties", cap.Properties)
+	d.Set("properties", properties)
 	return nil
 }
 
