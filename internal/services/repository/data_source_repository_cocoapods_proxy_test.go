@@ -23,7 +23,7 @@ func TestAccDataSourceRepositoryCocoapodsProxy(t *testing.T) {
 		Name:   fmt.Sprintf("acceptance-%s", acctest.RandString(10)),
 		Online: true,
 		Proxy: repository.Proxy{
-			RemoteURL: "https://cocoapodsjs.org/",
+			RemoteURL: "https://cdn.cocoapods.org",
 		},
 		Storage: repository.Storage{
 			BlobStoreName:               "default",

@@ -52,7 +52,7 @@ func testAccResourceRepositoryCocoapodsProxy() repository.CocoapodsProxyReposito
 		Proxy: repository.Proxy{
 			ContentMaxAge:  770,
 			MetadataMaxAge: 770,
-			RemoteURL:      "https://api.cocoapods.org/v3/index.json",
+			RemoteURL:      "https://cdn.cocoapods.org",
 		},
 	}
 }
