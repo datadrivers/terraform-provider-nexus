@@ -7,3 +7,4 @@ echo "Starting Nexus ${NEXUS_TYPE} and other required services..."
 docker compose up -d
 
 ./wait-for-nexus.sh
+./disable-ssrf-protection.sh
