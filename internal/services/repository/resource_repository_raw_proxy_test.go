@@ -52,7 +52,7 @@ func testAccResourceRepositoryRawProxy() repository.RawProxyRepository {
 		Proxy: repository.Proxy{
 			ContentMaxAge:  770,
 			MetadataMaxAge: 770,
-			RemoteURL:      "https://raw.elastic.co",
+			RemoteURL:      "https://nodejs.org/dist",
 		},
 	}
 }

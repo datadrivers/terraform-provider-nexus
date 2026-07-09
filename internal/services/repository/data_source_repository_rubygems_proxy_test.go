@@ -23,7 +23,7 @@ func TestAccDataSourceRepositoryRubygemsProxy(t *testing.T) {
 		Name:   fmt.Sprintf("acceptance-%s", acctest.RandString(10)),
 		Online: true,
 		Proxy: repository.Proxy{
-			RemoteURL: "https://rubygemsjs.org/",
+			RemoteURL: "https://rubygems.org",
 		},
 		Storage: repository.Storage{
 			BlobStoreName:               "default",

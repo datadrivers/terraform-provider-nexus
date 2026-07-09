@@ -23,7 +23,7 @@ func TestAccDataSourceRepositoryNugetProxy(t *testing.T) {
 		Name:   fmt.Sprintf("acceptance-%s", acctest.RandString(10)),
 		Online: true,
 		Proxy: repository.Proxy{
-			RemoteURL: "https://nugetjs.org/",
+			RemoteURL: "https://api.nuget.org/v3/index.json",
 		},
 		Storage: repository.Storage{
 			BlobStoreName:               "default",

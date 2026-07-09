@@ -35,7 +35,9 @@ func TestAccDataSourceRepositoryNpmProxy(t *testing.T) {
 		},
 		Npm: &repository.Npm{
 			RemoveNonCataloged: false,
-			RemoveQuarantined:  true,
+			// Requires Sonatype Repository Firewall (IQ server); without it
+			// Nexus silently stores false.
+			RemoveQuarantined: false,
 		},
 	}
 

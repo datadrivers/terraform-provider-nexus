@@ -23,7 +23,7 @@ func TestAccDataSourceRepositoryPypiProxy(t *testing.T) {
 		Name:   fmt.Sprintf("acceptance-%s", acctest.RandString(10)),
 		Online: true,
 		Proxy: repository.Proxy{
-			RemoteURL: "https://pypijs.org/",
+			RemoteURL: "https://pypi.org",
 		},
 		Storage: repository.Storage{
 			BlobStoreName:               "default",
