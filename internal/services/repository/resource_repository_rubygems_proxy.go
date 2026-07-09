@@ -153,7 +153,7 @@ func resourceRubygemsProxyRepositoryCreate(resourceData *schema.ResourceData, m 
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceRubygemsProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceRubygemsProxyRepositoryRead, resourceData, m)
 }
 
 func resourceRubygemsProxyRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -182,7 +182,7 @@ func resourceRubygemsProxyRepositoryUpdate(resourceData *schema.ResourceData, m 
 		return err
 	}
 
-	return resourceRubygemsProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceRubygemsProxyRepositoryRead, resourceData, m)
 }
 
 func resourceRubygemsProxyRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

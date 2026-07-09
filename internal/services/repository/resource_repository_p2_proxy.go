@@ -153,7 +153,7 @@ func resourceP2ProxyRepositoryCreate(resourceData *schema.ResourceData, m interf
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceP2ProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceP2ProxyRepositoryRead, resourceData, m)
 }
 
 func resourceP2ProxyRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -182,7 +182,7 @@ func resourceP2ProxyRepositoryUpdate(resourceData *schema.ResourceData, m interf
 		return err
 	}
 
-	return resourceP2ProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceP2ProxyRepositoryRead, resourceData, m)
 }
 
 func resourceP2ProxyRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

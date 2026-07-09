@@ -145,7 +145,7 @@ func resourceDockerHostedRepositoryCreate(resourceData *schema.ResourceData, m i
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceDockerHostedRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceDockerHostedRepositoryRead, resourceData, m)
 }
 
 func resourceDockerHostedRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -174,7 +174,7 @@ func resourceDockerHostedRepositoryUpdate(resourceData *schema.ResourceData, m i
 		return err
 	}
 
-	return resourceDockerHostedRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceDockerHostedRepositoryRead, resourceData, m)
 }
 
 func resourceDockerHostedRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

@@ -171,7 +171,7 @@ func resourceNugetProxyRepositoryCreate(resourceData *schema.ResourceData, m int
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceNugetProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceNugetProxyRepositoryRead, resourceData, m)
 }
 
 func resourceNugetProxyRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -200,7 +200,7 @@ func resourceNugetProxyRepositoryUpdate(resourceData *schema.ResourceData, m int
 		return err
 	}
 
-	return resourceNugetProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceNugetProxyRepositoryRead, resourceData, m)
 }
 
 func resourceNugetProxyRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

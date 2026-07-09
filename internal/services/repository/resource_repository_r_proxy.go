@@ -153,7 +153,7 @@ func resourceRProxyRepositoryCreate(resourceData *schema.ResourceData, m interfa
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceRProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceRProxyRepositoryRead, resourceData, m)
 }
 
 func resourceRProxyRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -182,7 +182,7 @@ func resourceRProxyRepositoryUpdate(resourceData *schema.ResourceData, m interfa
 		return err
 	}
 
-	return resourceRProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceRProxyRepositoryRead, resourceData, m)
 }
 
 func resourceRProxyRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

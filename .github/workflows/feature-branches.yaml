@@ -4,12 +4,12 @@ jobs:
   test:
     strategy:
       matrix:
-        go-version: [1.24.x]
+        go-version: [1.25.x]
         platform: [ubuntu-latest]
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout source codes
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Install Go
         uses: actions/setup-go@v6
         with:
@@ -19,7 +19,10 @@ jobs:
           NEXUS3_LICENSE_B64_ENCODED: ${{ secrets.NEXUS3_LICENSE_B64_ENCODED }}
           AZURE_STORAGE_ACCOUNT_KEY: ${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}
         run: |
-          echo "${NEXUS3_LICENSE_B64_ENCODED}" | base64 -d > scripts/license.lic
+          if [[ "${NEXUS3_LICENSE_B64_ENCODED}" != "NO_LICENSE" ]]; then 
+            echo "${NEXUS3_LICENSE_B64_ENCODED}" | base64 -d > scripts/license.lic
+          fi
+
           make start-services
 
           test -s scripts/license.lic || export SKIP_PRO_TESTS="true"

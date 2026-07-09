@@ -153,7 +153,7 @@ func resourceCocoapodsProxyRepositoryCreate(resourceData *schema.ResourceData, m
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceCocoapodsProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceCocoapodsProxyRepositoryRead, resourceData, m)
 }
 
 func resourceCocoapodsProxyRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -182,7 +182,7 @@ func resourceCocoapodsProxyRepositoryUpdate(resourceData *schema.ResourceData, m
 		return err
 	}
 
-	return resourceCocoapodsProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceCocoapodsProxyRepositoryRead, resourceData, m)
 }
 
 func resourceCocoapodsProxyRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

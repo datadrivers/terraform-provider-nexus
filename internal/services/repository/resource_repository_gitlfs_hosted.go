@@ -109,7 +109,7 @@ func resourceGitlfsHostedRepositoryCreate(resourceData *schema.ResourceData, m i
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceGitlfsHostedRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceGitlfsHostedRepositoryRead, resourceData, m)
 }
 
 func resourceGitlfsHostedRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -138,7 +138,7 @@ func resourceGitlfsHostedRepositoryUpdate(resourceData *schema.ResourceData, m i
 		return err
 	}
 
-	return resourceGitlfsHostedRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceGitlfsHostedRepositoryRead, resourceData, m)
 }
 
 func resourceGitlfsHostedRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

@@ -120,7 +120,7 @@ func resourceDockerGroupRepositoryCreate(resourceData *schema.ResourceData, m in
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceDockerGroupRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceDockerGroupRepositoryRead, resourceData, m)
 }
 
 func resourceDockerGroupRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -149,7 +149,7 @@ func resourceDockerGroupRepositoryUpdate(resourceData *schema.ResourceData, m in
 		return err
 	}
 
-	return resourceDockerGroupRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceDockerGroupRepositoryRead, resourceData, m)
 }
 
 func resourceDockerGroupRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

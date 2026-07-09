@@ -247,7 +247,7 @@ func resourceDockerProxyRepositoryCreate(resourceData *schema.ResourceData, m in
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceDockerProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceDockerProxyRepositoryRead, resourceData, m)
 }
 
 func resourceDockerProxyRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -276,7 +276,7 @@ func resourceDockerProxyRepositoryUpdate(resourceData *schema.ResourceData, m in
 		return err
 	}
 
-	return resourceDockerProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceDockerProxyRepositoryRead, resourceData, m)
 }
 
 func resourceDockerProxyRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {
