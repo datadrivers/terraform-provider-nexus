@@ -167,7 +167,7 @@ func resourceYumProxyRepositoryCreate(resourceData *schema.ResourceData, m inter
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourceYumProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceYumProxyRepositoryRead, resourceData, m)
 }
 
 func resourceYumProxyRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -196,7 +196,7 @@ func resourceYumProxyRepositoryUpdate(resourceData *schema.ResourceData, m inter
 		return err
 	}
 
-	return resourceYumProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourceYumProxyRepositoryRead, resourceData, m)
 }
 
 func resourceYumProxyRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

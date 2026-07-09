@@ -82,7 +82,7 @@ func resourcePypiGroupRepositoryCreate(resourceData *schema.ResourceData, m inte
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourcePypiGroupRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourcePypiGroupRepositoryRead, resourceData, m)
 }
 
 func resourcePypiGroupRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -111,7 +111,7 @@ func resourcePypiGroupRepositoryUpdate(resourceData *schema.ResourceData, m inte
 		return err
 	}
 
-	return resourcePypiGroupRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourcePypiGroupRepositoryRead, resourceData, m)
 }
 
 func resourcePypiGroupRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {

@@ -153,7 +153,7 @@ func resourcePypiProxyRepositoryCreate(resourceData *schema.ResourceData, m inte
 	}
 	resourceData.SetId(repo.Name)
 
-	return resourcePypiProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourcePypiProxyRepositoryRead, resourceData, m)
 }
 
 func resourcePypiProxyRepositoryRead(resourceData *schema.ResourceData, m interface{}) error {
@@ -182,7 +182,7 @@ func resourcePypiProxyRepositoryUpdate(resourceData *schema.ResourceData, m inte
 		return err
 	}
 
-	return resourcePypiProxyRepositoryRead(resourceData, m)
+	return retryRepositoryRead(resourcePypiProxyRepositoryRead, resourceData, m)
 }
 
 func resourcePypiProxyRepositoryDelete(resourceData *schema.ResourceData, m interface{}) error {
