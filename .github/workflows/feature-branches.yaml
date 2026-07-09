@@ -14,6 +14,13 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
+      # Provide a Terraform binary on PATH so the acceptance test framework
+      # does not download one per test package. Parallel downloads are flaky:
+      # checkpoint-api.hashicorp.com timeouts and races between packages.
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
       - name: Test client with nexus3 instance
         env:
           NEXUS3_LICENSE_B64_ENCODED: ${{ secrets.NEXUS3_LICENSE_B64_ENCODED }}
