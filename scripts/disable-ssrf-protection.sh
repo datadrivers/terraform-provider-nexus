@@ -3,6 +3,9 @@ set -eo pipefail
 
 source .env
 
+NEXUS_USERNAME=${NEXUS_USERNAME:-admin}
+NEXUS_PASSWORD=${NEXUS_PASSWORD:-admin123}
+
 IP=$(./detect-docker-env-ip.sh)
 
 # Since 3.93.0 Nexus ships SSRF protection that resolves and validates every
@@ -10,7 +13,7 @@ IP=$(./detect-docker-env-ip.sh)
 # a private IP) and every proxy repository test using a placeholder remote
 # URL. Disable it for the test instance. Best effort: older Nexus versions do
 # not have this endpoint.
-if curl -sf -u "admin:admin123" \
+if curl -sf -u "${NEXUS_USERNAME}:${NEXUS_PASSWORD}" \
   -X PUT "http://${IP}:${NEXUS_PORT}/service/rest/v1/security/ssrf-protection" \
   -H "Content-Type: application/json" \
   -d '{"enabled": false, "allowedIPs": [], "allowedDomains": []}' \
