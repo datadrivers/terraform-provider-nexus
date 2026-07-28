@@ -9,7 +9,7 @@ Use this resource to manage Nexus capabilities.
 ## Example Usage
 ```terraform
 # Manage a Nexus capability
-# Note: Capabilities API requires Nexus Repository Manager 3.81.0 or later
+# Note: Capabilities API requires Nexus Repository Manager 3.85.0 or later
 
 # Example: Repository Firewall Audit Capability
 resource "nexus_capability" "firewall_audit" {
