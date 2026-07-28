@@ -175,7 +175,10 @@ func resourceSecurityOIDCExists(d *schema.ResourceData, m interface{}) (bool, er
 	if err != nil {
 		return false, err
 	}
-	cfg, _ := svc.Read()
+	cfg, err := svc.Read()
+	if err != nil {
+		return false, err
+	}
 	// The endpoint always returns a payload (with empty strings when unset);
 	// treat empty client_id as "not configured".
 	return cfg != nil && cfg.ClientID != "", nil
