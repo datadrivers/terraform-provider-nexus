@@ -13,8 +13,8 @@ resource "nexus_security_user" "user_password_wo" {
   firstname           = "Administrator"
   lastname            = "User"
   email               = "nexus1@example.com"
-  password_wo         = "admin123"   # This password value don't save to state
-  password_wo_version = 1            # Incriment version, for update password  
+  password_wo         = "admin123"   # This password value isn't saved to state
+  password_wo_version = 1            # Increment version, for update password
   roles               = ["nx-admin"]
   status              = "active"
 }
@@ -29,7 +29,7 @@ resource "nexus_security_user" "user_password_from_ephemeral" {
   lastname            = "User"
   email               = "ephemeral@example.com"
   password_wo         = ephemeral.random_password.password  # Use ephemeral value
-  password_wo_version = 1                                   # Incriment version, for update password  
+  password_wo_version = 1                                   # Increment version, for update password
   roles               = ["nx-admin"]
   status              = "active"
 }

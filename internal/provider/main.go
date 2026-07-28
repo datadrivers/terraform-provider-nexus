@@ -70,6 +70,7 @@ func Provider() *schema.Provider {
 			"nexus_security_ldap":                         security.DataSourceSecurityLDAP(),
 			"nexus_security_realms":                       security.DataSourceSecurityRealms(),
 			"nexus_security_role":                         security.DataSourceSecurityRole(),
+			"nexus_security_oidc":                         security.DataSourceSecurityOIDC(),
 			"nexus_security_saml":                         security.DataSourceSecuritySAML(),
 			"nexus_security_ssl":                          security.DataSourceSecuritySSL(),
 			"nexus_security_ssl_truststore":               security.DataSourceSecuritySSLTrustStore(),
@@ -143,6 +144,7 @@ func Provider() *schema.Provider {
 			"nexus_security_realms":                       security.ResourceSecurityRealms(),
 			"nexus_security_role":                         security.ResourceSecurityRole(),
 			"nexus_security_ssl_truststore":               security.ResourceSecuritySSLTruststore(),
+			"nexus_security_oidc":                         security.ResourceSecurityOIDC(),
 			"nexus_security_saml":                         security.ResourceSecuritySAML(),
 			"nexus_security_user":                         security.ResourceSecurityUser(),
 			"nexus_security_user_token":                   security.ResourceSecurityUserToken(),
@@ -225,5 +227,14 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		RootCAPath:            &rootCaPath,
 	}
 
-	return nexus.NewClient(config), nil
+	nc := nexus.NewClient(config)
+
+	// OIDC support is not yet exposed by go-nexus-client; wire a low-level
+	// HTTP client into the security package so resource_security_oidc can
+	// reach the /service/rest/v1/security/oauth2 endpoint directly. Keyed by
+	// this provider instance's client so aliased provider configurations
+	// don't share (and overwrite) the same OIDC client.
+	security.ConfigureOIDC(nc, client.NewClient(config))
+
+	return nc, nil
 }

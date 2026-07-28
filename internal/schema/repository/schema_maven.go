@@ -36,6 +36,7 @@ var (
 				"content_disposition": {
 					Description: "Add Content-Disposition header as 'Attachment' to disable some content from being inline in a browse. Possible Value: `INLINE` or `ATTACHMENT`",
 					Optional:    true,
+					Computed:    true,
 					Type:        schema.TypeString,
 					ValidateFunc: validation.StringInSlice([]string{
 						string(repository.MavenContentDispositionInline),
