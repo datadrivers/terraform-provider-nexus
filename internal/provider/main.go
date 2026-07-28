@@ -227,10 +227,14 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		RootCAPath:            &rootCaPath,
 	}
 
+	nc := nexus.NewClient(config)
+
 	// OIDC support is not yet exposed by go-nexus-client; wire a low-level
 	// HTTP client into the security package so resource_security_oidc can
-	// reach the /service/rest/v1/security/oauth2 endpoint directly.
-	security.ConfigureOIDC(client.NewClient(config))
+	// reach the /service/rest/v1/security/oauth2 endpoint directly. Keyed by
+	// this provider instance's client so aliased provider configurations
+	// don't share (and overwrite) the same OIDC client.
+	security.ConfigureOIDC(nc, client.NewClient(config))
 
-	return nexus.NewClient(config), nil
+	return nc, nil
 }

@@ -121,9 +121,9 @@ The ` + "`OAuth2 Realm`" + ` must be active (via ` + "`nexus_security_realms`" +
 }
 
 func resourceSecurityOIDCRead(d *schema.ResourceData, m interface{}) error {
-	_ = m.(*nexus.NexusClient)
+	nc := m.(*nexus.NexusClient)
 
-	svc, err := oidc()
+	svc, err := oidc(nc)
 	if err != nil {
 		return err
 	}
@@ -141,9 +141,9 @@ func resourceSecurityOIDCRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecurityOIDCUpdate(d *schema.ResourceData, m interface{}) error {
-	_ = m.(*nexus.NexusClient)
+	nc := m.(*nexus.NexusClient)
 
-	svc, err := oidc()
+	svc, err := oidc(nc)
 	if err != nil {
 		return err
 	}
@@ -159,9 +159,9 @@ func resourceSecurityOIDCUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecurityOIDCDelete(d *schema.ResourceData, m interface{}) error {
-	_ = m.(*nexus.NexusClient)
+	nc := m.(*nexus.NexusClient)
 
-	svc, err := oidc()
+	svc, err := oidc(nc)
 	if err != nil {
 		return err
 	}
@@ -169,9 +169,9 @@ func resourceSecurityOIDCDelete(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSecurityOIDCExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	_ = m.(*nexus.NexusClient)
+	nc := m.(*nexus.NexusClient)
 
-	svc, err := oidc()
+	svc, err := oidc(nc)
 	if err != nil {
 		return false, err
 	}

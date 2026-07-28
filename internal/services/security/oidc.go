@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"sync"
 
+	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/pkg/client"
 	"github.com/datadrivers/go-nexus-client/nexus3/pkg/tools"
 )
@@ -41,20 +43,32 @@ type oidcService struct {
 	c *client.Client
 }
 
-// configuredOIDCService is populated by ConfigureOIDC during providerConfigure.
-// Package-scoped because go-nexus-client v1.20.0 does not expose an OIDC
-// service via NexusClient and the embedded `*client.Client` is unexported.
-var configuredOIDCService *oidcService
+// oidcServices maps a provider instance's *nexus.NexusClient to its low-level
+// OIDC client, populated by ConfigureOIDC during providerConfigure. Keyed
+// per-instance (rather than a single package-level value) so that multiple
+// aliased `nexus` provider configurations in the same run each talk to their
+// own Nexus instance instead of racing on a shared global. Package-scoped
+// because go-nexus-client v1.20.0 does not expose an OIDC service via
+// NexusClient and the embedded `*client.Client` is unexported.
+var (
+	oidcServicesMu sync.Mutex
+	oidcServices   = map[*nexus.NexusClient]*oidcService{}
+)
 
-func ConfigureOIDC(c *client.Client) {
-	configuredOIDCService = &oidcService{c: c}
+func ConfigureOIDC(nc *nexus.NexusClient, c *client.Client) {
+	oidcServicesMu.Lock()
+	defer oidcServicesMu.Unlock()
+	oidcServices[nc] = &oidcService{c: c}
 }
 
-func oidc() (*oidcService, error) {
-	if configuredOIDCService == nil {
+func oidc(nc *nexus.NexusClient) (*oidcService, error) {
+	oidcServicesMu.Lock()
+	defer oidcServicesMu.Unlock()
+	svc, ok := oidcServices[nc]
+	if !ok {
 		return nil, fmt.Errorf("nexus OIDC client not configured")
 	}
-	return configuredOIDCService, nil
+	return svc, nil
 }
 
 func (s *oidcService) Apply(o OIDC) error {
