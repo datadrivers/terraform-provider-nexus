@@ -23,8 +23,8 @@ resource "nexus_security_user" "user_password_wo" {
   firstname           = "Administrator"
   lastname            = "User"
   email               = "nexus1@example.com"
-  password_wo         = "admin123"   # This password value don't save to state
-  password_wo_version = 1            # Incriment version, for update password  
+  password_wo         = "admin123"   # This password value isn't saved to state
+  password_wo_version = 1            # Increment version, for update password
   roles               = ["nx-admin"]
   status              = "active"
 }
@@ -39,7 +39,7 @@ resource "nexus_security_user" "user_password_from_ephemeral" {
   lastname            = "User"
   email               = "ephemeral@example.com"
   password_wo         = ephemeral.random_password.password  # Use ephemeral value
-  password_wo_version = 1                                   # Incriment version, for update password  
+  password_wo_version = 1                                   # Increment version, for update password
   roles               = ["nx-admin"]
   status              = "active"
 }
@@ -56,8 +56,10 @@ resource "nexus_security_user" "user_password_from_ephemeral" {
 
 ### Optional
 
+> **NOTE**: [Write-only arguments](https://developer.hashicorp.com/terraform/language/resources/ephemeral#write-only-arguments) are supported in Terraform 1.11 and later.
+
 - `password` (String, Sensitive) The password for the user.
-- `password_wo` (String, Sensitive) The password for the user (write-only, not stored in state). Use with password_wo_version to control updates.
+- `password_wo` (String, Sensitive, [Write-only](https://developer.hashicorp.com/terraform/language/resources/ephemeral#write-only-arguments)) The password for the user (write-only, not stored in state). Use with password_wo_version to control updates.
 - `password_wo_version` (Number) Version tracker for password_wo changes. Increment this value to force a password update when using password_wo.
 - `roles` (Set of String) The roles which the user has been assigned within Nexus.
 - `status` (String) The user's status, e.g. active or disabled.
