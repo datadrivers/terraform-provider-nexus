@@ -48,7 +48,7 @@ resource "nexus_security_ldap" "example" {
 - `auth_username` (String) This must be a fully qualified username if simple authentication is used. Required if authScheme other than none.
 - `connection_retry_delay_seconds` (Number) How long to wait before retrying
 - `connection_timeout_seconds` (Number) How long to wait before timeout
-- `group_type` (String) Defines a type of groups used: static (a group contains a list of users) or dynamic (a user contains a list of groups). Required if ldapGroupsAsRoles is true.
+- `group_type` (String) Defines a type of groups used: static (a group contains a list of users) or dynamic (a user contains a list of groups). Required if ldapGroupsAsRoles is true. This must be set in upper case.
 - `host` (String) LDAP server connection hostname
 - `max_incident_count` (Number) How many retry attempts
 - `name` (String) LDAP server name
