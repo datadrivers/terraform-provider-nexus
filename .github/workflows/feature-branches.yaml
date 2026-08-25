@@ -18,7 +18,7 @@ jobs:
       # does not download one per test package. Parallel downloads are flaky:
       # checkpoint-api.hashicorp.com timeouts and races between packages.
       - name: Install Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v4
         with:
           terraform_wrapper: false
       - name: Test client with nexus3 instance
