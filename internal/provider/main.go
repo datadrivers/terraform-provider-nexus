@@ -76,6 +76,7 @@ func Provider() *schema.Provider {
 			"nexus_security_ssl_truststore":               security.DataSourceSecuritySSLTrustStore(),
 			"nexus_security_user":                         security.DataSourceSecurityUser(),
 			"nexus_security_user_token":                   security.DataSourceSecurityUserToken(),
+			"nexus_http_client":                           other.DataSourceHTTPClient(),
 			"nexus_mail_config":                           other.DataSourceMailConfig(),
 			"nexus_privilege_script":                      security.DataSourceSecurityPrivilegeScript(),
 			"nexus_privilege_wildcard":                    security.DataSourceSecurityPrivilegeWildcard(),
@@ -148,6 +149,7 @@ func Provider() *schema.Provider {
 			"nexus_security_saml":                         security.ResourceSecuritySAML(),
 			"nexus_security_user":                         security.ResourceSecurityUser(),
 			"nexus_security_user_token":                   security.ResourceSecurityUserToken(),
+			"nexus_http_client":                           other.ResourceHTTPClient(),
 			"nexus_mail_config":                           other.ResourceMailConfig(),
 			"nexus_privilege_application":                 security.ResourceSecurityPrivilegeApplication(),
 			"nexus_privilege_script":                      security.ResourceSecurityPrivilegeScript(),
@@ -234,7 +236,9 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	// reach the /service/rest/v1/security/oauth2 endpoint directly. Keyed by
 	// this provider instance's client so aliased provider configurations
 	// don't share (and overwrite) the same OIDC client.
-	security.ConfigureOIDC(nc, client.NewClient(config))
+	lowLevel := client.NewClient(config)
+	security.ConfigureOIDC(nc, lowLevel)
+	other.ConfigureHTTPClient(nc, lowLevel)
 
 	return nc, nil
 }
