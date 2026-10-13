@@ -116,10 +116,10 @@ func resourceBlobstoreGroupRead(resourceData *schema.ResourceData, m interface{}
 		return nil
 	}
 
-	if err := resourceData.Set("available_space_in_bytes", genericBlobstoreInformation.AvailableSpaceInBytes); err != nil {
+	if err := resourceData.Set("available_space_in_bytes", sanitizeBlobstoreInt(genericBlobstoreInformation.AvailableSpaceInBytes)); err != nil {
 		return err
 	}
-	if err := resourceData.Set("blob_count", genericBlobstoreInformation.BlobCount); err != nil {
+	if err := resourceData.Set("blob_count", sanitizeBlobstoreInt(genericBlobstoreInformation.BlobCount)); err != nil {
 		return err
 	}
 	if err := resourceData.Set("fill_policy", string(bs.FillPolicy)); err != nil {
@@ -131,7 +131,7 @@ func resourceBlobstoreGroupRead(resourceData *schema.ResourceData, m interface{}
 	if err := resourceData.Set("name", bs.Name); err != nil {
 		return err
 	}
-	if err := resourceData.Set("total_size_in_bytes", genericBlobstoreInformation.TotalSizeInBytes); err != nil {
+	if err := resourceData.Set("total_size_in_bytes", sanitizeBlobstoreInt(genericBlobstoreInformation.TotalSizeInBytes)); err != nil {
 		return err
 	}
 
