@@ -108,6 +108,7 @@ func Provider() *schema.Provider {
 			"nexus_repository_gitlfs_hosted":              repository.ResourceRepositoryGitlfsHosted(),
 			"nexus_repository_go_group":                   repository.ResourceRepositoryGoGroup(),
 			"nexus_repository_go_proxy":                   repository.ResourceRepositoryGoProxy(),
+			"nexus_repository_huggingface_proxy":          repository.ResourceRepositoryHuggingfaceProxy(),
 			"nexus_repository_helm_hosted":                repository.ResourceRepositoryHelmHosted(),
 			"nexus_repository_helm_proxy":                 repository.ResourceRepositoryHelmProxy(),
 			"nexus_repository_maven_group":                repository.ResourceRepositoryMavenGroup(),
@@ -235,6 +236,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	// this provider instance's client so aliased provider configurations
 	// don't share (and overwrite) the same OIDC client.
 	security.ConfigureOIDC(nc, client.NewClient(config))
+	repository.ConfigureHuggingface(nc, client.NewClient(config))
 
 	return nc, nil
 }
