@@ -122,11 +122,12 @@ func flattenHTTPClientAuthentication(auth *repository.HTTPClientAuthentication, 
 	}
 	return []map[string]interface{}{
 		{
-			"ntlm_domain": auth.NTLMDomain,
-			"ntlm_host":   auth.NTLMHost,
-			"type":        auth.Type,
-			"username":    auth.Username,
-			"password":    d.Get("http_client.0.authentication.0.password").(string),
+			"ntlm_domain":  auth.NTLMDomain,
+			"ntlm_host":    auth.NTLMHost,
+			"type":         auth.Type,
+			"username":     auth.Username,
+			"password":     d.Get("http_client.0.authentication.0.password").(string),
+			"bearer_token": d.Get("http_client.0.authentication.0.bearer_token").(string),
 		},
 	}
 }
