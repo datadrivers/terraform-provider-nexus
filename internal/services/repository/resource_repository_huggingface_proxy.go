@@ -11,6 +11,7 @@ import (
 	repositorySchema "github.com/datadrivers/terraform-provider-nexus/internal/schema/repository"
 	"github.com/datadrivers/terraform-provider-nexus/internal/tools"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"net/http"
 	"net/url"
 	"sync"
@@ -49,13 +50,46 @@ func ResourceRepositoryHuggingfaceProxy() *schema.Resource {
 			"online": repositorySchema.ResourceOnline,
 			// Proxy schemas
 			"cleanup":        repositorySchema.ResourceCleanup,
-			"http_client":    repositorySchema.ResourceHTTPClient,
+			"http_client":    huggingfaceHTTPClientSchema(),
 			"negative_cache": repositorySchema.ResourceNegativeCache,
 			"proxy":          repositorySchema.ResourceProxy,
 			"routing_rule":   repositorySchema.ResourceRoutingRule,
 			"storage":        repositorySchema.ResourceStorage,
 		},
 	}
+}
+
+// Hugging Face supports bearer-token authentication. Keep the extra field
+// scoped to this resource so other proxy resources cannot accept a value
+// their encoders do not send to Nexus.
+func huggingfaceHTTPClientSchema() *schema.Schema {
+	httpClient := *repositorySchema.ResourceHTTPClient
+	httpClientResource := *repositorySchema.ResourceHTTPClient.Elem.(*schema.Resource)
+	httpClientResource.Schema = make(map[string]*schema.Schema, len(httpClientResource.Schema))
+	for name, field := range repositorySchema.ResourceHTTPClient.Elem.(*schema.Resource).Schema {
+		httpClientResource.Schema[name] = field
+	}
+
+	authentication := *repositorySchema.ResourceHTTPClientAuthentication
+	authenticationResource := *repositorySchema.ResourceHTTPClientAuthentication.Elem.(*schema.Resource)
+	authenticationResource.Schema = make(map[string]*schema.Schema, len(authenticationResource.Schema)+1)
+	for name, field := range repositorySchema.ResourceHTTPClientAuthentication.Elem.(*schema.Resource).Schema {
+		authenticationResource.Schema[name] = field
+	}
+	authenticationType := *authenticationResource.Schema["type"]
+	authenticationType.Description = "Authentication type. Possible values: `ntlm`, `username` or `bearerToken`"
+	authenticationType.ValidateDiagFunc = validation.ToDiagFunc(validation.StringInSlice([]string{"ntlm", "username", "bearerToken"}, false))
+	authenticationResource.Schema["type"] = &authenticationType
+	authenticationResource.Schema["bearer_token"] = &schema.Schema{
+		Description: "The bearer token used for bearerToken authentication",
+		Optional:    true,
+		Sensitive:   true,
+		Type:        schema.TypeString,
+	}
+	authentication.Elem = &authenticationResource
+	httpClientResource.Schema["authentication"] = &authentication
+	httpClient.Elem = &httpClientResource
+	return &httpClient
 }
 
 func getHuggingfaceProxyRepositoryFromResourceData(resourceData *schema.ResourceData) huggingfaceProxyRepository {
