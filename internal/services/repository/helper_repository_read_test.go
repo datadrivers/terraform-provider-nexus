@@ -37,6 +37,26 @@ func TestRetryRepositoryRead(t *testing.T) {
 		assert.Equal(t, 3, calls)
 	})
 
+	t.Run("retries while a written repository is not yet found", func(t *testing.T) {
+		oldDelay := repositoryReadRetryDelay
+		repositoryReadRetryDelay = time.Millisecond
+		t.Cleanup(func() { repositoryReadRetryDelay = oldDelay })
+
+		resourceData := schema.TestResourceDataRaw(t, map[string]*schema.Schema{}, map[string]interface{}{})
+		resourceData.SetId("example")
+		calls := 0
+		err := retryRepositoryRead(func(d *schema.ResourceData, _ interface{}) error {
+			calls++
+			if calls < 3 {
+				d.SetId("")
+			}
+			return nil
+		}, resourceData, nil)
+		assert.NoError(t, err)
+		assert.Equal(t, 3, calls)
+		assert.Equal(t, "example", resourceData.Id())
+	})
+
 	t.Run("returns last error after max attempts", func(t *testing.T) {
 		oldDelay := repositoryReadRetryDelay
 		repositoryReadRetryDelay = time.Millisecond
