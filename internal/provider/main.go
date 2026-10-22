@@ -1,6 +1,8 @@
 package provider
 
 import (
+	"strings"
+
 	nexus "github.com/datadrivers/go-nexus-client/nexus3"
 	"github.com/datadrivers/go-nexus-client/nexus3/pkg/client"
 	"github.com/datadrivers/terraform-provider-nexus/internal/services/blobstore"
@@ -12,7 +14,7 @@ import (
 
 // Provider returns a terraform.Provider
 func Provider() *schema.Provider {
-	return &schema.Provider{
+	provider := &schema.Provider{
 		DataSourcesMap: map[string]*schema.Resource{
 			"nexus_blobstore_azure":                       blobstore.DataSourceBlobstoreAzure(),
 			"nexus_blobstore_file":                        blobstore.DataSourceBlobstoreFile(),
@@ -209,6 +211,12 @@ func Provider() *schema.Provider {
 		},
 		ConfigureFunc: providerConfigure,
 	}
+	for name, dataSource := range provider.DataSourcesMap {
+		if strings.HasPrefix(name, "nexus_repository_") {
+			repository.RequireRepositoryFound(dataSource)
+		}
+	}
+	return provider
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
