@@ -92,6 +92,11 @@ func resourceSecurityRoleRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	role, err := client.Security.Role.Get(d.Id())
+	if isRoleNotFoundError(err, d.Id()) {
+		// The role was deleted outside Terraform: drop it from state so it gets recreated.
+		d.SetId("")
+		return nil
+	}
 	if err != nil {
 		return err
 	}
@@ -137,5 +142,8 @@ func resourceSecurityRoleExists(d *schema.ResourceData, m interface{}) (bool, er
 	client := m.(*nexus.NexusClient)
 
 	role, err := client.Security.Role.Get(d.Id())
+	if isRoleNotFoundError(err, d.Id()) {
+		return false, nil
+	}
 	return role != nil, err
 }

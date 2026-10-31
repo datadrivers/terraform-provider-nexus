@@ -1,6 +1,7 @@
 package security
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/datadrivers/terraform-provider-nexus/internal/schema/common"
@@ -56,7 +57,14 @@ func DataSourceSecurityRole() *schema.Resource {
 }
 
 func dataSourceSecurityRoleRead(d *schema.ResourceData, m interface{}) error {
-	d.SetId(d.Get("roleid").(string))
+	roleID := d.Get("roleid").(string)
+	d.SetId(roleID)
 
-	return resourceSecurityRoleRead(d, m)
+	if err := resourceSecurityRoleRead(d, m); err != nil {
+		return err
+	}
+	if d.Id() == "" {
+		return fmt.Errorf("role %q not found", roleID)
+	}
+	return nil
 }
