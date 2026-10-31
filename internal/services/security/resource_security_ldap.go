@@ -201,6 +201,11 @@ func resourceSecurityLDAPRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*nexus.NexusClient)
 
 	ldap, err := client.Security.LDAP.Get(d.Id())
+	if isLDAPNotFoundError(err) {
+		// The LDAP server does not exist (anymore): drop it from state so it gets (re)created.
+		d.SetId("")
+		return nil
+	}
 	if err != nil {
 		return err
 	}
