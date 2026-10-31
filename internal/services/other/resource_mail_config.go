@@ -135,6 +135,9 @@ func getMailConfigFromResourceData(d *schema.ResourceData) nexusSchema.MailConfi
 		SslServerIdentityCheckEnabled: tools.GetBoolPointer(d.Get("ssl_server_identity_check_enabled").(bool)),
 		NexusTrustStoreEnabled:        tools.GetBoolPointer(d.Get("nexus_trust_store_enabled").(bool)),
 	}
+	if password := d.Get("password").(string); password != "" {
+		mailconfig.Password = tools.GetStringPointer(password)
+	}
 	return mailconfig
 }
 
