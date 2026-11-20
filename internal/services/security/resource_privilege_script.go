@@ -45,7 +45,7 @@ func ResourceSecurityPrivilegeScript() *schema.Resource {
 				Required:    true,
 				Elem: &schema.Schema{
 					Type:         schema.TypeString,
-					ValidateFunc: validation.StringInSlice([]string{"ADD", "READ", "DELETE", "RUN", "BROWSE", "EDIT"}, false),
+					ValidateFunc: validation.StringInSlice([]string{"ADD", "READ", "DELETE", "RUN", "BROWSE", "EDIT", "ALL"}, false),
 				},
 			},
 		},
