@@ -89,7 +89,7 @@ func ResourceSecurityLDAP() *schema.Resource {
 				Description:  "Defines a type of groups used: static (a group contains a list of users) or dynamic (a user contains a list of groups). Required if ldapGroupsAsRoles is true.",
 				Required:     true,
 				Type:         schema.TypeString,
-				ValidateFunc: validation.StringInSlice([]string{"dynamic", "static"}, false),
+				ValidateFunc: validation.StringInSlice([]string{"DYNAMIC", "STATIC"}, false),
 			},
 			"host": {
 				Description: "LDAP server connection hostname",
@@ -250,7 +250,7 @@ func setSecurityLDAPToResourceData(ldap *security.LDAP, d *schema.ResourceData) 
 	d.Set("group_member_format", ldap.GroupMemberFormat)
 	d.Set("group_object_class", ldap.GroupObjectClass)
 	d.Set("group_subtree", ldap.GroupSubtree)
-	// d.Set("group_type", ldap.GroupType) // GroupType is not returned by API :-/
+	d.Set("group_type", ldap.GroupType)
 	d.Set("host", ldap.Host)
 	d.Set("ldap_groups_as_roles", ldap.LDAPGroupsAsRoles)
 	d.Set("max_incident_count", ldap.MaxIncidentCount)
